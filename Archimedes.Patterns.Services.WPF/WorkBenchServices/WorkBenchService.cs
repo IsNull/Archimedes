@@ -313,12 +313,25 @@ namespace Archimedes.Services.WPF.WorkBenchServices
                 return content;
 
             foreach (var floatingWnd in DockManager.FloatingWindows) {
-                var floatingPane = floatingWnd.Content as FloatingDockablePane;
-                foreach (ManagedContent managedContent in floatingPane.Items) {
-                    if (ReferenceEquals((managedContent.Content as FrameworkElement).DataContext, vm)) {
-                        return managedContent;
+
+               if (floatingWnd.Content is FloatingDockablePane) {
+                    var floatingPane = floatingWnd.Content as FloatingDockablePane;
+                    foreach (ManagedContent managedContent in floatingPane.Items) {
+                        if (ReferenceEquals((managedContent.Content as FrameworkElement).DataContext, vm)) {
+                            return managedContent;
+                        }
                     }
-                }
+               }
+               if (floatingWnd.Content is DocumentPane) {
+                   var floatingPane = floatingWnd.Content as DocumentPane;
+                   foreach (ManagedContent managedContent in floatingPane.Items) {
+                       if (ReferenceEquals((managedContent.Content as FrameworkElement).DataContext, vm)) {
+                           return managedContent;
+                       }
+                   }
+
+               }
+
             }
 
             return content;
