@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Threading;
+using System.Reflection;
 
 namespace Archimedes.Patterns.MVMV
 {
@@ -18,7 +19,7 @@ namespace Archimedes.Patterns.MVMV
 
         static Dictionary<string, PropertyChangedEventArgs> _eventArgsMap = new Dictionary<string, PropertyChangedEventArgs>();
 
-        SynchronizationContext _syncContext;
+        Dictionary<string, List<Action<object>>> _typedInvokerMap = new Dictionary<string, List<Action<object>>>();
         PropertyChangedEventHandler _propChangedHandler;
 
         #endregion
@@ -48,6 +49,14 @@ namespace Archimedes.Patterns.MVMV
             }
         }
 
+        public void RegisterPropertyChangedEvent(Expression<Func<object>> property, Action<object> callback) {
+            var name = GetPropertyName(property);
+            if (!_typedInvokerMap.ContainsKey(name)) {
+                _typedInvokerMap.Add(name, new List<Action<object>>());
+            }
+            _typedInvokerMap[name].Add(callback);
+        }
+
         #region Notify Helpers
 
         /// <summary>
@@ -68,10 +77,23 @@ namespace Archimedes.Patterns.MVMV
         string[] GetPropertyNames(Expression<Func<object>>[] expressions) {
             string[] propertyNames = new string[expressions.Length];
             for (int i = 0; i < expressions.Length; i++) {
-                propertyNames[i] = Lambda.GetPropertyName(expressions[i]);
+                propertyNames[i] = GetPropertyName(expressions[i]);
             }
             return propertyNames;
         }
+
+
+        string GetPropertyName(Expression<Func<object>> expression) {
+            var lambda = expression as LambdaExpression;
+            var memberExpression = lambda.Body as MemberExpression;
+            if (memberExpression == null) {
+                var unaryExpression = (UnaryExpression)lambda.Body;
+                memberExpression = (MemberExpression)unaryExpression.Operand;
+            }
+            var propertyInfo = (PropertyInfo)memberExpression.Member;
+            return propertyInfo.Name;
+        }
+
 
         void OnPropertysChangedInternal(params string[] propertyNames) {
             if ((propertyNames == null) || (propertyNames.Length == 0))
@@ -86,6 +108,11 @@ namespace Archimedes.Patterns.MVMV
         void OnPropertyChangedInternal(string propertyName) {
             if (_propChangedHandler != null)
                 _propChangedHandler(this, GetEventArgs(propertyName));
+
+            if (_typedInvokerMap.ContainsKey(propertyName)) {
+                foreach (var a in _typedInvokerMap[propertyName])
+                    a(this);
+            }
         }
 
         static PropertyChangedEventArgs GetEventArgs(string propertyName) {

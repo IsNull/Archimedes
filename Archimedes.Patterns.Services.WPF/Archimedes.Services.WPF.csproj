@@ -12,6 +12,7 @@
     <AssemblyName>Archimedes.Services.WPF</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -50,6 +50,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -61,6 +62,15 @@
   <ItemGroup>
     <Compile Include="AvalonDockService\AvalonService.cs" />
     <Compile Include="AvalonDockService\IAvalonService.cs" />
+    <Compile Include="FrameWorkDialogs\FileDialogViewModel.cs" />
+    <Compile Include="FrameWorkDialogs\FolderBrowse\FolderBrowserDialog.cs" />
+    <Compile Include="FrameWorkDialogs\FolderBrowse\FolderBrowserDialogViewModel.cs" />
+    <Compile Include="FrameWorkDialogs\FolderBrowse\IFolderBrowserDialog.cs" />
+    <Compile Include="FrameWorkDialogs\IFileDialog.cs" />
+    <Compile Include="FrameWorkDialogs\OpenFile\IOpenFileDialog.cs" />
+    <Compile Include="FrameWorkDialogs\OpenFile\OpenFileDialog.cs" />
+    <Compile Include="FrameWorkDialogs\OpenFile\OpenFileDialogViewModel.cs" />
+    <Compile Include="FrameWorkDialogs\WindowWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowViewModelMapping\IWindowViewModelMappings.cs" />
     <Compile Include="WindowViewModelMapping\IWindowViewModelMappingsContract.cs" />

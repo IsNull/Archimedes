@@ -172,7 +172,7 @@ namespace Archimedes.Patterns.Commands
                 }
 #if !DEBUG
             } catch (Exception e) {
-                MessageBox.Show("Fehler beim rückgängig machen der letzten Aktion!","RIEDOMaps Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show(string.Format("Undo failed with \n{0}","Command Error", e.Message),MessageBoxButtons.OK, MessageBoxIcon.Error); 
             }
 #endif
         }
@@ -202,8 +202,8 @@ namespace Archimedes.Patterns.Commands
                 }
 #if !DEBUG
             } catch (Exception e) {
-                MessageBox.Show(string.Format("Fehler beim wiederherstellen der letzten, rückgängig gmachten Aktion!\n{0}",e),
-                    "RIEDOMaps Fehler", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show(string.Format("Redo failed with:\n{0}",e),
+                //    "Command Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 #endif
         }
