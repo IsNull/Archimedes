@@ -304,13 +304,18 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
         ManagedContent FindContentByViewModel(WorkspaceViewModel vm) {
             ManagedContent content = null;
-            content = DockManager.DockableContents.ToList().Find(x => ReferenceEquals(x.Content, vm));
-            if (content != null)
-                return content;
 
-            content = DockManager.Documents.ToList().Find(x => ReferenceEquals(x.Content, vm));
-            if (content != null)
-                return content;
+            var res = from dockcontent in DockManager.DockableContents
+                      where dockcontent.Content != null && ReferenceEquals(((FrameworkElement)dockcontent.Content).DataContext, vm)
+                      select dockcontent;
+            if (res.Any())
+                return res.First();
+
+            var docs = from doc in DockManager.Documents
+                       where doc.Content != null && ReferenceEquals(((FrameworkElement)doc.Content).DataContext, vm)
+                       select doc;
+            if(docs.Any())
+                return docs.First();
 
             foreach (var floatingWnd in DockManager.FloatingWindows) {
 
@@ -329,7 +334,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
                            return managedContent;
                        }
                    }
-
                }
 
             }
