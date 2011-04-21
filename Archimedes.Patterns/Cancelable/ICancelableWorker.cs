@@ -5,7 +5,10 @@ using System.Text;
 
 namespace Archimedes.Patterns.Cancelable
 {
-    class ICancelable
+    public interface ICancelableWorker
     {
+        void Cancel();
+        bool CancellationPending { get; }
+        bool IsBusy { get; }
     }
 }

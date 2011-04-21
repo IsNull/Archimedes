@@ -3,6 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes", "Archimedes\Archimedes.csproj", "{60DBCF96-F3D4-46C4-A399-AC08E4874BD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns", "Archimedes.Patterns\Archimedes.Patterns.csproj", "{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Services.WPF", "Archimedes.Patterns.Services.WPF\Archimedes.Services.WPF.csproj", "{EA929451-8342-492C-8C16-6E4B15355E7C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AvalonDock", "AvalonDock", "{64AE7FF4-8481-46AA-8C52-097E005A3CC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonDock", "AvalonDock\AvalonDock\AvalonDock.csproj", "{87E61430-4243-45F2-B74E-0A4C096CEBF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonDock.Themes", "AvalonDock\AvalonDock.Themes\AvalonDock.Themes.csproj", "{3836F4A8-4B35-4F5E-BB0F-DAD374297525}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns.WPF", "Archimedes.Patterns.WPF\Archimedes.Patterns.WPF.csproj", "{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,8 +25,32 @@ Global
 		{60DBCF96-F3D4-46C4-A399-AC08E4874BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60DBCF96-F3D4-46C4-A399-AC08E4874BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60DBCF96-F3D4-46C4-A399-AC08E4874BD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA929451-8342-492C-8C16-6E4B15355E7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA929451-8342-492C-8C16-6E4B15355E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA929451-8342-492C-8C16-6E4B15355E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA929451-8342-492C-8C16-6E4B15355E7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87E61430-4243-45F2-B74E-0A4C096CEBF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87E61430-4243-45F2-B74E-0A4C096CEBF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87E61430-4243-45F2-B74E-0A4C096CEBF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87E61430-4243-45F2-B74E-0A4C096CEBF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3836F4A8-4B35-4F5E-BB0F-DAD374297525}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3836F4A8-4B35-4F5E-BB0F-DAD374297525}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3836F4A8-4B35-4F5E-BB0F-DAD374297525}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3836F4A8-4B35-4F5E-BB0F-DAD374297525}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{87E61430-4243-45F2-B74E-0A4C096CEBF3} = {64AE7FF4-8481-46AA-8C52-097E005A3CC1}
+		{3836F4A8-4B35-4F5E-BB0F-DAD374297525} = {64AE7FF4-8481-46AA-8C52-097E005A3CC1}
 	EndGlobalSection
 EndGlobal

@@ -5,13 +5,28 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>37330a91-37a8-4737-a5be-fa49b1fb7928</ProjectGuid>
+    <ProjectGuid>{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Archimedes.Patterns</RootNamespace>
     <AssemblyName>Archimedes.Patterns</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,8 +55,59 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Cancelable\CancelableBase.cs" />
+    <Compile Include="Cancelable\ICancelableWorker.cs" />
+    <Compile Include="Commands\CommandEventArgs.cs" />
+    <Compile Include="Commands\CommandUndo.cs" />
+    <Compile Include="Commands\CompositeUnDoCommand.cs" />
+    <Compile Include="Commands\CustomCommandManager.cs" />
+    <Compile Include="Commands\ICommandManager.cs" />
+    <Compile Include="Commands\ICommandSimple.cs" />
+    <Compile Include="Commands\ICommandUndo.cs" />
+    <Compile Include="Commands\NotExecutableCommand.cs" />
+    <Compile Include="Commands\States\BoolStateCommand.cs" />
+    <Compile Include="Commands\States\IStateCommand.cs" />
+    <Compile Include="Commands\States\StateChangingEventArgs.cs" />
+    <Compile Include="Commands\States\StateCommand.cs" />
+    <Compile Include="Commands\TransparentCommandUndo.cs" />
+    <Compile Include="Data\LimitedStack.cs" />
+    <Compile Include="Data\ObservableLimitedStack.cs" />
+    <Compile Include="Lambda.cs" />
+    <Compile Include="MVMV\NotifyChangedBase.cs" />
+    <Compile Include="MVMV\ViewModelBase.cs" />
+    <Compile Include="MVMV\ViewModels\PoolCache\ICacheable.cs" />
+    <Compile Include="MVMV\ViewModels\PoolCache\IViewModelPoolService.cs" />
+    <Compile Include="MVMV\ViewModels\PoolCache\ViewModelPoolService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IServiceLocator.cs" />
+    <Compile Include="Services\ServiceLocator.cs" />
+    <Compile Include="Services\ServiceLocatorInstance.cs" />
+    <Compile Include="Singleton.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Commands\Design\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
