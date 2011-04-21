@@ -91,6 +91,8 @@
     <Compile Include="ViewModels\ChooseItemViewModel.cs" />
     <Compile Include="ViewModels\Commands\CommandManagerViewModel.cs" />
     <Compile Include="ViewModels\Commands\UnDoCommandViewModel.cs" />
+    <Compile Include="ViewModels\Trees\ITreeViewItemViewModel.cs" />
+    <Compile Include="ViewModels\Trees\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\ViewBuilder.cs" />
     <Compile Include="ViewModels\WorkSpaceViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
