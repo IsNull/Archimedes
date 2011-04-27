@@ -28,6 +28,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         IAvalonService _avalonService = ServiceLocator.Instance.Resolve<IAvalonService>();
         DockingManager _dockManager = null;
         string _statusBarText = "";
+        bool _isbackgroundWorking = false;
 
         #endregion
 
@@ -37,6 +38,11 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// Raised when the Statusbar Text has changed
         /// </summary>
         public event EventHandler StatusTextChanged;
+
+        /// <summary>
+        /// Raised when the BackgroundWorking State has changed
+        /// </summary>
+        public event EventHandler IsBackgroundWorkingChanged;
 
         #endregion
 
@@ -172,6 +178,23 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             return System.Windows.MessageBox.Show(Window.GetWindow(DockManager), messageBoxText, caption, button, icon);
         }
         #endregion
+
+        
+        /// <summary>
+        /// Indicates that a background action is currently launched
+        /// </summary>
+        public bool IsBackgroundWorking {
+            get { return _isbackgroundWorking; }
+            set {
+
+                if (_isbackgroundWorking != value) {
+
+                    _isbackgroundWorking = value;
+                    if (IsBackgroundWorkingChanged != null)
+                        IsBackgroundWorkingChanged(this, EventArgs.Empty);
+                }
+            }
+        }
 
         #region Loader
 
