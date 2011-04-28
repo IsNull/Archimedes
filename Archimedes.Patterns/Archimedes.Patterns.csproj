@@ -78,6 +78,16 @@
     <Compile Include="Commands\TransparentCommandUndo.cs" />
     <Compile Include="Data\LimitedStack.cs" />
     <Compile Include="Data\ObservableLimitedStack.cs" />
+    <Compile Include="Data\Tree\ComplexSubtree.cs" />
+    <Compile Include="Data\Tree\ComplexTree.cs" />
+    <Compile Include="Data\Tree\ComplexTreeNode.cs" />
+    <Compile Include="Data\Tree\ComplexTreeNodeList.cs" />
+    <Compile Include="Data\Tree\Enums.cs" />
+    <Compile Include="Data\Tree\ITreeBasic.cs" />
+    <Compile Include="Data\Tree\SimpleSubtree.cs" />
+    <Compile Include="Data\Tree\SimpleTree.cs" />
+    <Compile Include="Data\Tree\SimpleTreeNode.cs" />
+    <Compile Include="Data\Tree\SimpleTreeNodeList.cs" />
     <Compile Include="Lambda.cs" />
     <Compile Include="MVMV\NotifyChangedBase.cs" />
     <Compile Include="MVMV\ViewModelBase.cs" />
