@@ -19,10 +19,7 @@ namespace AvalonDock
 
         internal AvalonDockWindow()
         {
-            if (AvalonGlobals.UseMinWindowSize) {
-                this.MinHeight = 30;
-                this.MinWidth = 150;
-            }
+
         }
     }
 }
