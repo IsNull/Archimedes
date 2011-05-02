@@ -25,8 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample3", "Sample3\Sample3.
 		{3836F4A8-4B35-4F5E-BB0F-DAD374297525} = {3836F4A8-4B35-4F5E-BB0F-DAD374297525}
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "AvalonDock.Setup", "AvalonDock.Setup\AvalonDock.Setup.vdproj", "{79AEBF6C-3063-4BDA-96FE-728F38841404}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample4", "Sample4\Sample4.csproj", "{86D1C009-D351-4D09-BFE3-A608FEFFBA82}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{657BF351-BD85-4F4C-974A-35DC8761B329}"
@@ -152,12 +150,6 @@ Global
 		{F729FF99-2991-4819-9855-7CD7A1199089}.Release|Mixed Platforms.Build.0 = Release|x86
 		{F729FF99-2991-4819-9855-7CD7A1199089}.Release|x86.ActiveCfg = Release|x86
 		{F729FF99-2991-4819-9855-7CD7A1199089}.Release|x86.Build.0 = Release|x86
-		{79AEBF6C-3063-4BDA-96FE-728F38841404}.Debug|Any CPU.ActiveCfg = Debug
-		{79AEBF6C-3063-4BDA-96FE-728F38841404}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{79AEBF6C-3063-4BDA-96FE-728F38841404}.Debug|x86.ActiveCfg = Debug
-		{79AEBF6C-3063-4BDA-96FE-728F38841404}.Release|Any CPU.ActiveCfg = Release
-		{79AEBF6C-3063-4BDA-96FE-728F38841404}.Release|Mixed Platforms.ActiveCfg = Release
-		{79AEBF6C-3063-4BDA-96FE-728F38841404}.Release|x86.ActiveCfg = Release
 		{86D1C009-D351-4D09-BFE3-A608FEFFBA82}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{86D1C009-D351-4D09-BFE3-A608FEFFBA82}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{86D1C009-D351-4D09-BFE3-A608FEFFBA82}.Debug|Mixed Platforms.Build.0 = Debug|x86

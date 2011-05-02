@@ -19,12 +19,6 @@ namespace AvalonDock
 
         internal AvalonDockWindow()
         {
-            if (AvalonGlobals.UseTransparentWindwos) {
-                WindowStyle = System.Windows.WindowStyle.None;
-                AllowsTransparency = true;
-                this.Background = Brushes.Transparent;
-            }
-
             if (AvalonGlobals.UseMinWindowSize) {
                 this.MinHeight = 30;
                 this.MinWidth = 150;
