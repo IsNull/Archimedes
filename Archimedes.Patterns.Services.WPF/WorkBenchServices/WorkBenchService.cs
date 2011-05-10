@@ -188,7 +188,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             set {
 
                 if (_isbackgroundWorking != value) {
-
                     _isbackgroundWorking = value;
                     if (IsBackgroundWorkingChanged != null)
                         IsBackgroundWorkingChanged(this, EventArgs.Empty);
