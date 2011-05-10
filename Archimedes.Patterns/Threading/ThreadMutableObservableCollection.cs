@@ -7,7 +7,10 @@ using System.Collections.Specialized;
 
 namespace Archimedes.Patterns.Threading
 {
-   
+   /// <summary>
+   /// Provides a simple Thread-mutable collection with basic sync. The Invokes/Events are NOT gueranteed to run in the GUI Thread.
+   /// </summary>
+   /// <typeparam name="T"></typeparam>
     public class ThreadMutableObservableCollection<T> : IList<T>, INotifyCollectionChanged
     {
         #region Fields
