@@ -51,6 +51,11 @@ namespace AvalonDock
 
         internal FloatingWindow()
         {
+            if (AvalonGlobals.UseMinWindowSize) {
+                this.MinHeight = 30;
+                this.MinWidth = 150;
+            }
+
             this.Loaded += new RoutedEventHandler(OnLoaded);
             this.Unloaded += new RoutedEventHandler(OnUnloaded);
 

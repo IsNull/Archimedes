@@ -73,11 +73,27 @@ namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
 
         void OnCacheExpired(object sender, EventArgs e) {
             // remove the object from cache to allow disposing / GC Garbage collection
+            // otherwise we produce a memory leak here
+
+            #region Remove from Domain Model - VM Map
+
+            var val = (from kv in _domainModel2VMmap
+                       where ReferenceEquals(kv.Value, sender)
+                       select kv.Key).ToList();
+            foreach (var dm in val)
+                _domainModel2VMmap.Remove(val.First());
+
+            #endregion
+
+            #region Remove from VM Cache
+
             Type t = sender.GetType();
             if (_viewModels.ContainsKey(t)) {
                 if (ReferenceEquals(_viewModels[t], sender))
                     _viewModels[t] = null;
             }
+
+            #endregion
         }
 
     }

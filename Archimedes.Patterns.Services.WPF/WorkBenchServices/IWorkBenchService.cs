@@ -20,6 +20,11 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// </summary>
         event EventHandler StatusTextChanged;
 
+        /// <summary>
+        /// Raised when the BackgroundWorking State has changed
+        /// </summary>
+        event EventHandler IsBackgroundWorkingChanged;
+
         #endregion
 
         void ActivateMainWindow();
@@ -103,6 +108,10 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// </summary>
         string StatusText { get; set; }
 
+        /// <summary>
+        /// Indicates that a background action is currently launched
+        /// </summary>
+        bool IsBackgroundWorking { get; set; }
 
         //!! Dont expose AvalonDock primitives in this generic interface!
 

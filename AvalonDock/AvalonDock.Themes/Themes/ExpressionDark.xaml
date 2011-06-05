@@ -765,7 +765,8 @@
     <Style x:Key="{x:Type ad:DockableFloatingWindow}" TargetType="{x:Type ad:DockableFloatingWindow}">
         <Setter Property="ResizeMode" Value="NoResize" />
         <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ad:DockableFloatingWindow}">
@@ -864,7 +865,8 @@
     <Style x:Key="{x:Type ad:UnDockableFloatingWindow}" TargetType="{x:Type ad:UnDockableFloatingWindow}">
         <Setter Property="ResizeMode" Value="NoResize" />
         <Setter Property="WindowStyle" Value="None" />
-        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ad:UnDockableFloatingWindow}">
@@ -963,10 +965,13 @@
     <Style x:Key="{x:Type ad:DocumentFloatingWindow}" TargetType="{x:Type ad:DocumentFloatingWindow}">
         <Setter Property="ResizeMode" Value="NoResize" />
         <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="AllowsTransparency" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ad:DocumentFloatingWindow}">
-                    <Border x:Name="ExtBorder">
+                    <Border x:Name="ExtBorder" BorderBrush="{DynamicResource {ComponentResourceKey {x:Type ad:DockingManager}, {x:Static ad:AvalonDockBrushes.WindowBorderBrush}}}"
+                            CornerRadius="5" BorderThickness="3">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="5"/>
@@ -979,7 +984,7 @@
                                 <RowDefinition Height="*"/>
                                 <RowDefinition Height="5"/>
                             </Grid.RowDefinitions>
-                            <Border x:Name="PART_MoveAnchor" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3"
+                            <Border x:Name="PART_MoveAnchor" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" CornerRadius="2,2,0,0"
                                     Background="{DynamicResource {ComponentResourceKey {x:Type ad:DockingManager}, {x:Static ad:AvalonDockBrushes.DocumentHeaderBackgroundSelected}}}">
                                 <Grid x:Name="intTitleGrid">
                                     <Grid.ColumnDefinitions>
