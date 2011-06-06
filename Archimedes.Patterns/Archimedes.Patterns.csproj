@@ -71,6 +71,7 @@
     <Compile Include="Commands\ICommandSimple.cs" />
     <Compile Include="Commands\ICommandUndo.cs" />
     <Compile Include="Commands\NotExecutableCommand.cs" />
+    <Compile Include="Commands\SimpleRelayCommand.cs" />
     <Compile Include="Commands\States\BoolStateCommand.cs" />
     <Compile Include="Commands\States\IStateCommand.cs" />
     <Compile Include="Commands\States\StateChangingEventArgs.cs" />

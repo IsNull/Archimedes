@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AvalonDock.Themes", "Avalon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns.WPF", "Archimedes.Patterns.WPF\Archimedes.Patterns.WPF.csproj", "{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Geometry", "Archimedes.Geometry\Archimedes.Geometry.csproj", "{B16862E8-837A-411A-8D07-09CCDA8CE3D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B16862E8-837A-411A-8D07-09CCDA8CE3D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B16862E8-837A-411A-8D07-09CCDA8CE3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B16862E8-837A-411A-8D07-09CCDA8CE3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B16862E8-837A-411A-8D07-09CCDA8CE3D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

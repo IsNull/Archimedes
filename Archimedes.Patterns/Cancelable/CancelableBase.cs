@@ -68,6 +68,7 @@ namespace Archimedes.Patterns.Cancelable
         protected void InitWorker() {
             CancellationPending = false;
             IsBusy = true;
+            State = WorkProgressState.Unknown;
         }
     }
 

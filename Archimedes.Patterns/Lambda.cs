@@ -7,6 +7,9 @@ using System.Reflection;
 
 namespace Archimedes.Patterns
 {
+    /// <summary>
+    /// Provides some common used static Lambda Helper Methods
+    /// </summary>
     public static class Lambda
     {
         /// <summary>
