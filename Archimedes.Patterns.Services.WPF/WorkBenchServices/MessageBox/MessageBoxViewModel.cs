@@ -14,8 +14,8 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
     public class MessageBoxViewModel : WorkspaceViewModel
     {
         #region Fields
-
-        string _message;
+        string _detailHeader = "Details";
+        string _message, _detailmessage;
         string _imageSource;
         MessageBoxType _messageBoxImage = MessageBoxType.None;
         readonly MessageBoxWPFButton _buttons = MessageBoxWPFButton.OK;
@@ -34,6 +34,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
 
         #region Properties
 
+        /// <summary>
+        /// The Message to display
+        /// </summary>
         public string Message {
             get { return _message; }
             set {
@@ -42,6 +45,35 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
             }
         }
 
+        /// <summary>
+        /// Specail Detail Message Data which is displayed in an Scrollable Messagefield
+        /// </summary>
+        public string DetailMessage {
+            get { return _detailmessage; }
+            set { 
+                _detailmessage = value;
+                OnPropertyChanged(
+                    () => DetailMessage,
+                    () => DetailMessageVisible);
+            }
+        }
+        
+        public string DetailHeader {
+            get { return _detailHeader; }
+            set { _detailHeader = value; }
+        }
+
+        public Visibility DetailMessageVisible {
+            get { return (string.IsNullOrWhiteSpace(DetailMessage)) ? Visibility.Collapsed : Visibility.Visible; }
+        }
+
+        public int? MaxTextAeraWidth {
+            get { return (DetailMessageVisible == Visibility.Collapsed) ? (int?)500 : null; }
+        }
+
+        /// <summary>
+        /// URI to the Image to display
+        /// </summary>
         public string ImageSource {
             get { return _imageSource; }
             set { 
@@ -57,6 +89,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
 
         #region Buttons
 
+        /// <summary>
+        /// Button text 1
+        /// </summary>
         public string Button1 {
             get { return _button1; }
             set {
@@ -65,7 +100,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
             }
         }
 
-
+        /// <summary>
+        /// Button text 2
+        /// </summary>
         public string Button2 {
             get { return _button2; }
             set {
@@ -74,6 +111,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
             }
         }
 
+        /// <summary>
+        /// Button text 3
+        /// </summary>
         public string Button3 {
             get { return _button3; }
             set {
@@ -84,6 +124,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
 
         #endregion
 
+        /// <summary>
+        /// Predefined Images
+        /// </summary>
         public MessageBoxType MessageBoxImage {
             set {
                 _messageBoxImage = value;
@@ -170,6 +213,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
         #region Public Methods
 
         public UserControl BuildView() {
+            //todo: localisation
             UserControl view = null;
 
             if (_buttons == MessageBoxWPFButton.OK) {

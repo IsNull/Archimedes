@@ -4,18 +4,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Margin="10" MaxWidth="500">
+             d:DesignHeight="97" d:DesignWidth="416">
+
+    <Grid Margin="10" VerticalAlignment="Stretch" MaxWidth="{Binding MaxTextAeraWidth}" HorizontalAlignment="Stretch" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
+        <!--Row 1-->
         <Image MaxWidth="48" MaxHeight="48" Margin="10" Source="{Binding ImageSource}" />
-        <!--../../Images/dialog-clean.ico 
+        <!--
+        Source="{Binding ImageSource}"
+        ../../Images/dialog-clean.ico 
         Text="{Binding Message}"-->
 
         <TextBlock Grid.Column="2" HorizontalAlignment="Left"
-                   Text="{Binding Message}" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap" />
+                   Text="{Binding Message, FallbackValue=DebugText}" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap" />
+
+        <!--Row 2: Detail Section -->
+        <Expander Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding DetailMessageVisible, FallbackValue=Collapsed}">
+            <Expander.Header>
+                <TextBlock Text="{Binding DetailHeader}"/>
+            </Expander.Header>
+            <TextBox Height="Auto" MaxHeight="350" Text="{Binding DetailMessage}"
+                     VerticalScrollBarVisibility="Auto" IsReadOnly="True"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+        </Expander>
+
     </Grid>
 </UserControl>
