@@ -21,28 +21,18 @@ namespace Archimedes.Geometry
             set;
         }
 
-        public Point StartPoint {
+        public Vector2 StartPoint {
             get;
             set;
         }
 
-        //public Pen Pen {
-        //    get { return _pen; }
-        //    set { _pen = value; }
-        //}
-
-        public VectorDrawer(Vector2 v, Point startPoint) {
+        public VectorDrawer(Vector2 v, Vector2 startPoint) {
             Vector = v;
-            StartPoint = startPoint;
-        }
-
-        public VectorDrawer(Vector2 v, PointF startPoint) {
-            Vector = v;
-            StartPoint = new Point((int)startPoint.X, (int)startPoint.Y);
+            StartPoint = new Vector2(startPoint.X, startPoint.Y);
         }
 
         public void Draw(System.Drawing.Graphics G) {
-            var line = new Line2(StartPoint, Vector.GetPoint(StartPoint));
+            var line = new Line2(StartPoint, StartPoint + Vector);
             line.Pen = _thisPen;
             line.Draw(G);
         }

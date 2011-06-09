@@ -15,17 +15,17 @@ namespace Archimedes.Geometry.Primitives
         #region Fields
 
         private Image _image;
-        private PointF _location;
+        private Vector2 _location;
 
         #endregion
 
         #region Constructors
 
         public ImageDrawable() {
-            _location = new PointF(0, 0);
+            _location = new Vector2(0, 0);
         }
 
-        public ImageDrawable(Image image, PointF? location = null) : this() {
+        public ImageDrawable(Image image, Vector2? location = null) : this() {
             Image = image;
             _location = location ?? _location;
         }
@@ -50,7 +50,7 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public new PointF Location {
+        public new Vector2 Location {
             get { return _location; }
             set {_location = value;}
         }

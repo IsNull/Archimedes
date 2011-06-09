@@ -12,8 +12,8 @@ namespace Archimedes.Geometry
     public interface IGeometryBase : IDrawable, IDisposable
     {
         //Pen Pen { get; set; }
-        System.Drawing.PointF Location { get; set; }
-        System.Drawing.PointF MiddlePoint { get; set; }
+        Vector2 Location { get; set; }
+        Vector2 MiddlePoint { get; set; }
         
 
         IGeometryBase Clone();
@@ -22,7 +22,7 @@ namespace Archimedes.Geometry
         void Move(Vector2 mov);
         void Scale(float fact);
 
-        IEnumerable<PointF> ToVertices();
+        IEnumerable<Vector2> ToVertices();
 
         void AddToPath(GraphicsPath path);
 
@@ -50,14 +50,14 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        IEnumerable<PointF> Intersect(IGeometryBase other);
+        IEnumerable<Vector2> Intersect(IGeometryBase other);
 
         /// <summary>
         /// Checks if a Point is contained in the geometry
         /// </summary>
         /// <param name="Point"></param>
         /// <returns></returns>
-        bool Contains(System.Drawing.PointF Point);
+        bool Contains(Vector2 pos);
 
     }
 }

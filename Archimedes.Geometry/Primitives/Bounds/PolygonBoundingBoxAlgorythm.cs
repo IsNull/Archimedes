@@ -13,7 +13,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
     public abstract class PolygonBoundingBoxAlgorythm
     {
         protected Polygon2 _polygon;
-        protected PointF[] _vertices;
+        protected Vector2[] _vertices;
 
         /// <summary>
         /// Set the Poligon to process.
@@ -28,6 +28,6 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// Process the set Polygon with the underlying algorythm and find the Boundingbox.
         /// </summary>
         /// <returns>Returns the Boundingbox as Array of 4 Points</returns>
-        public abstract PointF[] FindBounds();
+        public abstract Vector2[] FindBounds();
     }
 }

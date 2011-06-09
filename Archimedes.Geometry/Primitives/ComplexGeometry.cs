@@ -14,7 +14,7 @@ namespace Archimedes.Geometry.Primitives
         #region Fields
 
         List<IGeometryBase> _geometries = new List<IGeometryBase>();
-        List<PointF> _vertices = new List<PointF>();
+        List<Vector2> _vertices = new List<Vector2>();
         object _verticesLock = new object();
         bool _verticesInvalidated = true;
         RectangleF _boundingbox;
@@ -80,11 +80,11 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Properties
 
-        public PointF FirstPoint {
+        public Vector2 FirstPoint {
             get { return ToPath().FirstPoint; }
         }
 
-        public PointF LastPoint {
+        public Vector2 LastPoint {
             get { return ToPath().LastPoint; }
         }
 
@@ -102,14 +102,14 @@ namespace Archimedes.Geometry.Primitives
             _boundingboxsmallInvalidated = true;
         }
 
-        public PointF Location {
+        public Vector2 Location {
             get { return MiddlePoint; }
             set { MiddlePoint = value; }
         }
 
-        public PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get {
-                PointF mpoint = new PointF(0, 0);
+                Vector2 mpoint = new Vector2(0, 0);
 
                 var middlepoints = (from g in _geometries
                                    select g.MiddlePoint).ToList();
@@ -167,7 +167,7 @@ namespace Archimedes.Geometry.Primitives
             this.Pen = prototype.Pen;
         }
 
-        public bool Contains(PointF point) {
+        public bool Contains(Vector2 point) {
             foreach (var g in _geometries) {
                 if (g.Contains(point)) {
                     return true;
@@ -175,7 +175,7 @@ namespace Archimedes.Geometry.Primitives
             }
             return false;
         }
-        public bool Contains(PointF point, ref IGeometryBase subGeometry) {
+        public bool Contains(Vector2 point, ref IGeometryBase subGeometry) {
             subGeometry = null;
             foreach (var g in _geometries) {
                 if (g.Contains(point)) {
@@ -225,8 +225,8 @@ namespace Archimedes.Geometry.Primitives
 
         #region Intersection Methods
 
-        public IEnumerable<PointF> Intersect(IGeometryBase other){
-           var intercepts = new List<PointF>();
+        public IEnumerable<Vector2> Intersect(IGeometryBase other){
+           var intercepts = new List<Vector2>();
            foreach (var g in _geometries) {
                 intercepts.AddRange(g.Intersect(other));
            }
@@ -246,7 +246,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region To -> Transformer Methods
 
-        public IEnumerable<PointF> ToVertices() {
+        public IEnumerable<Vector2> ToVertices() {
             lock (_verticesLock) {
                 if (_verticesInvalidated) {
                     _vertices.Clear();

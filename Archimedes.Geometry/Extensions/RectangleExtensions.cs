@@ -26,8 +26,8 @@ namespace Archimedes.Geometry.Extensions
             return new Point(oRect.X + oRect.Width / 2, oRect.Y + oRect.Height / 2);
         }
 
-        public static PointF MiddlePoint(this RectangleF oRect) {
-            return new PointF(oRect.X + oRect.Width / 2, oRect.Y + oRect.Height / 2);
+        public static Vector2 MiddlePoint(this RectangleF oRect) {
+            return new Vector2(oRect.X + oRect.Width / 2, oRect.Y + oRect.Height / 2);
         }
         #endregion
 
@@ -37,18 +37,18 @@ namespace Archimedes.Geometry.Extensions
 
         #region ToVertices
 
-        public static IEnumerable<PointF> ToVertices(this Rectangle rect) {
+        public static IEnumerable<Vector2> ToVertices(this Rectangle rect) {
             return ToVerticesConv(rect);
         }
-        public static IEnumerable<PointF> ToVertices(this RectangleF rect) {
+        public static IEnumerable<Vector2> ToVertices(this RectangleF rect) {
             return ToVerticesConv(rect);
         }
-        private static IEnumerable<PointF>  ToVerticesConv(RectangleF rect) {
-            var vertices = new PointF[4];
+        private static IEnumerable<Vector2> ToVerticesConv(RectangleF rect) {
+            var vertices = new Vector2[4];
             vertices[0] = rect.Location;
-            vertices[1] = new PointF(rect.Location.X + rect.Width, rect.Location.Y);
-            vertices[2] = new PointF(rect.Location.X + rect.Width, rect.Location.Y + rect.Height);
-            vertices[3] = new PointF(rect.Location.X, rect.Location.Y + rect.Height);
+            vertices[1] = new Vector2(rect.Location.X + rect.Width, rect.Location.Y);
+            vertices[2] = new Vector2(rect.Location.X + rect.Width, rect.Location.Y + rect.Height);
+            vertices[3] = new Vector2(rect.Location.X, rect.Location.Y + rect.Height);
             return vertices;
         }
 

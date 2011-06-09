@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Vertex = System.Drawing.PointF;
+using Vertex = Archimedes.Geometry.Vector2;
 using Archimedes.Geometry.Extensions;
 using System.Drawing.Drawing2D;
 using System.Drawing;
@@ -92,10 +92,11 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        public PointF LastPoint {
+        public Vector2 LastPoint {
             get { return gpath.PointCount != 0 ? gpath.GetLastPoint() : new PointF(); }
         }
-        public PointF FirstPoint {
+
+        public Vector2 FirstPoint {
             get {
                 return gpath.PointCount != 0 ? gpath.PathPoints[0] : new PointF();
             }
@@ -108,12 +109,12 @@ namespace Archimedes.Geometry.Primitives
 
         #region IGeometryBase
 
-        public System.Drawing.PointF Location {
+        public Vector2 Location {
             get { return MiddlePoint; }
             set { MiddlePoint = value; }
         }
 
-        public System.Drawing.PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get {
                 return this.BoundingBox.MiddlePoint();
             }
@@ -164,11 +165,11 @@ namespace Archimedes.Geometry.Primitives
             throw new NotImplementedException();
         }
 
-        public IEnumerable<System.Drawing.PointF> Intersect(IGeometryBase other) {
+        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
             throw new NotImplementedException();
         }
 
-        public bool Contains(System.Drawing.PointF Point) {
+        public bool Contains(Vector2 Point) {
             throw new NotImplementedException();
         }
 

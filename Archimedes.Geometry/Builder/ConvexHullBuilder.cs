@@ -31,7 +31,7 @@ namespace Archimedes.Geometry.Builder
 
     public class ConvexHullBuilder
     {
-        public static Polygon2 Convexhull(IEnumerable<PointF> vertices) {
+        public static Polygon2 Convexhull(IEnumerable<Vector2> vertices) {
 
             if (vertices.Count() == 0)
                 return new Polygon2();
@@ -65,7 +65,7 @@ namespace Archimedes.Geometry.Builder
             PointEx[] res = new PointEx[lower.Size() + upper.Size()];
             lower.CopyInto(res, 0);
             upper.CopyInto(res, lower.Size());
-            return new Polygon2(PointEx.ToPointArray(res));
+            return new Polygon2(PointEx.ToVertices(res));
         }
 
 
@@ -112,15 +112,15 @@ namespace Archimedes.Geometry.Builder
             return x == p2.x && y == p2.y;
         }
 
-        public PointF ToPoint(){
-            return new PointF((float)x, (float)y);
+        public Vector2 ToVector() {
+            return new Vector2((float)x, (float)y);
         }
 
-        public static PointF[] ToPointArray(IEnumerable<PointEx> pexs) {
+        public static Vector2[] ToVertices(IEnumerable<PointEx> pexs) {
             return (from p in pexs
-                    select (p.ToPoint())).ToArray();
+                    select (p.ToVector())).ToArray();
         }
-        public static PointEx[] ToPointExArray(IEnumerable<PointF> pexs) {
+        public static PointEx[] ToPointExArray(IEnumerable<Vector2> pexs) {
             return (from p in pexs
                     select (new PointEx(p.X,p.Y))).ToArray();
         }

@@ -32,9 +32,9 @@ namespace Archimedes.Geometry.Primitives.Bounds
 
         // The area of the current and best bounding rectangles.
         private float _currentArea = float.MaxValue;
-        protected PointF[] _currentRectangle = null;
+        protected Vector2[] _currentRectangle = null;
         private float _bestArea = float.MaxValue;
-        protected PointF[] _bestRectangle = null;
+        protected Vector2[] _bestRectangle = null;
 
         #endregion
 
@@ -65,13 +65,13 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// Find a smallest bounding rectangle.
         /// </summary>
         /// <returns></returns>
-        public override PointF[] FindBounds() {
+        public override Vector2[] FindBounds() {
 
             if (_polygon == null)
                 throw new ArgumentNullException();
 
             if (_vertices.Count() == 0)
-                return new PointF[0];
+                return new Vector2[0];
 
             // This algorithm assumes the polygon
             // is oriented counter-clockwise.
@@ -134,12 +134,12 @@ namespace Archimedes.Geometry.Primitives.Bounds
             currentControlPoint = -1;
 
             // Reset the current and best bounding rectangle.
-            _currentRectangle = new PointF[] 
+            _currentRectangle = new Vector2[] 
             { 
-                new PointF(minx, miny),
-                new PointF(maxx, miny),
-                new PointF(maxx, maxy),
-                new PointF(minx, maxy),
+                new Vector2(minx, miny),
+                new Vector2(maxx, miny),
+                new Vector2(maxx, maxy),
+                new Vector2(minx, maxy),
             };
             _currentArea = (maxx - minx) * (maxy - miny);
             _bestRectangle = _currentRectangle;
@@ -282,7 +282,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
             float dy3 = dx;
 
             // Find the points of intersection.
-            _currentRectangle = new PointF[4];
+            _currentRectangle = new Vector2[4];
             FindIntersection(px0, py0, px0 + dx0, py0 + dy0, px1, py1, px1 + dx1, py1 + dy1, ref _currentRectangle[0]);
             FindIntersection(px1, py1, px1 + dx1, py1 + dy1, px2, py2, px2 + dx2, py2 + dy2, ref _currentRectangle[1]);
             FindIntersection(px2, py2, px2 + dx2, py2 + dy2, px3, py3, px3 + dx3, py3 + dy3, ref _currentRectangle[2]);
@@ -344,7 +344,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// <param name="B2"></param>
         /// <param name="intersect"></param>
         /// <returns></returns>
-        private bool FindIntersection(float X1, float Y1, float X2, float Y2, float A1, float B1, float A2, float B2, ref PointF intersect) {
+        private bool FindIntersection(float X1, float Y1, float X2, float Y2, float A1, float B1, float A2, float B2, ref Vector2 intersect) {
             float dx = X2 - X1;
             float dy = Y2 - Y1;
             float da = A2 - A1;
@@ -357,7 +357,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
             // Find the point of intersection.
             s = (dx * (B1 - Y1) + dy * (X1 - A1)) / (da * dy - db * dx);
             t = (da * (Y1 - B1) + db * (A1 - X1)) / (db * dx - da * dy);
-            intersect = new PointF(X1 + t * dx, Y1 + t * dy);
+            intersect = new Vector2(X1 + t * dx, Y1 + t * dy);
             return true;
         }
 

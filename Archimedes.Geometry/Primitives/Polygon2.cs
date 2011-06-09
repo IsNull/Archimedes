@@ -17,10 +17,10 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Fields
 
-        protected List<PointF> _vertices = new List<PointF>();
+        protected Vertices _vertices = new Vertices();
         private bool _boundCircleChanged = false;
 
-        private PointF _middlePoint;
+        private Vector2 _middlePoint;
         private Circle2 _boundingCircle;
 
         protected Pen _pen = null;
@@ -35,10 +35,7 @@ namespace Archimedes.Geometry.Primitives
 
         public Polygon2() { }
 
-        public Polygon2(IEnumerable<Point> vertices) {
-            this.AddRange(vertices);
-        }
-        public Polygon2(IEnumerable<PointF> vertices) {
+        public Polygon2(IEnumerable<Vector2> vertices) {
             this.AddRange(vertices);
         }
 
@@ -69,25 +66,21 @@ namespace Archimedes.Geometry.Primitives
             _boundCircleChanged = true;
         }
 
-        public void Add(PointF uvertex) {
+        public void Add(Vector2 uvertex) {
             _vertices.Add(uvertex);
             _boundCircleChanged = true;
         }
-        public void Remove(Point uvertex) {
+        public void Remove(Vector2 uvertex) {
             _vertices.Remove(uvertex);
             _boundCircleChanged = true;
         }
-        public void AddRange(IEnumerable<Point> uvertices) {
-            foreach (var vertex in uvertices)
-                this.Add(vertex);
-        }
-        public void AddRange(IEnumerable<PointF> uvertices) {
+        public void AddRange(IEnumerable<Vector2> uvertices) {
             _vertices.AddRange(uvertices);
             _boundCircleChanged = true;
         }
 
         public void CleanUp() {
-            _vertices = _vertices.Distinct().ToList();
+            _vertices = new Vertices(_vertices.Distinct());
         }
 
         #endregion
@@ -179,7 +172,7 @@ namespace Archimedes.Geometry.Primitives
             int num_points = _vertices.Count;
             if (num_points == 0)
                 return 0;
-            var pts = new PointF[num_points + 1];
+            var pts = new Vector2[num_points + 1];
             _vertices.CopyTo(pts, 0);
             pts[num_points] = _vertices[0];
 
@@ -244,11 +237,11 @@ namespace Archimedes.Geometry.Primitives
 /// </summary>
 /// <param name="p">The Point to check</param>
 /// <returns>True if the Point is contained in the Polygon</returns>
-public bool Contains(Point p) {
+public bool Contains(Vector2 p) {
     int counter = 0;
     int i;
     double xinters;
-    PointF p1, p2;
+    Vector2 p1, p2;
     int N = _vertices.Count;
 
     if(!this.BoundingCircle.Contains(p)) {
@@ -288,19 +281,19 @@ public bool Contains(Point p) {
         }
 
         public bool IntersectsWith(IGeometryBase other) {
-            IEnumerable<PointF> collisionPoints;
+            IEnumerable<Vector2> collisionPoints;
             return InterSectsOther(other, false, out collisionPoints);
         }
 
-        public IEnumerable<PointF> Intersect(IGeometryBase other) {
-            IEnumerable<PointF> collisionPoints;
+        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+            IEnumerable<Vector2> collisionPoints;
             InterSectsOther(other, true, out collisionPoints);
             return collisionPoints;
         }
 
 
-        private bool InterSectsOther(IGeometryBase other, bool collectAllPoints , out IEnumerable<PointF> _collisionPoints) {
-            var collisionPoints = new List<PointF>();
+        private bool InterSectsOther(IGeometryBase other, bool collectAllPoints, out IEnumerable<Vector2> _collisionPoints) {
+            var collisionPoints = new List<Vector2>();
             _collisionPoints = collisionPoints;
 
             if (other is IClosedGeometry) { /* if other is not a closed element, it must have one vertex in this polygon */
@@ -380,7 +373,7 @@ public bool Contains(Point p) {
         /// Get the middlepoint of this polygon
         /// </summary>
         /// <returns></returns>
-        public PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get {
                 if(_boundCircleChanged) {
                     _middlePoint = FindCentroid();
@@ -397,14 +390,14 @@ public bool Contains(Point p) {
         /// Find the polygon's centroid.
         /// </summary>
         /// <returns></returns>
-        private PointF FindCentroid() {
+        private Vector2 FindCentroid() {
 
             if (_vertices.Count == 0)
-                return new PointF(); // in case there are no vertices
+                return new Vector2(); // in case there are no vertices
 
             // Add the first point at the end of the array.
             int num_points = _vertices.Count;
-            var pts = new PointF[num_points + 1];
+            var pts = new Vector2[num_points + 1];
             _vertices.CopyTo(pts, 0);
             pts[num_points] = _vertices[0];
 
@@ -431,7 +424,7 @@ public bool Contains(Point p) {
                 X = -X;
                 Y = -Y;
             }
-            return new PointF(X, Y);
+            return new Vector2(X, Y);
         }
 
         #endregion
@@ -443,7 +436,7 @@ public bool Contains(Point p) {
         /// </summary>
         /// <param name="angle">Angle to rotate</param>
         /// <param name="origin">Point to rotate around. Default is middlepoint of this polygon</param>
-        public void Rotate(float angle, PointF? origin = null) {
+        public void Rotate(float angle, Vector2? origin = null) {
             var newVertices = VerticesHelper.RotateVertices(this.ToVertices(), origin ?? this.MiddlePoint, angle);
             this.Clear();
             this.AddRange(newVertices);
@@ -487,7 +480,7 @@ public bool Contains(Point p) {
             return clone;
         }
 
-        public IEnumerable<PointF> ToVertices() {
+        public IEnumerable<Vector2> ToVertices() {
             return this._vertices.Distinct();
         }
 
@@ -502,7 +495,7 @@ public bool Contains(Point p) {
         public void Draw(Graphics G) {
             try {
                 var path = new GraphicsPath();
-                path.AddPolygon(_vertices.ToArray());
+                path.AddPolygon(_vertices.ToPointArray());
                 if (this.FillBrush != null)
                     G.FillPath(this.FillBrush, path);
                 G.DrawPath(_pen, path);
@@ -516,10 +509,10 @@ public bool Contains(Point p) {
         #region IGeometryBase
 
         public void AddToPath(GraphicsPath path) {
-            path.AddPolygon(_vertices.ToArray());
+            path.AddPolygon(_vertices.ToPointArray());
         }
 
-        public PointF Location {
+        public Vector2 Location {
             get { return this.MiddlePoint; }
             set { this.MiddlePoint = value; }
         }
@@ -528,17 +521,10 @@ public bool Contains(Point p) {
         public IGeometryBase Clone() {
             return new Polygon2(this);
         }
-        /// <summary>
-        /// Checks if a Point is contained this Polygon
-        /// </summary>
-        /// <param name="pointf"></param>
-        /// <returns></returns>
-        public bool Contains(PointF p) {
-            return this.Contains(p.ToPoint());
-        }
+
 
         public RectangleF BoundingBox {
-            get { return VerticesHelper.BoundingBox(_vertices); }
+            get { return _vertices.BoundingBox; }
         }
 
         #endregion

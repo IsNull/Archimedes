@@ -21,8 +21,8 @@ namespace Archimedes.Geometry.Primitives
 
         const float roundingDiff = 0.5f;
 
-        PointF _start;
-        PointF _end;
+        Vector2 _start;
+        Vector2 _end;
 
         Pen _pen = null;
         bool _penSharedResource = false;
@@ -34,16 +34,16 @@ namespace Archimedes.Geometry.Primitives
         public Line2() { }
 
         public Line2(float Lenght) {
-            this.P1 = new PointF(0, 0);
-            this.P2 = new PointF(Lenght,0);
+            this.P1 = new Vector2(0, 0);
+            this.P2 = new Vector2(Lenght, 0);
         }
 
-        public Line2(PointF uP1, PointF uP2) {
+        public Line2(Vector2 uP1, Vector2 uP2) {
             this._start = uP1;
             this._end = uP2;
         }
 
-        public Line2(PointF uP1, PointF uP2, Pen uPen) {
+        public Line2(Vector2 uP1, Vector2 uP2, Pen uPen) {
             this._start = uP1;
             this._end = uP2;
             this.Pen = uPen;
@@ -79,12 +79,12 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Propertys
 
-        public PointF P1 {
+        public Vector2 P1 {
             get { return _start; }
             set { _start = value; }
         }
 
-        public PointF P2 {
+        public Vector2 P2 {
             get { return _end; }
             set { _end = value; }
         }
@@ -139,7 +139,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static double CalcLenght(PointF start, PointF end) {
+        public static double CalcLenght(Vector2 start, Vector2 end) {
             return Math.Sqrt(Math.Pow(end.X - start.X, 2) + Math.Pow(end.Y - start.Y, 2));
         }
       
@@ -220,8 +220,8 @@ namespace Archimedes.Geometry.Primitives
             return new Vector2(this.P1, this.P2);
         }
 
-        public IEnumerable<PointF> ToVertices() {
-            return new PointF[] { this.P1, this.P2 };
+        public IEnumerable<Vector2> ToVertices() {
+            return new Vector2[] { this.P1, this.P2 };
         }
 
         #endregion
@@ -232,7 +232,7 @@ namespace Archimedes.Geometry.Primitives
             path.AddLine(this.P1, this.P2);
         }
 
-        public PointF Location {
+        public Vector2 Location {
             get {
                 return this.P1;
             }
@@ -241,7 +241,7 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get {
                 Vector2 vLine = (new Vector2(P1, P2)) / 2;
                 return vLine.GetPoint(P1);
@@ -275,7 +275,7 @@ namespace Archimedes.Geometry.Primitives
 
         public RectangleF BoundingBox {
 	        get { 
-                PointF SP;
+                Vector2 SP;
                 if (P1.X > P2.X) {
                     SP = P1;
                 }else if (P1.X == P2.X){
@@ -317,8 +317,8 @@ namespace Archimedes.Geometry.Primitives
         #region Geomtry Base Collision
 
 
-        public IEnumerable<PointF> Intersect(IGeometryBase other){
-            var pnts = new List<PointF>();
+        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+            var pnts = new List<Vector2>();
 
             if (other is Line2) {
                 var pnt = this.InterceptLine(other as Line2);
@@ -349,7 +349,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="Point"></param>
         /// <returns>true/false</returns>
-        public bool Contains(PointF Point) {
+        public bool Contains(Vector2 Point) {
             return Contains(Point, 0.0);
         }
 
@@ -363,11 +363,11 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="pt">Target Point</param>
         /// <param name="closest">Closest Point on Line to Targetpoint</param>
         /// <returns>Distance to target point</returns>
-        public double FindDistanceToPoint(PointF pt, out PointF closest) {
+        public double FindDistanceToPoint(Vector2 pt, out Vector2 closest) {
             return Line2.FindDistanceToPoint(pt, this, out closest);
         }
-        public double FindDistanceToPoint(PointF pt) {
-            PointF dummy;
+        public double FindDistanceToPoint(Vector2 pt) {
+            Vector2 dummy;
             return Line2.FindDistanceToPoint(pt, this, out dummy);
         }
 
@@ -378,7 +378,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="line">line</param>
         /// <param name="closest">closes Point on Line to target Point</param>
         /// <returns>Smallest distance to the targetpoint</returns>
-        public static double FindDistanceToPoint(PointF pt, Line2 line, out PointF closest) {
+        public static double FindDistanceToPoint(Vector2 pt, Line2 line, out Vector2 closest) {
             var p1 = line.P1; var p2 = line.P2;
             float dx = p2.X - p1.X;
             float dy = p2.Y - p1.Y;
@@ -396,15 +396,15 @@ namespace Archimedes.Geometry.Primitives
             // See if this represents one of the segment's
             // end points or a point in the middle.
             if (t < 0) {
-                closest = new PointF(p1.X, p1.Y);
+                closest = p1;
                 dx = pt.X - p1.X;
                 dy = pt.Y - p1.Y;
             } else if (t > 1) {
-                closest = new PointF(p2.X, p2.Y);
+                closest = p2;
                 dx = pt.X - p2.X;
                 dy = pt.Y - p2.Y;
             } else {
-                closest = new PointF(p1.X + t * dx, p1.Y + t * dy);
+                closest = new Vector2(p1.X + t * dx, p1.Y + t * dy);
                 dx = pt.X - closest.X;
                 dy = pt.Y - closest.Y;
             }

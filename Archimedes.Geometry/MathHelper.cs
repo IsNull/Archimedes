@@ -9,18 +9,21 @@ using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry
 {
-    public static class Common
+    public static class MathHelper
     {
 
         public static Matrix FlipY {
-            get { return new Matrix(1, 0, 0,
-                                   -1, 0, 0); }
+            get {
+                return new Matrix(1, 0, 0,
+                                 -1, 0, 0);
+            }
         }
         public static Matrix FlipX {
-            get { return new Matrix(-1, 0, 0,
-                                     1, 0, 0); }
+            get {
+                return new Matrix(-1, 0, 0,
+                                   1, 0, 0);
+            }
         }
-
 
         /// <summary>
         /// To convert a degrees value to radians, multiply it by pi/180 (approximately 0.01745329252).
@@ -28,7 +31,7 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="degree"></param>
         /// <returns></returns>
-        public static float Degree2RAD(float degree) {
+        public static float ToRadians(float degree) {
             return (float)(degree * Math.PI / 180);
         }
 
@@ -37,7 +40,7 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="RAD"></param>
         /// <returns></returns>
-        public static float RAD2Degree(float RAD) {
+        public static float ToDegree(float RAD) {
             return (float)(RAD * 180 / Math.PI);
         }
 

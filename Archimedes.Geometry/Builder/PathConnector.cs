@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing.Drawing2D;
-using Vertex = System.Drawing.PointF;
+using Vertex = Archimedes.Geometry.Vector2;
 using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry.Builder

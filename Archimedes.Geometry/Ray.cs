@@ -14,7 +14,7 @@ namespace Archimedes.Geometry
     {
         #region Fields
 
-        PointF _location;
+        Vector2 _location;
         Pen _pen = null;
         Vector2 _rayvector;
 
@@ -22,13 +22,13 @@ namespace Archimedes.Geometry
 
         #region Constructors
 
-        public Ray(Vector2 v, PointF startpnt)
+        public Ray(Vector2 v, Vector2 startpnt)
             : this(v.X, v.Y, startpnt) { }
 
         public Ray(Ray prototype)
             : this(prototype.Vector, prototype.Location) { }
 
-        public Ray(float x, float y, PointF p) {
+        public Ray(float x, float y, Vector2 p) {
             _rayvector = new Vector2(x, y);
             this.Location = p;
         }
@@ -40,7 +40,7 @@ namespace Archimedes.Geometry
         /// <summary>
         /// Startpoint of this Ray
         /// </summary>
-        public PointF Location {
+        public Vector2 Location {
             get { return _location; }
             set { _location = value; }
         }
@@ -79,7 +79,7 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public bool Contains(PointF target) {
+        public bool Contains(Vector2 target) {
             var v = new Vector2(this.Location, target);
             return (Vector.IsDirectionEqual(v));
         }
@@ -91,12 +91,12 @@ namespace Archimedes.Geometry
 
         #region Intersection Ray - Ray
 
-        public PointF Intersect(Ray uRay) {
+        public Vector2 Intersect(Ray uRay) {
             var point = IntersectN(uRay);
             if (point.HasValue)
                 return point.Value;
             else
-                return new PointF();
+                return new Vector2();
         }
 
         public bool IntersectWith(Ray uRay) {
@@ -109,8 +109,8 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="uRay"></param>
         /// <returns></returns>
-        PointF? IntersectN(Ray uRay) {
-            PointF intersectionpnt = new PointF();
+        Vector2? IntersectN(Ray uRay) {
+            Vector2 intersectionpnt = new Vector2();
 
             if (Vector.IsParallel(uRay.Vector)) {
                 return null;

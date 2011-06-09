@@ -16,7 +16,7 @@ namespace Archimedes.Geometry.Primitives
         #region Fields
         //Internal Data which defines a rotatable rect
 
-        PointF _middlePoint;
+        Vector2 _middlePoint;
         float _width;
         float _height;
         float _rotateAngle = 0; //rotation is considered centric
@@ -84,7 +84,7 @@ namespace Archimedes.Geometry.Primitives
 
         public Rectangle2() { }
 
-        public Rectangle2(PointF[] vertices) {
+        public Rectangle2(Vector2[] vertices) {
 
             if (vertices.Count() != 4)
                 throw new ArgumentException("You must submit 4 vertices!");
@@ -104,10 +104,10 @@ namespace Archimedes.Geometry.Primitives
         public Rectangle2(float x, float y, float uwidth, float uheight, float angle = 0 ) {
             _width = uwidth;
             _height = uheight;
-            this.Location = new PointF(x, y);
+            this.Location = new Vector2(x, y);
             this.Angle = angle;
         }
-        public Rectangle2(PointF uLocation, SizeF uSize, float angle = 0) {
+        public Rectangle2(Vector2 uLocation, SizeF uSize, float angle = 0) {
             this.Size = uSize;
             this.Location = uLocation;
             this.Angle = angle;
@@ -148,8 +148,8 @@ namespace Archimedes.Geometry.Primitives
         /// Gets the Vertices (Points) of this Rectangle
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<PointF> ToVertices() {
-            var rect = new RectangleF(new PointF(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2), this.Size);
+        public IEnumerable<Vector2> ToVertices() {
+            var rect = new RectangleF(new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2), this.Size);
             var vertices = rect.ToVertices();
 
             if (_rotateAngle != 0)
@@ -205,9 +205,9 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Gets or sets the Location of the upper Left Corner of this Rectangle
         /// </summary>
-        public PointF Location {
+        public Vector2 Location {
             get {
-                var upperleftCorner = new PointF(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2);
+                var upperleftCorner = new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2);
                 if (this.IsRotated) { //optimisation - do only if we have a rotated rect
                     var vToUpperLeft = new Vector2(MiddlePoint, upperleftCorner);
                     upperleftCorner = vToUpperLeft.GetRotated(Angle).GetPoint(MiddlePoint);
@@ -231,7 +231,7 @@ namespace Archimedes.Geometry.Primitives
             throw new NotImplementedException();
         }
 
-        public PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get { return this._middlePoint; }
             set { this._middlePoint = value; }
         }
@@ -262,7 +262,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region IGeometryBase Collision Detection
 
-        public bool Contains(PointF point) {
+        public bool Contains(Vector2 point) {
             if (this.IsRotated)
                 return this.ToPolygon2().Contains(point);
             else //optimisation - use simple rect if no rotation is given
@@ -286,8 +286,8 @@ namespace Archimedes.Geometry.Primitives
             }
             return false;
         }
-        public IEnumerable<PointF> Intersect(IGeometryBase other) {
-            var intersections = new List<PointF>();
+        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+            var intersections = new List<Vector2>();
 
             foreach (var line in this.ToLines())
                 intersections.AddRange(other.Intersect(line));

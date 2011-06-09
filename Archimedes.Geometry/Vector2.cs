@@ -31,18 +31,11 @@ namespace Archimedes.Geometry
         }
 
         /// <summary>
-        /// Create a new 2D Vector with given x/y Parts (as point)
-        /// </summary>
-        /// <param name="P1"></param>
-        public Vector2(PointF P1) : 
-            this(P1.X, P1.Y) { }
-
-        /// <summary>
         /// Create a new 2D Vector from 2 given Points
         /// </summary>
         /// <param name="P1"></param>
         /// <param name="P2"></param>
-        public Vector2(PointF P1, PointF P2)
+        public Vector2(Vector2 P1, Vector2 P2)
             : this(P2.X - P1.X, P2.Y - P1.Y) { }
 
         #endregion
@@ -143,13 +136,23 @@ namespace Archimedes.Geometry
             return v1;
         }
 
+
+
+        public static implicit operator PointF(Vector2 other) {
+            return new PointF(other.X, other.Y);
+        }
+
+        public static implicit operator Vector2(PointF other) {
+            return new Vector2(other.X, other.Y);
+        }
+
         #endregion    
 
         #region Static Methods
 
         public static Vector2 VectorFromAngle(float angle, float length) {
-            var gk = length * (float)Math.Sin(Common.Degree2RAD(angle));
-            var ak = length * (float)Math.Cos(Common.Degree2RAD(angle));
+            var gk = length * (float)Math.Sin(MathHelper.ToRadians(angle));
+            var ak = length * (float)Math.Cos(MathHelper.ToRadians(angle));
             return new Vector2(ak, gk);
         }
 
@@ -213,7 +216,7 @@ namespace Archimedes.Geometry
         /// <param name="angle"></param>
         public void Rotate(float angle) {
             float r = this.Lenght;
-            float thisAngle = Common.Degree2RAD(angle + this.GetAngle2X());
+            float thisAngle = MathHelper.ToRadians(angle + this.GetAngle2X());
             this = new Vector2(r * (float)Math.Cos(thisAngle), r * (float)Math.Sin(thisAngle));
         }
 
@@ -268,15 +271,12 @@ namespace Archimedes.Geometry
 
         #region Public Query Methods
 
-        public PointF GetPoint(PointF startPoint) {
-            return GetPoint(startPoint.X, startPoint.Y);
+        public Vector2 GetPoint(Vector2 startPoint) {
+            return startPoint + this;
         }
 
-        public PointF GetPoint(float XStart, float YStart) {
-            PointF EndPoint = new PointF((float)this.X, (float)this.Y);
-            EndPoint.X = EndPoint.X + XStart;
-            EndPoint.Y = EndPoint.Y + YStart;
-            return EndPoint;
+        public Vector2 GetPoint(float XStart, float YStart) {
+            return new Vector2(XStart,YStart) + this;
         }
 
         public bool IsParallel(Vector2 v2) {
@@ -304,7 +304,7 @@ namespace Archimedes.Geometry
             float degree;
             Vector2 xVector = new Vector2(1, 0); // X-Vector
 
-            degree = Common.RAD2Degree((float)Math.Acos(this.DotP(xVector) / this.Lenght));
+            degree = MathHelper.ToDegree((float)Math.Acos(this.DotP(xVector) / this.Lenght));
             if (this.Y < 0) {
                 degree = 360 - degree;
             }
@@ -321,7 +321,7 @@ namespace Archimedes.Geometry
         public float GetAngle2V(Vector2 vbase) {
             float gamma;
             float tmp = this.DotP(vbase) / (this.Lenght * vbase.Lenght);
-            gamma = Common.RAD2Degree((float)Math.Acos(tmp));
+            gamma = MathHelper.ToDegree((float)Math.Acos(tmp));
             if (gamma > 180) {          //from mathematic definition, it's always the shorter angle to return.
                 gamma = 360 - gamma;
             }

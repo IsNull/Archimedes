@@ -19,13 +19,13 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Internal Data
 
-        PointF _middlePoint = new PointF();
+        Vector2 _middlePoint;
         float _radius;
         Pen _pen = null;
         Brush _fillBrush = null;
 
         bool _verticesInValidated = true;
-        List<PointF> _vertices = new List<PointF>();
+        Vertices _vertices = new Vertices();
 
         #endregion
 
@@ -34,20 +34,20 @@ namespace Archimedes.Geometry.Primitives
         public Circle2() { }
 
         public Circle2(float x, float y, float uRadius, Pen pen) {
-            _middlePoint = new PointF(x, y);
+            _middlePoint = new Vector2(x, y);
             _radius = uRadius;
             Pen = pen;
         }
 
         public Circle2(float x, float y, float uRadius) {
-            _middlePoint = new PointF(x, y);
+            _middlePoint = new Vector2(x, y);
             _radius = uRadius;
         }
-        public Circle2(PointF uMiddlePoint, float uRadius) {
+        public Circle2(Vector2 uMiddlePoint, float uRadius) {
             _middlePoint = uMiddlePoint;
             _radius = uRadius;
         }
-        public Circle2(PointF uMiddlePoint, float uRadius, Pen pen) {
+        public Circle2(Vector2 uMiddlePoint, float uRadius, Pen pen) {
             _middlePoint = uMiddlePoint;
             _radius = uRadius;
             Pen = pen;
@@ -80,13 +80,13 @@ namespace Archimedes.Geometry.Primitives
 
         #region Exp Methods
 
-        private PointF AddPoints(PointF P1, PointF P2) {
+        private Vector2 AddPoints(Vector2 P1, Vector2 P2) {
             P1.X = P1.X + P2.X;
             P1.Y = P1.Y + P2.Y;
             return P1;
         }
 
-        private PointF SubPoints(PointF P1, PointF P2) {
+        private Vector2 SubPoints(Vector2 P1, Vector2 P2) {
             P1.X = P1.X - P2.X;
             P1.Y = P1.Y - P2.Y;
             return P1;
@@ -94,8 +94,8 @@ namespace Archimedes.Geometry.Primitives
 
 
 
-        public PointF GetPoint(float Angle){
-            var CirclePoint = new PointF(0,0);
+        public Vector2 GetPoint(float Angle){
+            var CirclePoint = new Vector2(0,0);
 
             CirclePoint.X = (float)Math.Cos(Degree2RAD(Angle)) * this.Radius;
             CirclePoint.Y = (float)Math.Sin(Degree2RAD(Angle)) * this.Radius;
@@ -110,7 +110,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region Intersection
 
-        public bool Contains(PointF point, float range) {
+        public bool Contains(Vector2 point, float range) {
             return Circle2.Contains(this.MiddlePoint, this.Radius, point, range);
         }
 
@@ -123,7 +123,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="checkPoint"></param>
         /// <param name="range"></param>
         /// <returns></returns>
-        public static bool Contains(PointF middlePoint, float radius, PointF checkPoint, float range = 0) {
+        public static bool Contains(Vector2 middlePoint, float radius, Vector2 checkPoint, float range = 0) {
             var len = Line2.CalcLenght(middlePoint, checkPoint);
             var dist = radius - (len - range);
             return (dist >= 0);
@@ -147,10 +147,10 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="uLine"></param>
         /// <returns></returns>
-        private List<PointF> InterceptLine(Line2 uLine) {
-            var InterSeptionPoints = new List<PointF>();
-            var P1 = new PointF();
-            var P2 = new PointF();
+        private List<Vector2> InterceptLine(Line2 uLine) {
+            var InterSeptionPoints = new List<Vector2>();
+            var P1 = new Vector2();
+            var P2 = new Vector2();
 
             var M = this.Location;
 
@@ -214,8 +214,8 @@ namespace Archimedes.Geometry.Primitives
 
         #region Circle Rectangle
 
-        private List<PointF> InterceptRectangle2(Rectangle2 rect) {
-            var intersections = new List<PointF>();
+        private List<Vector2> InterceptRectangle2(Rectangle2 rect) {
+            var intersections = new List<Vector2>();
             foreach (var border in rect.ToLines()) {
                 intersections.AddRange(this.InterceptLine(border));
                 border.Dispose();
@@ -231,8 +231,8 @@ namespace Archimedes.Geometry.Primitives
             return !(Line2.CalcLenght(this.MiddlePoint, other.MiddlePoint) > (this.Radius + other.Radius));
         }
 
-        private IEnumerable<PointF> InterceptCircle(Circle2 other) {
-            List<PointF> interceptions = new List<PointF>();
+        private IEnumerable<Vector2> InterceptCircle(Circle2 other) {
+            List<Vector2> interceptions = new List<Vector2>();
             if(InterceptWithCircle(other)){
 
                 var d = Line2.CalcLenght(this.MiddlePoint, other.MiddlePoint);
@@ -257,7 +257,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="cA"></param>
         /// <param name="cB"></param>
         /// <returns></returns>
-        private IEnumerable<PointF> IntersectCircle(Circle2 cA, Circle2 cB) {
+        private IEnumerable<Vector2> IntersectCircle(Circle2 cA, Circle2 cB) {
 
             float dx = cA.MiddlePoint.X - cB.MiddlePoint.X;
             float dy = cA.MiddlePoint.Y - cB.MiddlePoint.Y;
@@ -265,7 +265,7 @@ namespace Archimedes.Geometry.Primitives
             float d = (float)Math.Sqrt(d2);
 
             if (d > cA.Radius + cB.Radius || d < Math.Abs(cA.Radius - cB.Radius))
-                return new PointF[]{}; // no solution
+                return new Vector2[]{}; // no solution
 
             float a = (cA.Radius2 - cB.Radius2 + d2) / (2 * d);
             float h = (float)Math.Sqrt(cA.Radius2 - a * a);
@@ -277,7 +277,7 @@ namespace Archimedes.Geometry.Primitives
             float pbX = x2 - h * (cB.MiddlePoint.Y - cA.MiddlePoint.Y) / d;
             float pbY = y2 + h * (cB.MiddlePoint.X - cA.MiddlePoint.X) / d;
 
-            return new PointF[] { new PointF(paX, paY), new PointF(pbX, pbY) };
+            return new Vector2[] { new Vector2(paX, paY), new Vector2(pbX, pbY) };
         }
 
         
@@ -297,12 +297,12 @@ namespace Archimedes.Geometry.Primitives
             this.Location = mov.GetPoint(this.Location);
         }
 
-        public PointF Location {
+        public Vector2 Location {
             get { return this.MiddlePoint; }
             set { this.MiddlePoint = value; }
         }
 
-        public PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get { return _middlePoint; }
             set { _middlePoint = value; }
         }
@@ -322,7 +322,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region GeomertryBase Collision
 
-        public virtual bool Contains(PointF Point) {
+        public virtual bool Contains(Vector2 Point) {
             return Contains(Point, 0);
         }
 
@@ -339,7 +339,7 @@ namespace Archimedes.Geometry.Primitives
                 return this.ToPolygon2().IntersectsWith(other);
         }
 
-        public virtual IEnumerable<PointF> Intersect(IGeometryBase other) {
+        public virtual IEnumerable<Vector2> Intersect(IGeometryBase other) {
 
             if (other is Line2) {
                 return this.InterceptLine(other as Line2);
@@ -404,7 +404,7 @@ namespace Archimedes.Geometry.Primitives
             Radius *= factor;
         }
 
-        public virtual IEnumerable<PointF> ToVertices() {
+        public virtual IEnumerable<Vector2> ToVertices() {
             if (_verticesInValidated) {
                 var path = new GraphicsPath();
                 _vertices.Clear();

@@ -21,19 +21,18 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Private Data
 
-        private float? _radius = null;
-        private float? _angle = null;
-        private float? _bowlen = null;
+        float? _radius = null;
+        float? _angle = null;
+        float? _bowlen = null;
 
-        private float _anglediff = 0f;
-
+        float _anglediff = 0f;
         
-        private Direction _direction = Direction.LEFT;
-        private PointF _startPoint;
-        private Vector2 _base = new Vector2();
+        Direction _direction = Direction.LEFT;
+        Vector2 _startPoint;
+        Vector2 _base;
 
-        private Pen _pen = null;
-        private bool _verticesInvalidated = true;
+        Pen _pen = null;
+        bool _verticesInvalidated = true;
 
         #endregion 
 
@@ -45,8 +44,8 @@ namespace Archimedes.Geometry.Primitives
             ArcFromProtoType(prototype);
         }
 
-        public Arc(PointF startPoint, PointF interPoint, PointF endPoint) {
-            ArcFromProtoType(FromDescriptorPoints(startPoint.ToPoint(), interPoint.ToPoint(), endPoint.ToPoint()));
+        public Arc(Vector2 start, Vector2 inter, Vector2 end) {
+            ArcFromProtoType(FromDescriptorPoints(start, inter, end));
         }
 
         private void ArcFromProtoType(Arc prototype){
@@ -70,15 +69,9 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Methods (Transformators)
 
-        //public Vector2 BaseVector {
-        //    get { return _base; }
-        //    set { _base = value; }
-        //}
+        public Vector2 GetPointOnArc(float DeltaAngle) {
 
-
-        public PointF GetPointOnArc(float DeltaAngle) {
-
-            PointF pointOnArc;
+            Vector2 pointOnArc;
             var fakeBaseVector = _base.GetRotated(this.AngleDiff);
 
             using (var helperArc = new Arc(Radius, DeltaAngle, null, _base, AngleDiff)) {
@@ -100,18 +93,18 @@ namespace Archimedes.Geometry.Primitives
         /// Calc the delta from the endpoint to M
         /// </summary>
         /// <param name="radius"></param>
-        /// <param name="RelAngle"></param>
+        /// <param name="relAngle"></param>
         /// <returns></returns>
         /// 
-        private PointF CalcEndpointDelta2M(float radius, float RelAngle) {
-            var Delta2M = new PointF(radius, radius);
-            Delta2M.X = (float)(Delta2M.X * Math.Cos(Common.Degree2RAD(RelAngle)));
-            Delta2M.Y = (float)(Delta2M.Y * Math.Sin(Common.Degree2RAD(RelAngle)));
-            return Delta2M;
+        private Vector2 CalcEndpointDelta2M(float radius, float relAngle) {
+            var delta2M = new Vector2(radius, radius);
+            delta2M.X = (float)(delta2M.X * Math.Cos(MathHelper.ToRadians(relAngle)));
+            delta2M.Y = (float)(delta2M.Y * Math.Sin(MathHelper.ToRadians(relAngle)));
+            return delta2M;
         }
 
-        /// <summary> Calc Relative angle
-        /// 
+        /// <summary> 
+        /// Calc Relative angle
         /// </summary>
         /// <param name="BowAngle">Bogenwinkel</param>
         /// <param name="BaseAngle">Winkel des Base Vector</param>
@@ -168,7 +161,7 @@ namespace Archimedes.Geometry.Primitives
         /// <summary> 
         /// Get the Arc's Endpoint
         /// </summary>
-        public PointF EndPoint {
+        public Vector2 EndPoint {
             get {
                 return GetPointOnArc(this.Angle);
             }
@@ -277,7 +270,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="splitPoint">Point to split</param>
         /// <returns></returns>
-        public IEnumerable<Arc> Split(PointF splitPoint) {
+        public IEnumerable<Arc> Split(Vector2 splitPoint) {
             var vstart = new Vector2(this.MiddlePoint, this.Location);
             var vsplit = new Vector2(this.MiddlePoint, splitPoint);
             return Split(vstart.GetAngle2V(vsplit));
@@ -332,8 +325,8 @@ namespace Archimedes.Geometry.Primitives
             return path;
         }
 
-        public IEnumerable<PointF> ToVertices() {
-            var vertices = new PointF[0];
+        public IEnumerable<Vector2> ToVertices() {
+            var vertices = new Vector2[0];
             try {
                 var path = ToPath();
                 path.Flatten();
@@ -357,14 +350,14 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geomerty Base
 
-        public PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get {
                 // calc vector which points to the arc middlepoint
                 var orthBaseVector = _base.GetOrthogonalVector(this.Direction);
                 orthBaseVector = orthBaseVector.GetRotated(this.AngleDiff);
                 orthBaseVector.Lenght = this.Radius;                              
 
-                return new PointF((float)(this.Location.X + orthBaseVector.X), (float)(this.Location.Y + orthBaseVector.Y));
+                return new Vector2((float)(this.Location.X + orthBaseVector.X), (float)(this.Location.Y + orthBaseVector.Y));
             }
             set {
                 var vMove = new Vector2(this.MiddlePoint, value);
@@ -379,7 +372,7 @@ namespace Archimedes.Geometry.Primitives
         /// <summary> Arc StartPoint
         /// 
         /// </summary>
-        public PointF Location {
+        public Vector2 Location {
             get { return _startPoint; }
             set {
                 _startPoint = value;

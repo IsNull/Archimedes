@@ -13,8 +13,8 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="other"></param>
         /// <returns>Returns a Point if func succeeds. If there is no interception, empty point is returned.</returns>
-        private PointF? InterceptLine(Line2 other) {
-            PointF interPnt = new PointF();
+        private Vector2? InterceptLine(Line2 other) {
+            Vector2 interPnt = new Vector2();
 
             if (other == null || this.EqualSlope(other)) {
                 return null;            // Lines are parralell
@@ -44,7 +44,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="other"></param>
         /// <returns>Returns true/false.</returns>
         public bool InterceptLineWith(Line2 other) {
-            var IsP = new PointF();
+            var IsP = new Vector2();
 
             if (other == null || this.EqualSlope(other))
                 return false;
@@ -91,8 +91,8 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="Rect1"></param>
         /// <param name="Intercepts">Points</param>
         /// <returns>Returns count of Interception Points</returns>
-        public List<PointF> InterceptRect(RectangleF Rect1) {
-            List<PointF> intercepts = new List<PointF>(2);
+        public List<Vector2> InterceptRect(RectangleF Rect1) {
+            List<Vector2> intercepts = new List<Vector2>(2);
             short i = 0;
             var borderLines = Line2.RectExplode(Rect1); //get 4 borderlines from rect
 
@@ -114,23 +114,23 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Checks if a Point is on the 2dLine (or in its range)
         /// </summary>
-        /// <param name="Point"></param>
+        /// <param name="pos"></param>
         /// <param name="Range"></param>
         /// <returns>true/false</returns>
-        public bool Contains(PointF Point, double Range) {
+        public bool Contains(Vector2 pos, double Range) {
 
             // we can't check directly with math functions,
             // as it is possible that the slope is undefinied. (on vertical lines)
 
             if (this.IsVertical) {
                 // vertical means that the slope is undefinied
-                if (Math.Abs(this.P1.X - Point.X) <= Range) {
-                    return (((Point.Y >= this.P1.Y) && (Point.Y <= this.P2.Y)) || ((Point.Y <= this.P1.Y) && (Point.Y >= this.P2.Y)));
+                if (Math.Abs(this.P1.X - pos.X) <= Range) {
+                    return (((pos.Y >= this.P1.Y) && (pos.Y <= this.P2.Y)) || ((pos.Y <= this.P1.Y) && (pos.Y >= this.P2.Y)));
                 } else 
                     return false;
             } else {
-                if (Math.Round(Math.Abs(Point.Y - (Point.X * (float)this.Slope + (float)this.YMovement)), 2) <= Range) {
-                    return (((Point.X >= this.P1.X) && (Point.X <= this.P2.X)) || ((Point.X <= this.P1.X) && (Point.X >= this.P2.X)));
+                if (Math.Round(Math.Abs(pos.Y - (pos.X * (float)this.Slope + (float)this.YMovement)), 2) <= Range) {
+                    return (((pos.X >= this.P1.X) && (pos.X <= this.P2.X)) || ((pos.X <= this.P1.X) && (pos.X >= this.P2.X)));
                 } else
                     return false;
             }

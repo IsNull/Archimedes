@@ -1,0 +1,163 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Drawing;
+
+namespace Archimedes.Geometry
+{
+    public class Vertices : IList<Vector2>, IEnumerable<Vector2>
+    {
+        List<Vector2> _vertices;
+
+        #region Constructor
+
+        public Vertices() {
+            _vertices = new List<Vector2>();
+        }
+
+        public Vertices(IEnumerable<Vector2> vertices) {
+            _vertices = new List<Vector2>(vertices);
+        }
+
+        #endregion
+
+        #region To Methods
+
+        public IEnumerable<PointF> ToPoints(){
+            foreach(var v in _vertices)
+                yield return new PointF(v.X,v.Y);
+        }
+
+        public PointF[] ToPointArray() {
+            return ToPoints().ToArray();
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        /// <summary>
+        /// Returns a Boundingbox (orth rect) around all vertices
+        /// </summary>
+        public RectangleF BoundingBox {
+            get {
+                if (_vertices.Count() == 0)
+                    return new RectangleF();
+
+                var minX = (from v in _vertices
+                            orderby v.X ascending
+                            select v.X).First();
+
+                var maxX = (from v in _vertices
+                            orderby v.X descending
+                            select v.X).First();
+
+                var minY = (from v in _vertices
+                            orderby v.Y ascending
+                            select v.Y).First();
+
+                var maxY = (from v in _vertices
+                            orderby v.Y descending
+                            select v.Y).First();
+
+                return new RectangleF(minX, minY, maxX - minX, maxY - minY);
+            }
+        }
+
+        #endregion
+
+        public void AddRange(IEnumerable<Vector2> vertices) {
+            _vertices.AddRange(vertices);
+        }
+
+        public void AddRange(IEnumerable<PointF> vertices) {
+            foreach (var p in vertices)
+                this.Add(p);
+        }
+
+        #region Public Modifiers/Creator Methods
+
+        /// <summary>
+        /// Rotates given vertices around a origin with given angle. New Vertices are returned.
+        /// </summary>
+        /// <param name="vertices">Array of Points</param>
+        /// <param name="rotationOrigin">Origin location of rotation</param>
+        /// <param name="angle">Rotation angle</param>
+        /// <returns>New vertices array</returns>
+        public Vertices RotateVertices(Vector2 rotationOrigin, float angle) {
+            Vector2 vrotate;
+            var cnt = _vertices.Count();
+            var rotVertices = new Vertices();
+            foreach (var vertex in _vertices) {
+                vrotate = new Vector2(rotationOrigin, vertex);
+                var pnt = vrotate.GetRotated(angle).GetPoint(rotationOrigin);
+                rotVertices.Add(pnt);
+            }
+            return rotVertices;
+        }
+
+        #endregion
+
+        #region IList
+
+        public int IndexOf(Vector2 item) {
+            return _vertices.IndexOf(item);
+        }
+
+        public void Insert(int index, Vector2 item) {
+            _vertices.Insert(index, item);
+        }
+
+        public void RemoveAt(int index) {
+            _vertices.RemoveAt(index);
+        }
+
+        public Vector2 this[int index] {
+            get {
+                return _vertices[index];
+            }
+            set {
+                _vertices[index] = value;
+            }
+        }
+
+        public void Add(Vector2 item) {
+            _vertices.Add(item);
+        }
+
+        public void Clear() {
+            _vertices.Clear();
+        }
+
+        public bool Contains(Vector2 item) {
+            return _vertices.Contains(item);
+        }
+
+        public void CopyTo(Vector2[] array, int arrayIndex) {
+            _vertices.CopyTo(array, arrayIndex);
+        }
+
+        public int Count {
+            get { return _vertices.Count; }
+        }
+
+        public bool IsReadOnly {
+            get { return false; /*_vertices.IsReadonly;*/ }
+        }
+
+        public bool Remove(Vector2 item) {
+            return _vertices.Remove(item);
+        }
+
+        public IEnumerator<Vector2> GetEnumerator() {
+            return _vertices.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+            return ((System.Collections.IEnumerable)_vertices).GetEnumerator();
+        }
+
+        #endregion
+    }
+}

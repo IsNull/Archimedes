@@ -28,7 +28,7 @@ namespace Archimedes.Geometry.Primitives
 
         private string text = "";
 
-        private PointF location = new PointF();
+        private Vector2 location = new Vector2();
         private TextAligning textAligning = TextAligning.Centered;
 
         //private SizeF mTextSize = new SizeF();
@@ -57,7 +57,7 @@ namespace Archimedes.Geometry.Primitives
             : this (uText){
             this.Font = uFont;
         }
-        public GdiText2(string uText, Font uFont, PointF uTextMiddlePoint)
+        public GdiText2(string uText, Font uFont, Vector2 uTextMiddlePoint)
             : this(uText, uFont) {
             this.MiddlePoint = uTextMiddlePoint;
         }
@@ -195,7 +195,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geomerty Base
 
-        public PointF Location {
+        public Vector2 Location {
             get { return location; }
             set { 
                 location = value;
@@ -211,7 +211,7 @@ namespace Archimedes.Geometry.Primitives
             throw new NotImplementedException();
         }
 
-        public PointF MiddlePoint {
+        public Vector2 MiddlePoint {
             get {
                 if (this.Aligning == TextAligning.Centered) {
                     return Location;
@@ -269,15 +269,15 @@ namespace Archimedes.Geometry.Primitives
                 return other.IntersectsWith(this);
         }
 
-        public IEnumerable<PointF> Intersect(IGeometryBase other) {
+        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
             if (other is GdiText2) 
                 return IntersectRect(other.BoundingBox);
             else
                 return other.Intersect(this);
         }
 
-        private IEnumerable<PointF> IntersectRect(RectangleF other) {
-            var pnts = new List<PointF>();
+        private IEnumerable<Vector2> IntersectRect(RectangleF other) {
+            var pnts = new List<Vector2>();
             foreach (var side in Line2.RectExplode(this.BoundingBox)) {
                 pnts.AddRange(side.InterceptRect(other));
             }
@@ -300,14 +300,14 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public bool Contains(PointF uPoint) {
+        public bool Contains(Vector2 uPoint) {
             return this.BoundingBox.Contains(new Point((int)uPoint.X, (int)uPoint.Y));
         }
 
 
         #endregion
 
-        public IEnumerable<PointF> ToVertices() {
+        public IEnumerable<Vector2> ToVertices() {
             return this.BoundingBox.ToVertices();
         }
 

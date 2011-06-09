@@ -15,12 +15,12 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="interPoint"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        private static Arc FromDescriptorPoints(Point startPoint, Point interPoint, Point endPoint) {
+        private static Arc FromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint) {
 
             var calcdirection = Direction.RIGHT;
 
             // Calculate Rays from the 3 given Points
-            var rays = RaysFromDescriptorPoints(startPoint, interPoint, endPoint, Common.Switch(calcdirection));
+            var rays = RaysFromDescriptorPoints(startPoint, interPoint, endPoint, MathHelper.Switch(calcdirection));
             // The two Rays intercept in the Arc's Middlepoint:
             var arcCenter = rays[0].Intersect(rays[1]);
             var arcRadius = new Vector2(startPoint, arcCenter).Lenght;
@@ -34,7 +34,7 @@ namespace Archimedes.Geometry.Primitives
             var newArc = new Arc(arcRadius, vMPToEndPoint.GetAngleBetweenClockWise(vMPToStartPoint, calcdirection), null, vbase)
             {
              Location = startPoint,
-             Direction = Common.Switch(calcdirection)
+             Direction = MathHelper.Switch(calcdirection)
             };
 
             return newArc;
@@ -48,7 +48,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="interPoint"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        private static Ray[] RaysFromDescriptorPoints(Point startPoint, Point interPoint, Point endPoint, Direction direction) {
+        private static Ray[] RaysFromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint, Direction direction) {
 
             Ray[] rays = new Ray[2];
 
