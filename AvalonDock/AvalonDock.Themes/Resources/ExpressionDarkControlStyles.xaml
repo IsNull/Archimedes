@@ -20,6 +20,9 @@
         <ResourceDictionary Source="ExpressionDark/UserControl.xaml"/>
         <ResourceDictionary Source="ExpressionDark/ScrollBar.xaml"/>
         <ResourceDictionary Source="ExpressionDark/ComboBox.xaml"/>
+
+        <ResourceDictionary Source="ExpressionDark/DataGrid.xaml"/>
+
     </ResourceDictionary.MergedDictionaries>
 
 

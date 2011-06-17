@@ -5,7 +5,7 @@
                     mc:Ignorable="d">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Shared.xaml" />
+        <ResourceDictionary Source="/AvalonDock.Themes;component/Resources/ExpressionDark/Shared.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
     <!-- SimpleStyles: Menu -->
