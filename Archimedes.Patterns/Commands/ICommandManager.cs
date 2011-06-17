@@ -6,6 +6,9 @@ using Archimedes.Patterns.Data;
 
 namespace Archimedes.Patterns.Commands
 {
+    /// <summary>
+    /// Keeps track of all executed commands and provides basic undo/redo capabilities
+    /// </summary>
     public interface ICommandManager
     {
         /// <summary>
