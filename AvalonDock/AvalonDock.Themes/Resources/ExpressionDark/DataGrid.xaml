@@ -357,19 +357,16 @@
 
     </Style>
 
+    
     <!--DataGrid -->
+    
     <Style TargetType='{x:Type controls:DataGrid}'>
         <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
-        <Setter Property='ScrollViewer.CanContentScroll' Value='False' />
-        <Setter Property='AutoGenerateColumns' Value='False' />
+        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
+
         <Setter Property="IsTabStop" Value="True" />
         <Setter Property="RowBackground" Value="{x:Null}" />
-        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
-        <Setter Property="AlternatingRowBackground" Value="#00FFFFFF" />
-        <Setter Property="GridLinesVisibility" Value="Vertical" />
-        <Setter Property="HorizontalGridLinesBrush" Value="#FFC9CACA" />
-        <Setter Property="IsTabStop" Value="True" />
-        <Setter Property="VerticalGridLinesBrush" Value="#FFC9CACA" />
+        
         <Setter Property="BorderBrush">
             <Setter.Value>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -380,24 +377,40 @@
                 </LinearGradientBrush>
             </Setter.Value>
         </Setter>
+        
+        <!--
+        using this makes the datagrid extremly slow!
+        <Setter Property='ScrollViewer.CanContentScroll' Value='False' />
+        -->
+
+        <Setter Property='IsSynchronizedWithCurrentItem' Value='True'/>
+        <Setter Property="EnableRowVirtualization" Value="True" />
+        <Setter Property='RowDetailsVisibilityMode' Value='VisibleWhenSelected' />
+        
+        <Setter Property="AlternatingRowBackground" Value="#00FFFFFF" />
+        <Setter Property="HorizontalGridLinesBrush" Value="#FFC9CACA" />
+        <Setter Property="VerticalGridLinesBrush" Value="#FFC9CACA" />
+
+        <Setter Property="GridLinesVisibility" Value="Vertical" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property='AutoGenerateColumns' Value='False' />
+        <Setter Property="IsTabStop" Value="True" />
         <Setter Property='SelectionUnit' Value='CellOrRowHeader' />
         <Setter Property='SelectionMode' Value='Single' />
+
         <Setter Property='IsReadOnly' Value='False' />
         <Setter Property='CanUserAddRows' Value='True' />
         <Setter Property='CanUserSortColumns' Value='True' />
         <Setter Property='CanUserResizeRows' Value='False' />
         <Setter Property='CanUserSortColumns' Value='True' />
-        <Setter Property='IsSynchronizedWithCurrentItem' Value='True'/>
-        <Setter Property="EnableRowVirtualization" Value="True" />
-        <Setter Property='CellStyle' Value='{StaticResource CellStyle}' />
-        <Setter Property='RowStyle' Value='{StaticResource RowStyle}' />
-        <Setter Property='RowDetailsVisibilityMode' Value='VisibleWhenSelected' />
-        <Setter Property='ColumnHeaderStyle' Value='{StaticResource ColumnHeaderStyle}' />
+
         <Setter Property='VerticalAlignment' Value='Center' />
         <Setter Property='FontFamily' Value='Verdana' />
-        <!--FontSize hack-->
         <Setter Property='FontSize' Value='11' />
-    </Style>
+        <Setter Property='ColumnHeaderStyle' Value='{StaticResource ColumnHeaderStyle}' />
+        <Setter Property='CellStyle' Value='{StaticResource CellStyle}' />
+        <Setter Property='RowStyle' Value='{StaticResource RowStyle}' />
+
+    </Style> 
 
 </ResourceDictionary>
