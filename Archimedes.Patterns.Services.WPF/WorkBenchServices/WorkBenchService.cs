@@ -119,17 +119,17 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         }
 
 
-        public void ShowDockedContent(WorkspaceViewModel viewModel, string title) {
+        public void ShowDockedContent(WorkspaceViewModel viewModel) {
             if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
-            var dockableContent = SetUpDockableContent(viewModel, title);
+            var dockableContent = SetUpDockableContent(viewModel, viewModel.DisplayName);
             dockableContent.Show(DockManager);
         }
 
-        public void ShowDockedDocument(WorkspaceViewModel viewModel, string title) {
+        public void ShowDockedDocument(WorkspaceViewModel viewModel) {
             if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
-            var dockableContent = SetUpDockableContent(viewModel, title);
+            var dockableContent = SetUpDockableContent(viewModel, viewModel.DisplayName);
             dockableContent.ShowAsDocument(DockManager);
         }
 

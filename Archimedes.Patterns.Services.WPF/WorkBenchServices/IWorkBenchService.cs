@@ -49,14 +49,14 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// </summary>
         /// <param name="viewModel"></param>
         /// <param name="title"></param>
-        void ShowDockedContent(WorkspaceViewModel viewModel, string title);
+        void ShowDockedContent(WorkspaceViewModel viewModel);
 
         /// <summary>
         /// Show the ViewModel as docked Document
         /// </summary>
         /// <param name="viewModel"></param>
         /// <param name="title"></param>
-        void ShowDockedDocument(WorkspaceViewModel viewModel, string title);
+        void ShowDockedDocument(WorkspaceViewModel viewModel);
 
         /// <summary>
         /// Show the ViewModel as floating window which can be redocked to the DockingManager.
