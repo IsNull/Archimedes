@@ -71,6 +71,7 @@
     <Compile Include="Commands\ICommandSimple.cs" />
     <Compile Include="Commands\ICommandUndo.cs" />
     <Compile Include="Commands\NotExecutableCommand.cs" />
+    <Compile Include="Commands\SimpleRelayCommand.cs" />
     <Compile Include="Commands\States\BoolStateCommand.cs" />
     <Compile Include="Commands\States\IStateCommand.cs" />
     <Compile Include="Commands\States\StateChangingEventArgs.cs" />
@@ -88,6 +89,9 @@
     <Compile Include="Data\Tree\SimpleTree.cs" />
     <Compile Include="Data\Tree\SimpleTreeNode.cs" />
     <Compile Include="Data\Tree\SimpleTreeNodeList.cs" />
+    <Compile Include="Notifications\NotificationCollection.cs" />
+    <Compile Include="Notifications\UserNotification.cs" />
+    <Compile Include="Threading\ThreadMutableObservableCollection.cs" />
     <Compile Include="Lambda.cs" />
     <Compile Include="MVMV\NotifyChangedBase.cs" />
     <Compile Include="MVMV\ViewModelBase.cs" />

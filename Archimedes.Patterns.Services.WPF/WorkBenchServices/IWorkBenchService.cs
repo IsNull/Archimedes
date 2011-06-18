@@ -74,25 +74,27 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="windowSize"></param>
         void ShowFloating(WorkspaceViewModel viewModel, SizeToContent sizeToContent = SizeToContent.WidthAndHeight, Size? windowSize = null);
 
-        /// <summary>
-        /// Show a common MessageBox Dialoge
-        /// </summary>
-        /// <param name="messageBoxText"></param>
-        /// <param name="caption"></param>
-        /// <param name="button"></param>
-        /// <param name="icon"></param>
-        /// <returns></returns>
-        //MessageBoxResult ShowMessageBox(string messageBoxText, string caption, MessageBoxButton button, MessageBoxImage icon);
 
         /// <summary>
         /// Show a common MessageBox Dialoge
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="title"></param>
-        /// <param name="type"></param>
+        /// <param name="message">The message to show</param>
+        /// <param name="title">The title of the MessageBox</param>
+        /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
         /// <param name="button"></param>
         /// <returns></returns>
         DialogWPFResult MessageBox(string message, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK);
+
+        /// <summary>
+        /// Show a common MessageBox Dialoge
+        /// </summary>
+        /// <param name="message">The message to show</param>
+        /// <param name="detail">The Detail Message which will be stored in a scrollable message presenter</param>
+        /// <param name="title">The title of the MessageBox</param>
+        /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
+        /// <param name="button"></param>
+        /// <returns></returns>
+        DialogWPFResult MessageBox(string message, string detail, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK);
 
         #endregion
 

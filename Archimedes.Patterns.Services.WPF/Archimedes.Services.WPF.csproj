@@ -77,6 +77,7 @@
     <Compile Include="FrameWorkDialogs\OpenFile\OpenFileDialog.cs" />
     <Compile Include="FrameWorkDialogs\OpenFile\OpenFileDialogViewModel.cs" />
     <Compile Include="FrameWorkDialogs\WindowWrapper.cs" />
+    <Compile Include="Notifications\NotificationPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WindowViewModelMapping\IWindowViewModelMappings.cs" />
     <Compile Include="WindowViewModelMapping\IWindowViewModelMappingsContract.cs" />
@@ -119,7 +120,7 @@
     </ProjectReference>
     <ProjectReference Include="..\AvalonDock\AvalonDock\AvalonDock.csproj">
       <Project>{87E61430-4243-45F2-B74E-0A4C096CEBF3}</Project>
-      <Name>AvalonDock %28AvalonDock\AvalonDock%29</Name>
+      <Name>AvalonDock</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

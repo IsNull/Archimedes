@@ -137,11 +137,41 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
         #region MessageBox 
 
+
+
         /// <summary>
-        /// Displays a simple MessageBox
+        /// Show a common MessageBox Dialoge with an additional Detail Message Section for large Text amounts
         /// </summary>
-        /// <param name="message"></param>
-        /// <param name="title"></param>
+        /// <param name="message">The message to show</param>
+        /// <param name="detail">The Detail Message which will be stored in a scrollable message presenter</param>
+        /// <param name="title">The title of the MessageBox</param>
+        /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
+        /// <param name="button"></param>
+        /// <returns></returns>
+        public DialogWPFResult MessageBox(string message, string detail, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
+            var vm = new MessageBoxViewModel(message, button);
+            vm.DetailMessage = detail;
+            vm.MessageBoxImage = type;
+            var view = vm.BuildView();
+
+            var dc = CreateDockableContent(title, view, vm);
+            dc.DockableStyle = AvalonDock.DockableStyle.Floating;
+            dc.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
+            dc.HideOnClose = false;
+            dc.Closing += (s, e) => vm.OnRequestClose();
+            dc.ShowAsDialoge(DockManager);
+
+            return vm.DialogeResult;
+        }
+
+        /// <summary>
+        /// Show a common MessageBox Dialoge
+        /// </summary>
+        /// <param name="message">The message to show</param>
+        /// <param name="title">The title of the MessageBox</param>
+        /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
+        /// <param name="button"></param>
+        /// <returns></returns>
         public DialogWPFResult MessageBox(string message, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
             var vm = new MessageBoxViewModel(message, button);
             vm.MessageBoxImage = type;
@@ -157,26 +187,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             return vm.DialogeResult;
         }
 
-        /// <summary>
-        /// Shows a message box.
-        /// </summary>
-        /// <param name="messageBoxText">A string that specifies the text to display.</param>
-        /// <param name="caption">A string that specifies the title bar caption to display.</param>
-        /// <param name="button">
-        /// A MessageBoxButton value that specifies which button or buttons to display.
-        /// </param>
-        /// <param name="icon">A MessageBoxImage value that specifies the icon to display.</param>
-        /// <returns>
-        /// A MessageBoxResult value that specifies which message box button is clicked by the user.
-        /// </returns>
-        [Obsolete("Use MessageBox")]
-        public MessageBoxResult ShowMessageBox(
-            string messageBoxText,
-            string caption,
-            MessageBoxButton button,
-            MessageBoxImage icon) {
-            return System.Windows.MessageBox.Show(Window.GetWindow(DockManager), messageBoxText, caption, button, icon);
-        }
         #endregion
 
         
@@ -188,7 +198,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             set {
 
                 if (_isbackgroundWorking != value) {
-
                     _isbackgroundWorking = value;
                     if (IsBackgroundWorkingChanged != null)
                         IsBackgroundWorkingChanged(this, EventArgs.Empty);

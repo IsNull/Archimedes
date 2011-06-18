@@ -7,8 +7,6 @@ namespace AvalonDock
 {
     public static class AvalonGlobals
     {
-        public static bool UseTransparentWindwos = false;
-
         public static bool UseMinWindowSize = true;
     }
 }
