@@ -1,6 +1,9 @@
 ﻿using System;
 namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
 {
+    /// <summary>
+    /// Pool cache for often used ViewModels
+    /// </summary>
     public interface IViewModelPoolService
     {
         void Register(object domainmodelInstance, ICacheable viewModelInstance);
