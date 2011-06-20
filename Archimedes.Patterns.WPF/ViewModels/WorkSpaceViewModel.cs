@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using Archimedes.Patterns.MVMV;
 using Archimedes.Patterns.WPF.Commands;
+using System.Linq.Expressions;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -43,6 +44,14 @@ namespace Archimedes.Patterns.WPF.ViewModels
         protected WorkspaceViewModel() { }
 
         #endregion // Constructor
+
+        /// <summary>
+        /// Updates the given Property identified by Expression
+        /// </summary>
+        /// <param name="expressions"></param>
+        public virtual void UpdateProperty(params Expression<Func<object>>[] expressions) {
+            OnPropertyChanged(expressions);
+        }
 
         #region CloseCommand
 

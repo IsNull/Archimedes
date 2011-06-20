@@ -6,6 +6,7 @@ namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Diagnostics;
 
     /// <summary>
     /// Pool for common used ViewModels
@@ -24,8 +25,13 @@ namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
         public T Resolve<T>() where T : class {
             if (_viewModels.ContainsKey(typeof(T))) {
                 return _viewModels[typeof(T)] as T;
-            } else
+            } else {
+                foreach (var vt in _viewModels.Keys)
+                    if (typeof(T).IsAssignableFrom(vt))
+                        return _viewModels[vt] as T;
+                Debug.Fail(string.Format("Can't find an Instance of {0} in the VM Pool!", typeof(T).Name));
                 return null;
+            }
         }
 
         /// <summary>

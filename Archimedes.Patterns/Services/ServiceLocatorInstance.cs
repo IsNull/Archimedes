@@ -39,14 +39,11 @@ namespace Archimedes.Patterns.Services
         /// <summary>
         /// Resolves a service.
         /// </summary>
+        [DebuggerStepThrough]
         public TInterface Resolve<TInterface>() {
-
-#if DEBUG
             if (!services.ContainsKey(typeof(TInterface))) {
-                Debug.Fail("Service '" + typeof(TInterface).Name + "' not Found!");
+                throw new ServiceNotFoundException(typeof(TInterface));
             }
-#endif
-
             return (TInterface)services[typeof(TInterface)].ServiceImplementation;
         }
 
@@ -138,5 +135,12 @@ namespace Archimedes.Patterns.Services
 
 
 
+    }
+
+    public class ServiceNotFoundException : Exception
+    {
+        public ServiceNotFoundException(Type serviceInterface)
+            : base(string.Format("Interface {0} was not found withhin this ServiceLocator!",serviceInterface.ToString())) {
+        }
     }
 }
