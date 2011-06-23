@@ -14,7 +14,8 @@ namespace Archimedes.Patterns.Services
         /// <summary>
         /// Registers a service.
         /// </summary>
-        public void Register<TInterface, TImplemention>() where TImplemention : TInterface {
+        public void Register<TInterface, TImplemention>() 
+            where TImplemention : TInterface, new() {
             Register<TInterface, TImplemention>(false);
         }
 
@@ -22,7 +23,8 @@ namespace Archimedes.Patterns.Services
         /// <summary>
         /// Registers a service as a singleton.
         /// </summary>
-        public void RegisterSingleton<TInterface, TImplemention>() where TImplemention : TInterface {
+        public void RegisterSingleton<TInterface, TImplemention>() 
+            where TImplemention : TInterface, new() {
             Register<TInterface, TImplemention>(true);
         }
 
@@ -32,14 +34,14 @@ namespace Archimedes.Patterns.Services
         /// <typeparam name="TInterface"></typeparam>
         /// <typeparam name="TImplemention"></typeparam>
         /// <param name="instance"></param>
-        public void RegisterInstance<TInterface, TImplemention>(TImplemention instance) where TImplemention : TInterface {
+        public void RegisterInstance<TInterface, TImplemention>(TImplemention instance) where TImplemention : TInterface{
             services.Add(typeof(TInterface), new ServiceInfo(instance));
         }
 
         /// <summary>
         /// Resolves a service.
         /// </summary>
-        [DebuggerStepThrough]
+        //[DebuggerStepThrough]
         public TInterface Resolve<TInterface>() {
             if (!services.ContainsKey(typeof(TInterface))) {
                 throw new ServiceNotFoundException(typeof(TInterface));
@@ -71,9 +73,9 @@ namespace Archimedes.Patterns.Services
         /// </summary>
         class ServiceInfo
         {
-            Type serviceImplementationType;
-            object serviceImplementation;
-            bool isSingleton;
+            Type _serviceImplementationType;
+            object _serviceImplementation;
+            bool _isSingleton;
 
 
             /// <summary>
@@ -82,8 +84,8 @@ namespace Archimedes.Patterns.Services
             /// <param name="serviceImplementationType">Type of the service implementation.</param>
             /// <param name="isSingleton">Whether the service is a Singleton.</param>
             public ServiceInfo(Type serviceImplementationType, bool isSingleton) {
-                this.serviceImplementationType = serviceImplementationType;
-                this.isSingleton = isSingleton;
+                _serviceImplementationType = serviceImplementationType;
+                _isSingleton = isSingleton;
             }
 
             /// <summary>
@@ -91,8 +93,9 @@ namespace Archimedes.Patterns.Services
             /// </summary>
             /// <param name="serviceImplementation">Instance. of service</param>
             public ServiceInfo(object serviceImplementation) {
-                this.serviceImplementationType = serviceImplementation.GetType();
-                this.isSingleton = true;
+                _serviceImplementationType = serviceImplementation.GetType();
+                _serviceImplementation = serviceImplementation;
+                _isSingleton = true;
             }
 
             /// <summary>
@@ -100,13 +103,13 @@ namespace Archimedes.Patterns.Services
             /// </summary>
             public object ServiceImplementation {
                 get {
-                    if (isSingleton) {
-                        if (serviceImplementation == null) {
-                            serviceImplementation = CreateInstance(serviceImplementationType);
+                    if (_isSingleton) {
+                        if (_serviceImplementation == null) {
+                            _serviceImplementation = CreateInstance(_serviceImplementationType);
                         }
-                        return serviceImplementation;
+                        return _serviceImplementation;
                     } else {
-                        return CreateInstance(serviceImplementationType);
+                        return CreateInstance(_serviceImplementationType);
                     }
                 }
             }

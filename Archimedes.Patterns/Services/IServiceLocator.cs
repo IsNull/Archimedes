@@ -10,8 +10,8 @@ namespace Archimedes.Patterns.Services
         bool Contains(Type t);
         object GetServiceImplementation(Type t);
         void RegisterInstance<TInterface, TImplemention>(TImplemention instance) where TImplemention : TInterface;
-        void Register<TInterface, TImplemention>() where TImplemention : TInterface;
-        void RegisterSingleton<TInterface, TImplemention>() where TImplemention : TInterface;
+        void Register<TInterface, TImplemention>() where TImplemention : TInterface, new();
+        void RegisterSingleton<TInterface, TImplemention>() where TImplemention : TInterface, new();
         TInterface Resolve<TInterface>();
     }
 }
