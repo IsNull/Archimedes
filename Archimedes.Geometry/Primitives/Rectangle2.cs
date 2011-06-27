@@ -148,14 +148,10 @@ namespace Archimedes.Geometry.Primitives
         /// Gets the Vertices (Points) of this Rectangle
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Vector2> ToVertices() {
+        public Vertices ToVertices() {
             var rect = new RectangleF(new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2), this.Size);
             var vertices = rect.ToVertices();
-
-            if (_rotateAngle != 0)
-                vertices = VerticesHelper.RotateVertices(vertices, this.MiddlePoint, Angle);
-
-            return vertices;
+            return  vertices.RotateVertices(this.MiddlePoint, Angle);
         }
 
         public Polygon2 ToPolygon2() {

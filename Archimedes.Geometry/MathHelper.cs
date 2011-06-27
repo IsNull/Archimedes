@@ -79,8 +79,8 @@ namespace Archimedes.Geometry
 
             if (geometry is Line2) {
                 var line = geometry as Line2;
-                start = line.P1.ToPoint(); ;
-                end = line.P2.ToPoint();
+                start = line.Start.ToPoint(); ;
+                end = line.End.ToPoint();
             } else if (geometry is Arc) {
                 var arc = geometry as Arc;
                 start = arc.Location.ToPoint();

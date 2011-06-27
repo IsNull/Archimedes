@@ -13,7 +13,9 @@ using System.Drawing.Drawing2D;
 
 namespace Archimedes.Geometry.Primitives
 {
-
+    /// <summary>
+    /// Represents a Line in a 2D coord space
+    /// </summary>
     public partial class Line2 : IGeometryBase
     {
         
@@ -31,29 +33,39 @@ namespace Archimedes.Geometry.Primitives
 
         #region Constructors
 
+        /// <summary>
+        /// Creates a new empty line
+        /// </summary>
         public Line2() { }
 
-        public Line2(float Lenght) {
-            this.P1 = new Vector2(0, 0);
-            this.P2 = new Vector2(Lenght, 0);
+        /// <summary>
+        /// Creates a new horizontal Line, starting from 0,0 with the given Length
+        /// </summary>
+        /// <param name="lenght">Lenght of the new Line</param>
+        public Line2(float lenght) {
+            _start = Vector2.Zero;
+            _end = new Vector2(lenght, 0);
         }
 
-        public Line2(Vector2 uP1, Vector2 uP2) {
-            this._start = uP1;
-            this._end = uP2;
+        /// <summary>
+        /// Creates a Line between two given Points represented by Vectors
+        /// </summary>
+        /// <param name="start">Startpoint of the Line</param>
+        /// <param name="end">Endpoint of the Line</param>
+        public Line2(Vector2 start, Vector2 end) {
+            _start = start;
+            _end = end;
         }
 
         public Line2(Vector2 uP1, Vector2 uP2, Pen uPen) {
-            this._start = uP1;
-            this._end = uP2;
+            _start = uP1;
+            _end = uP2;
             this.Pen = uPen;
         }
 
         public Line2(float uP1x, float uP1y, float uP2x, float uP2y) {
-            _start.X = uP1x;
-            _start.Y = uP1y;
-            _end.X = uP2x;
-            _end.Y = uP2y;
+            _start = new Vector2(uP1x, uP1y);
+            _end = new Vector2(uP2x, uP2y);
         }
 
         public Line2(Line2 prototype) {
@@ -65,8 +77,8 @@ namespace Archimedes.Geometry.Primitives
             if (prototype == null)
                 throw new NotImplementedException();
 
-            this.P1 = prototype.P1;
-            this.P2 = prototype.P2;
+            this.Start = prototype.Start;
+            this.End = prototype.End;
             try {
                 if (prototype.Pen != null)
                     this.Pen = prototype.Pen.Clone() as Pen;
@@ -79,12 +91,18 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Propertys
 
-        public Vector2 P1 {
+        /// <summary>
+        /// Get/Set the Startpoint of this Line
+        /// </summary>
+        public Vector2 Start {
             get { return _start; }
             set { _start = value; }
         }
 
-        public Vector2 P2 {
+        /// <summary>
+        /// Get/Set the Endpoint of this Line
+        /// </summary>
+        public Vector2 End {
             get { return _end; }
             set { _end = value; }
         }
@@ -98,7 +116,7 @@ namespace Archimedes.Geometry.Primitives
                     return 0;
                 }
                 else {
-                    return this.P1.Y - ((float)this.Slope * this.P1.X);
+                    return this.Start.Y - ((float)this.Slope * this.Start.X);
                 }
             }
         }
@@ -108,29 +126,29 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         public float Slope {
             get {
-                if ((this.P2.X - this.P1.X) == 0) { // prevent divison by zero
+                if ((this.End.X - this.Start.X) == 0) { // prevent divison by zero
                     return 0;
                 }
-                return (this.P2.Y - this.P1.Y) / (this.P2.X - this.P1.X);
+                return (this.End.Y - this.Start.Y) / (this.End.X - this.Start.X);
             }
         }
 
 
         public void Stretch(float len, Direction direction){
-            Vector2 vThis = new Vector2(this.P1,this.P2);
+            Vector2 vThis = new Vector2(this.Start,this.End);
 
             if (direction == Direction.RIGHT) {
                 vThis.Lenght += len;
-                this.P2 = vThis.GetPoint(this.P1);
+                this.End = vThis.GetPoint(this.Start);
             } else {
                 vThis.Lenght = len;
                 vThis *= -1;
-                this.P1 = vThis.GetPoint(this.P1);
+                this.Start = vThis.GetPoint(this.Start);
             }
         }
 
         public double Lenght {
-            get { return CalcLenght(this.P1, this.P2); }
+            get { return CalcLenght(this.Start, this.End); }
         }
 
         /// <summary>
@@ -171,14 +189,14 @@ namespace Archimedes.Geometry.Primitives
         /// Is this Line vertical?
         /// </summary>
         public bool IsVertical {
-            get { return (Math.Abs(this.P2.X - this.P1.X) <= roundingDiff); }
+            get { return (Math.Abs(this.End.X - this.Start.X) <= roundingDiff); }
         }
 
         /// <summary>
         /// Is this Line horizontal?
         /// </summary>
         public bool IsHorizontal {
-            get { return (Math.Abs(this.P2.Y - this.P1.Y) <= roundingDiff); }
+            get { return (Math.Abs(this.End.Y - this.Start.Y) <= roundingDiff); }
         }
         /// <summary>
         /// Is this Line horizontal or vertical?
@@ -193,13 +211,14 @@ namespace Archimedes.Geometry.Primitives
         #endregion
 
         #region Specail Transformators
+
         /// <summary>
         /// Scale the line by given scale factor
         /// </summary>
         /// <param name="factor">Scale Factor</param>
         public void Scale(float factor) {
-            this.P1 = P1.Scale(factor);
-            this.P2 = P2.Scale(factor);
+            this.Start = Start.Scale(factor);
+            this.End = End.Scale(factor);
         }
 
         /// <summary>
@@ -217,11 +236,11 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public Vector2 ToVector() {
-            return new Vector2(this.P1, this.P2);
+            return new Vector2(this.Start, this.End);
         }
 
-        public IEnumerable<Vector2> ToVertices() {
-            return new Vector2[] { this.P1, this.P2 };
+        public Vertices ToVertices() {
+            return new Vertices{ this.Start, this.End };
         }
 
         #endregion
@@ -229,22 +248,22 @@ namespace Archimedes.Geometry.Primitives
         #region Geomerty Base
 
         public void AddToPath(GraphicsPath path) {
-            path.AddLine(this.P1, this.P2);
+            path.AddLine(this.Start, this.End);
         }
 
         public Vector2 Location {
             get {
-                return this.P1;
+                return this.Start;
             }
             set {
-                Move(new Vector2(this.P1, value));
+                Move(new Vector2(this.Start, value));
             }
         }
 
         public Vector2 MiddlePoint {
             get {
-                Vector2 vLine = (new Vector2(P1, P2)) / 2;
-                return vLine.GetPoint(P1);
+                Vector2 vLine = (new Vector2(Start, End)) / 2;
+                return vLine.GetPoint(Start);
             }
             set {
                 Move(new Vector2(this.MiddlePoint, value));
@@ -252,8 +271,8 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public void Move(Vector2 mov) {
-            this.P1 = mov.GetPoint(this.P1);
-            this.P2 = mov.GetPoint(this.P2);
+            this.Start = mov.GetPoint(this.Start);
+            this.End = mov.GetPoint(this.End);
         }
 
         /// <summary>
@@ -276,24 +295,24 @@ namespace Archimedes.Geometry.Primitives
         public RectangleF BoundingBox {
 	        get { 
                 Vector2 SP;
-                if (P1.X > P2.X) {
-                    SP = P1;
-                }else if (P1.X == P2.X){
-                    if(P1.Y < P2.Y)
-                        SP = P1;
+                if (Start.X > End.X) {
+                    SP = Start;
+                }else if (Start.X == End.X){
+                    if(Start.Y < End.Y)
+                        SP = Start;
                     else
-                        SP = P2;
+                        SP = End;
                 }else
-                    SP = P2;
+                    SP = End;
 
-                return new RectangleF(SP, new SizeF(Math.Abs(P1.X - P2.X), Math.Abs(P1.Y - P2.Y)));
+                return new RectangleF(SP, new SizeF(Math.Abs(Start.X - End.X), Math.Abs(Start.Y - End.Y)));
             }
         }
 
         public Circle2 BoundingCircle {
             get { 
                 var m = this.MiddlePoint;
-                return new Circle2(m, (float)Line2.CalcLenght(m, this.P1));
+                return new Circle2(m, (float)Line2.CalcLenght(m, this.Start));
             }
         }
 
@@ -308,8 +327,8 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public void Draw(Graphics G) {
-            if (this.Pen != null && !P1.Equals(P2))
-                G.DrawLine(this.Pen, this.P1, this.P2);
+            if (this.Pen != null && !Start.Equals(End))
+                G.DrawLine(this.Pen, this.Start, this.End);
         }
 
         #endregion
@@ -379,7 +398,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="closest">closes Point on Line to target Point</param>
         /// <returns>Smallest distance to the targetpoint</returns>
         public static double FindDistanceToPoint(Vector2 pt, Line2 line, out Vector2 closest) {
-            var p1 = line.P1; var p2 = line.P2;
+            var p1 = line.Start; var p2 = line.End;
             float dx = p2.X - p1.X;
             float dy = p2.Y - p1.Y;
             if ((dx == 0) && (dy == 0)) {
@@ -425,8 +444,8 @@ namespace Archimedes.Geometry.Primitives
 
         public override string ToString() {
             string dump = "";
-            dump += "P1: " + this.P1.ToString() + "\n";
-            dump += "P2: " + this.P2.ToString() + "\n";
+            dump += "P1: " + this.Start.ToString() + "\n";
+            dump += "P2: " + this.End.ToString() + "\n";
             dump += "slope: " + this.Slope + "\n";
             dump += "q: " + this.YMovement + "\n";
             dump += "vert: " + this.IsVertical + "\n";

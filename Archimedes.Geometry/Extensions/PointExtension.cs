@@ -48,25 +48,25 @@ namespace Archimedes.Geometry.Extensions
             return new Vector2(pntF.X * factor, pntF.Y * factor);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="pntF"></param>
-        /// <param name="size"></param>
-        /// <param name="angle">Angle in degree</param>
-        /// <returns></returns>
-        public static Vector2 GetPoint(this Vector2 pntF, float size, float angle) {
-            var newPnt = new Vector2();
-            newPnt.X = pntF.X + (float)(size * Math.Cos(MathHelper.ToRadians(angle)));
-            newPnt.Y = pntF.Y + (float)(size * Math.Sin(MathHelper.ToRadians(angle)));
-            return newPnt;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="pntF"></param>
+        ///// <param name="size"></param>
+        ///// <param name="angle">Angle in degree</param>
+        ///// <returns></returns>
+        //public static Vector2 GetPoint(this Vector2 pntF, float size, float angle) {
+        //    var newPnt = new Vector2();
+        //    newPnt.X = pntF.X + (float)(size * Math.Cos(MathHelper.ToRadians(angle)));
+        //    newPnt.Y = pntF.Y + (float)(size * Math.Sin(MathHelper.ToRadians(angle)));
+        //    return newPnt;
+        //}
 
-        public static Vector2 Round(this Vector2 pntF, int value) {
-            var newPnt = new Vector2();
-            newPnt.X = (float)Math.Round(pntF.X, value);
-            newPnt.Y = (float)Math.Round(pntF.Y, value);
-            return newPnt;
-        }
+        //public static Vector2 Round(this Vector2 pntF, int value) {
+        //    var newPnt = new Vector2();
+        //    newPnt.X = (float)Math.Round(pntF.X, value);
+        //    newPnt.Y = (float)Math.Round(pntF.Y, value);
+        //    return newPnt;
+        //}
     }
 }

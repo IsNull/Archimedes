@@ -24,26 +24,23 @@ namespace Archimedes.Geometry.Primitives
     /// </summary>
     public class GdiText2 : IGeometryBase, IClosedGeometry
     {
-        #region Private Data
+        #region Fields
 
-        private string text = "";
+        string _text = "";
 
-        private Vector2 location = new Vector2();
-        private TextAligning textAligning = TextAligning.Centered;
+        Vector2 _location = new Vector2();
+        TextAligning _textAligning = TextAligning.Centered;
 
-        //private SizeF mTextSize = new SizeF();
-        private RectangleF textSizeBounding = new RectangleF();
-
-        private bool updateBoundingBox = false;
-        private bool updateTextRect = false;
-
-        private Font font = null;
+        RectangleF _textSizeBounding = new RectangleF();
+        bool _updateBoundingBox = false;
+        bool _updateTextRect = false;
+        Font _font = null;
        
-        public int boundingBorder = 0;
+        int _boundingBorder = 0;
 
-        private Pen pen = Pens.Black;
-        private Brush brush = new SolidBrush(Color.White);
-        StringAlignment textHorizontalAlign = StringAlignment.Center;
+        Pen _pen = Pens.Black;
+        Brush _brush = Brushes.White;
+        StringAlignment _textHorizontalAlign = StringAlignment.Center;
 
         #endregion
 
@@ -86,12 +83,12 @@ namespace Archimedes.Geometry.Primitives
 
         public Font Font
         {
-            get { return font; }
+            get { return _font; }
             set 
             { 
-                font = value;
-                updateBoundingBox = true;
-                updateTextRect = true;
+                _font = value;
+                _updateBoundingBox = true;
+                _updateTextRect = true;
             }
         }
 
@@ -106,43 +103,43 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public string Text {
-            get { return text; }
+            get { return _text; }
             set {
-                text = value;
-                updateTextRect = true;
-                updateBoundingBox = true;
+                _text = value;
+                _updateTextRect = true;
+                _updateBoundingBox = true;
             }
         }
 
         public TextAligning Aligning {
-            get { return textAligning; }
-            set { textAligning = value; }
+            get { return _textAligning; }
+            set { _textAligning = value; }
         }
         
         public StringAlignment TextHorizontalAlign {
-            get { return textHorizontalAlign; }
-            set { textHorizontalAlign = value; }
+            get { return _textHorizontalAlign; }
+            set { _textHorizontalAlign = value; }
         }
 
         public Color BackGroundColor {
             get { 
             
-                if(brush != null)
-                    return (brush as SolidBrush).Color;
+                if(_brush != null)
+                    return (_brush as SolidBrush).Color;
                 return Color.White;
             }
-            set { (brush as SolidBrush).Color = value; }
+            set { (_brush as SolidBrush).Color = value; }
         }
 
         /// <summary>
         /// Defines the additional Border around the BoundingBox
         /// </summary>
         public int BoundingBorder {
-            get { return this.boundingBorder; }
+            get { return this._boundingBorder; }
             set {
-                if (this.boundingBorder == value) { return; }
-                this.boundingBorder = value;
-                updateBoundingBox = true;
+                if (this._boundingBorder == value) { return; }
+                this._boundingBorder = value;
+                _updateBoundingBox = true;
             }
         }
 
@@ -196,10 +193,10 @@ namespace Archimedes.Geometry.Primitives
         #region Geomerty Base
 
         public Vector2 Location {
-            get { return location; }
+            get { return _location; }
             set { 
-                location = value;
-                updateBoundingBox = true;
+                _location = value;
+                _updateBoundingBox = true;
             }
         }
 
@@ -236,8 +233,8 @@ namespace Archimedes.Geometry.Primitives
         #region Geomerty Base Drawing
 
         public Pen Pen {
-            get { return pen; }
-            set { pen = value; }
+            get { return _pen; }
+            set { _pen = value; }
         }
 
         public void Draw(Graphics G) {
@@ -291,12 +288,12 @@ namespace Archimedes.Geometry.Primitives
 
         public RectangleF BoundingBox {
             get {
-                if (updateBoundingBox) {
+                if (_updateBoundingBox) {
                     var BoundingBox = GetTextBoundRect();
-                    textSizeBounding = BoundingBox;
-                    updateBoundingBox = false;
+                    _textSizeBounding = BoundingBox;
+                    _updateBoundingBox = false;
                 }
-                return textSizeBounding;
+                return _textSizeBounding;
             }
         }
 
@@ -304,10 +301,9 @@ namespace Archimedes.Geometry.Primitives
             return this.BoundingBox.Contains(new Point((int)uPoint.X, (int)uPoint.Y));
         }
 
-
         #endregion
 
-        public IEnumerable<Vector2> ToVertices() {
+        public Vertices ToVertices() {
             return this.BoundingBox.ToVertices();
         }
 
@@ -329,12 +325,6 @@ namespace Archimedes.Geometry.Primitives
             return str;
         }
 
-        public void Dispose() {
-            this.Pen.Dispose();
-            this.FillBrush.Dispose();
-            this.Font.Dispose();
-        }
-
         #region IClosedGeometry
 
         public float Area {
@@ -342,10 +332,14 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public Brush FillBrush {
-            get { return brush; }
-            set { brush = value as SolidBrush; }
+            get { return _brush; }
+            set { _brush = value; }
         }
 
         #endregion
+
+        public void Dispose() {
+            //
+        }
     }
 }

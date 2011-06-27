@@ -92,6 +92,12 @@ namespace Archimedes.Geometry
             get { return (this.X != 0) ? (this.Y / this.X) : 0; }
         }
 
+        public bool IsEmpty {
+            get {
+                return this == Vector2.Zero;
+            }
+        }
+
         #endregion
 
         #region Operator Overloads
@@ -136,13 +142,32 @@ namespace Archimedes.Geometry
             return v1;
         }
 
+        public static bool operator ==(Vector2 v1, Vector2 v2){
+            return v1.X == v2.X && v1.Y == v2.Y;
+        }
 
+        public static bool operator !=(Vector2 v1, Vector2 v2) {
+            return !(v1 == v2);
+        }
 
         public static implicit operator PointF(Vector2 other) {
             return new PointF(other.X, other.Y);
         }
 
         public static implicit operator Vector2(PointF other) {
+            return new Vector2(other.X, other.Y);
+        }
+
+        /// <summary>
+        /// Warning: You may loose all floating signs
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public static explicit operator Point(Vector2 other) {
+            return new Point((int)other.X, (int)other.Y);
+        }
+
+        public static implicit operator Vector2(Point other) {
             return new Vector2(other.X, other.Y);
         }
 
@@ -271,12 +296,32 @@ namespace Archimedes.Geometry
 
         #region Public Query Methods
 
+        /// <summary>
+        /// Returns a new Vector values rounded by the given amount
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public Vector2 Rounded(int value) {
+            return new Vector2((float)Math.Round(this.X, value),
+            (float)Math.Round(this.Y, value));
+        }
+
+
         public Vector2 GetPoint(Vector2 startPoint) {
             return startPoint + this;
         }
 
-        public Vector2 GetPoint(float XStart, float YStart) {
-            return new Vector2(XStart,YStart) + this;
+        /// <summary>
+        /// Get a point starting from this, with the given distance and angle
+        /// </summary>
+        /// <param name="distance">distance to the new point</param>
+        /// <param name="angle">angle to the new point</param>
+        /// <returns></returns>
+        public Vector2 GetPoint(float distance, float angle) {
+            Vector2 newPnt = new Vector2(
+                this.X + (float)(distance * Math.Cos(MathHelper.ToRadians(angle))),
+                this.Y + (float)(distance * Math.Sin(MathHelper.ToRadians(angle))));
+            return newPnt;
         }
 
         public bool IsParallel(Vector2 v2) {

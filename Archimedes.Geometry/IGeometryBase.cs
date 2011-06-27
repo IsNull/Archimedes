@@ -22,7 +22,7 @@ namespace Archimedes.Geometry
         void Move(Vector2 mov);
         void Scale(float fact);
 
-        IEnumerable<Vector2> ToVertices();
+        Vertices ToVertices();
 
         void AddToPath(GraphicsPath path);
 

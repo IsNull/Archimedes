@@ -437,9 +437,8 @@ public bool Contains(Vector2 p) {
         /// <param name="angle">Angle to rotate</param>
         /// <param name="origin">Point to rotate around. Default is middlepoint of this polygon</param>
         public void Rotate(float angle, Vector2? origin = null) {
-            var newVertices = VerticesHelper.RotateVertices(this.ToVertices(), origin ?? this.MiddlePoint, angle);
-            this.Clear();
-            this.AddRange(newVertices);
+            _vertices = _vertices.RotateVertices(origin ?? this.MiddlePoint, angle);
+            Invalidate();
         }
 
 
@@ -449,7 +448,7 @@ public bool Contains(Vector2 p) {
         /// <param name="v"></param>
         public void Move(Vector2 v) {
             for(int i=0; i < _vertices.Count; i++) {
-                _vertices[i] = v.GetPoint(_vertices[i]).ToPoint();
+                _vertices[i] = _vertices[i] + v;
             }
             Invalidate();
         }
@@ -460,9 +459,6 @@ public bool Contains(Vector2 p) {
             }
             Invalidate();
         }
-
-
-
 
         #endregion
 
@@ -480,8 +476,8 @@ public bool Contains(Vector2 p) {
             return clone;
         }
 
-        public IEnumerable<Vector2> ToVertices() {
-            return this._vertices.Distinct();
+        public Vertices ToVertices() {
+            return new Vertices(_vertices.Distinct());
         }
 
         public Polygon2 ToPolygon2() {
@@ -563,8 +559,6 @@ public bool Contains(Vector2 p) {
             return (BAx * BCx + BAy * BCy);
         }
         #endregion // Cross and Dot Products
-
-
 
         PolygonBoundingBoxAlgorythm SmallestBoundingBoxFinderAlgorythm {
             get {

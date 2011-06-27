@@ -20,9 +20,23 @@ namespace Archimedes.Geometry
             _vertices = new List<Vector2>(vertices);
         }
 
+        public Vertices(IEnumerable<PointF> vertices) {
+            _vertices = new List<Vector2>();
+            this.AddRange(vertices);
+        }
+
         #endregion
 
         #region To Methods
+
+        public static IEnumerable<PointF> ToPointFs(IEnumerable<Vector2> vertices) {
+            foreach (var v in vertices)
+                yield return new PointF(v.X, v.Y);
+        }
+        public static IEnumerable<Point> ToPoints(IEnumerable<Vector2> vertices) {
+            foreach (var v in vertices)
+                yield return new Point((int)v.X, (int)v.Y);
+        }
 
         public IEnumerable<PointF> ToPoints(){
             foreach(var v in _vertices)
@@ -86,6 +100,10 @@ namespace Archimedes.Geometry
         /// <param name="angle">Rotation angle</param>
         /// <returns>New vertices array</returns>
         public Vertices RotateVertices(Vector2 rotationOrigin, float angle) {
+
+            if (angle == 0)
+                return new Vertices(_vertices);
+
             Vector2 vrotate;
             var cnt = _vertices.Count();
             var rotVertices = new Vertices();

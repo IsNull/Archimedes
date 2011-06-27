@@ -25,10 +25,10 @@ namespace Archimedes.Geometry.Primitives
                 interPnt.X = (float)((-1 * (this.YMovement - other.YMovement)) / (this.Slope - other.Slope));
                 interPnt.Y = (float)(this.Slope * interPnt.X + this.YMovement);
             } else if (this.IsVertical) {                  // this vertical (so it must lie on this.X)
-                interPnt.X = this.P1.X;
+                interPnt.X = this.Start.X;
                 interPnt.Y = (float)(other.Slope * interPnt.X + other.YMovement);
             } else if (other.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
-                interPnt.X = other.P1.X;
+                interPnt.X = other.Start.X;
                 interPnt.Y = (float)(this.Slope * interPnt.X + this.YMovement);
             }
             //check if computed intercept lies on our line.
@@ -54,10 +54,10 @@ namespace Archimedes.Geometry.Primitives
                 IsP.X = (float)((-1 * (this.YMovement - other.YMovement)) / (this.Slope - other.Slope));
                 IsP.Y = (float)(this.Slope * IsP.X + this.YMovement);
             } else if (this.IsVertical) {                  // this vertical (so it must lie on this.X)
-                IsP.X = this.P1.X;
+                IsP.X = this.Start.X;
                 IsP.Y = (float)(other.Slope * IsP.X + other.YMovement);
             } else if (other.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
-                IsP.X = other.P1.X;
+                IsP.X = other.Start.X;
                 IsP.Y = (float)(this.Slope * IsP.X + this.YMovement);
             }
 
@@ -73,7 +73,7 @@ namespace Archimedes.Geometry.Primitives
         public bool InterceptRectWith(RectangleF Rect1) {
             
             // is Start/EndPoint in the Rectangle?
-            if (Rect1.Contains(this.P1) || Rect1.Contains(this.P2))
+            if (Rect1.Contains(this.Start) || Rect1.Contains(this.End))
                 return true; 
             // crosses the Line a Rectangle Border?
             var BorderLines = Line2.RectExplode(Rect1); //get 4 borderlines from rect
@@ -124,13 +124,13 @@ namespace Archimedes.Geometry.Primitives
 
             if (this.IsVertical) {
                 // vertical means that the slope is undefinied
-                if (Math.Abs(this.P1.X - pos.X) <= Range) {
-                    return (((pos.Y >= this.P1.Y) && (pos.Y <= this.P2.Y)) || ((pos.Y <= this.P1.Y) && (pos.Y >= this.P2.Y)));
+                if (Math.Abs(this.Start.X - pos.X) <= Range) {
+                    return (((pos.Y >= this.Start.Y) && (pos.Y <= this.End.Y)) || ((pos.Y <= this.Start.Y) && (pos.Y >= this.End.Y)));
                 } else 
                     return false;
             } else {
                 if (Math.Round(Math.Abs(pos.Y - (pos.X * (float)this.Slope + (float)this.YMovement)), 2) <= Range) {
-                    return (((pos.X >= this.P1.X) && (pos.X <= this.P2.X)) || ((pos.X <= this.P1.X) && (pos.X >= this.P2.X)));
+                    return (((pos.X >= this.Start.X) && (pos.X <= this.End.X)) || ((pos.X <= this.Start.X) && (pos.X >= this.End.X)));
                 } else
                     return false;
             }

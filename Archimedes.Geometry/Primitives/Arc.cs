@@ -325,12 +325,12 @@ namespace Archimedes.Geometry.Primitives
             return path;
         }
 
-        public IEnumerable<Vector2> ToVertices() {
-            var vertices = new Vector2[0];
+        public Vertices ToVertices() {
+            Vertices vertices = new Vertices();
             try {
                 var path = ToPath();
                 path.Flatten();
-                vertices = path.PathPoints;
+                vertices.AddRange(path.PathPoints);
                 Invalidate();
             } catch (ArgumentException) {
                 // igonroe yield nothing
@@ -344,7 +344,6 @@ namespace Archimedes.Geometry.Primitives
                 c.Pen = this.Pen.Clone() as Pen;
             return c;
         }
-
 
         #endregion
 

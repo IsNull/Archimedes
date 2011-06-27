@@ -14,7 +14,7 @@ namespace Archimedes.Geometry.Primitives
         #region Fields
 
         List<IGeometryBase> _geometries = new List<IGeometryBase>();
-        List<Vector2> _vertices = new List<Vector2>();
+        Vertices _vertices = new Vertices();
         object _verticesLock = new object();
         bool _verticesInvalidated = true;
         RectangleF _boundingbox;
@@ -89,7 +89,11 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public Pen Pen {
-            get { return _geometries[1].Pen; }
+            get {
+                if (_geometries.Any())
+                    return _geometries[1].Pen;
+                return null;
+            }
             set {
                 foreach (var g in _geometries)
                     g.Pen = value;
@@ -175,6 +179,7 @@ namespace Archimedes.Geometry.Primitives
             }
             return false;
         }
+
         public bool Contains(Vector2 point, ref IGeometryBase subGeometry) {
             subGeometry = null;
             foreach (var g in _geometries) {
@@ -193,7 +198,7 @@ namespace Archimedes.Geometry.Primitives
         public RectangleF BoundingBox {
             get {
                 if (_boundingboxInvalidated) {
-                    _boundingbox = VerticesHelper.BoundingBox(ToVertices());
+                    _boundingbox = _vertices.BoundingBox;
                     _boundingboxInvalidated = false;
                 }
                 return _boundingbox;
@@ -246,27 +251,27 @@ namespace Archimedes.Geometry.Primitives
 
         #region To -> Transformer Methods
 
-        public IEnumerable<Vector2> ToVertices() {
+        public Vertices ToVertices() {
             lock (_verticesLock) {
                 if (_verticesInvalidated) {
                     _vertices.Clear();
                     try {
-                        _vertices = ToPath().ToVertices().ToList();
+                        _vertices = new Vertices(ToPath().ToVertices().Distinct());
                         _verticesInvalidated = false;
                     } catch (ArgumentException) {
                         // igonre
                     }
                 }
-                return _vertices.Distinct().ToArray();
+                return new Vertices(_vertices);
             }
         }
 
         public IEnumerable<IGeometryBase> GetGeometries() {
-            return new List<IGeometryBase>(this._geometries);
+            return new List<IGeometryBase>(_geometries);
         }
 
         public Polygon2 ToPolygon2() {
-            return new Polygon2(this.ToVertices());
+            return new Polygon2(_vertices);
         }
 
         /// <summary>

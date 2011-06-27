@@ -15,17 +15,17 @@ namespace Archimedes.Geometry.Primitives
     /// </summary>
     public class Path2 : IGeometryBase
     {
-        #region Private Data
+        #region Fields
 
-        private System.Drawing.Pen pen;
-        GraphicsPath gpath = new GraphicsPath();
+        System.Drawing.Pen _pen;
+        GraphicsPath _gpath = new GraphicsPath();
 
         #endregion
 
         #region Construcors
 
         public Path2() {
-            gpath.StartFigure();
+            _gpath.StartFigure();
         }
 
         public Path2(Path2 prototype) 
@@ -63,7 +63,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="vertices">Vertixes to add</param>
         public void AddVertices(IEnumerable<Vertex> vertices) {
             if(vertices.Count() > 1)
-                gpath.AddLines(vertices.ToArray());
+                _gpath.AddLines(Vertices.ToPoints(vertices).ToArray());
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Archimedes.Geometry.Primitives
         }
         public void DockVertices(IEnumerable<Vertex> vertices) {
             // does vertex order matther?
-            if (gpath.PointCount == 0) {
+            if (_gpath.PointCount == 0) {
                 AddVertices(vertices);
                 return;
             }
@@ -87,24 +87,24 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public void Clear() {
-            gpath.Reset();
+            _gpath.Reset();
         }
 
         #endregion
 
         public Vector2 LastPoint {
-            get { return gpath.PointCount != 0 ? gpath.GetLastPoint() : new PointF(); }
+            get { return _gpath.PointCount != 0 ? _gpath.GetLastPoint() : new PointF(); }
         }
 
         public Vector2 FirstPoint {
             get {
-                return gpath.PointCount != 0 ? gpath.PathPoints[0] : new PointF();
+                return _gpath.PointCount != 0 ? _gpath.PathPoints[0] : new PointF();
             }
         }
 
         public virtual void Dispose() {
             Pen.Dispose();
-            gpath.Dispose();
+            _gpath.Dispose();
         }
 
         #region IGeometryBase
@@ -129,32 +129,32 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public void Prototype(IGeometryBase prototype) {
-            gpath.Reset();
-            prototype.AddToPath(gpath);
+            _gpath.Reset();
+            prototype.AddToPath(_gpath);
             this.Pen = prototype.Pen;
         }
 
         public void Move(Vector2 mov) {
-            for (int i = 0; i < gpath.PathPoints.Count(); i++)
-                gpath.PathPoints[i] = mov.GetPoint(gpath.PathPoints[i]);
+            for (int i = 0; i < _gpath.PathPoints.Count(); i++)
+                _gpath.PathPoints[i] = mov.GetPoint(_gpath.PathPoints[i]);
         }
 
         public void Scale(float fact) {
-            for (int i = 0; i < gpath.PathPoints.Count(); i++)
-                gpath.PathPoints[i] = gpath.PathPoints[i].Scale(fact);
+            for (int i = 0; i < _gpath.PathPoints.Count(); i++)
+                _gpath.PathPoints[i] = _gpath.PathPoints[i].Scale(fact);
         }
 
-        public IEnumerable<Vertex> ToVertices() {
-            return gpath.PathPoints;
+        public Vertices ToVertices() {
+            return new Vertices(_gpath.PathPoints);
         }
 
         public System.Drawing.RectangleF BoundingBox {
-            get { return VerticesHelper.BoundingBox(ToVertices()); }
+            get { return ToVertices().BoundingBox; }
         }
 
         public System.Drawing.Pen Pen {
-            get {return pen; }
-            set { pen = value; }
+            get {return _pen; }
+            set { _pen = value; }
         }
 
         public Circle2 BoundingCircle {
@@ -169,16 +169,16 @@ namespace Archimedes.Geometry.Primitives
             throw new NotImplementedException();
         }
 
-        public bool Contains(Vector2 Point) {
-            throw new NotImplementedException();
+        public bool Contains(Vector2 pnt) {
+            return this.ToVertices().Contains(pnt);
         }
 
         public void Draw(System.Drawing.Graphics G) {
-            G.DrawPath(Pen, gpath);
+            G.DrawPath(Pen, _gpath);
         }
 
         public void AddToPath(GraphicsPath path) {
-            path.AddPath(gpath, true);
+            path.AddPath(_gpath, true);
         }
 
         #endregion

@@ -17,7 +17,7 @@ namespace Archimedes.Geometry.Primitives
 
     public class Circle2 : IGeometryBase, IClosedGeometry
     {
-        #region Internal Data
+        #region Fields
 
         Vector2 _middlePoint;
         float _radius;
@@ -80,30 +80,13 @@ namespace Archimedes.Geometry.Primitives
 
         #region Exp Methods
 
-        private Vector2 AddPoints(Vector2 P1, Vector2 P2) {
-            P1.X = P1.X + P2.X;
-            P1.Y = P1.Y + P2.Y;
-            return P1;
-        }
-
-        private Vector2 SubPoints(Vector2 P1, Vector2 P2) {
-            P1.X = P1.X - P2.X;
-            P1.Y = P1.Y - P2.Y;
-            return P1;
-        }
-
-
-
         public Vector2 GetPoint(float Angle){
-            var CirclePoint = new Vector2(0,0);
+            Vector2 circlePoint = new Vector2(
+                (float)Math.Cos(MathHelper.ToRadians(Angle)) * this.Radius,
+                (float)Math.Sin(MathHelper.ToRadians(Angle)) * this.Radius);
 
-            CirclePoint.X = (float)Math.Cos(Degree2RAD(Angle)) * this.Radius;
-            CirclePoint.Y = (float)Math.Sin(Degree2RAD(Angle)) * this.Radius;
-
-            CirclePoint.X += this.Location.X;
-            CirclePoint.Y += this.Location.Y;
-
-            return CirclePoint;
+            circlePoint += this.Location;
+            return circlePoint;
         }
 
         #endregion
@@ -142,73 +125,64 @@ namespace Archimedes.Geometry.Primitives
             return (List.Count > 0);
         }
 
-        /// <summary> Circle-Line Interception 
-        /// 
+        /// <summary> 
+        /// Circle-Line Interception 
         /// </summary>
         /// <param name="uLine"></param>
-        /// <returns></returns>
+        /// <returns>Returns all intersection points</returns>
         private List<Vector2> InterceptLine(Line2 uLine) {
-            var InterSeptionPoints = new List<Vector2>();
-            var P1 = new Vector2();
-            var P2 = new Vector2();
-
-            var M = this.Location;
+            var intersections = new List<Vector2>();
+            Vector2 p1;
+            Vector2 p2;
+            Vector2 location = this.Location;
 
             // we assume that the circle Middlepoint is NULL/NULL
             // So we move the Line with the delta to NULL
-            var Line = new Line2(uLine.P1.X - M.X, uLine.P1.Y - M.Y, uLine.P2.X - M.X, uLine.P2.Y - M.Y);
+            var helperLine = new Line2(uLine.Start - location, uLine.End - location);
 
-            ///line
-            float q = Line.YMovement;
-            float m = Line.Slope;
-            //circle
+            // line
+            float q = helperLine.YMovement;
+            float m = helperLine.Slope;
 
-            float r = this.Radius;
-
-            float D;    //Discriminant
-
-            if (!Line.IsVertical) {
+            if (!helperLine.IsVertical) {
                 // The slope is defined as the Line isn't vertical
 
-                D = (float)((Math.Pow(m, 2) + 1) * Math.Pow(r, 2) - Math.Pow(q, 2));
-                if (D > 0) {
-                    //only posivive sqrt() results in a rational number
+                var discriminant = (float)((Math.Pow(m, 2) + 1) * Math.Pow(this.Radius, 2) - Math.Pow(q, 2));
+                if (discriminant > 0) {
+                    // only positive discriminants for f() -> sqrt(discriminant) results are defined in |R
 
-                    P1.X = (float)((Math.Sqrt(D) - m * (q)) / (Math.Pow(m, 2) + 1));
-                    P2.X = (float)((-1 * (Math.Sqrt(D) + m * q)) / (Math.Pow(m, 2) + 1));
-                    P1.Y = m * P1.X + q;
-                    P2.Y = m * P2.X + q;
+                    p1.X = (float)((Math.Sqrt(discriminant) - m * (q)) / (Math.Pow(m, 2) + 1));
+                    p2.X = (float)((-1 * (Math.Sqrt(discriminant) + m * q)) / (Math.Pow(m, 2) + 1));
+                    p1.Y = m * p1.X + q;
+                    p2.Y = m * p2.X + q;
 
-                    if (Line.Contains(P1)) {
-                        InterSeptionPoints.Add(AddPoints(P1, M));
+                    if (helperLine.Contains(p1)) {
+                        intersections.Add(p1 + location);
                     }
-                    if ((P1.X != P2.X) || (P1.Y != P2.Y)) {
-                        if (Line.Contains(P2)) {
-                            InterSeptionPoints.Add(AddPoints(P2, M));
+                    if ((p1.X != p2.X) || (p1.Y != p2.Y)) {
+                        if (helperLine.Contains(p2)) {
+                            intersections.Add(p2 + location);
                         }
                     }
                 }
             } else {
-                //undefined slope, so we have to deal with it directly
-                float dx, dy; //delta x,y
+                // undefined slope, so we have to deal with it directly
 
-                dx = this.Location.X + Line.P1.X;
-                dy = (float)Math.Sqrt(Math.Pow(this.Radius, 2) - Math.Pow(dx, 2));
-                P1.X = dx;
-                P1.Y = dy;
+                p1.X = this.Location.X + helperLine.Start.X;
+                p1.Y = (float)Math.Sqrt(Math.Pow(this.Radius, 2) - Math.Pow(p1.X, 2));
 
-                P2.X = dx;
-                P2.Y = -dy;
+                p2.X = p1.X; 
+                p2.Y = -p1.Y;
 
-                if (Line.Contains(P1)) {
-                    InterSeptionPoints.Add(AddPoints(P1, M));
+                if (helperLine.Contains(p1)) {
+                    intersections.Add(p1 + location);
                 }
-                if (Line.Contains(P2)) {
-                    InterSeptionPoints.Add(AddPoints(P2, M));
+                if (helperLine.Contains(p2)) {
+                    intersections.Add(p2 + location);
                 }
             }
 
-            return InterSeptionPoints;
+            return intersections;
         }
         #endregion
 
@@ -259,13 +233,12 @@ namespace Archimedes.Geometry.Primitives
         /// <returns></returns>
         private IEnumerable<Vector2> IntersectCircle(Circle2 cA, Circle2 cB) {
 
-            float dx = cA.MiddlePoint.X - cB.MiddlePoint.X;
-            float dy = cA.MiddlePoint.Y - cB.MiddlePoint.Y;
-            float d2 = dx * dx + dy * dy;
+            Vector2 dv = cA.MiddlePoint - cB.MiddlePoint;
+            float d2 = dv.X * dv.X + dv.Y * dv.Y;
             float d = (float)Math.Sqrt(d2);
 
             if (d > cA.Radius + cB.Radius || d < Math.Abs(cA.Radius - cB.Radius))
-                return new Vector2[]{}; // no solution
+                return new Vector2[] { }; // no solution
 
             float a = (cA.Radius2 - cB.Radius2 + d2) / (2 * d);
             float h = (float)Math.Sqrt(cA.Radius2 - a * a);
@@ -279,9 +252,6 @@ namespace Archimedes.Geometry.Primitives
 
             return new Vector2[] { new Vector2(paX, paY), new Vector2(pbX, pbY) };
         }
-
-        
-
 
         #endregion
 
@@ -363,6 +333,7 @@ namespace Archimedes.Geometry.Primitives
                 return this.DrawingRect;
             }
         }
+
         #endregion
 
         #region Geometry Base Drawing
@@ -385,26 +356,12 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region Private Helper Methods
-
-        // To convert a degrees value to radians, multiply it by pi/180 (approximately 0.01745329252).
-        private static float Degree2RAD(float degree) {
-            return (float)(degree * Math.PI / 180);
-        }
-
-        // To convert a radians value to degrees, multiply it by 180/pi (approximately 57.29578).
-        private static float RAD2Degree(float RAD) {
-            return (float)(RAD * 180 / Math.PI);
-        }
-
-        #endregion
-
         public void Scale(float factor) {
             this.Location = Location.Scale(factor);
             Radius *= factor;
         }
 
-        public virtual IEnumerable<Vector2> ToVertices() {
+        public virtual Vertices ToVertices() {
             if (_verticesInValidated) {
                 var path = new GraphicsPath();
                 _vertices.Clear();
@@ -416,7 +373,7 @@ namespace Archimedes.Geometry.Primitives
                     // we ignore this -> void vertices
                 }
             }
-            return _vertices;
+            return new Vertices(_vertices);
         }
 
         public Polygon2 ToPolygon2() {

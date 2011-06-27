@@ -37,19 +37,22 @@ namespace Archimedes.Geometry.Extensions
 
         #region ToVertices
 
-        public static IEnumerable<Vector2> ToVertices(this Rectangle rect) {
+        public static Vertices ToVertices(this Rectangle rect) {
             return ToVerticesConv(rect);
         }
-        public static IEnumerable<Vector2> ToVertices(this RectangleF rect) {
+
+        public static Vertices ToVertices(this RectangleF rect) {
             return ToVerticesConv(rect);
         }
-        private static IEnumerable<Vector2> ToVerticesConv(RectangleF rect) {
-            var vertices = new Vector2[4];
-            vertices[0] = rect.Location;
-            vertices[1] = new Vector2(rect.Location.X + rect.Width, rect.Location.Y);
-            vertices[2] = new Vector2(rect.Location.X + rect.Width, rect.Location.Y + rect.Height);
-            vertices[3] = new Vector2(rect.Location.X, rect.Location.Y + rect.Height);
-            return vertices;
+
+        private static Vertices ToVerticesConv(RectangleF rect) {
+            return new Vertices()
+            {
+                rect.Location,
+                new Vector2(rect.Location.X + rect.Width, rect.Location.Y),
+                new Vector2(rect.Location.X + rect.Width, rect.Location.Y + rect.Height),
+                new Vector2(rect.Location.X, rect.Location.Y + rect.Height)
+            };
         }
 
         #endregion
