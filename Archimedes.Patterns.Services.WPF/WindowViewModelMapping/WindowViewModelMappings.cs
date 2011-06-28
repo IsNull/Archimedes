@@ -29,7 +29,16 @@ namespace Archimedes.Services.WPF.WindowViewModelMapping
 
 
         public Type GetViewTypeFromViewModelType(Type viewModelType) {
-            return mappings[viewModelType];
+            if (mappings.ContainsKey(viewModelType))
+                return mappings[viewModelType];
+            else {
+                var possibleMatches = from kt in mappings.Keys
+                                      where kt.IsAssignableFrom(viewModelType)
+                                      select kt;
+                if (possibleMatches.Any())
+                    return mappings[possibleMatches.First()];
+            }
+            throw new KeyNotFoundException(viewModelType.ToString() + " was not found!");
         }
 
         /// <summary>
