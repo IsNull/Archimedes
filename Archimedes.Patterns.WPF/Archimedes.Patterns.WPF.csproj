@@ -81,6 +81,12 @@
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\WrapperCommand.cs" />
     <Compile Include="Commands\WrapperStateCommand.cs" />
+    <Compile Include="FlowDocuments\Attached.cs" />
+    <Compile Include="FlowDocuments\BindableRun.cs" />
+    <Compile Include="FlowDocuments\BlockTemplateContent.cs" />
+    <Compile Include="FlowDocuments\Fragment.cs" />
+    <Compile Include="FlowDocuments\Helpers.cs" />
+    <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
