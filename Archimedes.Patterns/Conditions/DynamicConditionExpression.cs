@@ -184,7 +184,7 @@ namespace Archimedes.Patterns.Conditions
             if ((_compOP & Operator.GreaterThan) == Operator.GreaterThan) {
                 if (_isNumeric) {
                     _res = (double)Convert.ChangeType(val, NUMBER) > (double)Convert.ChangeType(_value, NUMBER);
-                } else if (_itemType == typeof(DateTime)) {
+                } else if (val != null && TypeHelper.IsTypeOrUnderlingType(_itemType, typeof(DateTime))) {
                     _res = (DateTime)val > (DateTime)_value;
                 }
                 
@@ -193,7 +193,7 @@ namespace Archimedes.Patterns.Conditions
             if ((_compOP & Operator.SmallerThan) == Operator.SmallerThan) {
                 if (_isNumeric) {
                     _res = (double)Convert.ChangeType(val, NUMBER) < (double)Convert.ChangeType(_value, NUMBER);
-                } else if (_itemType == typeof(DateTime)) {
+                } else if (val != null && TypeHelper.IsTypeOrUnderlingType(_itemType, typeof(DateTime))) {
                     _res = (DateTime)val < (DateTime)_value;
                 }
             }
