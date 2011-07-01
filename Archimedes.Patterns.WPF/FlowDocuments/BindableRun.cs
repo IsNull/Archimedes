@@ -9,7 +9,7 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
         public static readonly DependencyProperty BoundTextProperty = DependencyProperty.Register("BoundText", typeof(string), typeof(BindableRun), new PropertyMetadata(OnBoundTextChanged));
 
         public BindableRun() {
-            Helpers.FixupDataContext(this);
+            DocHelpers.FixupDataContext(this);
         }
 
         private static void OnBoundTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {

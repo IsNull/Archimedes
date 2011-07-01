@@ -22,7 +22,7 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
 
 
         public BlockTemplateContent() {
-            Helpers.FixupDataContext(this);
+            DocHelpers.FixupDataContext(this);
             Loaded += BlockTemplateContent_Loaded;
         }
 
@@ -35,7 +35,7 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
         private void GenerateContent(DataTemplate template) {
             Blocks.Clear();
             if (template != null) {
-                FrameworkContentElement element = Helpers.LoadDataTemplate(template);
+                FrameworkContentElement element = DocHelpers.LoadDataTemplate(template);
                 Blocks.Add((Block)element);
             }
         }

@@ -44,15 +44,24 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #region Properties
 
+        /// <summary>
+        /// Items which are chooseable
+        /// </summary>
         public ICollectionView Items {
             get { return _itemPresenter; }
         }
 
+        /// <summary>
+        /// The choosen item. This is null if the user didn't choose any.
+        /// </summary>
         public T ChoosenItem {
             get;
             private set;
         }
 
+        /// <summary>
+        /// The currently selected item
+        /// </summary>
         public T SelectedEntity {
             get { return _selectedEntity; }
             set {

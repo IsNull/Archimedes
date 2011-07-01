@@ -306,7 +306,11 @@ namespace Archimedes.Geometry
             (float)Math.Round(this.Y, value));
         }
 
-
+        /// <summary>
+        /// Get 
+        /// </summary>
+        /// <param name="startPoint"></param>
+        /// <returns></returns>
         public Vector2 GetPoint(Vector2 startPoint) {
             return startPoint + this;
         }

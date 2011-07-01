@@ -17,9 +17,11 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
         private static readonly DependencyProperty ItemsPanelProperty = DependencyProperty.Register("ItemsPanel", typeof(DataTemplate), typeof(ItemsContent), new PropertyMetadata(OnItemsPanelChanged));
 
         public ItemsContent() {
-            Helpers.FixupDataContext(this);
+            DocHelpers.FixupDataContext(this);
             Loaded += ItemsContent_Loaded;
+            //DataContextChanged += (s, e) => GenerateContent(ItemsPanel, ItemTemplate, ItemsSource);
         }
+
 
         private void ItemsContent_Loaded(object sender, RoutedEventArgs e) {
             GenerateContent(ItemsPanel, ItemTemplate, ItemsSource);
@@ -50,7 +52,7 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
                         if (itemsPanel == null)
                             panel = this;
                         else {
-                            FrameworkContentElement p = Helpers.LoadDataTemplate(itemsPanel);
+                            FrameworkContentElement p = DocHelpers.LoadDataTemplate(itemsPanel);
                             if (!(p is Block))
                                 throw new Exception("ItemsPanel must be a block element");
                             Blocks.Add((Block)p);
@@ -59,11 +61,11 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
                                 throw new Exception("ItemsHost not found. Did you forget to specify Attached.IsItemsHost?");
                         }
                     }
-                    FrameworkContentElement element = Helpers.LoadDataTemplate(itemTemplate);
+                    FrameworkContentElement element = DocHelpers.LoadDataTemplate(itemTemplate);
                     element.DataContext = data;
-                    Helpers.UnFixupDataContext(element);
+                    DocHelpers.UnFixupDataContext(element);
                     if (panel is Section)
-                        ((Section)panel).Blocks.Add(Helpers.ConvertToBlock(data, element));
+                        ((Section)panel).Blocks.Add(DocHelpers.ConvertToBlock(data, element));
                     else if (panel is TableRowGroup)
                         ((TableRowGroup)panel).Rows.Add((TableRow)element);
                     else

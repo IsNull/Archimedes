@@ -50,7 +50,7 @@ namespace Archimedes.Patterns.MVMV
         }
 
         public void RegisterPropertyChangedEvent(Expression<Func<object>> property, Action<object> callback) {
-            var name = GetPropertyName(property);
+            var name = Lambda.GetPropertyName(property);
             if (!_typedInvokerMap.ContainsKey(name)) {
                 _typedInvokerMap.Add(name, new List<Action<object>>());
             }
@@ -77,22 +77,12 @@ namespace Archimedes.Patterns.MVMV
         string[] GetPropertyNames(Expression<Func<object>>[] expressions) {
             string[] propertyNames = new string[expressions.Length];
             for (int i = 0; i < expressions.Length; i++) {
-                propertyNames[i] = GetPropertyName(expressions[i]);
+                propertyNames[i] = Lambda.GetPropertyName(expressions[i]);
             }
             return propertyNames;
         }
 
 
-        string GetPropertyName(Expression<Func<object>> expression) {
-            var lambda = expression as LambdaExpression;
-            var memberExpression = lambda.Body as MemberExpression;
-            if (memberExpression == null) {
-                var unaryExpression = (UnaryExpression)lambda.Body;
-                memberExpression = (MemberExpression)unaryExpression.Operand;
-            }
-            var propertyInfo = (PropertyInfo)memberExpression.Member;
-            return propertyInfo.Name;
-        }
 
 
         void OnPropertysChangedInternal(params string[] propertyNames) {

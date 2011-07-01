@@ -55,6 +55,7 @@
     <AssemblyOriginatorKeyFile>Archimedes.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -85,7 +86,7 @@
     <Compile Include="FlowDocuments\BindableRun.cs" />
     <Compile Include="FlowDocuments\BlockTemplateContent.cs" />
     <Compile Include="FlowDocuments\Fragment.cs" />
-    <Compile Include="FlowDocuments\Helpers.cs" />
+    <Compile Include="FlowDocuments\DocHelpers.cs" />
     <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -150,6 +151,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FlowDocuments\Paginators\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,19 +13,28 @@ namespace Archimedes.Patterns
     public static class Lambda
     {
         /// <summary>
+        /// Returns the PropertyInfo from a Expression containing a property like: "() => MyProperty"
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static PropertyInfo GetPropertyInfo(Expression<Func<object>> expression) {
+            var lambda = expression as LambdaExpression;
+            var memberExpression = lambda.Body as MemberExpression;
+            if (memberExpression == null) {
+                var unaryExpression = (UnaryExpression)lambda.Body;
+                memberExpression = (MemberExpression)unaryExpression.Operand;
+            }
+            return memberExpression.Member as PropertyInfo;
+        }
+
+
+        /// <summary>
         /// Returns the PropertyName from a Expression containing a property like: "() => MyProperty"
         /// </summary>
         /// <param name="expression"></param>
         /// <returns></returns>
         public static string GetPropertyName(Expression<Func<object>> expression) {
-            var lambda = expression as LambdaExpression;
-            var memberExpression = lambda.Body as MemberExpression;
-            if (memberExpression == null) {
-                var unaryExpression = (lambda.Body as UnaryExpression);
-                memberExpression = unaryExpression.Operand as MemberExpression;
-            }
-
-            var propertyInfo = memberExpression.Member as PropertyInfo;
+            var propertyInfo = GetPropertyInfo(expression);
             if (propertyInfo != null)
                 return propertyInfo.Name;
             else

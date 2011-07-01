@@ -11,8 +11,14 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Documents;
+    using System.IO;
+    using System.Text;
+    using System.Windows.Markup;
+    using System.IO.Packaging;
+    using System.Windows.Xps.Packaging;
+    using System.Windows.Xps.Serialization;
 
-    internal static class Helpers
+    public static class DocHelpers
     {
         /// <summary>
         /// If you use a bindable flow document element more than once, you may encounter a "Collection was modified" exception.
@@ -36,7 +42,7 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
 
         private static bool InternalUnFixupDataContext(DependencyObject dp) {
             // only consider those elements for which we've called FixupDataContext(): they all belong to this namespace
-            if (dp is FrameworkContentElement && dp.GetType().Namespace == typeof(Helpers).Namespace) {
+            if (dp is FrameworkContentElement && dp.GetType().Namespace == typeof(DocHelpers).Namespace) {
                 Binding binding = BindingOperations.GetBinding(dp, FrameworkContentElement.DataContextProperty);
                 if (binding != null
                     && binding.Path != null && binding.Path.Path == FrameworkContentElement.DataContextProperty.Name
@@ -83,6 +89,48 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
                 Run run = new Run();
                 run.Text = (data == null) ? String.Empty : data.ToString();
                 return new Paragraph(run);
+            }
+        }
+
+
+        public static FlowDocument LoadFlowDocumentFromFile(string filePathXaml) {
+            FlowDocument doc;
+            using (StreamReader sr = new StreamReader(new FileStream(filePathXaml, FileMode.Open, FileAccess.Read))) {
+                doc = XamlReader.Load(sr.BaseStream) as FlowDocument;
+                sr.Close();
+            }
+            return doc;
+        }
+
+        /// <summary>
+        /// Helper method to create page header or footer from flow document template
+        /// </summary>
+        /// <param name="data">report data</param>
+        /// <returns></returns>
+        /// 
+        public static XpsDocument CreateXpsDocument(FlowDocument document) {
+            MemoryStream ms = new MemoryStream();
+            Package pkg = Package.Open(ms, FileMode.Create, FileAccess.ReadWrite);
+            string pack = "pack://report.xps";
+            PackageStore.RemovePackage(new Uri(pack));
+            PackageStore.AddPackage(new Uri(pack), pkg);
+            XpsDocument xpsdoc = new XpsDocument(pkg, CompressionOption.NotCompressed, pack);
+            XpsSerializationManager rsm = new XpsSerializationManager(new XpsPackagingPolicy(xpsdoc), false);
+
+            DocumentPaginator dp = 
+                ((IDocumentPaginatorSource)document).DocumentPaginator;
+            rsm.SaveAsXaml(dp);
+            return xpsdoc;
+        }
+
+        public static void SaveAsXps(string path, FlowDocument document) {
+            using (Package package = Package.Open(path, FileMode.Create)) {
+                using (var xpsDoc = new XpsDocument(package, System.IO.Packaging.CompressionOption.Maximum)) {
+                    var xpsSm = new XpsSerializationManager(new XpsPackagingPolicy(xpsDoc), false);
+                    DocumentPaginator dp =
+                        ((IDocumentPaginatorSource)document).DocumentPaginator;
+                    xpsSm.SaveAsXaml(dp);
+                }
             }
         }
 

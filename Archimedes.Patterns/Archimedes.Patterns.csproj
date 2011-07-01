@@ -77,6 +77,9 @@
     <Compile Include="Commands\States\StateChangingEventArgs.cs" />
     <Compile Include="Commands\States\StateCommand.cs" />
     <Compile Include="Commands\TransparentCommandUndo.cs" />
+    <Compile Include="Conditions\ConditionalEmiter.cs" />
+    <Compile Include="Conditions\IOperatorManagerService.cs" />
+    <Compile Include="Conditions\OperatorManagerService.cs" />
     <Compile Include="Data\LimitedStack.cs" />
     <Compile Include="Data\ObservableLimitedStack.cs" />
     <Compile Include="Data\Tree\ComplexSubtree.cs" />
@@ -91,6 +94,8 @@
     <Compile Include="Data\Tree\SimpleTreeNodeList.cs" />
     <Compile Include="Notifications\NotificationCollection.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
+    <Compile Include="Conditions\DynamicConditionExpression.cs" />
+    <Compile Include="Reflection\TypeHelper.cs" />
     <Compile Include="Threading\ThreadMutableObservableCollection.cs" />
     <Compile Include="Lambda.cs" />
     <Compile Include="MVMV\NotifyChangedBase.cs" />
