@@ -139,8 +139,8 @@ namespace Archimedes.Patterns.Conditions
                 //
                 // Cache Property Info if necessary
                 //
-                if (_property == null) {
-                    _property =
+                if (Property == null) {
+                    Property =
                     dataQry.First().GetType().GetProperty(_propertyName);
                     if (_property == null)
                         throw new NotSupportedException(string.Format(
