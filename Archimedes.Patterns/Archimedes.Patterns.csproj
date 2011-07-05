@@ -79,6 +79,7 @@
     <Compile Include="Commands\TransparentCommandUndo.cs" />
     <Compile Include="Conditions\ConditionalEmiter.cs" />
     <Compile Include="Conditions\IOperatorManagerService.cs" />
+    <Compile Include="Conditions\Operator.cs" />
     <Compile Include="Conditions\OperatorManagerService.cs" />
     <Compile Include="Data\LimitedStack.cs" />
     <Compile Include="Data\ObservableLimitedStack.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Data\Tree\SimpleTree.cs" />
     <Compile Include="Data\Tree\SimpleTreeNode.cs" />
     <Compile Include="Data\Tree\SimpleTreeNodeList.cs" />
+    <Compile Include="EventArgs.cs" />
     <Compile Include="Notifications\NotificationCollection.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Conditions\DynamicConditionExpression.cs" />

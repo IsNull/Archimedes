@@ -9,6 +9,8 @@ namespace Archimedes.Patterns.Conditions
 {
     /// <summary>
     /// Represents a dynamic property conditon expression
+    /// There are hardcoded greater/smallerthan emiters,
+    /// which basicaly can handle numeric types / dates
     /// </summary>
     public class DynamicConditionExpression
     {
@@ -27,8 +29,19 @@ namespace Archimedes.Patterns.Conditions
 
         #region Events
 
+        /// <summary>
+        /// Raised when the Property Value has changed
+        /// </summary>
         public event EventHandler ValueChanged;
+
+        /// <summary>
+        /// Raised when the Property Operator has changed
+        /// </summary>
         public event EventHandler OperatorChanged;
+
+        /// <summary>
+        /// Raised when the Property "Proeperty" has changed
+        /// </summary>
         public event EventHandler PropertyChanged;
 
         #endregion
@@ -66,6 +79,10 @@ namespace Archimedes.Patterns.Conditions
 
         #region Public Properties
 
+        /// <summary>
+        /// Propertyname as string
+        /// If just the string name is given, the Propertyinfo is garthered with reflection
+        /// </summary>
         public string PropertyName {
             get { return Property == null ? _propertyName : Property.Name; }
             set { 
@@ -74,6 +91,9 @@ namespace Archimedes.Patterns.Conditions
             }
         }
 
+        /// <summary>
+        /// Specifies a Property of a Class to use for comparision
+        /// </summary>
         public PropertyInfo Property {
             get {
                 return _property;
@@ -96,6 +116,9 @@ namespace Archimedes.Patterns.Conditions
             }
         }
 
+        /// <summary>
+        /// Operator to use for comparision
+        /// </summary>
         public Operator Operator {
             get { return _compOP; }
             set {
@@ -105,6 +128,9 @@ namespace Archimedes.Patterns.Conditions
             }
         }
 
+        /// <summary>
+        /// Value to compare against
+        /// </summary>
         public object Value {
             get { return _value; }
             set { 
@@ -168,14 +194,20 @@ namespace Archimedes.Patterns.Conditions
 
             var val = _property.GetValue(obj, null);
 
+
+            // Check here if the Expression is true
+            // NOT will be handled in the Finalize Part of this Method and reverse
+            // any result if NOT is set.
+
             //
             // Compare Equality if the Equals Flag is set
-            // Do it also if NOT is the only flag which is set for convience
+            // Do it also if NOT is the ONLY flag which is set, for convience.
             //
             if (((_compOP & Operator.Equal) == Operator.Equal)
                 || _compOP == Operator.Not) {
-                
-                if (val != null && val.Equals(_value)) {
+
+                if ((val == null && _value == null) ||
+                    (val != null && val.Equals(_value))) {
                     _res = true;
                     goto Finalize;
                 }
@@ -187,7 +219,6 @@ namespace Archimedes.Patterns.Conditions
                 } else if (val != null && TypeHelper.IsTypeOrUnderlingType(_itemType, typeof(DateTime))) {
                     _res = (DateTime)val > (DateTime)_value;
                 }
-                
             }
 
             if ((_compOP & Operator.SmallerThan) == Operator.SmallerThan) {
@@ -205,18 +236,6 @@ namespace Archimedes.Patterns.Conditions
         #endregion
     }
 
-    /// <summary>
-    /// Comparing Operator
-    /// Uses bitwise flags
-    /// </summary>
-    [Flags]
-    public enum Operator
-    {
-        None = 0,
-        Equal = 1,
-        GreaterThan = 2,
-        SmallerThan = 4,
-        Not = 8
-    }
+
 
 }

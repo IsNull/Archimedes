@@ -10,7 +10,8 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
     [ContentProperty("Content")]
     public class Fragment : FrameworkElement
     {
-        private static readonly DependencyProperty ContentProperty = DependencyProperty.Register("Content", typeof(FrameworkContentElement), typeof(Fragment));
+        private static readonly DependencyProperty ContentProperty = DependencyProperty.Register(
+            "Content", typeof(FrameworkContentElement), typeof(Fragment));
 
         public FrameworkContentElement Content {
             get {

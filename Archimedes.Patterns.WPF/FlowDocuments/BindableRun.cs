@@ -6,7 +6,8 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
 {
     public class BindableRun : Run
     {
-        public static readonly DependencyProperty BoundTextProperty = DependencyProperty.Register("BoundText", typeof(string), typeof(BindableRun), new PropertyMetadata(OnBoundTextChanged));
+        public static readonly DependencyProperty BoundTextProperty = DependencyProperty.Register(
+            "BoundText", typeof(string), typeof(BindableRun), new PropertyMetadata(OnBoundTextChanged));
 
         public BindableRun() {
             DocHelpers.FixupDataContext(this);

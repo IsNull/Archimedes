@@ -17,6 +17,7 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
     using System.IO.Packaging;
     using System.Windows.Xps.Packaging;
     using System.Windows.Xps.Serialization;
+    using System.Xml;
 
     public static class DocHelpers
     {
@@ -95,9 +96,8 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
 
         public static FlowDocument LoadFlowDocumentFromFile(string filePathXaml) {
             FlowDocument doc;
-            using (StreamReader sr = new StreamReader(new FileStream(filePathXaml, FileMode.Open, FileAccess.Read))) {
-                doc = XamlReader.Load(sr.BaseStream) as FlowDocument;
-                sr.Close();
+            using (XmlTextReader xtr = new XmlTextReader(filePathXaml)) {
+                doc = XamlReader.Load(xtr) as FlowDocument;
             }
             return doc;
         }
@@ -107,7 +107,6 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
         /// </summary>
         /// <param name="data">report data</param>
         /// <returns></returns>
-        /// 
         public static XpsDocument CreateXpsDocument(FlowDocument document) {
             MemoryStream ms = new MemoryStream();
             Package pkg = Package.Open(ms, FileMode.Create, FileAccess.ReadWrite);

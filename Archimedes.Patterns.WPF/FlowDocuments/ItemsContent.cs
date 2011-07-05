@@ -12,9 +12,12 @@ namespace Archimedes.Patterns.WPF.FlowDocuments
 
     public class ItemsContent : Section
     {
-        private static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(ItemsContent), new PropertyMetadata(OnItemsSourceChanged));
-        private static readonly DependencyProperty ItemTemplateProperty = DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(ItemsContent), new PropertyMetadata(OnItemTemplateChanged));
-        private static readonly DependencyProperty ItemsPanelProperty = DependencyProperty.Register("ItemsPanel", typeof(DataTemplate), typeof(ItemsContent), new PropertyMetadata(OnItemsPanelChanged));
+        static readonly DependencyProperty ItemsSourceProperty = 
+            DependencyProperty.Register("ItemsSource", typeof(IEnumerable), typeof(ItemsContent), new PropertyMetadata(OnItemsSourceChanged));
+        static readonly DependencyProperty ItemTemplateProperty = 
+            DependencyProperty.Register("ItemTemplate", typeof(DataTemplate), typeof(ItemsContent), new PropertyMetadata(OnItemTemplateChanged));
+        static readonly DependencyProperty ItemsPanelProperty = 
+            DependencyProperty.Register("ItemsPanel", typeof(DataTemplate), typeof(ItemsContent), new PropertyMetadata(OnItemsPanelChanged));
 
         public ItemsContent() {
             DocHelpers.FixupDataContext(this);
