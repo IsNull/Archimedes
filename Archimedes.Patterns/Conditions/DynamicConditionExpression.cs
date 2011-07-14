@@ -13,7 +13,7 @@ namespace Archimedes.Patterns.Conditions
     /// There are hardcoded greater/smallerthan emiters,
     /// which basicaly can handle numeric types / dates
     /// </summary>
-    public class DynamicConditionExpression
+    public class DynamicConditionExpression : ConditionExpression
     {
         #region Fields
 
@@ -52,8 +52,15 @@ namespace Archimedes.Patterns.Conditions
         /// <summary>
         /// Creates an new empty DynamicConditionExpression
         /// </summary>
-        public DynamicConditionExpression() { }
+        public DynamicConditionExpression() : base() { }
 
+
+        /// <summary>
+        /// Creates an new empty DynamicConditionExpression
+        /// </summary>
+        public DynamicConditionExpression(Guid newid) : base(newid) { }
+
+        /*
         /// <summary>
         /// Creates an new DynamicConditionExpression
         /// </summary>
@@ -75,7 +82,7 @@ namespace Archimedes.Patterns.Conditions
             Operator = op;
             Value = value;
         }
-        
+        */
         #endregion
 
         #region Public Properties
@@ -153,9 +160,8 @@ namespace Archimedes.Patterns.Conditions
         /// </summary>
         /// <param name="dataQry"></param>
         /// <returns></returns>
-        public virtual IQueryable<object> Filter(IQueryable<object> dataQry) {
+        public override IQueryable<object> Filter(IQueryable<object> dataQry) {
             if (dataQry.Any()) {
-
                 //
                 // Cache Property Info if necessary
                 //
@@ -166,10 +172,8 @@ namespace Archimedes.Patterns.Conditions
                         throw new NotSupportedException(string.Format(
                             "Your objects in the provided List doesn't have the specified public property {0}!", _propertyName));
                 }
-                // Apply the filter
-                dataQry = dataQry.Where(x => IsMatch(x));
             }
-            return dataQry;
+            return base.Filter(dataQry);
         }
 
         
@@ -178,8 +182,8 @@ namespace Archimedes.Patterns.Conditions
         /// </summary>
         /// <param name="obj">Object which has a matching Property</param>
         /// <returns></returns>
-        public virtual bool IsMatch(object obj) {
-            bool _res = false;
+        public override bool IsMatch(object obj) {
+            bool res = false;
 
             if (_property == null)
                 throw new NotSupportedException(
@@ -202,32 +206,37 @@ namespace Archimedes.Patterns.Conditions
 
                 if ((val == null && _value == null) ||
                     (val != null && val.Equals(_value))) {
-                    _res = true;
+                    res = true;
                     goto Finalize;
                 }
             }
 
             if ((_compOP & Operator.GreaterThan) == Operator.GreaterThan) {
                 if (_isNumeric) {
-                    _res = (double)Convert.ChangeType(val, NUMBER) > (double)Convert.ChangeType(_value, NUMBER);
+                    res = (double)Convert.ChangeType(val, NUMBER) > (double)Convert.ChangeType(_value, NUMBER);
                 } else if (val != null && TypeHelper.IsTypeOrUnderlingType(_itemType, typeof(DateTime))) {
-                    _res = (DateTime)val > (DateTime)_value;
+                    res = (DateTime)val > (DateTime)_value;
                 }
             }
 
             if ((_compOP & Operator.SmallerThan) == Operator.SmallerThan) {
                 if (_isNumeric) {
-                    _res = (double)Convert.ChangeType(val, NUMBER) < (double)Convert.ChangeType(_value, NUMBER);
+                    res = (double)Convert.ChangeType(val, NUMBER) < (double)Convert.ChangeType(_value, NUMBER);
                 } else if (val != null && TypeHelper.IsTypeOrUnderlingType(_itemType, typeof(DateTime))) {
-                    _res = (DateTime)val < (DateTime)_value;
+                    res = (DateTime)val < (DateTime)_value;
                 }
             }
 
         Finalize:
-            return ((_compOP & Operator.Not) == Operator.Not) ? !_res : _res;
+            return ((_compOP & Operator.Not) == Operator.Not) ? !res : res;
         }
 
         #endregion
+
+        static string _name = "Dynamische Bedingung";
+        public override string Name {
+            get { return _name; }
+        }
     }
 
 

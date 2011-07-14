@@ -77,11 +77,12 @@
     <Compile Include="Commands\States\StateChangingEventArgs.cs" />
     <Compile Include="Commands\States\StateCommand.cs" />
     <Compile Include="Commands\TransparentCommandUndo.cs" />
-    <Compile Include="Conditions\ConditionalEmiter.cs" />
+    <Compile Include="Conditions\ConditionExpression.cs" />
     <Compile Include="Conditions\IOperatorManagerService.cs" />
     <Compile Include="Conditions\Operator.cs" />
     <Compile Include="Conditions\OperatorManagerService.cs" />
     <Compile Include="Data\Entity.cs" />
+    <Compile Include="Data\IEntityBase.cs" />
     <Compile Include="Data\LimitedStack.cs" />
     <Compile Include="Data\ObservableLimitedStack.cs" />
     <Compile Include="Data\Tree\ComplexSubtree.cs" />

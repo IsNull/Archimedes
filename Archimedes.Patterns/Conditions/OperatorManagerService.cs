@@ -79,5 +79,31 @@ namespace Archimedes.Patterns.Conditions
             return sb.ToString();
         }
 
+
+        public virtual bool EvalNumeric(double left, Operator op, double right) {
+            bool res = false;
+
+            if (((op & Operator.Equal) == Operator.Equal)
+                || op == Operator.Not) {
+
+                if (left.Equals(right)) {
+                    res = true;
+                    goto Finalize;
+                }
+            }
+
+            if ((op & Operator.GreaterThan) == Operator.GreaterThan) {
+                    res = left > right;
+            }
+
+            if ((op & Operator.SmallerThan) == Operator.SmallerThan) {
+                res = left < right;
+            }
+
+            Finalize:
+            return ((op & Operator.Not) == Operator.Not) ? !res : res;
+        }
+
+
     }
 }

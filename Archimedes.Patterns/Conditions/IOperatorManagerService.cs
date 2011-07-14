@@ -27,5 +27,14 @@ namespace Archimedes.Patterns.Conditions
         /// <param name="opFlags"></param>
         /// <returns></returns>
         string OperatorToString(Operator opFlags);
+
+        /// <summary>
+        /// Evaluates the given numeric comparer expression
+        /// </summary>
+        /// <param name="left">Left Number</param>
+        /// <param name="op">Comparer Operator to use</param>
+        /// <param name="right">Right Number</param>
+        /// <returns></returns>
+        bool EvalNumeric(double left, Operator op, double right);
     }
 }

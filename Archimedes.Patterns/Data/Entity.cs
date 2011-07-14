@@ -45,7 +45,7 @@ namespace Archimedes.Patterns.Data
     /// </summary>
     /// <typeparam name="Tid">ID type of this entity</typeparam>
     /// <typeparam name="T">Type of this entity</typeparam>
-    public class EntityBase<Tid, T> where T : class
+    public class EntityBase<Tid, T> : IEntityBase<Tid,T> where T : class
     {
         public EntityBase(){ }
 
