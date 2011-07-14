@@ -6,6 +6,7 @@ using System.Windows.Input;
 using Archimedes.Patterns.MVMV;
 using Archimedes.Patterns.WPF.Commands;
 using System.Linq.Expressions;
+using System.Windows.Markup;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -53,7 +54,12 @@ namespace Archimedes.Patterns.WPF.ViewModels
             OnPropertyChanged(expressions);
         }
 
-        #region CloseCommand
+        public static XmlLanguage DefaultLanguage = XmlLanguage.Empty;
+        public virtual XmlLanguage Language {
+            get { return DefaultLanguage; }
+        }
+
+        #region Close Command
 
         /// <summary>
         /// Returns the command that, when invoked, attempts
@@ -67,8 +73,14 @@ namespace Archimedes.Patterns.WPF.ViewModels
                 return _closeCommand;
             }
         }
+        #endregion // CloseCommand
 
-        
+        #region Focus Command
+
+        /// <summary>
+        /// Returns the command that, when invoked, attempts
+        /// to focus this workspace in the user interface.
+        /// </summary>
         public ICommand FocusCommand {
             get {
                 if (_focusCommand == null) {
@@ -77,9 +89,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
                 return _focusCommand;
             }
         }
-
-
-        #endregion // CloseCommand
+        #endregion // FocusCommand
 
         #region Event Invokers
 

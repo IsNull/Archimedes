@@ -1,0 +1,29 @@
+﻿<Window x:Class="Archimedes.Tests.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525" xmlns:my="clr-namespace:Archimedes.Controls.WPF;assembly=Archimedes.Controls.WPF">
+    <Grid>
+        <my:ColorViewer 
+            Height="147" 
+            HorizontalAlignment="Left" 
+            Margin="148,37,0,0" 
+            Name="colorViewer1" 
+            
+            VerticalAlignment="Top" Width="148">
+
+            <my:ColorViewer.SectorBrushes>
+
+                <SolidColorBrush Color="YellowGreen"/>
+                <!--
+                                <SolidColorBrush Color="Yellow"/>
+                <SolidColorBrush Color="Red"/>
+                <SolidColorBrush Color="Blue"/>
+                <SolidColorBrush Color="Violet"/>
+                <SolidColorBrush Color="Black"/>
+                <SolidColorBrush Color="Green"/>
+                
+                -->
+             </my:ColorViewer.SectorBrushes>
+        </my:ColorViewer>
+    </Grid>
+</Window>

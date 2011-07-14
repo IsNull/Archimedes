@@ -43,5 +43,23 @@ namespace Archimedes.Patterns.Reflection
             return type.Equals(needle);
         }
 
+        public static object ConvertOrDefault(object source, Type destination, bool instantiateNullables = true) {
+            object newvalue;
+
+            Type destinationType = destination;
+            if (TypeHelper.IsNullableType(destinationType))
+                destinationType = Nullable.GetUnderlyingType(destinationType);
+            try {
+                newvalue = Convert.ChangeType(source, destinationType);
+            } catch {
+                if (instantiateNullables)
+                    newvalue = destinationType.IsValueType ? Activator.CreateInstance(destinationType) : null;
+                else
+                    newvalue = destination.IsValueType ? Activator.CreateInstance(destination) : null;
+            }
+            return newvalue;
+        }
+
+
     }
 }

@@ -16,6 +16,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
     using Archimedes.Patterns.Services;
     using Archimedes.Patterns.WPF.ViewModels;
     using Archimedes.Services.WPF.WorkBenchServices.Loader;
+    using System.Windows.Documents;
 
     /// <summary>
     /// Implements the workbenchservice backing AvalonDock
@@ -59,6 +60,23 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         #endregion
 
         #region IWorkBenchService
+
+        public void ShowRapport(WorkspaceViewModel viewModel, FlowDocument template) {
+
+            if (viewModel == null)
+                throw new ArgumentNullException("viewModel");
+            if (template == null)
+                throw new ArgumentNullException("template");
+
+            var dockableContent = CreateDockableContent(viewModel.DisplayName, template, viewModel);
+
+            dockableContent.DockableStyle = DockableStyle.None;
+            dockableContent.FloatingWindowSizeToContent = SizeToContent.Manual;
+            dockableContent.HideOnClose = false;
+            dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
+
+            dockableContent.ShowAsDialoge(DockManager);
+        }
 
         #region Show VM Content Methods
 
@@ -322,10 +340,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             return dockableContent;
         }
 
-        DockableContent CreateDockableContent(string title, FrameworkElement view, WorkspaceViewModel viewModel) {
+        DockableContent CreateDockableContent(string title, DependencyObject view, WorkspaceViewModel viewModel) {
             var dockableContent = new DockableContent()
             {
-                Name = "myNewDialoge",
                 Title = title
             };
             dockableContent.Content = view;
@@ -374,7 +391,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         }
 
 
-        void CloseParent(FrameworkElement element, WorkspaceViewModel vm) {
+        void CloseParent(DependencyObject element, WorkspaceViewModel vm) {
             var window = Window.GetWindow(element);
             if(window != null){
                 window.Closed += (a, b) => CleanUp(element,vm, window);
@@ -387,7 +404,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             ActivateMainWindow();
         }
 
-        void CleanUp(FrameworkElement element, WorkspaceViewModel vm, Window window) {
+        void CleanUp(DependencyObject element, WorkspaceViewModel vm, Window window) {
             vm.RequestClose -= (s, e) => CloseParent(element, vm);
             window.Closed -= (a, b) => CleanUp(element, vm, window);
         }

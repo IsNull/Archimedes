@@ -88,6 +88,7 @@
     <Compile Include="FlowDocuments\Fragment.cs" />
     <Compile Include="FlowDocuments\DocHelpers.cs" />
     <Compile Include="FlowDocuments\ItemsContent.cs" />
+    <Compile Include="FlowDocuments\XamlToXPS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

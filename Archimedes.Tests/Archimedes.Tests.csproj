@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{41E7583E-4C6C-4DAA-8648-3DB3455B8A88}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Archimedes.Tests</RootNamespace>
+    <AssemblyName>Archimedes.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Archimedes.Controls.WPF\Archimedes.Controls.WPF.csproj">
+      <Project>{9B72F725-A1DB-45E8-AEFF-34AB9601F161}</Project>
+      <Name>Archimedes.Controls.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Archimedes.Geometry\Archimedes.Geometry.csproj">
+      <Project>{B16862E8-837A-411A-8D07-09CCDA8CE3D7}</Project>
+      <Name>Archimedes.Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Archimedes.Patterns.Services.WPF\Archimedes.Services.WPF.csproj">
+      <Project>{EA929451-8342-492C-8C16-6E4B15355E7C}</Project>
+      <Name>Archimedes.Services.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Archimedes.Patterns.WPF\Archimedes.Patterns.WPF.csproj">
+      <Project>{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}</Project>
+      <Name>Archimedes.Patterns.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Archimedes.Patterns\Archimedes.Patterns.csproj">
+      <Project>{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}</Project>
+      <Name>Archimedes.Patterns</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Archimedes\Archimedes.csproj">
+      <Project>{60DBCF96-F3D4-46C4-A399-AC08E4874BD2}</Project>
+      <Name>Archimedes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AvalonDock\AvalonDock.Themes\AvalonDock.Themes.csproj">
+      <Project>{3836F4A8-4B35-4F5E-BB0F-DAD374297525}</Project>
+      <Name>AvalonDock.Themes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AvalonDock\AvalonDock\AvalonDock.csproj">
+      <Project>{87E61430-4243-45F2-B74E-0A4C096CEBF3}</Project>
+      <Name>AvalonDock %28AvalonDock\AvalonDock%29</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

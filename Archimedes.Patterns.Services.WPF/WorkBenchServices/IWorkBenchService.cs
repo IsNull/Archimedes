@@ -5,6 +5,7 @@ using System.Windows.Threading;
 using System.Collections.Generic;
 using Archimedes.Services.WPF.WorkBenchServices.MessageBox;
 using Archimedes.Patterns.WPF.ViewModels;
+using System.Windows.Documents;
 
 namespace Archimedes.Services.WPF.WorkBenchServices
 {
@@ -31,7 +32,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         
         void LoaderView();
         void LoaderView(bool display);
-        
+
+
+        void ShowRapport(WorkspaceViewModel viewModel, FlowDocument template);
 
         #region Show Content Methods
 

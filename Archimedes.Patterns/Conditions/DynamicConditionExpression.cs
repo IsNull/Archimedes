@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Reflection;
 using Archimedes.Patterns.Reflection;
+using System.Linq.Expressions;
 
 namespace Archimedes.Patterns.Conditions
 {
@@ -32,17 +33,17 @@ namespace Archimedes.Patterns.Conditions
         /// <summary>
         /// Raised when the Property Value has changed
         /// </summary>
-        public event EventHandler ValueChanged;
+        public virtual event EventHandler ValueChanged;
 
         /// <summary>
         /// Raised when the Property Operator has changed
         /// </summary>
-        public event EventHandler OperatorChanged;
+        public virtual event EventHandler OperatorChanged;
 
         /// <summary>
         /// Raised when the Property "Proeperty" has changed
         /// </summary>
-        public event EventHandler PropertyChanged;
+        public virtual event EventHandler PropertyChanged;
 
         #endregion
 
@@ -83,7 +84,7 @@ namespace Archimedes.Patterns.Conditions
         /// Propertyname as string
         /// If just the string name is given, the Propertyinfo is garthered with reflection
         /// </summary>
-        public string PropertyName {
+        public virtual string PropertyName {
             get { return Property == null ? _propertyName : Property.Name; }
             set { 
                 _propertyName = value;
@@ -94,7 +95,7 @@ namespace Archimedes.Patterns.Conditions
         /// <summary>
         /// Specifies a Property of a Class to use for comparision
         /// </summary>
-        public PropertyInfo Property {
+        public virtual PropertyInfo Property {
             get {
                 return _property;
             }
@@ -119,7 +120,7 @@ namespace Archimedes.Patterns.Conditions
         /// <summary>
         /// Operator to use for comparision
         /// </summary>
-        public Operator Operator {
+        public virtual Operator Operator {
             get { return _compOP; }
             set {
                 _compOP = value;
@@ -131,18 +132,11 @@ namespace Archimedes.Patterns.Conditions
         /// <summary>
         /// Value to compare against
         /// </summary>
-        public object Value {
+        public virtual object Value {
             get { return _value; }
             set { 
                 if (_itemType != null)
-                    try {
-                        Type destinationType = _itemType;
-                        if (TypeHelper.IsNullableType(_itemType))
-                            destinationType = Nullable.GetUnderlyingType(_itemType);
-                        _value = Convert.ChangeType(value, destinationType);
-                    } catch {
-                        _value = _itemType.IsValueType ? Activator.CreateInstance(_itemType) : null;
-                    }
+                    _value = TypeHelper.ConvertOrDefault(value, _itemType, false);
                 else
                     _value = value;
                 if (ValueChanged != null)
