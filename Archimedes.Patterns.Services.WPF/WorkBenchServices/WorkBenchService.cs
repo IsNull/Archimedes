@@ -68,7 +68,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             if (template == null)
                 throw new ArgumentNullException("template");
 
-            var dockableContent = CreateDockableContent(viewModel.DisplayName, template, viewModel);
+            var dockableContent = CreateDockableContent(template, viewModel);
 
             dockableContent.DockableStyle = DockableStyle.None;
             dockableContent.FloatingWindowSizeToContent = SizeToContent.Manual;
@@ -123,7 +123,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
 
-            var dockableContent = SetUpDockableContent(viewModel, viewModel.DisplayName);
+            var dockableContent = SetUpDockableContent(viewModel);
             dockableContent.DockableStyle = DockableStyle.None;
             dockableContent.FloatingWindowSizeToContent = sizeToContent;
             dockableContent.HideOnClose = false;
@@ -140,14 +140,14 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         public void ShowDockedContent(WorkspaceViewModel viewModel) {
             if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
-            var dockableContent = SetUpDockableContent(viewModel, viewModel.DisplayName);
+            var dockableContent = SetUpDockableContent(viewModel);
             dockableContent.Show(DockManager);
         }
 
         public void ShowDockedDocument(WorkspaceViewModel viewModel) {
             if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
-            var dockableContent = SetUpDockableContent(viewModel, viewModel.DisplayName);
+            var dockableContent = SetUpDockableContent(viewModel);
             dockableContent.ShowAsDocument(DockManager);
         }
 
@@ -168,11 +168,12 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <returns></returns>
         public DialogWPFResult MessageBox(string message, string detail, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
             var vm = new MessageBoxViewModel(message, button);
+            vm.DisplayName = title;
             vm.DetailMessage = detail;
             vm.MessageBoxImage = type;
             var view = vm.BuildView();
 
-            var dc = CreateDockableContent(title, view, vm);
+            var dc = CreateDockableContent(view, vm);
             dc.DockableStyle = AvalonDock.DockableStyle.Floating;
             dc.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
             dc.HideOnClose = false;
@@ -192,10 +193,11 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <returns></returns>
         public DialogWPFResult MessageBox(string message, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
             var vm = new MessageBoxViewModel(message, button);
+            vm.DisplayName = title;
             vm.MessageBoxImage = type;
             var view = vm.BuildView();
 
-            var dc = CreateDockableContent(title, view, vm);
+            var dc = CreateDockableContent(view, vm);
             dc.DockableStyle = AvalonDock.DockableStyle.Floating;
             dc.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
             dc.HideOnClose = false;
@@ -243,7 +245,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             if (_dcLoaderView == null && display) {
                 var loaderView = new LoadingAnimation() { Width = 100, Height = 100 };
                 var vm = new LoaderViewModel();
-                _dcLoaderView = CreateDockableContent("Bitte Warten", loaderView, vm);
+                _dcLoaderView = CreateDockableContent(loaderView, vm);
                 _dcLoaderView.DockableStyle = DockableStyle.Floating;
                 _dcLoaderView.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
                 //_dcLoaderView.IsCloseable = false;
@@ -313,7 +315,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             if (viewModel == null)
                 throw new ArgumentNullException("viewModel");
 
-            var dockableContent = SetUpDockableContent(viewModel, viewModel.DisplayName);
+            var dockableContent = SetUpDockableContent(viewModel);
             dockableContent.DockableStyle = DockableStyle.Floating;
             dockableContent.FloatingWindowSizeToContent = sizeToContent;
             dockableContent.HideOnClose = false;
@@ -326,7 +328,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             return dockableContent;
         }
 
-        DockableContent SetUpDockableContent(WorkspaceViewModel viewModel, string title) {
+        DockableContent SetUpDockableContent(WorkspaceViewModel viewModel) {
 
             var dockableContent = FindContentByViewModel(viewModel) as DockableContent;
             if (dockableContent != null)
@@ -336,15 +338,16 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             var viewType = _mappingService.GetViewTypeFromViewModelType(viewModel.GetType());
             var view = (FrameworkElement)Activator.CreateInstance(viewType);
 
-            dockableContent = CreateDockableContent(title, view, viewModel);
+            dockableContent = CreateDockableContent(view, viewModel);
             return dockableContent;
         }
 
-        DockableContent CreateDockableContent(string title, DependencyObject view, WorkspaceViewModel viewModel) {
-            var dockableContent = new DockableContent()
-            {
-                Title = title
-            };
+        DockableContent CreateDockableContent(DependencyObject view, WorkspaceViewModel viewModel) {
+            var dockableContent = new DockableContent();
+
+            //bind title to WorkspaceViewModel.DisplayName
+            dockableContent.SetBinding(DockableContent.TitleProperty, new System.Windows.Data.Binding("DisplayName"));
+
             dockableContent.Content = view;
             dockableContent.DataContext = viewModel;
             viewModel.RequestClose += (s, e) => CloseParent(view, viewModel);

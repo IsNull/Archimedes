@@ -100,6 +100,7 @@
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Conditions\DynamicConditionExpression.cs" />
     <Compile Include="Reflection\TypeHelper.cs" />
+    <Compile Include="Serializing\SerializerHelper.cs" />
     <Compile Include="Threading\ThreadMutableObservableCollection.cs" />
     <Compile Include="Lambda.cs" />
     <Compile Include="MVMV\NotifyChangedBase.cs" />
@@ -112,6 +113,8 @@
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Services\ServiceLocatorInstance.cs" />
     <Compile Include="Singleton.cs" />
+    <Compile Include="Utils\AsciiHelper.cs" />
+    <Compile Include="Utils\ThrowUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

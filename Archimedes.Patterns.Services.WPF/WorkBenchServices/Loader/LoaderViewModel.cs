@@ -8,6 +8,8 @@ namespace Archimedes.Services.WPF.WorkBenchServices.Loader
 {
     public class LoaderViewModel : WorkspaceViewModel
     {
-        public LoaderViewModel() { }
+        public LoaderViewModel() { 
+            DisplayName = "Please Wait";
+        }
     }
 }

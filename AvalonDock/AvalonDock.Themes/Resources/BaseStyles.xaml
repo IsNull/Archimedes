@@ -8,4 +8,8 @@
             Value="75" />
     </Style>
     
+    
+    <Style TargetType="TextBlock" x:Key="TextBlockBase">
+        
+    </Style>    
 </ResourceDictionary>
