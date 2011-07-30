@@ -75,6 +75,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent.HideOnClose = false;
             dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
 
+            viewModel.IsOnWorkspace = true;
             dockableContent.ShowAsDialoge(DockManager);
         }
 
@@ -92,6 +93,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
             var content = SetupFloatingContent(viewModel, sizeToContent, windowSize);
             content.ShowAsFloatingWindow(DockManager, false);
+            viewModel.IsOnWorkspace = true;
         }
 
         /// <summary>
@@ -106,6 +108,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
             var content = SetupFloatingContent(viewModel, sizeToContent, windowSize);
             content.ShowAsUndockableFloatingWindow(DockManager);
+            viewModel.IsOnWorkspace = true;
         }
 
 
@@ -131,6 +134,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             if (windowSize.HasValue) {
                 dockableContent.FloatingWindowSize = windowSize.Value;
             }
+            viewModel.IsOnWorkspace = true;
             var ret = dockableContent.ShowAsDialoge(DockManager);
 
             return ret;
@@ -142,6 +146,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
                 throw new ArgumentNullException("viewModel");
             var dockableContent = SetUpDockableContent(viewModel);
             dockableContent.Show(DockManager);
+            viewModel.IsOnWorkspace = true;
         }
 
         public void ShowDockedDocument(WorkspaceViewModel viewModel) {
@@ -149,6 +154,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
                 throw new ArgumentNullException("viewModel");
             var dockableContent = SetUpDockableContent(viewModel);
             dockableContent.ShowAsDocument(DockManager);
+            viewModel.IsOnWorkspace = true;
         }
 
         #endregion
@@ -178,6 +184,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dc.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
             dc.HideOnClose = false;
             dc.Closing += (s, e) => vm.OnRequestClose();
+            vm.IsOnWorkspace = true;
             dc.ShowAsDialoge(DockManager);
 
             return vm.DialogeResult;
@@ -202,8 +209,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dc.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
             dc.HideOnClose = false;
             dc.Closing += (s, e) => vm.OnRequestClose();
+            vm.IsOnWorkspace = true;
             dc.ShowAsDialoge(DockManager);
-
+            
             return vm.DialogeResult;
         }
 
@@ -242,9 +250,10 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="display">True means show, false hides the Loader</param>
         public void LoaderView(bool display) {
 
+            LoaderViewModel vm = null;
             if (_dcLoaderView == null && display) {
                 var loaderView = new LoadingAnimation() { Width = 100, Height = 100 };
-                var vm = new LoaderViewModel();
+                vm = new LoaderViewModel();
                 _dcLoaderView = CreateDockableContent(loaderView, vm);
                 _dcLoaderView.DockableStyle = DockableStyle.Floating;
                 _dcLoaderView.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
@@ -254,6 +263,8 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
             if (display) {
                 _dcLoaderView.ShowAsFloatingWindow(DockManager, false);
+                if(vm != null)
+                    vm.IsOnWorkspace = true;
             } else {
                 if (_dcLoaderView != null)
                     _dcLoaderView.Close();
@@ -341,16 +352,69 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent = CreateDockableContent(view, viewModel);
             return dockableContent;
         }
-
+        
         DockableContent CreateDockableContent(DependencyObject view, WorkspaceViewModel viewModel) {
             var dockableContent = new DockableContent();
+            dockableContent.HideOnClose = false;
 
             //bind title to WorkspaceViewModel.DisplayName
             dockableContent.SetBinding(DockableContent.TitleProperty, new System.Windows.Data.Binding("DisplayName"));
+            
 
             dockableContent.Content = view;
             dockableContent.DataContext = viewModel;
-            viewModel.RequestClose += (s, e) => CloseParent(view, viewModel);
+
+            viewModel.RequestClose += (s, e) => {
+                    CloseParent(view, viewModel);
+                };
+            
+            viewModel.RequestFocus += (s, e) => {
+                dockableContent.Focus();
+                };
+
+
+            dockableContent.Hiding += (s, e) => {
+                var content = s as DockableContent;
+                var vm = content.DataContext as WorkspaceViewModel;
+                vm.OnClosing(e);
+            };
+
+            dockableContent.Hidden += (s, e) => {
+                var content = s as DockableContent;
+                var vm = content.DataContext as WorkspaceViewModel;
+                vm.OnClosed();
+            };
+
+            dockableContent.Closing += (s, e) => {
+                var content = s as DockableContent;
+                var vm = content.DataContext as WorkspaceViewModel;
+                vm.OnClosing(e);
+            };
+
+            dockableContent.Closing += (s, e) => {
+                var content = s as DockableContent;
+                var vm = content.DataContext as WorkspaceViewModel;
+                vm.OnClosed();
+            };
+
+
+            dockableContent.Closed += (s, e) => {
+                var content = s as DockableContent;
+                var vm = content.DataContext as WorkspaceViewModel;
+                vm.IsOnWorkspace = false;
+            };
+
+            dockableContent.GotFocus += (s, e) => {
+                var content = s as DockableContent;
+                var vm = content.DataContext as WorkspaceViewModel;
+                vm.HasFocus = true;
+                };
+            dockableContent.LostFocus += (s, e) => {
+                var content = s as DockableContent;
+                var vm = content.DataContext as WorkspaceViewModel;
+                vm.HasFocus = false;
+            };
+
             return dockableContent;
         }
 

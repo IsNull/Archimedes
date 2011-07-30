@@ -223,6 +223,23 @@ namespace AvalonDock
     /// </summary>
     public class DockableContent : ManagedContent
     {
+
+        #region Events
+
+        /// <summary>
+        /// Raised when this DockableContent was hidden
+        /// </summary>
+        public event EventHandler Hidden;
+
+
+        /// <summary>
+        /// Raised when this DockableContent is about to hide itself
+        /// </summary>
+        public event EventHandler<CancelEventArgs> Hiding;
+
+
+        #endregion
+
         static DockableContent()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DockableContent), new FrameworkPropertyMetadata(typeof(DockableContent)));
@@ -676,8 +693,14 @@ namespace AvalonDock
         {
             if (!CanExecuteCommand(ManagedContentCommands.Hide))
                 return false;
+            var e = new CancelEventArgs();
+            this.OnHiding(e);
+
+            if(e.Cancel)
+                return false;
 
             Manager.Hide(this);
+            this.OnHidden();
             return true;
         }
 
@@ -738,7 +761,8 @@ namespace AvalonDock
                     ContainerPane.RemoveContent(
                         ContainerPane.Items.IndexOf(this));
                 }
-                
+                this.Content = null;
+
                 OnClosed();
 
                 //Close here ThemeDictionaryExtension floatingwindow...
@@ -746,6 +770,24 @@ namespace AvalonDock
                 return true;
             }            
         }
+
+        /// <summary>
+        /// Ovveride this method to handle <see cref="DocumentContent.OnHiding"/> event.
+        /// </summary>
+        protected virtual void OnHiding(CancelEventArgs e) {
+            if(Hiding != null && !e.Cancel) {
+                Hiding(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Ovveride this method to handle <see cref="DocumentContent.OnHidden"/> event.
+        /// </summary>
+        protected virtual void OnHidden() {
+            if(Hidden != null)
+                Hidden(this, EventArgs.Empty);
+        }
+
 
         /// <summary>
         /// Slides out this content to a border of the containing docking manager

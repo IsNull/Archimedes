@@ -7,6 +7,7 @@ using Archimedes.Patterns.MVMV;
 using Archimedes.Patterns.WPF.Commands;
 using System.Linq.Expressions;
 using System.Windows.Markup;
+using System.ComponentModel;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -22,6 +23,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         RelayCommand _closeCommand;
         RelayCommand _focusCommand;
+        bool _hasFocus = false;
+        bool _isOnWorkspace = false;
 
         #endregion // Fields
 
@@ -37,6 +40,21 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// </summary>
         public event EventHandler RequestFocus;
 
+        /// <summary>
+        /// Raised when the focus of this Workspace Element has changed
+        /// </summary>
+        public event EventHandler HasFocusChanged;
+
+        /// <summary>
+        /// Raised when the IsOnWorkspace Property has changed
+        /// </summary>
+        public event EventHandler IsOnWorkspaceChanged;
+
+
+        /// <summary>
+        /// Raised when this Element is about to close itself
+        /// </summary>
+        public event EventHandler<CancelEventArgs> Closing;
 
         #endregion
 
@@ -57,6 +75,28 @@ namespace Archimedes.Patterns.WPF.ViewModels
         public static XmlLanguage DefaultLanguage = XmlLanguage.Empty;
         public virtual XmlLanguage Language {
             get { return DefaultLanguage; }
+        }
+
+        /// <summary>
+        /// Gets/Sets if this Elemnt has currently focus
+        /// </summary>
+        public bool HasFocus {
+            get { return _hasFocus; }
+            set { 
+                _hasFocus = value;
+                OnHasFocusChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets if this Element currently is on the Workspace
+        /// </summary>
+        public bool IsOnWorkspace {
+            get { return _isOnWorkspace; }
+            set { 
+                _isOnWorkspace = value;
+                OnIsOnWorkspaceChanged();
+            }
         }
 
         #region Close Command
@@ -93,12 +133,36 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #region Event Invokers
 
-        public void OnRequestClose() {
+        /// <summary>
+        /// Occurs when this Element is about to close
+        /// </summary>
+        /// <param name="e"></param>
+        public virtual void OnClosing(CancelEventArgs e) {
+            if(Closing != null && !e.Cancel)
+                Closing(this, e);
+        }
+
+        public virtual void OnClosed() {
+
+        }
+
+
+        protected virtual void OnIsOnWorkspaceChanged() {
+            if(IsOnWorkspaceChanged != null)
+                IsOnWorkspaceChanged(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnHasFocusChanged() {
+            if(HasFocusChanged != null)
+                HasFocusChanged(this, EventArgs.Empty);
+        }
+
+        public virtual void OnRequestClose() {
             if (RequestClose != null)
                 RequestClose(this, EventArgs.Empty);
         }
 
-        void OnRequestFocus() {
+        protected virtual void OnRequestFocus() {
             if (RequestFocus != null)
                 RequestFocus(this, EventArgs.Empty);
         }
