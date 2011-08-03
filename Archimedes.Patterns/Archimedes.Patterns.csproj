@@ -101,6 +101,7 @@
     <Compile Include="Conditions\DynamicConditionExpression.cs" />
     <Compile Include="Reflection\TypeHelper.cs" />
     <Compile Include="Serializing\SerializerHelper.cs" />
+    <Compile Include="Threading\LockEx.cs" />
     <Compile Include="Threading\ThreadMutableObservableCollection.cs" />
     <Compile Include="Lambda.cs" />
     <Compile Include="MVMV\NotifyChangedBase.cs" />

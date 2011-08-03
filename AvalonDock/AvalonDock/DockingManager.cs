@@ -709,6 +709,7 @@ namespace AvalonDock
 
         protected override void OnContentChanged(object oldContent, object newContent)
         {
+
             base.OnContentChanged(oldContent, newContent);
             
             UpdateLayout();
@@ -1987,10 +1988,11 @@ namespace AvalonDock
                 return;
 
             if (content.State == DockableContentState.FloatingWindow || content.State == DockableContentState.DockableWindow) {
-                DockableFloatingWindow floatingWindow = Window.GetWindow(content) as DockableFloatingWindow;
-
-                if (floatingWindow != null && (floatingWindow.Content as Pane).HasSingleItem && !floatingWindow.IsClosing) {
-                    floatingWindow.Close();
+                var wnd = Window.GetWindow(content) as FloatingWindow;
+                if(wnd != null) {
+                    if((wnd.Content as Pane).HasSingleItem && !wnd.IsClosing) {
+                        wnd.Close();
+                    }
                 }
             }
         }

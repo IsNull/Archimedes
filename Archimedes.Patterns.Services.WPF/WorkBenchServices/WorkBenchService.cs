@@ -73,7 +73,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent.DockableStyle = DockableStyle.None;
             dockableContent.FloatingWindowSizeToContent = SizeToContent.Manual;
             dockableContent.HideOnClose = false;
-            dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
+            //dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
 
             viewModel.IsOnWorkspace = true;
             dockableContent.ShowAsDialoge(DockManager);
@@ -130,7 +130,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent.DockableStyle = DockableStyle.None;
             dockableContent.FloatingWindowSizeToContent = sizeToContent;
             dockableContent.HideOnClose = false;
-            dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
+            //dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
             if (windowSize.HasValue) {
                 dockableContent.FloatingWindowSize = windowSize.Value;
             }
@@ -183,7 +183,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dc.DockableStyle = AvalonDock.DockableStyle.Floating;
             dc.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
             dc.HideOnClose = false;
-            dc.Closing += (s, e) => vm.OnRequestClose();
+            //dc.Closing += (s, e) => vm.OnRequestClose();
             vm.IsOnWorkspace = true;
             dc.ShowAsDialoge(DockManager);
 
@@ -208,7 +208,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dc.DockableStyle = AvalonDock.DockableStyle.Floating;
             dc.FloatingWindowSizeToContent = SizeToContent.WidthAndHeight;
             dc.HideOnClose = false;
-            dc.Closing += (s, e) => vm.OnRequestClose();
+            //dc.Closing += (s, e) => vm.OnRequestClose();
             vm.IsOnWorkspace = true;
             dc.ShowAsDialoge(DockManager);
             
@@ -330,7 +330,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent.DockableStyle = DockableStyle.Floating;
             dockableContent.FloatingWindowSizeToContent = sizeToContent;
             dockableContent.HideOnClose = false;
-            dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
+            //dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
 
 
             if (windowSize.HasValue) {
@@ -365,7 +365,19 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent.DataContext = viewModel;
 
             viewModel.RequestClose += (s, e) => {
-                    CloseParent(view, viewModel);
+                    //CloseParent(view, viewModel);
+                    var vm = s as WorkspaceViewModel;
+                    var content = FindContentByViewModel(vm);
+                    if(content != null) {
+                        var window = Window.GetWindow(content);
+
+                        if(window != null && window != Window.GetWindow(DockManager)) {
+                            window.Close();
+                        } else {
+                            content.Close();
+                        }
+                    }
+
                 };
             
             viewModel.RequestFocus += (s, e) => {
@@ -389,12 +401,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
                 var content = s as DockableContent;
                 var vm = content.DataContext as WorkspaceViewModel;
                 vm.OnClosing(e);
-            };
-
-            dockableContent.Closing += (s, e) => {
-                var content = s as DockableContent;
-                var vm = content.DataContext as WorkspaceViewModel;
-                vm.OnClosed();
             };
 
 
@@ -458,13 +464,13 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         }
 
 
-        void CloseParent(DependencyObject element, WorkspaceViewModel vm) {
+        void CloseParentWindow(DependencyObject element, WorkspaceViewModel vm) {
             var window = Window.GetWindow(element);
-            if(window != null){
-                window.Closed += (a, b) => CleanUp(element,vm, window);
+            if(window != null) {
+                window.Closed += (a, b) => CleanUp(element, vm, window);
                 try {
                     window.Close();
-                } catch {
+                } catch(Exception) {
                     //
                 }
             }
@@ -472,11 +478,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         }
 
         void CleanUp(DependencyObject element, WorkspaceViewModel vm, Window window) {
-            vm.RequestClose -= (s, e) => CloseParent(element, vm);
+            vm.RequestClose -= (s, e) => CloseParentWindow(element, vm);
             window.Closed -= (a, b) => CleanUp(element, vm, window);
         }
-
-
 
         //void UpdateHiddenContent(){
         //    if (DockManager != null) {
