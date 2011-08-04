@@ -23,6 +23,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Tests", "Archime
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.CodeDOM", "Archimedes.CodeDOM\Archimedes.CodeDOM.csproj", "{5FFA870A-6811-438E-B111-B36DD3651CEE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPFThemes", "WPFThemes", "{C6A5C501-32E2-4EED-BEEC-59CFF06E3363}"
+	ProjectSection(SolutionItems) = preProject
+		Info.txt = Info.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.Themes", "WPFThemes\WPF.Themes\WPF.Themes.csproj", "{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -133,6 +140,16 @@ Global
 		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|x86.ActiveCfg = Release|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,5 +157,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{87E61430-4243-45F2-B74E-0A4C096CEBF3} = {64AE7FF4-8481-46AA-8C52-097E005A3CC1}
 		{3836F4A8-4B35-4F5E-BB0F-DAD374297525} = {64AE7FF4-8481-46AA-8C52-097E005A3CC1}
+		{CD3CD636-D63E-4BD5-9FE9-2B63DA6F0616} = {C6A5C501-32E2-4EED-BEEC-59CFF06E3363}
 	EndGlobalSection
 EndGlobal

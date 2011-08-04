@@ -58,6 +58,7 @@
     <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -103,6 +104,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Threading\ThreadSafeObservableCollection.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\ChooseItemViewModel.cs" />
     <Compile Include="ViewModels\Commands\CommandManagerViewModel.cs" />
     <Compile Include="ViewModels\Commands\UnDoCommandViewModel.cs" />
