@@ -8,6 +8,8 @@ using Archimedes.Patterns.WPF.Commands;
 using System.Linq.Expressions;
 using System.Windows.Markup;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -64,6 +66,41 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #endregion // Constructor
 
+        #region Sync Dispatcher
+
+        /// <summary>
+        /// Returns the Dispatcher of the default GUI Thread
+        /// </summary>
+        public Dispatcher DefaultDispatcher {
+            get { return Application.Current.Dispatcher; } //Application.Current.Dispatcher.Invoke
+        }
+
+        /// <summary>
+        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread)
+        /// Raised when the IsOnWorkspace Property has changed
+        /// </summary>
+        /// <param name="method">Method to execute</param>
+        /// <param name="priority">Dispatcher Priority</param>
+        protected void SyncInvoke(Action method, DispatcherPriority priority = DispatcherPriority.Normal) {
+            Application.Current.Dispatcher.Invoke(method, priority);
+        }
+
+        /// <summary>
+        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread) and returns the Result
+        /// Raised when this Element is about to close itself
+        /// </summary>
+        /// <typeparam name="T">Return Type</typeparam>
+        /// <param name="method">Method to execute</param>
+        /// <param name="priority">Dispatcher Priority</param>
+        /// <returns></returns>
+        protected T SyncInvoke<T>(Func<T> method, DispatcherPriority priority = DispatcherPriority.Normal) {
+            return (T)Application.Current.Dispatcher.Invoke(method, priority);
+        }
+
+        #endregion
+
+        #region Methods
+
         /// <summary>
         /// Updates the given Property identified by Expression
         /// </summary>
@@ -71,6 +108,10 @@ namespace Archimedes.Patterns.WPF.ViewModels
         public virtual void UpdateProperty(params Expression<Func<object>>[] expressions) {
             OnPropertyChanged(expressions);
         }
+
+        #endregion
+
+        #region Properties
 
         public static XmlLanguage DefaultLanguage = XmlLanguage.Empty;
         public virtual XmlLanguage Language {
@@ -98,6 +139,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
                 OnIsOnWorkspaceChanged();
             }
         }
+
+        #endregion
 
         #region Close Command
 
