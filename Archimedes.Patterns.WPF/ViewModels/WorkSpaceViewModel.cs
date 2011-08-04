@@ -7,8 +7,7 @@ using Archimedes.Patterns.MVMV;
 using Archimedes.Patterns.WPF.Commands;
 using System.Linq.Expressions;
 using System.Windows.Markup;
-using System.Windows.Threading;
-using System.Windows;
+using System.ComponentModel;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -24,6 +23,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         RelayCommand _closeCommand;
         RelayCommand _focusCommand;
+        bool _hasFocus = false;
+        bool _isOnWorkspace = false;
 
         #endregion // Fields
 
@@ -39,6 +40,21 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// </summary>
         public event EventHandler RequestFocus;
 
+        /// <summary>
+        /// Raised when the focus of this Workspace Element has changed
+        /// </summary>
+        public event EventHandler HasFocusChanged;
+
+        /// <summary>
+        /// Raised when the IsOnWorkspace Property has changed
+        /// </summary>
+        public event EventHandler IsOnWorkspaceChanged;
+
+
+        /// <summary>
+        /// Raised when this Element is about to close itself
+        /// </summary>
+        public event EventHandler<CancelEventArgs> Closing;
 
         #endregion
 
@@ -47,37 +63,6 @@ namespace Archimedes.Patterns.WPF.ViewModels
         protected WorkspaceViewModel() { }
 
         #endregion // Constructor
-
-        #region Sync Dispatcher
-
-        /// <summary>
-        /// Returns the Dispatcher of the default GUI Thread
-        /// </summary>
-        public Dispatcher DefaultDispatcher {
-            get { return Application.Current.Dispatcher; } //Application.Current.Dispatcher.Invoke
-        }
-
-        /// <summary>
-        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread)
-        /// </summary>
-        /// <param name="method">Method to execute</param>
-        /// <param name="priority">Dispatcher Priority</param>
-        public void SyncInvoke(Action method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            Application.Current.Dispatcher.Invoke(method, priority);
-        }
-
-        /// <summary>
-        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread) and returns the Result
-        /// </summary>
-        /// <typeparam name="T">Return Type</typeparam>
-        /// <param name="method">Method to execute</param>
-        /// <param name="priority">Dispatcher Priority</param>
-        /// <returns></returns>
-        public T SyncInvoke<T>(Func<T> method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            return (T)Application.Current.Dispatcher.Invoke(method, priority);
-        }
-
-        #endregion
 
         /// <summary>
         /// Updates the given Property identified by Expression
@@ -90,6 +75,28 @@ namespace Archimedes.Patterns.WPF.ViewModels
         public static XmlLanguage DefaultLanguage = XmlLanguage.Empty;
         public virtual XmlLanguage Language {
             get { return DefaultLanguage; }
+        }
+
+        /// <summary>
+        /// Gets/Sets if this Elemnt has currently focus
+        /// </summary>
+        public bool HasFocus {
+            get { return _hasFocus; }
+            set { 
+                _hasFocus = value;
+                OnHasFocusChanged();
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets if this Element currently is on the Workspace
+        /// </summary>
+        public bool IsOnWorkspace {
+            get { return _isOnWorkspace; }
+            set { 
+                _isOnWorkspace = value;
+                OnIsOnWorkspaceChanged();
+            }
         }
 
         #region Close Command
@@ -126,12 +133,36 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #region Event Invokers
 
-        public void OnRequestClose() {
+        /// <summary>
+        /// Occurs when this Element is about to close
+        /// </summary>
+        /// <param name="e"></param>
+        public virtual void OnClosing(CancelEventArgs e) {
+            if(Closing != null && !e.Cancel)
+                Closing(this, e);
+        }
+
+        public virtual void OnClosed() {
+
+        }
+
+
+        protected virtual void OnIsOnWorkspaceChanged() {
+            if(IsOnWorkspaceChanged != null)
+                IsOnWorkspaceChanged(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnHasFocusChanged() {
+            if(HasFocusChanged != null)
+                HasFocusChanged(this, EventArgs.Empty);
+        }
+
+        public virtual void OnRequestClose() {
             if (RequestClose != null)
                 RequestClose(this, EventArgs.Empty);
         }
 
-        void OnRequestFocus() {
+        protected virtual void OnRequestFocus() {
             if (RequestFocus != null)
                 RequestFocus(this, EventArgs.Empty);
         }

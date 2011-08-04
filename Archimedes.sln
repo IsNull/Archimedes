@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Controls.WPF", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Tests", "Archimedes.Tests\Archimedes.Tests.csproj", "{41E7583E-4C6C-4DAA-8648-3DB3455B8A88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.CodeDOM", "Archimedes.CodeDOM\Archimedes.CodeDOM.csproj", "{5FFA870A-6811-438E-B111-B36DD3651CEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,16 @@ Global
 		{41E7583E-4C6C-4DAA-8648-3DB3455B8A88}.Release|Mixed Platforms.Build.0 = Release|x86
 		{41E7583E-4C6C-4DAA-8648-3DB3455B8A88}.Release|x86.ActiveCfg = Release|x86
 		{41E7583E-4C6C-4DAA-8648-3DB3455B8A88}.Release|x86.Build.0 = Release|x86
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5FFA870A-6811-438E-B111-B36DD3651CEE}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
