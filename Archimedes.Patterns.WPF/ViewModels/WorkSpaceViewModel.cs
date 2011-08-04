@@ -7,6 +7,8 @@ using Archimedes.Patterns.MVMV;
 using Archimedes.Patterns.WPF.Commands;
 using System.Linq.Expressions;
 using System.Windows.Markup;
+using System.Windows.Threading;
+using System.Windows;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -45,6 +47,37 @@ namespace Archimedes.Patterns.WPF.ViewModels
         protected WorkspaceViewModel() { }
 
         #endregion // Constructor
+
+        #region Sync Dispatcher
+
+        /// <summary>
+        /// Returns the Dispatcher of the default GUI Thread
+        /// </summary>
+        public Dispatcher DefaultDispatcher {
+            get { return Application.Current.Dispatcher; } //Application.Current.Dispatcher.Invoke
+        }
+
+        /// <summary>
+        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread)
+        /// </summary>
+        /// <param name="method">Method to execute</param>
+        /// <param name="priority">Dispatcher Priority</param>
+        public void SyncInvoke(Action method, DispatcherPriority priority = DispatcherPriority.Normal) {
+            Application.Current.Dispatcher.Invoke(method, priority);
+        }
+
+        /// <summary>
+        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread) and returns the Result
+        /// </summary>
+        /// <typeparam name="T">Return Type</typeparam>
+        /// <param name="method">Method to execute</param>
+        /// <param name="priority">Dispatcher Priority</param>
+        /// <returns></returns>
+        public T SyncInvoke<T>(Func<T> method, DispatcherPriority priority = DispatcherPriority.Normal) {
+            return (T)Application.Current.Dispatcher.Invoke(method, priority);
+        }
+
+        #endregion
 
         /// <summary>
         /// Updates the given Property identified by Expression

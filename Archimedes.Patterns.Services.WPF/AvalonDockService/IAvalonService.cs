@@ -6,8 +6,10 @@ using AvalonDock;
 
 namespace Archimedes.Services.WPF.AvalonDockService
 {
-
-    public interface IAvalonService
+    /// <summary>
+    /// Basic Bridge-Service to interact with a Window System (AvalonDock)
+    /// </summary>
+    public interface IWindowManagerService
     {
         #region Events
 

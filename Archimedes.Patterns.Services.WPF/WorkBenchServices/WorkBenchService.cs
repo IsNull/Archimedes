@@ -26,7 +26,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         #region Fields
 
         IWindowViewModelMappings _mappingService = ServiceLocator.Instance.Resolve<IWindowViewModelMappings>();
-        IAvalonService _avalonService = ServiceLocator.Instance.Resolve<IAvalonService>();
+        IWindowManagerService _avalonService = ServiceLocator.Instance.Resolve<IWindowManagerService>();
         DockingManager _dockManager = null;
         string _statusBarText = "";
         bool _isbackgroundWorking = false;
