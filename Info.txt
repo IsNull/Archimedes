@@ -1,0 +1,5 @@
+WPF.Themes
+
+The Themes - primary Expression Dark - were slightly modified to work with AvalonDock,
+and new Control-Themes were added (ex: GridView, buttons). 
+Because of this, WPF.Themes is includied in Archimedes to provide a working Out-of-the-Box Solution.
