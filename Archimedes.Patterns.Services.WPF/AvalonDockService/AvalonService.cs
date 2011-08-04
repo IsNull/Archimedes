@@ -7,7 +7,7 @@ using AvalonDock;
 
 namespace Archimedes.Services.WPF.AvalonDockService
 {
-    public class AvalonService : IWindowManagerService
+    public class AvalonService : IAvalonService
     {
         #region Fields
 

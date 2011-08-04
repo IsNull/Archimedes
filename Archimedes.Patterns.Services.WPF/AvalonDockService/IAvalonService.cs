@@ -9,7 +9,7 @@ namespace Archimedes.Services.WPF.AvalonDockService
     /// <summary>
     /// Basic Bridge-Service to interact with a Window System (AvalonDock)
     /// </summary>
-    public interface IWindowManagerService
+    public interface IAvalonService
     {
         #region Events
 

@@ -6,6 +6,9 @@
     </ResourceDictionary.MergedDictionaries>
 
 
+    <Style TargetType="TextBlock" x:Key="TextBlockBase"/>
+
+
     <Style x:Key="TextBlockStyle" TargetType="TextBlock"
            BasedOn="{StaticResource TextBlockBase}">
         <Setter Property="Foreground" Value="{StaticResource DefaultTextBrush}"/>

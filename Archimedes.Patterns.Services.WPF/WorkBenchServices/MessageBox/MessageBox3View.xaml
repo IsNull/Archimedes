@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Archimedes.Services.WPF.WorkBenchServices.MessageBox"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="186" d:DesignWidth="532">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
@@ -14,13 +14,13 @@
         <local:MessageBoxTextZoneView/>
 
         <Grid Grid.Row="1">
-            <Button  Height="17" Command="{Binding Button1Command}" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center" Width="100">
+            <Button IsDefault="True" Height="17" Command="{Binding Button1Command}" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Center" Width="100">
                 <TextBlock Text="{Binding Button1}"/>
             </Button>
             <Button  Height="17" Command="{Binding Button2Command}" HorizontalAlignment="Center" Margin="10" VerticalAlignment="Center" Width="100">
                 <TextBlock Text="{Binding Button2}"/>
             </Button>
-            <Button  Height="17" Command="{Binding Button3Command}" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Center" Width="100">
+            <Button Height="17" IsCancel="True" Command="{Binding Button3Command}" HorizontalAlignment="Right" Margin="10" VerticalAlignment="Center" Width="100">
                 <TextBlock Text="{Binding Button3}"/>
             </Button>
         </Grid>
