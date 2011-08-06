@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="Archimedes.Patterns.WPF.Plugins.View.PluginOverviewControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vplugin="clr-namespace:Archimedes.Patterns.WPF.Plugins.View"
+             xmlns:vmplugin="clr-namespace:Archimedes.Patterns.WPF.Plugins.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="179" d:DesignWidth="397">
+    <UserControl.Resources>
+
+        <DataTemplate DataType="{x:Type vmplugin:PluginViewModel}">
+            <vplugin:PluginView/>
+        </DataTemplate>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100*" />
+            <RowDefinition Height="100*" />
+        </Grid.RowDefinitions>
+        
+        <GroupBox Header="Loaded Plugins">
+            <ListBox x:Name="lbPlugins" 
+                    ItemsSource="{Binding Path=AllPlugins}"
+                    IsSynchronizedWithCurrentItem="True"/>
+        </GroupBox>
+        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Name="stackPanel1" VerticalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Name" MinWidth="100" />
+                <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.Name}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="GUID" MinWidth="100" />
+                <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.GUID}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="CopyRight" MinWidth="100" />
+                <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.CopyRight}" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

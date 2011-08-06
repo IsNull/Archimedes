@@ -1,0 +1,23 @@
+﻿<Window x:Class="Archimedes.Patterns.WPF.Plugins.View.PluginManagerView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+        xmlns:my="clr-namespace:Archimedes.Patterns.Plugins;assembly=Archimedes.Patterns"  
+        xmlns:my1="clr-namespace:Archimedes.Patterns.WPF.Plugins.View"
+        Title="Plugin Manager 2011" Height="306" Width="413" ShowInTaskbar="False" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" mc:Ignorable="d"
+        >
+    <GroupBox>
+        <GroupBox.BorderBrush>
+            <SolidColorBrush />
+        </GroupBox.BorderBrush>
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="228*" />
+            <RowDefinition Height="33*" />
+        </Grid.RowDefinitions>
+        <Button Content="Schliessen" Grid.Row="1" HorizontalAlignment="Right" Name="button1" VerticalAlignment="Stretch" Width="100" Click="button1_Click" />
+        <my1:PluginOverviewControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+    </Grid>
+    </GroupBox>
+</Window>

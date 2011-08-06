@@ -90,6 +90,17 @@
     <Compile Include="FlowDocuments\DocHelpers.cs" />
     <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="FlowDocuments\XamlToXPS.cs" />
+    <Compile Include="Plugins\ViewModel\AllPluginsViewModel.cs" />
+    <Compile Include="Plugins\ViewModel\PluginViewModel.cs" />
+    <Compile Include="Plugins\View\PluginManagerView.xaml.cs">
+      <DependentUpon>PluginManagerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\View\PluginOverviewControl.xaml.cs">
+      <DependentUpon>PluginOverviewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Plugins\View\PluginView.xaml.cs">
+      <DependentUpon>PluginView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -157,6 +168,20 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="FlowDocuments\Paginators\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Plugins\View\PluginManagerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plugins\View\PluginOverviewControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plugins\View\PluginView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
