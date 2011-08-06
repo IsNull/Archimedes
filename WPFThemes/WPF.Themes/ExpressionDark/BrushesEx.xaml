@@ -9,7 +9,8 @@
     <SolidColorBrush x:Key="LightBrush" Color="#FF333333" />
     <SolidColorBrush x:Key="ShadeBrush" Color="#FF434343" />
 
-    <Color x:Key="TopGradientSelectColor">#FF29224F</Color>
+    <Color x:Key="TopGradientSelectColor">#FF6C7B8B</Color>
+    <!-- 29224F-->
     <Color x:Key="BottomGradientSelectColor">#FF737373</Color>
 
     <Color x:Key="BlackColor">#FF000000</Color>

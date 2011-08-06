@@ -2041,7 +2041,8 @@
                 <ControlTemplate TargetType="{x:Type TreeView}">
                     <Grid>
                         <Border x:Name="Border" Background="{DynamicResource ControlBackgroundBrush}" BorderBrush="{x:Null}" BorderThickness="1" CornerRadius="3,3,3,3">
-                            <ScrollViewer Style="{DynamicResource NuclearScrollViewer}" Focusable="False" Padding="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" CanContentScroll="False" Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}">
+                            <ScrollViewer Style="{DynamicResource NuclearScrollViewer}" Focusable="False" Padding="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" CanContentScroll="False" 
+                                        Foreground="{DynamicResource {x:Static SystemColors.ActiveCaptionTextBrushKey}}" >
                                 <ItemsPresenter />
                             </ScrollViewer>
                         </Border>
@@ -2150,7 +2151,7 @@
                                 <Condition Property="IsSelected" Value="true" />
                                 <Condition Property="IsSelectionActive" Value="false" />
                             </MultiTrigger.Conditions>
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+                            <!--<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />-->
                             <Setter Property="Background" TargetName="Selection_Border" Value="{DynamicResource SelectedBackgroundBrush}" />
                             <Setter Property="Opacity" TargetName="Selection_Border" Value="0.5" />
                             <Setter Property="BorderBrush" TargetName="Selection_Border" Value="{DynamicResource NormalBorderBrush}" />

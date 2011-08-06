@@ -41,17 +41,18 @@ namespace Archimedes.Patterns.WPF.ViewModels
         #region VM Properties
 
         public string Version {
-            get {
-                return _version;
-            }
+            get { return _version; }
+            set { _version = value; }
         }
 
         public string Name {
             get { return _name; }
+            set { _name = value; }
         }
 
         public string CopyRight {
             get { return _copyright; }
+            set { _copyright = value; }
         }
 
         #endregion

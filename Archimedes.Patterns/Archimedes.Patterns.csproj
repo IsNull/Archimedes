@@ -96,6 +96,7 @@
     <Compile Include="Data\Tree\SimpleTreeNode.cs" />
     <Compile Include="Data\Tree\SimpleTreeNodeList.cs" />
     <Compile Include="EventArgs.cs" />
+    <Compile Include="ICloneable.cs" />
     <Compile Include="Notifications\NotificationCollection.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Conditions\DynamicConditionExpression.cs" />
