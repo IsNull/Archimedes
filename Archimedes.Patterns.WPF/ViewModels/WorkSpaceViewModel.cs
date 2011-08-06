@@ -58,6 +58,11 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// </summary>
         public event EventHandler<CancelEventArgs> Closing;
 
+        /// <summary>
+        /// Raised when this Element was closed.
+        /// </summary>
+        public event EventHandler Closed;
+
         #endregion
 
         #region Constructor
@@ -186,7 +191,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
         }
 
         public virtual void OnClosed() {
-
+            if(Closed != null)
+                Closed(this, EventArgs.Empty);
         }
 
 
