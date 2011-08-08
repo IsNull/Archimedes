@@ -96,7 +96,8 @@ namespace Archimedes.Patterns.WPF.ACB
         /// </summary>
         public void Execute()
         {
-            strategy.Execute(CommandParameter);
+            if (strategy != null)
+                strategy.Execute(CommandParameter);
         }
 
         #region IDisposable Members
