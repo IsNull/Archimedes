@@ -82,7 +82,6 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         /// <summary>
         /// Executes a Method in the default Dispatcher (running on the standard GUI Thread)
-        /// Raised when the IsOnWorkspace Property has changed
         /// </summary>
         /// <param name="method">Method to execute</param>
         /// <param name="priority">Dispatcher Priority</param>
@@ -92,7 +91,6 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         /// <summary>
         /// Executes a Method in the default Dispatcher (running on the standard GUI Thread) and returns the Result
-        /// Raised when this Element is about to close itself
         /// </summary>
         /// <typeparam name="T">Return Type</typeparam>
         /// <param name="method">Method to execute</param>
