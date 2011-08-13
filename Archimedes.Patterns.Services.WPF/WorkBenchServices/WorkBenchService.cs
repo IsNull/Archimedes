@@ -25,8 +25,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices
     {
         #region Fields
 
-        IWindowViewModelMappings _mappingService = ServiceLocator.Instance.Resolve<IWindowViewModelMappings>();
-        IAvalonService _avalonService = ServiceLocator.Instance.Resolve<IAvalonService>();
+        static readonly IWindowViewModelMappings _mappingService = new WindowViewModelMappings();
+
+        readonly IAvalonService _avalonService = ServiceLocator.Instance.Resolve<IAvalonService>();
         DockingManager _dockManager = null;
         string _statusBarText = "";
         bool _isbackgroundWorking = false;
@@ -49,7 +50,12 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
         #region Constructor
 
+        
+
         public AvalonWorkBenchService() {
+
+            var mappingService = MappingService;
+            mappingService.RegisterMapping(typeof(HeavyLoadViewModel), typeof(HeavyLoadView));
 
             _avalonService.PrimaryDockManagerChanged += OnPrimaryDockManagerChanged;
 
@@ -58,6 +64,11 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         }
 
         #endregion
+
+
+        public IWindowViewModelMappings MappingService {
+            get { return _mappingService; }
+        }
 
         #region IWorkBenchService
 

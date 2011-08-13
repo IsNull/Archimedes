@@ -83,6 +83,7 @@
     <Compile Include="Conditions\OperatorManagerService.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\IEntityBase.cs" />
+    <Compile Include="Data\IPersistentList.cs" />
     <Compile Include="Data\LimitedStack.cs" />
     <Compile Include="Data\ObservableLimitedStack.cs" />
     <Compile Include="Data\Tree\ComplexSubtree.cs" />

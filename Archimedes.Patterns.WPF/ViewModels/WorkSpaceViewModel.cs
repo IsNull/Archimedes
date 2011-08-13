@@ -87,7 +87,15 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <param name="method">Method to execute</param>
         /// <param name="priority">Dispatcher Priority</param>
         protected void SyncInvoke(Action method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            Application.Current.Dispatcher.Invoke(method, priority);
+            Application app = Application.Current;
+            if (app != null) {
+                if (!app.Dispatcher.CheckAccess()) {
+                    app.Dispatcher.BeginInvoke(method, priority);
+                } else
+                    method();
+
+            }
+
         }
 
         /// <summary>
@@ -99,7 +107,11 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <param name="priority">Dispatcher Priority</param>
         /// <returns></returns>
         protected T SyncInvoke<T>(Func<T> method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            return (T)Application.Current.Dispatcher.Invoke(method, priority);
+            Application app = Application.Current;
+            if (app != null)
+                return (T)app.Dispatcher.Invoke(method, priority);
+            else
+                return default(T);
         }
 
         #endregion
