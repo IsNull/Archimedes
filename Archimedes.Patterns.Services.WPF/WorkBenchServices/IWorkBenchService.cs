@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Archimedes.Services.WPF.WorkBenchServices.MessageBox;
 using Archimedes.Patterns.WPF.ViewModels;
 using System.Windows.Documents;
+using Archimedes.Services.WPF.WindowViewModelMapping;
 
 namespace Archimedes.Services.WPF.WorkBenchServices
 {
@@ -102,6 +103,11 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets the Mapping Service
+        /// </summary>
+        IWindowViewModelMappings MappingService { get; }
 
         /// <summary>
         /// Returns the standard Dispatcher of the UI

@@ -29,6 +29,7 @@ namespace Archimedes.Patterns.Data
     
     /// <summary>
     /// Baseclass for entities
+    /// Usable for Database stored Objects
     /// </summary>
     /// <typeparam name="Tid">ID type of this entity</typeparam>
     /// <typeparam name="T">Type of this entity</typeparam>

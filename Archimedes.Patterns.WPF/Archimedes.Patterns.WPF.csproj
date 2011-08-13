@@ -79,10 +79,17 @@
     <Compile Include="ACB\EventHandlerGenerator.cs" />
     <Compile Include="ACB\ExecutionStrategy.cs" />
     <Compile Include="ACB\SimpleCommand.cs" />
+    <Compile Include="Adroners\SimpleCircleAdorner.cs" />
     <Compile Include="Animations\VisibilityAnimation.cs" />
+    <Compile Include="Behaviours\ControlBehaviour.cs" />
+    <Compile Include="Behaviours\ControlExtensions.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Commands\WrapperCommand.cs" />
     <Compile Include="Commands\WrapperStateCommand.cs" />
+    <Compile Include="Converters\BaseConverter.cs" />
+    <Compile Include="Converters\BooleanToVisibilityInvertedConverter.cs" />
+    <Compile Include="Converters\CommandToVisibiltyConverter.cs" />
+    <Compile Include="Converters\NullableToVisibleConverter.cs" />
     <Compile Include="DragNDrop\DefaultDragHandler.cs" />
     <Compile Include="DragNDrop\DefaultDropHandler.cs" />
     <Compile Include="DragNDrop\DragAdorner.cs" />
@@ -98,6 +105,7 @@
     <Compile Include="DragNDrop\Utilities\ItemsControlExtensions.cs" />
     <Compile Include="DragNDrop\Utilities\TypeUtilities.cs" />
     <Compile Include="DragNDrop\Utilities\VisualTreeExtensions.cs" />
+    <Compile Include="Effects\HoverGlowBehaviourEffect.cs" />
     <Compile Include="FlowDocuments\Attached.cs" />
     <Compile Include="FlowDocuments\BindableRun.cs" />
     <Compile Include="FlowDocuments\BlockTemplateContent.cs" />
@@ -105,6 +113,7 @@
     <Compile Include="FlowDocuments\DocHelpers.cs" />
     <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="FlowDocuments\XamlToXPS.cs" />
+    <Compile Include="Effects\GlobalEffects.cs" />
     <Compile Include="Plugins\ViewModel\AllPluginsViewModel.cs" />
     <Compile Include="Plugins\ViewModel\PluginViewModel.cs" />
     <Compile Include="Plugins\View\PluginManagerView.xaml.cs">
@@ -130,6 +139,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Threading\ThreadSafeObservableCollection.cs" />
+    <Compile Include="UIHelper.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\ChooseItemViewModel.cs" />
     <Compile Include="ViewModels\Commands\CommandManagerViewModel.cs" />

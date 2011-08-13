@@ -6,7 +6,8 @@
              xmlns:vplugin="clr-namespace:Archimedes.Patterns.WPF.Plugins.View"
              xmlns:vmplugin="clr-namespace:Archimedes.Patterns.WPF.Plugins.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="179" d:DesignWidth="397">
+             MinWidth="500" MinHeight="270"
+             d:DesignHeight="275" d:DesignWidth="509">
     <UserControl.Resources>
 
         <DataTemplate DataType="{x:Type vmplugin:PluginViewModel}">
@@ -14,30 +15,38 @@
         </DataTemplate>
 
     </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100*" />
-            <RowDefinition Height="100*" />
-        </Grid.RowDefinitions>
+
         
         <GroupBox Header="Loaded Plugins">
-            <ListBox x:Name="lbPlugins" 
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <ListBox Grid.Row="0" x:Name="lbPlugins" 
                     ItemsSource="{Binding Path=AllPlugins}"
                     IsSynchronizedWithCurrentItem="True"/>
-        </GroupBox>
-        <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Name="stackPanel1" VerticalAlignment="Stretch">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Name" MinWidth="100" />
-                <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.Name}" />
+            
+            <StackPanel Grid.Row="1" HorizontalAlignment="Stretch" Name="stackPanel1" VerticalAlignment="Stretch">
+
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Name" MinWidth="100" />
+                    <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.Name}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="GUID" MinWidth="100" />
+                    <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.GUID}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="CopyRight" MinWidth="100" />
+                    <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.CopyRight}" />
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="GUID" MinWidth="100" />
-                <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.GUID}" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="CopyRight" MinWidth="100" />
-                <TextBlock Text="{Binding ElementName=lbPlugins, Path=SelectedItem.CopyRight}" />
-            </StackPanel>
-        </StackPanel>
-    </Grid>
+            
+        </Grid>
+    </GroupBox>
+        
+
 </UserControl>

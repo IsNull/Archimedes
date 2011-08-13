@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Archimedes.Patterns.WPF.ViewModels;
 using Archimedes.Patterns.WPF.Commands;
+using Archimedes.Services.WPF.Resources;
 
 
 namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
@@ -14,7 +15,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
     public class MessageBoxViewModel : WorkspaceViewModel
     {
         #region Fields
-        string _detailHeader = "Details";
+        string _detailHeader = Strings.Details;
         string _message, _detailmessage;
         string _imageSource;
         MessageBoxType _messageBoxImage = MessageBoxType.None;
@@ -29,7 +30,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
         public MessageBoxViewModel(string message, MessageBoxWPFButton buttons = MessageBoxWPFButton.OK) {
             Message = message;
             _buttons = buttons;
-            Button1 = "Ok";
+            Button1 = Strings.Ok;
         }
 
         #region Properties
@@ -217,20 +218,20 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
             UserControl view = null;
 
             if (_buttons == MessageBoxWPFButton.OK) {
-                Button1 = "Ok";
+                Button1 = Strings.Ok;
                 view = new MessageBoxView();
             } else if (_buttons == MessageBoxWPFButton.OKCancel) {
-                Button1 = "Ok";
-                Button2 = "Abbrechen";
+                Button1 = Strings.Ok;
+                Button2 = Strings.Abort;
                 view = new MessageBox2View();
             } else if (_buttons == MessageBoxWPFButton.YesNo) {
-                Button1 = "Ja";
-                Button2 = "Nein";
+                Button1 = Strings.Yes;
+                Button2 = Strings.No;
                 view = new MessageBox2View();
             } else if (_buttons == MessageBoxWPFButton.YesNoCancel) {
-                Button1 = "Ja";
-                Button2 = "Nein";
-                Button3 = "Abbrechen";
+                Button1 = Strings.Yes;
+                Button2 = Strings.No;
+                Button3 = Strings.Abort;
                 view = new MessageBox3View();
             }
 
