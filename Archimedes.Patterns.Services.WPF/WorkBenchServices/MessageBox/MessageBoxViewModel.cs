@@ -20,7 +20,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
         string _imageSource;
         MessageBoxType _messageBoxImage = MessageBoxType.None;
         readonly MessageBoxWPFButton _buttons = MessageBoxWPFButton.OK;
-        DialogWPFResult _dialogeResult = DialogWPFResult.Abort;
+        IDDialogResult _dialogeResult = IDDialogResult.Abort;
 
         string _button1;
         string _button2;
@@ -83,7 +83,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
             }
         }
 
-        public DialogWPFResult DialogeResult {
+        public IDDialogResult DialogeResult {
             get { return _dialogeResult; }
             private set { _dialogeResult = value; }
         }
@@ -181,27 +181,27 @@ namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
         void ButtonAction(int n){
             switch(_buttons){
                 case MessageBoxWPFButton.OK:
-                _dialogeResult = DialogWPFResult.OK;
+                _dialogeResult = IDDialogResult.OK;
                 break;
 
                 case MessageBoxWPFButton.OKCancel:
-                _dialogeResult = (n == 1) ? DialogWPFResult.OK : DialogWPFResult.Cancel;
+                _dialogeResult = (n == 1) ? IDDialogResult.OK : IDDialogResult.Cancel;
                 break;
 
                 case MessageBoxWPFButton.YesNo:
-                _dialogeResult = (n == 1) ? DialogWPFResult.Yes : DialogWPFResult.No;
+                _dialogeResult = (n == 1) ? IDDialogResult.Yes : IDDialogResult.No;
                 break;
 
                 case MessageBoxWPFButton.YesNoCancel:
                 switch (n) {
                     case 1:
-                    _dialogeResult = DialogWPFResult.Yes;
+                    _dialogeResult = IDDialogResult.Yes;
                     break;
                     case 2:
-                    _dialogeResult = DialogWPFResult.No;
+                    _dialogeResult = IDDialogResult.No;
                     break;
                     case 3:
-                    _dialogeResult = DialogWPFResult.Cancel;
+                    _dialogeResult = IDDialogResult.Cancel;
                     break;
                 }
                 break;

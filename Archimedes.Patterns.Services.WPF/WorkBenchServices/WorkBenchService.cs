@@ -17,6 +17,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
     using Archimedes.Patterns.WPF.ViewModels;
     using Archimedes.Services.WPF.WorkBenchServices.Loader;
     using System.Windows.Documents;
+    using Archimedes.Services.WPF.FrameWorkDialogs;
 
     /// <summary>
     /// Implements the workbenchservice backing AvalonDock
@@ -72,11 +73,37 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
         #region IWorkBenchService
 
-        public void ShowRapport(WorkspaceViewModel viewModel, FlowDocument template) {
+        public IDDialogResult ShowDialog(IFileDialog fileDialog, WorkspaceViewModel ownerVM = null) {
 
-            if (viewModel == null)
+            IDialogWrapper dlgwrapper = null;
+
+            if(fileDialog is IFolderBrowserDialog) {
+                dlgwrapper = new FolderBrowserDialog(fileDialog as IFolderBrowserDialog);
+            } else if(fileDialog is IOpenFileDialog) {
+                dlgwrapper = new OpenFileDialog(fileDialog as IOpenFileDialog);
+            }else
+                throw new NotSupportedException(fileDialog.GetType().Name);
+
+            Window owner = null;
+            if(ownerVM == null) {
+                owner = Window.GetWindow(DockManager);
+
+            } else {
+                var content = FindContentByViewModel(ownerVM);
+                if(content != null)
+                    owner = Window.GetWindow(content);
+            }
+
+            return IDDialogResultConverter.From(dlgwrapper.ShowDialog(new WindowWrapper(owner)));
+        }
+
+        #region Show VM Content Methods
+
+        public void ShowRapport(WorkspaceViewModel viewModel, DependencyObject template) {
+
+            if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
-            if (template == null)
+            if(template == null)
                 throw new ArgumentNullException("template");
 
             var dockableContent = CreateDockableContent(template, viewModel);
@@ -89,8 +116,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             viewModel.IsOnWorkspace = true;
             dockableContent.ShowAsDialoge(DockManager);
         }
-
-        #region Show VM Content Methods
 
         /// <summary>
         /// Show the VM in a dockable floating window
@@ -183,7 +208,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
         /// <param name="button"></param>
         /// <returns></returns>
-        public DialogWPFResult MessageBox(string message, string detail, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
+        public IDDialogResult MessageBox(string message, string detail, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
             var vm = new MessageBoxViewModel(message, button);
             vm.DisplayName = title;
             vm.DetailMessage = detail;
@@ -209,7 +234,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
         /// <param name="button"></param>
         /// <returns></returns>
-        public DialogWPFResult MessageBox(string message, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
+        public IDDialogResult MessageBox(string message, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK) {
             var vm = new MessageBoxViewModel(message, button);
             vm.DisplayName = title;
             vm.MessageBoxImage = type;
@@ -341,8 +366,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent.DockableStyle = DockableStyle.Floating;
             dockableContent.FloatingWindowSizeToContent = sizeToContent;
             dockableContent.HideOnClose = false;
-            //dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
-
 
             if (windowSize.HasValue) {
                 dockableContent.FloatingWindowSize = windowSize.Value;
@@ -363,7 +386,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             dockableContent = CreateDockableContent(view, viewModel);
             return dockableContent;
         }
-        
+
         DockableContent CreateDockableContent(DependencyObject view, WorkspaceViewModel viewModel) {
             var dockableContent = new DockableContent();
             dockableContent.HideOnClose = false;
@@ -435,6 +458,11 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             return dockableContent;
         }
 
+        /// <summary>
+        /// Finds the representing Content (View) Representation of the given ViewModel
+        /// </summary>
+        /// <param name="vm"></param>
+        /// <returns></returns>
         ManagedContent FindContentByViewModel(WorkspaceViewModel vm) {
             ManagedContent content = null;
 
@@ -468,7 +496,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
                        }
                    }
                }
-
             }
 
             return content;
@@ -493,14 +520,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
             window.Closed -= (a, b) => CleanUp(element, vm, window);
         }
 
-        //void UpdateHiddenContent(){
-        //    if (DockManager != null) {
-        //        var list = DockManager.DockableContents.Where(dc => dc.State == DockableContentState.Hidden).ToList();
-        //        HiddenContents.Clear();
-        //        foreach (var dc in list)
-        //            HiddenContents.Add(dc);
-        //    }
-        //}
         #endregion
 
         #region Event Handlers

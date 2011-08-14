@@ -7,6 +7,7 @@ using Archimedes.Services.WPF.WorkBenchServices.MessageBox;
 using Archimedes.Patterns.WPF.ViewModels;
 using System.Windows.Documents;
 using Archimedes.Services.WPF.WindowViewModelMapping;
+using Archimedes.Services.WPF.FrameWorkDialogs;
 
 namespace Archimedes.Services.WPF.WorkBenchServices
 {
@@ -35,9 +36,13 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         void LoaderView(bool display);
 
 
-        void ShowRapport(WorkspaceViewModel viewModel, FlowDocument template);
+        void ShowRapport(WorkspaceViewModel viewModel, DependencyObject template);
 
         #region Show Content Methods
+
+        IDDialogResult ShowDialog(IFileDialog fileDialog, WorkspaceViewModel ownerVM = null);
+
+        #region Show WorkspaceViewModel
 
         /// <summary>
         /// Show the ViewModel as modal Dialog window (blocks current thread)
@@ -78,6 +83,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="windowSize"></param>
         void ShowFloating(WorkspaceViewModel viewModel, SizeToContent sizeToContent = SizeToContent.WidthAndHeight, Size? windowSize = null);
 
+        #endregion
+
+        #region Show MessageBox
 
         /// <summary>
         /// Show a common MessageBox Dialoge
@@ -87,7 +95,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
         /// <param name="button"></param>
         /// <returns></returns>
-        DialogWPFResult MessageBox(string message, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK);
+        IDDialogResult MessageBox(string message, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK);
 
         /// <summary>
         /// Show a common MessageBox Dialoge
@@ -98,7 +106,9 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="type">Type of the Message, which will result in diffrent images displayed to the user</param>
         /// <param name="button"></param>
         /// <returns></returns>
-        DialogWPFResult MessageBox(string message, string detail, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK);
+        IDDialogResult MessageBox(string message, string detail, string title, MessageBoxType type = MessageBoxType.None, MessageBoxWPFButton button = MessageBoxWPFButton.OK);
+
+        #endregion
 
         #endregion
 

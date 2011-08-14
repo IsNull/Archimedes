@@ -17,7 +17,10 @@ namespace Archimedes.Services.WPF.FrameWorkDialogs
         /// </summary>
         /// <param name="window">The WPF window to wrap.</param>
         public WindowWrapper(Window window) {
-            Handle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+            if(window != null)
+                Handle = new System.Windows.Interop.WindowInteropHelper(window).Handle;
+            else
+                Handle = IntPtr.Zero;
         }
 
 

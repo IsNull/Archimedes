@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Archimedes.Services.WPF.FrameWorkDialogs.OpenFile
+namespace Archimedes.Services.WPF.FrameWorkDialogs
 {
     /// <summary>
     /// ViewModel of the OpenFileDialog.

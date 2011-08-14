@@ -3,12 +3,12 @@ using System.Diagnostics.Contracts;
 using System.Windows.Forms;
 using WinFormsFolderBrowserDialog = System.Windows.Forms.FolderBrowserDialog;
 
-namespace Archimedes.Services.WPF.FrameWorkDialogs.FolderBrowse
+namespace Archimedes.Services.WPF.FrameWorkDialogs 
 {
     /// <summary>
     /// Class wrapping System.Windows.Forms.FolderBrowserDialog, making it accept a ViewModel.
     /// </summary>
-    public class FolderBrowserDialog : IDisposable
+    public class FolderBrowserDialog : IDialogWrapper
     {
         private readonly IFolderBrowserDialog folderBrowserDialog;
         private WinFormsFolderBrowserDialog concreteFolderBrowserDialog;

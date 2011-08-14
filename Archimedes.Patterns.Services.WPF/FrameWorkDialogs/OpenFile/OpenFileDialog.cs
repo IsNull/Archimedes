@@ -3,12 +3,12 @@ using System.Diagnostics.Contracts;
 using System.Windows.Forms;
 using WinFormsOpenFileDialog = System.Windows.Forms.OpenFileDialog;
 
-namespace Archimedes.Services.WPF.FrameWorkDialogs.OpenFile
+namespace Archimedes.Services.WPF.FrameWorkDialogs
 {
     /// <summary>
     /// Class wrapping System.Windows.Forms.OpenFileDialog, making it accept a IOpenFileDialog.
     /// </summary>
-    public class OpenFileDialog : IDisposable
+    public class OpenFileDialog : IDialogWrapper
     {
         private readonly IOpenFileDialog openFileDialog;
         private WinFormsOpenFileDialog concreteOpenFileDialog;

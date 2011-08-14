@@ -72,6 +72,7 @@
     <Compile Include="FrameWorkDialogs\FolderBrowse\FolderBrowserDialog.cs" />
     <Compile Include="FrameWorkDialogs\FolderBrowse\FolderBrowserDialogViewModel.cs" />
     <Compile Include="FrameWorkDialogs\FolderBrowse\IFolderBrowserDialog.cs" />
+    <Compile Include="FrameWorkDialogs\IDialogWrapper.cs" />
     <Compile Include="FrameWorkDialogs\IFileDialog.cs" />
     <Compile Include="FrameWorkDialogs\OpenFile\IOpenFileDialog.cs" />
     <Compile Include="FrameWorkDialogs\OpenFile\OpenFileDialog.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="WindowViewModelMapping\IWindowViewModelMappings.cs" />
     <Compile Include="WindowViewModelMapping\IWindowViewModelMappingsContract.cs" />
     <Compile Include="WindowViewModelMapping\WindowViewModelMappings.cs" />
+    <Compile Include="WorkBenchServices\DialogWPFResult.cs" />
     <Compile Include="WorkBenchServices\IWorkBenchService.cs" />
     <Compile Include="WorkBenchServices\Loader\Block.xaml.cs">
       <DependentUpon>Block.xaml</DependentUpon>
