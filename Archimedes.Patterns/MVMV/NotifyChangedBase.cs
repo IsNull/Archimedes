@@ -57,6 +57,14 @@ namespace Archimedes.Patterns.MVMV
             _typedInvokerMap[name].Add(callback);
         }
 
+        /// <summary>
+        /// Updates the given Property identified by Expression
+        /// </summary>
+        /// <param name="expressions"></param>
+        public virtual void UpdateProperty(params Expression<Func<object>>[] expressions) {
+            OnPropertyChanged(expressions);
+        }
+
         #region Notify Helpers
 
         /// <summary>

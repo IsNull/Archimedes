@@ -73,7 +73,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
         #region IWorkBenchService
 
-        public IDDialogResult ShowDialog(IFileDialog fileDialog, WorkspaceViewModel ownerVM = null) {
+        public IDDialogResult ShowDialog(IDialog fileDialog, WorkspaceViewModel ownerVM = null) {
 
             IDialogWrapper dlgwrapper = null;
 

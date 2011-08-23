@@ -81,6 +81,7 @@
     <Compile Include="Conditions\IOperatorManagerService.cs" />
     <Compile Include="Conditions\Operator.cs" />
     <Compile Include="Conditions\OperatorManagerService.cs" />
+    <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\IEntityBase.cs" />
     <Compile Include="Data\IPersistentList.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Reflection\TypeHelper.cs" />
     <Compile Include="Serializing\SerializerHelper.cs" />
+    <Compile Include="Threading\IDispatcher.cs" />
     <Compile Include="Threading\LockEx.cs" />
     <Compile Include="Threading\ThreadMutableObservableCollection.cs" />
     <Compile Include="Lambda.cs" />
@@ -123,6 +125,8 @@
     <Compile Include="Services\ServiceLocator.cs" />
     <Compile Include="Services\ServiceLocatorInstance.cs" />
     <Compile Include="Singleton.cs" />
+    <Compile Include="Threading\UIDispatcher.cs" />
+    <Compile Include="Types\Period.cs" />
     <Compile Include="Utils\AsciiHelper.cs" />
     <Compile Include="Utils\ThrowUtil.cs" />
   </ItemGroup>

@@ -8,7 +8,7 @@ namespace Archimedes.Services.WPF.FrameWorkDialogs
     /// <summary>
     /// Interface describing the FolderBrowserDialog.
     /// </summary>
-    public interface IFolderBrowserDialog
+    public interface IFolderBrowserDialog : IDialog
     {
         /// <summary>
         /// Gets or sets the descriptive text displayed above the tree view control in the dialog box.

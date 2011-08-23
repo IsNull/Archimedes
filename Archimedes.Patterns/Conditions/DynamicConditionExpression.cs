@@ -60,29 +60,7 @@ namespace Archimedes.Patterns.Conditions
         /// </summary>
         public DynamicConditionExpression(Guid newid) : base(newid) { }
 
-        /*
-        /// <summary>
-        /// Creates an new DynamicConditionExpression
-        /// </summary>
-        /// <param name="propertyName">PropertyName to use for value lookup</param>
-        /// <param name="op">Operator used for the comparision</param>
-        /// <param name="value">Value to compare against</param>
-        public DynamicConditionExpression(string propertyName, Operator op, object value) {
-
-            if (string.IsNullOrWhiteSpace(propertyName))
-                throw new ArgumentException("propertyName: You must provide a propertyname to use");
-
-            if (op == Operator.None)
-                throw new ArgumentException("You provided a wrong Operator Type. None is not supported");
-
-            if (value == null)
-                throw new ArgumentNullException("value");
-
-            PropertyName = propertyName;
-            Operator = op;
-            Value = value;
-        }
-        */
+        
         #endregion
 
         #region Public Properties

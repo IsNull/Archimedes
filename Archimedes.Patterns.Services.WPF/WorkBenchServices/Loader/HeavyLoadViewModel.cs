@@ -31,7 +31,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices.Loader
             get { return _progressPercent; }
             set {
                 _progressPercent = value;
-                OnPropertyChanged(() => ProgressPercent);
+                SyncInvokeBegin(() => OnPropertyChanged(() => ProgressPercent));
             }
         }
         
@@ -39,7 +39,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices.Loader
             get { return _currentProcessedInfo; }
             set {
                 _currentProcessedInfo = value;
-                OnPropertyChanged(() => CurrentProcessedInfo);
+                SyncInvokeBegin(() => OnPropertyChanged(() => CurrentProcessedInfo));
             }
         }
 

@@ -19,7 +19,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
     /// 
     /// This class is abstract.
     /// </summary>
-    public abstract class WorkspaceViewModel : ViewModelBase
+    public abstract class WorkspaceViewModel : ViewModelWPF
     {
         #region Fields
 
@@ -71,61 +71,6 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #endregion // Constructor
 
-        #region Sync Dispatcher
-
-        /// <summary>
-        /// Returns the Dispatcher of the default GUI Thread
-        /// </summary>
-        public Dispatcher DefaultDispatcher {
-            get { return Application.Current.Dispatcher; } //Application.Current.Dispatcher.Invoke
-        }
-
-        /// <summary>
-        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread)
-        /// </summary>
-        /// <param name="method">Method to execute</param>
-        /// <param name="priority">Dispatcher Priority</param>
-        protected void SyncInvoke(Action method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            Application app = Application.Current;
-            if (app != null) {
-                if (!app.Dispatcher.CheckAccess()) {
-                    app.Dispatcher.BeginInvoke(method, priority);
-                } else
-                    method();
-
-            }
-
-        }
-
-        /// <summary>
-        /// Executes a Method in the default Dispatcher (running on the standard GUI Thread) and returns the Result
-        /// </summary>
-        /// <typeparam name="T">Return Type</typeparam>
-        /// <param name="method">Method to execute</param>
-        /// <param name="priority">Dispatcher Priority</param>
-        /// <returns></returns>
-        protected T SyncInvoke<T>(Func<T> method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            Application app = Application.Current;
-            if (app != null)
-                return (T)app.Dispatcher.Invoke(method, priority);
-            else
-                return default(T);
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Updates the given Property identified by Expression
-        /// </summary>
-        /// <param name="expressions"></param>
-        public virtual void UpdateProperty(params Expression<Func<object>>[] expressions) {
-            OnPropertyChanged(expressions);
-        }
-
-        #endregion
-
         #region Properties
 
         public static XmlLanguage DefaultLanguage = XmlLanguage.Empty;
@@ -171,6 +116,14 @@ namespace Archimedes.Patterns.WPF.ViewModels
                 return _closeCommand;
             }
         }
+
+        /// <summary>
+        /// Invokes the Close-Command of this ViewModel
+        /// </summary>
+        public void Close(){
+            this.CloseCommand.Execute(null);
+        }
+
         #endregion // CloseCommand
 
         #region Focus Command

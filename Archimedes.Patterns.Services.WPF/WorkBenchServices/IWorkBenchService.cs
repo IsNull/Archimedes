@@ -40,7 +40,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
         #region Show Content Methods
 
-        IDDialogResult ShowDialog(IFileDialog fileDialog, WorkspaceViewModel ownerVM = null);
+        IDDialogResult ShowDialog(IDialog fileDialog, WorkspaceViewModel ownerVM = null);
 
         #region Show WorkspaceViewModel
 

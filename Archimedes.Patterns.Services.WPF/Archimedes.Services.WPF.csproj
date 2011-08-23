@@ -71,7 +71,8 @@
     <Compile Include="FrameWorkDialogs\FileDialogViewModel.cs" />
     <Compile Include="FrameWorkDialogs\FolderBrowse\FolderBrowserDialog.cs" />
     <Compile Include="FrameWorkDialogs\FolderBrowse\FolderBrowserDialogViewModel.cs" />
-    <Compile Include="FrameWorkDialogs\FolderBrowse\IFolderBrowserDialog.cs" />
+    <Compile Include="FrameWorkDialogs\IFolderBrowserDialog.cs" />
+    <Compile Include="FrameWorkDialogs\IDialog.cs" />
     <Compile Include="FrameWorkDialogs\IDialogWrapper.cs" />
     <Compile Include="FrameWorkDialogs\IFileDialog.cs" />
     <Compile Include="FrameWorkDialogs\OpenFile\IOpenFileDialog.cs" />

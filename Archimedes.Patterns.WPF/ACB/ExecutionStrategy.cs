@@ -42,7 +42,7 @@ namespace Archimedes.Patterns.WPF.ACB
             if (Behavior == null)
                 throw new InvalidOperationException("Behavior property cannot be null when executing a strategy");
 
-            if (Behavior.Command.CanExecute(Behavior.CommandParameter))
+            if (Behavior.Command != null && Behavior.Command.CanExecute(Behavior.CommandParameter))
                 Behavior.Command.Execute(Behavior.CommandParameter);
         }
 

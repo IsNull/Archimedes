@@ -5,10 +5,11 @@ using System.Text;
 
 namespace Archimedes.Services.WPF.FrameWorkDialogs
 {
+
     /// <summary>
     /// Interface describing the FileDialog.
     /// </summary>
-    public interface IFileDialog
+    public interface IFileDialog : IDialog
     {
         /// <summary>
         /// Gets or sets a value indicating whether the dialog box automatically adds an extension to a

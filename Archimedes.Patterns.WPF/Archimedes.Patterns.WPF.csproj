@@ -90,6 +90,7 @@
     <Compile Include="Converters\BooleanToVisibilityInvertedConverter.cs" />
     <Compile Include="Converters\CommandToVisibiltyConverter.cs" />
     <Compile Include="Converters\NullableToVisibleConverter.cs" />
+    <Compile Include="Converters\TimeSpanToDateTimeConverter.cs" />
     <Compile Include="DragNDrop\DefaultDragHandler.cs" />
     <Compile Include="DragNDrop\DefaultDropHandler.cs" />
     <Compile Include="DragNDrop\DragAdorner.cs" />
@@ -139,6 +140,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Threading\ThreadSafeObservableCollection.cs" />
+    <Compile Include="Threading\WindowsDispatcher.cs" />
     <Compile Include="UIHelper.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\ChooseItemViewModel.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="ViewModels\Trees\ITreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\Trees\TreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\ViewBuilder.cs" />
+    <Compile Include="ViewModels\ViewModelWPF.cs" />
     <Compile Include="ViewModels\WorkSpaceViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
