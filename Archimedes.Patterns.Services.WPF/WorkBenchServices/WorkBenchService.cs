@@ -99,7 +99,8 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
         #region Show VM Content Methods
 
-        public void ShowRapport(WorkspaceViewModel viewModel, DependencyObject template) {
+        public void ShowTemplatedDialog(WorkspaceViewModel viewModel, DependencyObject template,
+            SizeToContent sizeToContent = SizeToContent.WidthAndHeight, Size? windowSize = null) {
 
             if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
@@ -108,10 +109,13 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
             var dockableContent = CreateDockableContent(template, viewModel);
 
+            if (windowSize.HasValue) {
+                dockableContent.FloatingWindowSize = windowSize.Value;
+            }
+
             dockableContent.DockableStyle = DockableStyle.None;
-            dockableContent.FloatingWindowSizeToContent = SizeToContent.Manual;
+            dockableContent.FloatingWindowSizeToContent = sizeToContent;
             dockableContent.HideOnClose = false;
-            //dockableContent.Closing += (s, e) => viewModel.OnRequestClose();
 
             viewModel.IsOnWorkspace = true;
             dockableContent.ShowAsDialoge(DockManager);

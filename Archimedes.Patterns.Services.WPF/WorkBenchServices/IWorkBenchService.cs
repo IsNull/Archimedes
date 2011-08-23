@@ -36,13 +36,22 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         void LoaderView(bool display);
 
 
-        void ShowRapport(WorkspaceViewModel viewModel, DependencyObject template);
+        
 
         #region Show Content Methods
 
         IDDialogResult ShowDialog(IDialog fileDialog, WorkspaceViewModel ownerVM = null);
 
         #region Show WorkspaceViewModel
+
+
+        /// <summary>
+        /// Show the ViewModel as modal Dialog window (blocks current thread) using the specified visual
+        /// </summary>
+        /// <param name="viewModel"></param>
+        /// <param name="template"></param>
+        void ShowTemplatedDialog(WorkspaceViewModel viewModel, DependencyObject template, System.Windows.SizeToContent sizeToContent = SizeToContent.WidthAndHeight, System.Windows.Size? windowSize = null);
+
 
         /// <summary>
         /// Show the ViewModel as modal Dialog window (blocks current thread)
