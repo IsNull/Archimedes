@@ -51,7 +51,8 @@
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource NormalBorderBrush}" />
         <Setter Property="Template" Value="{DynamicResource ButtonTemplate}" />
-   </Style>
+        <Setter Property="Padding" Value="5"/>
+    </Style>
 
     <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}" >
         <ControlTemplate.Resources>
