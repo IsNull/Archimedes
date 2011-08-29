@@ -386,14 +386,14 @@ namespace Archimedes.Geometry.Primitives
 
 
         public void Dispose() {
-            try {
-                if (Pen != null)
-                    this.Pen.Dispose();
-                if (FillBrush != null)
-                    this.FillBrush.Dispose();
-            } catch (ArgumentException) {
-                // ignore
-            }
+            //try {
+            //    if (Pen != null)
+            //        this.Pen.Dispose();
+            //    if (FillBrush != null)
+            //        this.FillBrush.Dispose();
+            //} catch (ArgumentException) {
+            //    // ignore
+            //}
         }
 
         #region IClosedGeometry

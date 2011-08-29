@@ -579,8 +579,8 @@ public bool Contains(Vector2 p) {
         }
 
         public virtual void Dispose() {
-            Pen.Dispose();
-            FillBrush.Dispose();
+            //Pen.Dispose();
+            //FillBrush.Dispose();
         }
 
         private void Invalidate() {

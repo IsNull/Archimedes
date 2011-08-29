@@ -87,7 +87,6 @@ namespace Archimedes.Geometry.Rendering
                 if (_oldframe != null)
                     _oldframe.Dispose();
             }
-            
 
         }
 

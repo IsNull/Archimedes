@@ -7,7 +7,7 @@ using System.Drawing.Drawing2D;
 namespace Archimedes.Geometry.Primitives
 {
     /// <summary>
-    /// Composition from several single IGeometryBase Elements to a common Interface
+    /// Composition of several single IGeometryBase Elements to a common Interface
     /// </summary>
     public class ComplexGeometry : IGeometryBase
     {
