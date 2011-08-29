@@ -141,14 +141,11 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <summary>
         /// Indicates that a background action is currently launched
         /// </summary>
-        bool IsBackgroundWorking { get; set; }
+        bool IsBackgroundWorking { get; }
 
-        //!! Dont expose AvalonDock primitives in this generic interface!
-
-        ///// <summary>
-        ///// Returns all hidden Contents
-        ///// </summary>
-        //IEnumerable<AvalonDock.DockableContent> HiddenContents { get; }
+        bool SetBackgroundWorking();
+        bool UnSetBackgroundWorking();
+        
 
         #endregion
 

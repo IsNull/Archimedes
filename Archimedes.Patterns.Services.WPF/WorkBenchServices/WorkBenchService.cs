@@ -31,7 +31,6 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         readonly IAvalonService _avalonService = ServiceLocator.Instance.Resolve<IAvalonService>();
         DockingManager _dockManager = null;
         string _statusBarText = "";
-        bool _isbackgroundWorking = false;
 
         #endregion
 
@@ -262,15 +261,35 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// Indicates that a background action is currently launched
         /// </summary>
         public bool IsBackgroundWorking {
-            get { return _isbackgroundWorking; }
-            set {
+            get { return _backgroundRequestSync > 0; }
+        }
 
-                if (_isbackgroundWorking != value) {
-                    _isbackgroundWorking = value;
-                    if (IsBackgroundWorkingChanged != null)
-                        IsBackgroundWorkingChanged(this, EventArgs.Empty);
-                }
-            }
+        uint _backgroundRequestSync = 0;
+
+        public bool SetBackgroundWorking() {
+            bool old = IsBackgroundWorking;
+            _backgroundRequestSync++;
+            if (old != IsBackgroundWorking) {
+                OnIsBackgroundWorkingChanged();
+                return true;
+            } else
+                return false;
+        }
+
+        public bool UnSetBackgroundWorking() {
+            bool old = IsBackgroundWorking;
+            _backgroundRequestSync--;
+
+            if (old != IsBackgroundWorking) {
+                OnIsBackgroundWorkingChanged();
+                return true;
+            } else
+                return false;
+        }
+
+        void OnIsBackgroundWorkingChanged() {
+            if (IsBackgroundWorkingChanged != null)
+                IsBackgroundWorkingChanged(this, EventArgs.Empty);
         }
 
         #region Loader
