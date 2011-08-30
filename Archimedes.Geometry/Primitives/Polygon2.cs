@@ -232,40 +232,40 @@ namespace Archimedes.Geometry.Primitives
 
         #region Collision Detection Methods
 
-/// <summary>
-/// Does this polygon contain the given point?
-/// </summary>
-/// <param name="p">The Point to check</param>
-/// <returns>True if the Point is contained in the Polygon</returns>
-public bool Contains(Vector2 p) {
-    int counter = 0;
-    int i;
-    double xinters;
-    Vector2 p1, p2;
-    int N = _vertices.Count;
+        /// <summary>
+        /// Does this polygon contain the given point?
+        /// </summary>
+        /// <param name="p">The Point to check</param>
+        /// <returns>True if the Point is contained in the Polygon</returns>
+        public bool Contains(Vector2 p) {
+            int counter = 0;
+            int i;
+            double xinters;
+            Vector2 p1, p2;
+            int N = _vertices.Count;
 
-    if(!this.BoundingCircle.Contains(p)) {
-        return false;
-    }
+            if (!this.BoundingCircle.Contains(p)) {
+                return false;
+            }
 
-    p1 = _vertices[0];
-    for(i = 1; i <= N; i++) {
-        p2 = _vertices[i % N];
-        if(p.Y > Math.Min(p1.Y, p2.Y)) {
-            if(p.Y <= Math.Max(p1.Y, p2.Y)) {
-                if(p.X <= Math.Max(p1.X, p2.X)) {
-                    if(p1.Y != p2.Y) {
-                        xinters = (p.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
-                        if(p1.X == p2.X || p.X <= xinters)
-                            counter++;
+            p1 = _vertices[0];
+            for (i = 1; i <= N; i++) {
+                p2 = _vertices[i % N];
+                if (p.Y > Math.Min(p1.Y, p2.Y)) {
+                    if (p.Y <= Math.Max(p1.Y, p2.Y)) {
+                        if (p.X <= Math.Max(p1.X, p2.X)) {
+                            if (p1.Y != p2.Y) {
+                                xinters = (p.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
+                                if (p1.X == p2.X || p.X <= xinters)
+                                    counter++;
+                            }
+                        }
                     }
                 }
+                p1 = p2;
             }
+            return (counter % 2 != 0);
         }
-        p1 = p2;
-    }
-    return (counter % 2 != 0);
-}
 
         /// <summary>
         /// Is the given Polygon fully contained in this one?
@@ -402,29 +402,29 @@ public bool Contains(Vector2 p) {
             pts[num_points] = _vertices[0];
 
             // Find the centroid.
-            float X = 0;
-            float Y = 0;
+            float x = 0;
+            float y = 0;
             float second_factor;
             for (int i = 0; i < num_points; i++) {
                 second_factor =
                     pts[i].X * pts[i + 1].Y -
                     pts[i + 1].X * pts[i].Y;
-                X += (pts[i].X + pts[i + 1].X) * second_factor;
-                Y += (pts[i].Y + pts[i + 1].Y) * second_factor;
+                x += (pts[i].X + pts[i + 1].X) * second_factor;
+                y += (pts[i].Y + pts[i + 1].Y) * second_factor;
             }
 
             // Divide by 6 times the polygon's area.
             float polygon_area = this.Area;
-            X /= (6 * polygon_area);
-            Y /= (6 * polygon_area);
+            x /= (6 * polygon_area);
+            y /= (6 * polygon_area);
 
             // If the values are negative, the polygon is
             // oriented counterclockwise so reverse the signs.
-            if (X < 0) {
-                X = -X;
-                Y = -Y;
+            if (x < 0) {
+                x = -x;
+                y = -y;
             }
-            return new Vector2(X, Y);
+            return new Vector2(x, y);
         }
 
         #endregion
