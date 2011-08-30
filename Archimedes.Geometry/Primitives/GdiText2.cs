@@ -201,7 +201,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public void Move(Vector2 mov) {
-            this.Location = mov.GetPoint(this.Location);
+            this.Location += mov;
         }
 
         public void Scale(float fact) {

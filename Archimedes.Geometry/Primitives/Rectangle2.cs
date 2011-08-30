@@ -94,7 +94,7 @@ namespace Archimedes.Geometry.Primitives
             var vH = new Vector2(vertices[1], vertices[2]);
 
             //Use Vector Geometry to walk to the middlepoint
-            _middlePoint = ((vW / 2) + (vH / 2)).GetPoint(vertices[0]);
+            _middlePoint = vertices[0] + ((vW / 2) + (vH / 2));
 
             _rotateAngle = vW.GetAngle2X();
             _width = vW.Lenght;
@@ -206,7 +206,7 @@ namespace Archimedes.Geometry.Primitives
                 var upperleftCorner = new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2);
                 if (this.IsRotated) { //optimisation - do only if we have a rotated rect
                     var vToUpperLeft = new Vector2(MiddlePoint, upperleftCorner);
-                    upperleftCorner = vToUpperLeft.GetRotated(Angle).GetPoint(MiddlePoint);
+                    upperleftCorner = MiddlePoint + vToUpperLeft.GetRotated(Angle);
                 }
                 return upperleftCorner;
             }
@@ -220,7 +220,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="mov"></param>
         public void Move(Vector2 mov) {
-            MiddlePoint = mov.GetPoint(MiddlePoint);
+            MiddlePoint += mov;
         }
 
         public void Scale(float fact) {

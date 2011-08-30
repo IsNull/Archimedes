@@ -86,6 +86,7 @@
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="VectorDrawer.cs" />
+    <Compile Include="VectorHelper.cs" />
     <Compile Include="Vertices.cs" />
     <Compile Include="VerticesHelper.cs" />
   </ItemGroup>

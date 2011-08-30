@@ -82,7 +82,7 @@ namespace Archimedes.Patterns.MVMV
             OnPropertysChangedInternal(propertyNames);
         }
 
-        string[] GetPropertyNames(Expression<Func<object>>[] expressions) {
+        protected string[] GetPropertyNames(Expression<Func<object>>[] expressions) {
             string[] propertyNames = new string[expressions.Length];
             for (int i = 0; i < expressions.Length; i++) {
                 propertyNames[i] = Lambda.GetPropertyName(expressions[i]);
@@ -104,8 +104,10 @@ namespace Archimedes.Patterns.MVMV
         }
 
         void OnPropertyChangedInternal(string propertyName) {
-            if (_propChangedHandler != null)
-                _propChangedHandler(this, GetEventArgs(propertyName));
+            if (_propChangedHandler != null) {
+                var args = GetEventArgs(propertyName);
+                _propChangedHandler(this, args);
+            }
 
             if (_typedInvokerMap.ContainsKey(propertyName)) {
                 foreach (var a in _typedInvokerMap[propertyName])

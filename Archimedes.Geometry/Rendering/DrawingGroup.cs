@@ -5,63 +5,98 @@ using System.Text;
 
 namespace Archimedes.Geometry.Rendering
 {
-    public class DrawingGroup : IDrawable, IEnumerable<IDrawable>
+    /// <summary>
+    /// Threadsafe Drawing Group
+    /// </summary>
+    public class DrawingGroup : IDrawable
     {
-        private List<IDrawable> grpdrawings = new List<IDrawable>();
-        private List<Exception> drawingErrors = new List<Exception>();
+        #region Fields
 
-        public  string Name = "";
+        readonly List<IDrawable> _grpdrawings = new List<IDrawable>();
+        readonly object _drawingsSYNC = new object();
+
+        //readonly List<Exception> _drawingErrors = new List<Exception>();
+
+        #endregion
+
+        public string Name { get; set; }
 
         public DrawingGroup(string uname) {
             Name = uname;
         }
 
-
-        public IDrawable this[int index] {
-            get { return grpdrawings[index]; }
-            set { grpdrawings[index] = value; }
-        }
+        #region Drawable Handling
 
         public void Add(IDrawable d) {
-            grpdrawings.Add(d);
+            lock (_drawingsSYNC) {
+                _grpdrawings.Add(d);
+            }
         }
+
         public void AddRange(IEnumerable<IDrawable> d) {
-            grpdrawings.AddRange(d);
+            lock (_drawingsSYNC) {
+                _grpdrawings.AddRange(d);
+            }
         }
+
+
+        /// <summary>
+        /// Remove the given Element
+        /// </summary>
+        /// <param name="d"></param>
         public void Remove(IDrawable d) {
-            grpdrawings.Remove(d);
+            lock (_drawingsSYNC) {
+                _grpdrawings.Remove(d);
+            }
         }
+
+        /// <summary>
+        /// Clear all Elements
+        /// </summary>
         public void Clear() {
-            grpdrawings.Clear();
+            lock (_drawingsSYNC) {
+                _grpdrawings.Clear();
+            }
         }
 
-        public IDrawable[] ToArray() {
-            return grpdrawings.ToArray();
-        }
-
-
+        /// <summary>
+        /// Element Count
+        /// </summary>
         public int Count {
-            get { return grpdrawings.Count; }
-        }
-
-        public void Draw(System.Drawing.Graphics G) {
-            foreach (var d in grpdrawings) {
-                if (d != null) {
-                    try {
-                        d.Draw(G);
-                    } catch (Exception e) {
-                        drawingErrors.Add(e);
-                    }
+            get {
+                lock (_drawingsSYNC) {
+                    return _grpdrawings.Count;
                 }
             }
         }
 
-        public IEnumerator<IDrawable> GetEnumerator() {
-            return grpdrawings.GetEnumerator();
+        /// <summary>
+        /// Get an immutable snapshot of all Drawing Elements currently contained in this Group
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<IDrawable> GetSnapshot() {
+            lock (_drawingsSYNC) {
+                return new List<IDrawable>(_grpdrawings);
+            }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-            return (grpdrawings as System.Collections.IEnumerable).GetEnumerator();
+        #endregion
+
+
+        /// <summary>
+        /// Draws all Elements to the given Gfx Context
+        /// </summary>
+        /// <param name="G"></param>
+        public void Draw(System.Drawing.Graphics G) {
+            foreach (var d in GetSnapshot()) {
+                if (d != null) {
+                    try {
+                        d.Draw(G);
+                    } catch (Exception e) {
+                        //_drawingErrors.Add(e);
+                    }
+                }
+            }
         }
     }
 }

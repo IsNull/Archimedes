@@ -8,7 +8,6 @@
 using System;
 using System.Drawing;
 using Archimedes.Geometry.Extensions;
-using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry
 {
@@ -181,17 +180,6 @@ namespace Archimedes.Geometry
             return new Vector2(ak, gk);
         }
 
-        public static Vector2 GetEndVector(IGeometryBase g) {
-            Vector2 v;
-            if (g is Line2) {
-                v = (g as Line2).ToVector();
-            } else if (g is Arc) {
-                v = (g as Arc).EndVector;
-            } else
-                throw new NotSupportedException("Can't get End-Vector from IGeometryBase: " + g.GetType().ToString());
-            return v;
-        }
-
         /// <summary>
         /// Multiplicate a Vector with a Scalar (Equal to v1[Vector] * Operator[Number])
         /// </summary>
@@ -304,15 +292,6 @@ namespace Archimedes.Geometry
         public Vector2 Rounded(int value) {
             return new Vector2((float)Math.Round(this.X, value),
             (float)Math.Round(this.Y, value));
-        }
-
-        /// <summary>
-        /// Get 
-        /// </summary>
-        /// <param name="startPoint"></param>
-        /// <returns></returns>
-        public Vector2 GetPoint(Vector2 startPoint) {
-            return startPoint + this;
         }
 
         /// <summary>

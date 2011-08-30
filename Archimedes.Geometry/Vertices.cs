@@ -109,7 +109,7 @@ namespace Archimedes.Geometry
             var rotVertices = new Vertices();
             foreach (var vertex in _vertices) {
                 vrotate = new Vector2(rotationOrigin, vertex);
-                var pnt = vrotate.GetRotated(angle).GetPoint(rotationOrigin);
+                Vector2 pnt = rotationOrigin + vrotate.GetRotated(angle);
                 rotVertices.Add(pnt);
             }
             return rotVertices;

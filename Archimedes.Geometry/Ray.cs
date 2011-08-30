@@ -140,7 +140,7 @@ namespace Archimedes.Geometry
             if (this.Pen != null) {
                 var v = Vector;
                 v.Lenght = 500;
-                var end = v.GetPoint(this.Location);
+                var end = this.Location + v;
                 G.DrawLine(this.Pen, this.Location, end);
             }
         }

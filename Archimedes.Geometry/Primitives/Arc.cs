@@ -360,12 +360,12 @@ namespace Archimedes.Geometry.Primitives
             }
             set {
                 var vMove = new Vector2(this.MiddlePoint, value);
-                this.Location = vMove.GetPoint(this.Location);
+                this.Location += vMove;
             }
         }
 
         public void Move(Vector2 mov) {
-            this.Location = mov.GetPoint(this.Location);
+            this.Location += mov;
         }
 
         /// <summary> Arc StartPoint

@@ -7,14 +7,18 @@ using System.Diagnostics;
 
 namespace Archimedes.Geometry.Rendering
 {
+    /// <summary>
+    /// Threadsafe Renderer
+    /// </summary>
     public class Renderer : IDisposable
     {
         #region Fields
 
-        List<DrawingGroup> _groups;
-        DrawingGroup _defaultGroup;
+        readonly List<DrawingGroup> _groups;
+        readonly object _groupsSYNC = new object();
 
-        object _frameLock = new object();
+        readonly DrawingGroup _defaultGroup;
+
         Image _frame = null; // Internal Master Frame
 
         #endregion
@@ -62,9 +66,10 @@ namespace Archimedes.Geometry.Rendering
             if (zoom <= 0)
                 throw new ArgumentException("zoom factor must not be negative!");
 
-            //lock (_frameLock) {
                 Image _oldframe = _frame;
-                _frame = new Bitmap((int)Math.Max(1, frameSize.Width * zoom), (int)Math.Max(1, frameSize.Height * zoom));
+                _frame = new Bitmap(
+                    (int)Math.Max(1, frameSize.Width * zoom),
+                    (int)Math.Max(1, frameSize.Height * zoom));
 
                 using (var G = Graphics.FromImage(_frame)) {
                     G.SmoothingMode = SmoothingMode.AntiAlias;
@@ -76,13 +81,15 @@ namespace Archimedes.Geometry.Rendering
                     if (BackGroundColor.HasValue)
                         G.Clear(BackGroundColor.Value);
 
-                    foreach (var group in _groups) {
-                        group.Draw(G);
+                    lock (_groupsSYNC) {
+                        foreach (var group in _groups) {
+                            group.Draw(G);
+                        }
                     }
 
                     if (OnPastRender != null)
                         OnPastRender(this, new RenderEventArgs(G));
-               // }
+
 
                 if (_oldframe != null)
                     _oldframe.Dispose();
@@ -96,7 +103,7 @@ namespace Archimedes.Geometry.Rendering
         /// <param name="rect"></param>
         /// <returns></returns>
         public Image GetViewPortFrame(Rectangle? _viewPortRect = null) {
-            //lock (_frameLock) {
+ 
                 Bitmap viewPort;
 
                 if (_frame == null)
@@ -126,7 +133,7 @@ namespace Archimedes.Geometry.Rendering
                     }
                }
                 return viewPort;
-            //}
+ 
         }
 
 
@@ -139,7 +146,9 @@ namespace Archimedes.Geometry.Rendering
         /// Clear all IDrawable Elements
         /// </summary>
         public void Clear() {
-            _groups.Clear();
+            lock (_groupsSYNC) {
+                _groups.Clear();
+            }
         }
 
         /// <summary>
@@ -164,25 +173,31 @@ namespace Archimedes.Geometry.Rendering
         #endregion
 
         public void GroupClear(string groupname) {
-            var grp = _groups.Find(x => x.Name.Equals(groupname));
-            if (grp != null)
-                grp.Clear();
+            lock (_groupsSYNC) {
+                var grp = _groups.Find(x => x.Name.Equals(groupname));
+                if (grp != null)
+                    grp.Clear();
+            }
         }
 
         private DrawingGroup GetGroupOrDefault(string groupname) {
-            return (from g in _groups
-                    where g.Name == groupname
-                    select g).DefaultIfEmpty(_defaultGroup).First();
+            lock (_groupsSYNC) {
+                return (from g in _groups
+                        where g.Name == groupname
+                        select g).DefaultIfEmpty(_defaultGroup).First();
+            }
         }
 
         private DrawingGroup GetGroupOrCreate(string groupname) {
-            var grp = _groups.Find(x => x.Name.Equals(groupname));
+            lock (_groupsSYNC) {
+                var grp = _groups.Find(x => x.Name.Equals(groupname));
 
-            if (grp == null) {
-                grp = new DrawingGroup(groupname);
-                _groups.Add(grp);
+                if (grp == null) {
+                    grp = new DrawingGroup(groupname);
+                    _groups.Add(grp);
+                }
+                return grp;
             }
-            return grp;
         }
 
 

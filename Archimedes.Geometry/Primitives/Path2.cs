@@ -103,7 +103,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public virtual void Dispose() {
-            Pen.Dispose();
+            //Pen.Dispose();
             _gpath.Dispose();
         }
 
@@ -136,7 +136,7 @@ namespace Archimedes.Geometry.Primitives
 
         public void Move(Vector2 mov) {
             for (int i = 0; i < _gpath.PathPoints.Count(); i++)
-                _gpath.PathPoints[i] = mov.GetPoint(_gpath.PathPoints[i]);
+                _gpath.PathPoints[i] +=  mov;
         }
 
         public void Scale(float fact) {
@@ -174,11 +174,13 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public void Draw(System.Drawing.Graphics G) {
-            G.DrawPath(Pen, _gpath);
+            if (_gpath.PointCount > 0)
+                G.DrawPath(Pen, _gpath);
         }
 
         public void AddToPath(GraphicsPath path) {
-            path.AddPath(_gpath, true);
+            if (_gpath.PointCount > 0)
+                path.AddPath(_gpath, true);
         }
 
         #endregion

@@ -135,15 +135,15 @@ namespace Archimedes.Geometry.Primitives
 
 
         public void Stretch(float len, Direction direction){
-            Vector2 vThis = new Vector2(this.Start,this.End);
+            Vector2 vThis = new Vector2(this.Start, this.End);
 
             if (direction == Direction.RIGHT) {
                 vThis.Lenght += len;
-                this.End = vThis.GetPoint(this.Start);
+                this.End = this.Start + vThis;
             } else {
                 vThis.Lenght = len;
                 vThis *= -1;
-                this.Start = vThis.GetPoint(this.Start);
+                this.Start += vThis;
             }
         }
 
@@ -263,7 +263,7 @@ namespace Archimedes.Geometry.Primitives
         public Vector2 MiddlePoint {
             get {
                 Vector2 vLine = (new Vector2(Start, End)) / 2;
-                return vLine.GetPoint(Start);
+                return Start + vLine;
             }
             set {
                 Move(new Vector2(this.MiddlePoint, value));
@@ -271,8 +271,8 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public void Move(Vector2 mov) {
-            this.Start = mov.GetPoint(this.Start);
-            this.End = mov.GetPoint(this.End);
+            this.Start += mov;
+            this.End += mov;
         }
 
         /// <summary>
