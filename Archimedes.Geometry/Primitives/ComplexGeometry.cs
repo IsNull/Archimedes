@@ -198,7 +198,7 @@ namespace Archimedes.Geometry.Primitives
         public RectangleF BoundingBox {
             get {
                 if (_boundingboxInvalidated) {
-                    _boundingbox = _vertices.BoundingBox;
+                    _boundingbox = ToVertices().BoundingBox;
                     _boundingboxInvalidated = false;
                 }
                 return _boundingbox;
@@ -271,7 +271,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public Polygon2 ToPolygon2() {
-            return new Polygon2(_vertices);
+            return new Polygon2(ToVertices());
         }
 
         /// <summary>
