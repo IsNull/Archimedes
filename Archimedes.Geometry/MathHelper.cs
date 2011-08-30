@@ -54,7 +54,7 @@ namespace Archimedes.Geometry
         }
 
         /// <summary>
-        /// Get -1 or 1, depending on the radius Direction
+        /// Get -1 or 1, depending on the Direction
         /// </summary>
         /// <param name="direction"></param>
         /// <returns></returns>

@@ -18,5 +18,19 @@ namespace Archimedes.Geometry
                 throw new NotSupportedException("Can't get End-Vector from IGeometryBase: " + g.GetType().ToString());
             return v;
         }
+
+        /// <summary>
+        /// Returns a signed angle
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public static float GetSignedAngleBetween(Line2 direction, Vector2 next) {
+            var angle = next.GetAngle2V(direction.ToVector());
+
+            return angle * (direction.IsLeft(next) ?
+                MathHelper.Mul(Direction.LEFT) : MathHelper.Mul(Direction.RIGHT));
+        }
+
     }
 }

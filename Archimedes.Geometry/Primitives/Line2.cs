@@ -152,6 +152,19 @@ namespace Archimedes.Geometry.Primitives
         }
 
         /// <summary>
+        /// Determites if the given Point/Vertex lies on the Left side of this Line
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        public bool IsLeft(Vector2 c) {
+            return isLeft(this.Start, this.End, c);
+        }
+
+        bool isLeft(Vector2 a, Vector2 b, Vector2 c) {
+            return ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X)) > 0;
+        }
+
+        /// <summary>
         /// Calculates the distance between two Points
         /// </summary>
         /// <param name="start"></param>
