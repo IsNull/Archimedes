@@ -117,7 +117,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         public void OrientClockwise() {
             if (!IsOrientedClockwise())
-                _vertices.Reverse();
+                _vertices = new Vertices(_vertices.Reverse());
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         public void OrientCounterClockwise() {
             if (IsOrientedClockwise())
-                _vertices.Reverse();
+                _vertices = new Vertices(_vertices.Reverse());
         }
 
         #endregion // Orientation Routines
