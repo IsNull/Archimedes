@@ -6,10 +6,15 @@ using System.IO;
 
 namespace Archimedes.Patterns.Deployment
 {
+
     public class FileInstaller
     {
-        List<FileInstallTarget> _filesToProcess = new List<FileInstallTarget>();
+        List<Installable> _filesToProcess = new List<Installable>();
 
+        /// <summary>
+        /// Install all items
+        /// </summary>
+        /// <returns></returns>
         public virtual bool Install() {
             try {
                 foreach (var file in _filesToProcess) {
@@ -22,11 +27,11 @@ namespace Archimedes.Patterns.Deployment
             return true;
         }
 
-        public void Add(FileInstallTarget t) {
+        public void Add(Installable t) {
             _filesToProcess.Add(t);
         }
 
-        public void Remove(FileInstallTarget t) {
+        public void Remove(Installable t) {
             _filesToProcess.Remove(t);
         }
 

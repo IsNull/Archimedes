@@ -100,6 +100,7 @@
     <Compile Include="Data\Tree\SimpleTreeNodeList.cs" />
     <Compile Include="Deployment\FileInstaller.cs" />
     <Compile Include="Deployment\FileInstallTarget.cs" />
+    <Compile Include="Deployment\Installable.cs" />
     <Compile Include="Deployment\IVersionStore.cs" />
     <Compile Include="Deployment\XMLVersionStore.cs" />
     <Compile Include="EventArgs.cs" />

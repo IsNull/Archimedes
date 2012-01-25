@@ -22,7 +22,7 @@ namespace Archimedes.Patterns.Deployment
     /// <summary>
     /// Represents a single item to install
     /// </summary>
-    public class FileInstallTarget
+    public class FileInstallTarget : Installable
     {
         #region Fields
 
