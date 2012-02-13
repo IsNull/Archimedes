@@ -12,11 +12,30 @@ namespace Archimedes.Patterns.Deployment
         Critical
     }
 
+    /// <summary>
+    /// Describes a handling with files
+    /// </summary>
     public enum FileHandling
     {
+        /// <summary>
+        /// Copy Source to Destionation, if Destination not exists
+        /// </summary>
         CopyIfNotExists,
+
+        /// <summary>
+        /// Always overwrite Destionation with Source File
+        /// </summary>
         CopyAlways,
-        CopyIfNewer
+
+        /// <summary>
+        /// Copy/Overrwite the Destination file with the Source, when the Source file is newer
+        /// </summary>
+        CopyIfNewer,
+
+        /// <summary>
+        /// Delete Destionation file if the file is outdated
+        /// </summary>
+        DeleteIfNewer
     }
 
     /// <summary>
@@ -112,54 +131,70 @@ namespace Archimedes.Patterns.Deployment
         /// </summary>
         /// <exception cref="FileNotFoundException"/>
         public virtual void Install() {
-            if (string.IsNullOrEmpty(Source) || string.IsNullOrEmpty(Destionation))
-                throw new FileNotFoundException();
+            if (string.IsNullOrEmpty(Destionation) ||
+                (Handling != FileHandling.DeleteIfNewer && string.IsNullOrEmpty(Source)))
+                throw new NotSupportedException("Destionation required");
 
             var targetDir = Path.GetDirectoryName(Destionation);
+            if (!Directory.Exists(targetDir))
+                Directory.CreateDirectory(targetDir);
 
-            switch (_handling) {
+            switch (Handling) {
 
+                //
+                // CopyIfNotExists
+                //
                 case FileHandling.CopyIfNotExists:
-                // Install only if the file not exists
-                if (!File.Exists(Destionation)) {
-                    if (!Directory.Exists(targetDir))
-                        Directory.CreateDirectory(targetDir);
+                    // Install only if the file not exists
+                    if (!File.Exists(Destionation)) {
 
+                        if (!File.Exists(Source))
+                            throw new FileNotFoundException(Source);
+                        File.Copy(Source, Destionation);
+                    }
+                break;
+
+                //
+                // CopyAlways
+                //
+                case FileHandling.CopyAlways:
                     if (!File.Exists(Source))
                         throw new FileNotFoundException(Source);
-                    File.Copy(Source, Destionation);
-                }
-                break;
-
-                case FileHandling.CopyAlways:
-
-                if (!Directory.Exists(targetDir))
-                    Directory.CreateDirectory(targetDir);
-
-                if (!File.Exists(Source))
-                    throw new FileNotFoundException(Source);
-                File.Copy(Source, Destionation, true);
-                break;
-
-                case FileHandling.CopyIfNewer:
-
-                if (CurrentVersionCallback == null)
-                    throw new NotSupportedException("CurrentVersionCallback must be set!");
-
-                var current = CurrentVersionCallback();
-                if (current == null || this.FileVersion > current) {
-
-                    if (!Directory.Exists(targetDir))
-                        Directory.CreateDirectory(targetDir);
-
-                    if (!File.Exists(Source))
-                        throw new FileNotFoundException("Sourcefile not found!", Source);
                     File.Copy(Source, Destionation, true);
-                    if (NewVersionInstalledCallback != null)
-                        NewVersionInstalledCallback(this.FileVersion);
-                }
-
                 break;
+
+
+                //
+                // CopyIfNewer
+                //
+                case FileHandling.CopyIfNewer:
+                    if (CurrentVersionCallback == null)
+                        throw new NotSupportedException("CurrentVersionCallback must be set!");
+
+                    var current = CurrentVersionCallback();
+                    if (current == null || this.FileVersion > current) {
+
+                        if (!File.Exists(Source))
+                            throw new FileNotFoundException("Sourcefile not found!", Source);
+                        File.Copy(Source, Destionation, true);
+                        if (NewVersionInstalledCallback != null)
+                            NewVersionInstalledCallback(this.FileVersion);
+                    }
+                break;
+
+                //
+                // DeleteIfNewer
+                //
+                case FileHandling.DeleteIfNewer:
+                    if (CurrentVersionCallback == null)
+                        throw new NotSupportedException("CurrentVersionCallback must be set!");
+
+                    if (CurrentVersionCallback() == null || this.FileVersion > CurrentVersionCallback()) {
+                        if (File.Exists(Destionation))
+                            File.Delete(Destionation);
+                    }
+                break;
+
 
                 default:
                 throw new NotSupportedException(

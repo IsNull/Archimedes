@@ -4,7 +4,7 @@ namespace Archimedes.Patterns.Deployment
     /// <summary>
     /// Represents an intem which can be installed
     /// </summary>
-    interface Installable
+    public interface Installable
     {
         /// <summary>
         /// Install this item
