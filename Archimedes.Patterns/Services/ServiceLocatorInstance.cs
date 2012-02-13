@@ -41,7 +41,7 @@ namespace Archimedes.Patterns.Services
         /// <summary>
         /// Resolves a service.
         /// </summary>
-        //[DebuggerStepThrough]
+        [DebuggerStepThrough]
         public TInterface Resolve<TInterface>() {
             if (!services.ContainsKey(typeof(TInterface))) {
                 throw new ServiceNotFoundException(typeof(TInterface));

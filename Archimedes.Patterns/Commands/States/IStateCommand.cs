@@ -2,6 +2,7 @@
 
 namespace Archimedes.Patterns.Commands.States
 {
+   
     public interface IStateCommand<T> : ICommandSimple
     {
         void OnStateChanged();
