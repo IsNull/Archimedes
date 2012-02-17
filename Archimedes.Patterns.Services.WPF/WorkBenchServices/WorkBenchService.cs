@@ -160,10 +160,12 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// <param name="viewModel"></param>
         /// <param name="sizeToContent"></param>
         /// <param name="windowSize"></param>
-        /// <returns></returns>
+        /// <returns>returns null, when no further information could be obtained. Otherwise true/false if the user accepted/declined the dialoge</returns>
         public bool? ShowDialog(WorkspaceViewModel viewModel, SizeToContent sizeToContent = SizeToContent.WidthAndHeight, Size? windowSize = null) {
             if(viewModel == null)
                 throw new ArgumentNullException("viewModel");
+
+            bool? ret = null;
 
             var dockableContent = SetUpDockableContent(viewModel);
             dockableContent.DockableStyle = DockableStyle.None;
@@ -174,7 +176,14 @@ namespace Archimedes.Services.WPF.WorkBenchServices
                 dockableContent.FloatingWindowSize = windowSize.Value;
             }
             viewModel.IsOnWorkspace = true;
-            var ret = dockableContent.ShowAsDialoge(DockManager);
+            dockableContent.ShowAsDialoge(DockManager); // return value will never yield anything useful
+
+            if (viewModel is IDialogViewModel) { // fix the return parameter
+                var dlg = viewModel as IDialogViewModel;
+                if (dlg.DialogeResult == IDDialogResult.OK || dlg.DialogeResult == IDDialogResult.Yes) {
+                    ret = true;
+                }
+            }
 
             return ret;
         }

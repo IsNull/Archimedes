@@ -8,16 +8,16 @@ using Archimedes.Patterns.WPF.Commands;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
+
     /// <summary>
     /// Generic ViewModel Class to let the user choose one single Item from a Enumeration of such types
     /// </summary>
     /// <typeparam name="T">ViewModel Type to show</typeparam>
-    public class ChooseItemDialogeViewModel<T> : WorkspaceViewModel where T : class
+    public class ChooseItemDialogeViewModel<T> : ChooseItemDialogeBase where T:class
     {
         #region Fields
 
         T _selectedEntity;
-        ICollectionView _itemPresenter;
         Predicate<T> _customTypeSaveFilter;
 
         #endregion
@@ -44,12 +44,6 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #region Properties
 
-        /// <summary>
-        /// Items which are chooseable
-        /// </summary>
-        public ICollectionView Items {
-            get { return _itemPresenter; }
-        }
 
         /// <summary>
         /// The choosen item. This is null if the user didn't choose any.
@@ -75,20 +69,12 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #region Commands
 
-        public ICommand ChooseSelectedItemCommand {
-            get {
-                return new RelayCommand(
-                    x => ChooseSelectedItem(),
-                    x => CanChooseSelectedItem);
-            }
-        }
-
-        void ChooseSelectedItem() {
+        protected override void ChooseSelectedItem() {
             ChoosenItem = SelectedEntity;
             this.CloseCommand.Execute(null);
         }
 
-        bool CanChooseSelectedItem {
+        protected override bool CanChooseSelectedItem {
             get { return SelectedEntity != null; }
         }
 

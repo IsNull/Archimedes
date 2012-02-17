@@ -10,12 +10,12 @@ namespace Archimedes.Patterns.WPF.ViewModels
 {
     public class ViewModelWPF : ViewModelBase
     {
-        #region Sync Dispatcher
+        #region internal Sync Dispatcher Helper Methods
 
         /// <summary>
         /// Returns the Dispatcher of the default GUI Thread
         /// </summary>
-        public Dispatcher DefaultDispatcher {
+        protected Dispatcher DefaultDispatcher {
             get { return Application.Current.Dispatcher; } //Application.Current.Dispatcher.Invoke
         }
 
@@ -26,13 +26,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <param name="method">Method to execute</param>
         /// <param name="priority">Dispatcher Priority</param>
         protected void SyncInvokeBegin(Action method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            Application app = Application.Current;
-            if (app != null) {
-                if (!app.Dispatcher.CheckAccess()) {
-                    app.Dispatcher.BeginInvoke(method, priority);
-                } else
-                    method();
-            }
+            ThreadingSupport.SyncInvokeBegin(method, priority);
         }
 
         /// <summary>
@@ -41,13 +35,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <param name="method">Method to execute</param>
         /// <param name="priority">Dispatcher Priority</param>
         protected void SyncInvoke(Action method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            Application app = Application.Current;
-            if (app != null) {
-                if (!app.Dispatcher.CheckAccess()) {
-                    app.Dispatcher.Invoke(method, priority);
-                } else
-                    method();
-            }
+            ThreadingSupport.SyncInvoke(method, priority);
         }
 
 
@@ -59,14 +47,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <param name="priority">Dispatcher Priority</param>
         /// <returns></returns>
         protected T SyncInvoke<T>(Func<T> method, DispatcherPriority priority = DispatcherPriority.Normal) {
-            Application app = Application.Current;
-            if (app != null)
-                if (!app.Dispatcher.CheckAccess()) {
-                    return (T)app.Dispatcher.Invoke(method, priority);
-                }else
-                    return method();
-            else
-                return default(T);
+            return ThreadingSupport.SyncInvoke<T>(method, priority);
         }
 
         #endregion

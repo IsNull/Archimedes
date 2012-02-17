@@ -34,7 +34,7 @@ namespace Archimedes.Patterns.Services
         /// <typeparam name="TInterface"></typeparam>
         /// <typeparam name="TImplemention"></typeparam>
         /// <param name="instance"></param>
-        public void RegisterInstance<TInterface, TImplemention>(TImplemention instance) where TImplemention : TInterface{
+        public void RegisterInstance<TInterface>(TInterface instance) {
             services.Add(typeof(TInterface), new ServiceInfo(instance));
         }
 
@@ -58,11 +58,11 @@ namespace Archimedes.Patterns.Services
             services.Add(typeof(TInterface), new ServiceInfo(typeof(TImplemention), isSingleton));
         }
 
-        public bool Contains(Type t) {
+        private bool Contains(Type t) {
             return services.ContainsKey(t);
         }
 
-        public object GetServiceImplementation(Type t) {
+        private object GetServiceImplementation(Type t) {
             return services[t].ServiceImplementation;
         }
 

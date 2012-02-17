@@ -5,10 +5,27 @@ using System.Text;
 
 namespace Archimedes.Patterns.Commands
 {
+    /// <summary>
+    /// Very basic command
+    /// </summary>
     public interface ICommandSimple
     {
-       void Execute(object args);
-       bool CanExecute(object parameter);
-       event EventHandler CanExecuteChanged;
+        /// <summary>
+        /// Raised when the CanExecute Property has been changed
+        /// </summary>
+        event EventHandler CanExecuteChanged;
+
+        /// <summary>
+        /// Can this command execute
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        bool CanExecute(object parameter);
+
+        /// <summary>
+        /// Execute the command
+        /// </summary>
+        /// <param name="args"></param>
+        void Execute(object args);
     }
 }

@@ -17,6 +17,7 @@ namespace Archimedes.Patterns.Commands
         string _name = "";
         string _description = "No Description given.";
         bool _isExecuted = false;
+        private bool isTransparentCommand = false;
 
         #endregion
 
@@ -71,12 +72,16 @@ namespace Archimedes.Patterns.Commands
             }
         }
 
+        
 
         /// <summary>
         /// Dont add this Command to the History?
         /// This is generally used when a Command self calls other Commands and exectues them on the CommandContext.
         /// </summary>
-        public virtual bool IsTransparentCommand { get { return false; } }
+        public virtual bool IsTransparentCommand { 
+            get { return isTransparentCommand; }
+            set { isTransparentCommand = value; }
+        }
 
         /// <summary>
         /// Was this Command already Executed?
