@@ -11,6 +11,33 @@ namespace Archimedes.Patterns.Commands
     /// </summary>
     public interface ICommandManager
     {
+
+        /// <summary>
+        /// Raised when CanUndo has changed
+        /// </summary>
+        event EventHandler CanUndoChanged;
+
+        /// <summary>
+        /// Raised when CanRedo has changed
+        /// </summary>
+        event EventHandler CanRedoChanged;
+
+        /// <summary>
+        /// Raised when Executed List has changed
+        /// </summary>
+        event EventHandler CommandsExecutedChanged;
+
+        /// <summary>
+        /// Raised when Undone List has changed
+        /// </summary>
+        event EventHandler CommandsUndoneChanged;
+
+        /// <summary>
+        /// Raised when a Command is executed throug the CommandManager
+        /// </summary>
+        event EventHandler<CommandEventArgs> CommandExecuted;
+
+
         /// <summary>
         /// Executes the command and saves a clone in the command history
         /// </summary>
@@ -43,30 +70,7 @@ namespace Archimedes.Patterns.Commands
         /// </summary>
         bool CanRedo { get; }
 
-        /// <summary>
-        /// Raised when CanUndo has changed
-        /// </summary>
-        event EventHandler CanUndoChanged;
-
-        /// <summary>
-        /// Raised when CanRedo has changed
-        /// </summary>
-        event EventHandler CanRedoChanged;
-
-        /// <summary>
-        /// Raised when Executed List has changed
-        /// </summary>
-        event EventHandler CommandsExecutedChanged;
-
-        /// <summary>
-        /// Raised when Undone List has changed
-        /// </summary>
-        event EventHandler CommandsUndoneChanged;
-
-        /// <summary>
-        /// Raised when a Command is executed throug the CommandManager
-        /// </summary>
-        event EventHandler<CommandEventArgs> CommandExecuted;
+        
 
         /// <summary>
         /// Get the whole Command history

@@ -19,7 +19,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
     /// 
     /// This class is abstract.
     /// </summary>
-    public abstract class WorkspaceViewModel : ViewModelWPF
+    public abstract class WorkspaceViewModel : ViewModelWPF, IWorkspaceViewModel
     {
         #region Fields
 
@@ -158,6 +158,11 @@ namespace Archimedes.Patterns.WPF.ViewModels
                 Closed(this, EventArgs.Empty);
         }
 
+        public virtual void OnRequestClose() {
+            if (RequestClose != null)
+                RequestClose(this, EventArgs.Empty);
+        }
+
 
         protected virtual void OnIsOnWorkspaceChanged() {
             if(IsOnWorkspaceChanged != null)
@@ -167,11 +172,6 @@ namespace Archimedes.Patterns.WPF.ViewModels
         protected virtual void OnHasFocusChanged() {
             if(HasFocusChanged != null)
                 HasFocusChanged(this, EventArgs.Empty);
-        }
-
-        public virtual void OnRequestClose() {
-            if (RequestClose != null)
-                RequestClose(this, EventArgs.Empty);
         }
 
         protected virtual void OnRequestFocus() {

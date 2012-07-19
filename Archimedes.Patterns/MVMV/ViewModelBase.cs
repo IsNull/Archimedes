@@ -12,7 +12,7 @@ namespace Archimedes.Patterns.MVMV
     /// It provides support for property change notifications 
     /// and has a DisplayName property.  This class is abstract.
     /// </summary>
-    public abstract class ViewModelBase : NotifyChangedBase, IDisposable
+    public abstract class ViewModelBase : NotifyChangedBase, IDisposable, Archimedes.Patterns.MVMV.IViewModelBase
     {
         #region Constructor
 

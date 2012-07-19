@@ -71,6 +71,7 @@
     <Compile Include="Commands\ICommandSimple.cs" />
     <Compile Include="Commands\ICommandUndo.cs" />
     <Compile Include="Commands\NotExecutableCommand.cs" />
+    <Compile Include="Commands\PropertySetCommand.cs" />
     <Compile Include="Commands\SimpleRelayCommand.cs" />
     <Compile Include="Commands\States\BoolStateCommand.cs" />
     <Compile Include="Commands\States\IStateCommand.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Conditions\Operator.cs" />
     <Compile Include="Conditions\OperatorManagerService.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
+    <Compile Include="Crypto\StringObfuscator.cs" />
     <Compile Include="Data\Entity.cs" />
     <Compile Include="Data\IEntityBase.cs" />
     <Compile Include="Data\IPersistentList.cs" />
@@ -99,9 +101,13 @@
     <Compile Include="Data\Tree\SimpleTreeNodeList.cs" />
     <Compile Include="Deployment\FileInstaller.cs" />
     <Compile Include="Deployment\FileInstallTarget.cs" />
+    <Compile Include="Deployment\Installable.cs" />
+    <Compile Include="Deployment\IVersionStore.cs" />
+    <Compile Include="Deployment\XMLVersionStore.cs" />
     <Compile Include="EventArgs.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="ICloneable.cs" />
+    <Compile Include="MVMV\IViewModelBase.cs" />
     <Compile Include="Notifications\NotificationCollection.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Conditions\DynamicConditionExpression.cs" />
@@ -113,7 +119,11 @@
     <Compile Include="Plugins\PluginHostProvider.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Reflection\TypeHelper.cs" />
+    <Compile Include="RegEx\RegExReplaceAggregate.cs" />
+    <Compile Include="RegEx\RegExReplacer.cs" />
+    <Compile Include="Serializing\SerializableDictionary.cs" />
     <Compile Include="Serializing\SerializerHelper.cs" />
+    <Compile Include="Serializing\SerializableSettingsBase.cs" />
     <Compile Include="Threading\IDispatcher.cs" />
     <Compile Include="Threading\LockEx.cs" />
     <Compile Include="Threading\ThreadMutableObservableCollection.cs" />

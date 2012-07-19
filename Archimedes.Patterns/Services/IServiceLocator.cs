@@ -5,13 +5,15 @@ using System.Text;
 
 namespace Archimedes.Patterns.Services
 {
+    /// <summary>
+    /// Basic Service resolving service
+    /// </summary>
     public interface IServiceLocator
     {
-        bool Contains(Type t);
-        object GetServiceImplementation(Type t);
-        void RegisterInstance<TInterface, TImplemention>(TImplemention instance) where TImplemention : TInterface;
+        void RegisterInstance<TInterface>(TInterface instance);
         void Register<TInterface, TImplemention>() where TImplemention : TInterface, new();
         void RegisterSingleton<TInterface, TImplemention>() where TImplemention : TInterface, new();
+
         TInterface Resolve<TInterface>();
     }
 }

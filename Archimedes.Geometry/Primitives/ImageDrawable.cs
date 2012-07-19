@@ -14,6 +14,7 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Fields
 
+        private readonly object _syncLOCK = new object();
         private Image _image;
         private Vector2 _location;
 
@@ -35,16 +36,22 @@ namespace Archimedes.Geometry.Primitives
         #region Properties
 
         public Image Image {
-            get { return _image; }
+            get {
+                lock (_syncLOCK) {
+                    return _image;
+                }
+            }
             set {
-                if (value == null) {
-                    Size = new SizeF();
-                } else {
-                    try {
-                        Size = value.Size;
-                        _image = value;
-                    } catch {
+                lock (_syncLOCK) {
+                    if (value == null) {
                         Size = new SizeF();
+                    } else {
+                        try {
+                            Size = value.Size;
+                            _image = value;
+                        } catch {
+                            Size = new SizeF();
+                        }
                     }
                 }
             }
@@ -81,8 +88,10 @@ namespace Archimedes.Geometry.Primitives
         #region IDrawable
 
         public override void Draw(Graphics G) {
-            if (_image != null)
-                G.DrawImage(_image, new RectangleF(Location, Size));
+            lock (_syncLOCK) {
+                if (_image != null)
+                    G.DrawImage(_image, new RectangleF(Location, Size));
+            }
         }
 
         #endregion

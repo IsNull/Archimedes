@@ -27,6 +27,23 @@ namespace Archimedes.Patterns
             return memberExpression.Member as PropertyInfo;
         }
 
+  
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public static PropertyInfo GetPropertyInfo<T>(Expression<Func<T>> expression) {
+            var lambda = expression as LambdaExpression;
+            var memberExpression = lambda.Body as MemberExpression;
+            if (memberExpression == null) {
+                var unaryExpression = (UnaryExpression)lambda.Body;
+                memberExpression = (MemberExpression)unaryExpression.Operand;
+            }
+            return memberExpression.Member as PropertyInfo;
+        }
+
 
         /// <summary>
         /// Returns the PropertyName from a Expression containing a property like: "() => MyProperty"

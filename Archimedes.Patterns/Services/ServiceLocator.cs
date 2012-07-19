@@ -19,5 +19,14 @@ namespace Archimedes.Patterns.Services
         public static ServiceLocator Instance {
             get { return _instance; }
         }
+
+        /// <summary>
+        /// Resolve the current Interface to an service instance
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T ResolveService<T>(){
+            return Instance.Resolve<T>();
+        }
     }
 }

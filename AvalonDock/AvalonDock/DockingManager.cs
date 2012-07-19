@@ -2252,9 +2252,13 @@ namespace AvalonDock
             
             UpdateFlyoutWindowPosition(true);
 
-            _flyoutWindow.Closing += new System.ComponentModel.CancelEventHandler(OnFlyoutWindowClosing);
-            _flyoutWindow.Show();
+            _flyoutWindow.Closing += OnFlyoutWindowClosing;
 
+            try {
+                _flyoutWindow.Show();
+            } catch (Exception e) {
+                Console.Write(e.ToString());
+            }
             //this.Focus();
         }
 
@@ -2277,7 +2281,7 @@ namespace AvalonDock
         {
             if (_flyoutWindow != null)
             {
-                _flyoutWindow.Closing -= new System.ComponentModel.CancelEventHandler(OnFlyoutWindowClosing);
+                _flyoutWindow.Closing -= OnFlyoutWindowClosing;
                 _flyoutWindow.Owner = null;
             }
         }

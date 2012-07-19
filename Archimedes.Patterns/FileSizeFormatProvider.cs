@@ -7,6 +7,8 @@ namespace Archimedes.Patterns
 {
     public class FileSizeFormatProvider : IFormatProvider, ICustomFormatter
     {
+        List<int> nums;
+
         public object GetFormat(Type formatType) {
             if (formatType == typeof(ICustomFormatter)) return this;
             return null;

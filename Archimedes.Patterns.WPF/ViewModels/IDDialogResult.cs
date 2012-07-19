@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
-namespace Archimedes.Services.WPF.WorkBenchServices
+namespace Archimedes.Patterns.WPF.ViewModels
 {
     /// <summary>
-    /// Independend Dialoge-Result (abstracts underliing Windows.Forms/WPF/Platform)
     /// Specifies identifiers to indicate the return value of a dialog box.
     /// </summary>
     public enum IDDialogResult
@@ -48,41 +46,10 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         /// </summary>
         Yes = 6,
 
-   
+
         /// <summary>
         /// The dialog box return value is No (usually sent from a button labeled No).
         /// </summary>
         No = 7,
     }
-
-
-    internal static class IDDialogResultConverter
-    {
-
-        internal static IDDialogResult From(DialogResult dlgResult) {
-            switch(dlgResult) {
-
-                case DialogResult.Abort:
-                    return IDDialogResult.Abort;
-                case DialogResult.Cancel:
-                    return IDDialogResult.Cancel;
-                case DialogResult.Ignore:
-                    return IDDialogResult.Ignore;
-                case DialogResult.No:
-                    return IDDialogResult.No;
-                case DialogResult.None:
-                    return IDDialogResult.None;
-                case DialogResult.OK:
-                    return IDDialogResult.OK;
-                case DialogResult.Retry:
-                    return IDDialogResult.Retry;
-                case DialogResult.Yes:
-                    return IDDialogResult.Yes;
-
-                default:
-                    return IDDialogResult.None;
-            }
-        }
-    }
-
 }

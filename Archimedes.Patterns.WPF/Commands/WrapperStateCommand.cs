@@ -18,6 +18,7 @@ namespace Archimedes.Patterns.WPF.Commands
 
         public bool State {
             get { return StateCommand.State; }
+            set { StateCommand.State = value;  }
         }
 
         public Visibility StateV {
