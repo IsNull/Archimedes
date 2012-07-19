@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace Archimedes.Geometry
+namespace Archimedes.Geometry._3D
 {
     /// <summary>
     ///  Vector for 3D - three components (x,y,z)
@@ -103,7 +103,7 @@ namespace Archimedes.Geometry
             set {
                 if (value < 0) { throw new ArgumentOutOfRangeException("value", value, NEGATIVE_MAGNITUDE); }
 
-                if (this == new Vector3(0, 0, 0)) { throw new ArgumentException(ORAGIN_VECTOR_MAGNITUDE, "this"); }
+                if (this == Vector3.Zero) { throw new ArgumentException(ORAGIN_VECTOR_MAGNITUDE, "this"); }
 
                 this = this * (value / Lenght);
             }

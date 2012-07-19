@@ -81,6 +81,8 @@
     <Compile Include="ACB\SimpleCommand.cs" />
     <Compile Include="Adroners\SimpleCircleAdorner.cs" />
     <Compile Include="Animations\VisibilityAnimation.cs" />
+    <Compile Include="AttachedProperties\WatermarkAdorner.cs" />
+    <Compile Include="AttachedProperties\WatermarkService.cs" />
     <Compile Include="Behaviours\ControlBehaviour.cs" />
     <Compile Include="Behaviours\ControlExtensions.cs" />
     <Compile Include="Commands\RelayCommand.cs" />

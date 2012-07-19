@@ -84,7 +84,9 @@
     <Compile Include="Rendering\RenderEventArgs.cs" />
     <Compile Include="Rendering\ZoomWorker.cs" />
     <Compile Include="Vector2.cs" />
-    <Compile Include="Vector3.cs" />
+    <Compile Include="_3D\Point3.cs" />
+    <Compile Include="_3D\StraightLine3.cs" />
+    <Compile Include="_3D\Vector3.cs" />
     <Compile Include="VectorDrawer.cs" />
     <Compile Include="VectorHelper.cs" />
     <Compile Include="Vertices.cs" />
