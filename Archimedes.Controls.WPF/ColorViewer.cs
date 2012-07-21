@@ -4,10 +4,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Collections;
+using System.Windows.Media.Imaging;
+using System.Collections.Generic;
 
 namespace Archimedes.Controls.WPF
 {
-    public class ColorViewer : Panel
+    public class ColorViewer : FrameworkElement
     {
         #region --- DependencyProperties ---
 
@@ -60,6 +62,7 @@ namespace Archimedes.Controls.WPF
             get { return (Color)GetValue(StrokeColorProperty); }
             set { 
                 SetValue(StrokeColorProperty, value);
+                _strokePen = null;
                 this.InvalidateVisual(); 
             }
         }
@@ -77,7 +80,29 @@ namespace Archimedes.Controls.WPF
         /// </summary>
         public double StrokeWidth {
             get { return (double)GetValue(StrokeWidthProperty); }
-            set { SetValue(StrokeWidthProperty, value); this.InvalidateVisual(); }
+            set { 
+                SetValue(StrokeWidthProperty, value);
+                _strokePen = null;
+                this.InvalidateVisual();
+            }
+        }
+
+        #endregion
+
+        #region Protected Properties
+
+        private Pen _strokePen = null;
+
+        protected Pen CachedStrokePen
+        {
+            get
+            {
+                if (_strokePen == null)
+                {
+                    _strokePen = new Pen(new SolidColorBrush(this.StrokeColor), this.StrokeWidth);
+                }
+                return _strokePen;
+            }
         }
 
         #endregion
@@ -89,7 +114,7 @@ namespace Archimedes.Controls.WPF
         /// </summary>
         public ColorViewer() {
             this.SectorBrushes = new ObservableCollection<Brush>();
-            
+            //this.CacheMode = new BitmapCache();
         }
 
         #endregion
@@ -101,12 +126,99 @@ namespace Archimedes.Controls.WPF
             this.InvalidateVisual();
         }
 
+        private bool useRenderCache = true;
+
         protected override void OnRender(System.Windows.Media.DrawingContext dc) {
             //We do all the rendering so skip the call to the default OnRender-method
             //base.OnRender(dc);
 
+
+            if ((this.SectorBrushes == null || this.SectorBrushes.Count == 0))
+                return;
+
+
+            if (useRenderCache)
+            {
+                // if the given image is not present in this size, render in a offscreen bitmap and cache it.
+                // otherwise the cached version is returned imedialty
+
+                BitmapSource bs = CachedRenderColorChartToBitmap(this.RenderSize.Width, this.RenderSize.Height);
+                dc.DrawImage(bs, new Rect(0, 0, bs.Width, bs.Height));
+            }
+            else
+            {
+                //render directly into the dc
+                RenderColorChart(dc, (int)this.RenderSize.Width, (int)this.RenderSize.Height);
+            }
+
+           
+
+        }
+
+        #endregion
+
+
+        #region Visual Render Cache
+
+        private readonly IDictionary<int, BitmapSource> bmpCache = new Dictionary<int, BitmapSource>();
+
+        BitmapSource CachedRenderColorChartToBitmap(double width, double height)
+        {
+            int hash = calcHash(width, height);
+
+            if (!bmpCache.ContainsKey(hash))
+            {
+                bmpCache.Add(hash, RenderColorChartToBitmap(width, height));
+            }
+
+            return bmpCache[hash];
+        }
+
+        private int calcHash(double a, double b)
+        {
+            return ((int)a * 1000) + (int)b;
+        }
+
+        #endregion
+        
+
+        private BitmapSource RenderColorChartToBitmap(double width, double height)
+        {
+            DrawingVisual drawingVisual = new DrawingVisual();
+            using (DrawingContext drawingContext = drawingVisual.RenderOpen())
+            {
+                RenderColorChart(drawingContext, width, height);
+                drawingContext.Close();
+            }
+
+            RenderTargetBitmap bitmap = new RenderTargetBitmap(
+                (int)Math.Ceiling(width),
+                (int)Math.Ceiling(height),
+                96, // dpi x
+                96, // dpi y
+                PixelFormats.Pbgra32);
+            bitmap.Render(drawingVisual);
+
+            //
+            // Note:
+            //
+            // The RenderTargetBitmap seems to hold some GDI handles alive.
+            // In our usecase, we can have tousands of such bitmaps, and this leads to a leaking and finaly an exception of the underliing GDI Com interface.
+            // To avoid this, we clone our Bitmap into a much simpler Writeable-Bitmap and release the RenderTargetBitmap
+            //
+
+            BitmapSource simpler = new WriteableBitmap(bitmap);
+            simpler.Freeze(); // freeze it for best performance
+            bitmap = null;
+            drawingVisual = null;
+            return simpler;
+        }
+
+
+        private void RenderColorChart(System.Windows.Media.DrawingContext dc, double width, double height)
+        {
             //Determine the radius of the overall circle; we want this to be square in order to get a true circle, so use the min. extent
-            double dblRadius = Math.Min(this.RenderSize.Width / 2, this.RenderSize.Height / 2);
+            double dblRadius = Math.Min(width / 2, height / 2);
             Size szRadius = new Size(dblRadius, dblRadius);
 
             //Calculate the center of the control
@@ -163,10 +275,9 @@ namespace Archimedes.Controls.WPF
 
             //Draw a circle around the sectors, if both a non-transparent color and a StrokeWidth>0 have been supplied.
             if (this.StrokeColor != null && this.StrokeColor != Colors.Transparent && this.StrokeWidth > 0)
-                dc.DrawEllipse(null, new Pen(new SolidColorBrush(this.StrokeColor), this.StrokeWidth), ptCenter, dblRadius, dblRadius);
+                dc.DrawEllipse(null, this.CachedStrokePen, ptCenter, dblRadius, dblRadius);
         }
 
-        #endregion
 
         #region --- Helpers ---
 
