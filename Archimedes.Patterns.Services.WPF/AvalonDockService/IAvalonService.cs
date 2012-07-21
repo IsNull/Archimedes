@@ -31,6 +31,11 @@ namespace Archimedes.Services.WPF.AvalonDockService
 
         bool IsDefaultLayoutSaved { get; }
 
+        /// <summary>
+        /// Deletes all cached layouts. This will generate them new the next time the layouts are used.
+        /// </summary>
+        void ForceRegenerateLayouts();
+
         void RestoreLastSessionLayout();
 
         void RestoreDefaultLayout();

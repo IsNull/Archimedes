@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using AvalonDock;
+using System.Diagnostics;
 
 namespace Archimedes.Services.WPF.AvalonDockService
 {
@@ -87,6 +88,25 @@ namespace Archimedes.Services.WPF.AvalonDockService
             }
         }
 
+        bool _isRegeneratingLayouts = false;
+
+        /// <summary>
+        /// Deletes all cached layouts. This will generate them new the next time the layouts are used.
+        /// </summary>
+        public void ForceRegenerateLayouts()
+        {
+            if (File.Exists(LayoutFilePath))
+            {
+                File.Delete(LayoutFilePath);
+            }
+            if (File.Exists(_layoutInitialSettings))
+            {
+                File.Delete(_layoutInitialSettings);
+            }
+
+            _isRegeneratingLayouts = true;
+        }
+
         public void RestoreLastSessionLayout() {
             try {
                 if (File.Exists(LayoutFilePath)) {
@@ -98,13 +118,15 @@ namespace Archimedes.Services.WPF.AvalonDockService
         public void RestoreDefaultLayout() {
             try {
                 if (File.Exists(_layoutInitialSettings)) {
+                    Debug.Print("Restoring window layout from {0}", Path.GetFullPath(_layoutInitialSettings));
                     PrimaryDockManager.RestoreLayout(_layoutInitialSettings);
                 }
             } catch { }
         }
 
         public void SaveSessionLayout() {
-            if (PrimaryDockManager != null) {
+            if (!_isRegeneratingLayouts && PrimaryDockManager != null)
+            {
                 PrimaryDockManager.SaveLayout(LayoutFilePath);
             }
         }
@@ -112,6 +134,7 @@ namespace Archimedes.Services.WPF.AvalonDockService
         public void SaveDefaultLayout() {
             PrimaryDockManager.SaveLayout(_layoutInitialSettings);
         }
+
         public bool IsDefaultLayoutSaved {
             get { return File.Exists(_layoutInitialSettings); }
         }
