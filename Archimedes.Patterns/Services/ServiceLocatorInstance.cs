@@ -38,9 +38,14 @@ namespace Archimedes.Patterns.Services
             services.Add(typeof(TInterface), new ServiceInfo(instance));
         }
 
+
+
+
         /// <summary>
         /// Resolves a service.
         /// </summary>
+        /// <typeparam name="TInterface">Service Interface</typeparam>
+        /// <returns></returns>
         [DebuggerStepThrough]
         public TInterface Resolve<TInterface>() {
             if (!services.ContainsKey(typeof(TInterface))) {

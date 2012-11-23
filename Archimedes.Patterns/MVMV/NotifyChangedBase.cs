@@ -82,6 +82,38 @@ namespace Archimedes.Patterns.MVMV
             OnPropertysChangedInternal(propertyNames);
         }
 
+        /// <summary>
+        ///  Notifies all listener that the given Property has changed.
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (_propChangedHandler != null)
+            {
+                var args = GetEventArgs(propertyName);
+                OnPropertyChanged(args);
+            }
+
+            if (_typedInvokerMap.ContainsKey(propertyName))
+            {
+                foreach (var a in _typedInvokerMap[propertyName])
+                    a(this);
+            }
+        }
+
+        /// <summary>
+        ///  Notifies all listener that the given Property has changed.
+        /// </summary>
+        /// <param name="args"></param>
+        protected void OnPropertyChanged(PropertyChangedEventArgs args)
+        {
+            if (_propChangedHandler != null)
+                _propChangedHandler(this, args);
+        }
+
+
+        
+
         protected string[] GetPropertyNames(Expression<Func<object>>[] expressions) {
             string[] propertyNames = new string[expressions.Length];
             for (int i = 0; i < expressions.Length; i++) {
@@ -100,20 +132,9 @@ namespace Archimedes.Patterns.MVMV
                 return;
 
             foreach (string propertyName in propertyNames)
-                OnPropertyChangedInternal(propertyName);
+                OnPropertyChanged(propertyName);
         }
 
-        void OnPropertyChangedInternal(string propertyName) {
-            if (_propChangedHandler != null) {
-                var args = GetEventArgs(propertyName);
-                _propChangedHandler(this, args);
-            }
-
-            if (_typedInvokerMap.ContainsKey(propertyName)) {
-                foreach (var a in _typedInvokerMap[propertyName])
-                    a(this);
-            }
-        }
 
         static PropertyChangedEventArgs GetEventArgs(string propertyName) {
             PropertyChangedEventArgs pe = null;

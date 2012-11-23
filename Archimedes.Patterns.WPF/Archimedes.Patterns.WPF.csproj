@@ -91,6 +91,7 @@
     <Compile Include="Converters\BaseConverter.cs" />
     <Compile Include="Converters\BooleanToVisibilityInvertedConverter.cs" />
     <Compile Include="Converters\CommandToVisibiltyConverter.cs" />
+    <Compile Include="Converters\ImageResizingConverter.cs" />
     <Compile Include="Converters\NullableToVisibleConverter.cs" />
     <Compile Include="Converters\TimeSpanToDateTimeConverter.cs" />
     <Compile Include="DragNDrop\DefaultDragHandler.cs" />
@@ -117,6 +118,10 @@
     <Compile Include="FlowDocuments\ItemsContent.cs" />
     <Compile Include="FlowDocuments\XamlToXPS.cs" />
     <Compile Include="Effects\GlobalEffects.cs" />
+    <Compile Include="Imaging\CachedImageResizer.cs" />
+    <Compile Include="Imaging\IImageResizeCache.cs" />
+    <Compile Include="Imaging\SizedImageCache.cs" />
+    <Compile Include="Imaging\ImageSupport.cs" />
     <Compile Include="Plugins\ViewModel\AllPluginsViewModel.cs" />
     <Compile Include="Plugins\ViewModel\PluginViewModel.cs" />
     <Compile Include="Plugins\View\PluginManagerView.xaml.cs">
