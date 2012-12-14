@@ -110,7 +110,7 @@ namespace Archimedes.Geometry.Primitives
         /// <summary> 
         /// Return the q (movement from x axis). If slope isn't defined, this property is Zero.
         /// </summary>
-        public float YMovement {
+        public double YMovement {
             get {   // q = y1 - m * x1 
                 if (this.IsVertical) {
                     return 0;
@@ -124,7 +124,7 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Returns the solpe of the line. Returns Zero if the slope isn't defined.
         /// </summary>
-        public float Slope {
+        public double Slope {
             get {
                 if ((this.End.X - this.Start.X) == 0) { // prevent divison by zero
                     return 0;
@@ -135,7 +135,7 @@ namespace Archimedes.Geometry.Primitives
 
 
         public void Stretch(float len, Direction direction){
-            Vector2 vThis = new Vector2(this.Start, this.End);
+            var vThis = new Vector2(this.Start, this.End);
 
             if (direction == Direction.RIGHT) {
                 vThis.Lenght += len;
@@ -229,7 +229,7 @@ namespace Archimedes.Geometry.Primitives
         /// Scale the line by given scale factor
         /// </summary>
         /// <param name="factor">Scale Factor</param>
-        public void Scale(float factor) {
+        public void Scale(double factor) {
             this.Start = Start.Scale(factor);
             this.End = End.Scale(factor);
         }
@@ -296,8 +296,12 @@ namespace Archimedes.Geometry.Primitives
         /// <returns></returns>
         public static Line2 CreateMoved(Line2 origin, Vector2 move) {
             var clone = origin.Clone() as Line2;
-            clone.Move(move);
-            return clone;
+            if (clone != null)
+            {
+                clone.Move(move);
+                return clone;
+            }
+            return null;
         }
 
 
@@ -318,7 +322,7 @@ namespace Archimedes.Geometry.Primitives
                 }else
                     SP = End;
 
-                return new RectangleF(SP, new SizeF(Math.Abs(Start.X - End.X), Math.Abs(Start.Y - End.Y)));
+                return new RectangleF(SP, new SizeF((float)Math.Abs(Start.X - End.X), (float)Math.Abs(Start.Y - End.Y)));
             }
         }
 
@@ -412,8 +416,8 @@ namespace Archimedes.Geometry.Primitives
         /// <returns>Smallest distance to the targetpoint</returns>
         public static double FindDistanceToPoint(Vector2 pt, Line2 line, out Vector2 closest) {
             var p1 = line.Start; var p2 = line.End;
-            float dx = p2.X - p1.X;
-            float dy = p2.Y - p1.Y;
+            double dx = p2.X - p1.X;
+            double dy = p2.Y - p1.Y;
             if ((dx == 0) && (dy == 0)) {
                 // It's a point not a line segment.
                 closest = p1;
@@ -423,7 +427,7 @@ namespace Archimedes.Geometry.Primitives
             }
 
             // Calculate the t that minimizes the distance.
-            float t = ((pt.X - p1.X) * dx + (pt.Y - p1.Y) * dy) / (dx * dx + dy * dy);
+            double t = ((pt.X - p1.X) * dx + (pt.Y - p1.Y) * dy) / (dx * dx + dy * dy);
 
             // See if this represents one of the segment's
             // end points or a point in the middle.

@@ -204,7 +204,7 @@ namespace Archimedes.Geometry.Primitives
             this.Location += mov;
         }
 
-        public void Scale(float fact) {
+        public void Scale(double fact) {
             throw new NotImplementedException();
         }
 
@@ -327,7 +327,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region IClosedGeometry
 
-        public float Area {
+        public double Area {
             get { return BoundingBox.Area(); }
         }
 

@@ -7,10 +7,18 @@ using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry
 {
-    interface IClosedGeometry
+    /// <summary>
+    /// Represents a closed geometry
+    /// </summary>
+    public interface IClosedGeometry
     {
-        float Area { get; }
+        /// <summary>
+        /// Gets the area of this geometry shape
+        /// </summary>
+        double Area { get; }
+
         Brush FillBrush { get; set; }
+
         Polygon2 ToPolygon2();
     }
 }

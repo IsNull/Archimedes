@@ -61,6 +61,7 @@
     <Compile Include="IClosedGeometry.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="IGeometryBase.cs" />
+    <Compile Include="PointD.cs" />
     <Compile Include="Primitives\Arc.collision.cs" />
     <Compile Include="Primitives\Arc.cs" />
     <Compile Include="Primitives\Arc.Factory.cs" />

@@ -31,16 +31,16 @@ namespace Archimedes.Geometry
 
         public static IEnumerable<PointF> ToPointFs(IEnumerable<Vector2> vertices) {
             foreach (var v in vertices)
-                yield return new PointF(v.X, v.Y);
+                yield return new PointF((float)v.X, (float)v.Y);
         }
         public static IEnumerable<Point> ToPoints(IEnumerable<Vector2> vertices) {
             foreach (var v in vertices)
                 yield return new Point((int)v.X, (int)v.Y);
         }
 
-        public IEnumerable<PointF> ToPoints(){
-            foreach(var v in _vertices)
-                yield return new PointF(v.X,v.Y);
+        public IEnumerable<PointF> ToPoints()
+        {
+            return ToPointFs(_vertices);
         }
 
         public PointF[] ToPointArray() {
@@ -56,7 +56,7 @@ namespace Archimedes.Geometry
         /// </summary>
         public RectangleF BoundingBox {
             get {
-                if (_vertices.Count() == 0)
+                if (!_vertices.Any())
                     return new RectangleF();
 
                 var minX = (from v in _vertices
@@ -75,7 +75,7 @@ namespace Archimedes.Geometry
                             orderby v.Y descending
                             select v.Y).First();
 
-                return new RectangleF(minX, minY, maxX - minX, maxY - minY);
+                return new RectangleF((float)minX, (float)minY, (float)(maxX - minX), (float)(maxY - minY));
             }
         }
 
@@ -99,7 +99,8 @@ namespace Archimedes.Geometry
         /// <param name="rotationOrigin">Origin location of rotation</param>
         /// <param name="angle">Rotation angle</param>
         /// <returns>New vertices array</returns>
-        public Vertices RotateVertices(Vector2 rotationOrigin, float angle) {
+        public Vertices RotateVertices(Vector2 rotationOrigin, double angle)
+        {
 
             if (angle == 0)
                 return new Vertices(_vertices);

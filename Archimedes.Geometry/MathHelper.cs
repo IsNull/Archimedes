@@ -32,7 +32,7 @@ namespace Archimedes.Geometry
         /// <param name="degree"></param>
         /// <returns></returns>
         public static float ToRadians(float degree) {
-            return (float)(degree * Math.PI / 180);
+            return (float)(degree * Math.PI / 180f);
         }
 
         /// <summary>
@@ -41,7 +41,29 @@ namespace Archimedes.Geometry
         /// <param name="RAD"></param>
         /// <returns></returns>
         public static float ToDegree(float RAD) {
-            return (float)(RAD * 180 / Math.PI);
+            return (float)(RAD * 180f / Math.PI);
+        }
+
+
+        /// <summary>
+        /// To convert a degrees value to radians, multiply it by pi/180 (approximately 0.01745329252).
+        /// 
+        /// </summary>
+        /// <param name="degree"></param>
+        /// <returns></returns>
+        public static double ToRadians(double degree)
+        {
+            return degree * Math.PI / 180d;
+        }
+
+        /// <summary>
+        ///  To convert a radians value to degrees, multiply it by 180/pi (approximately 57.29578).
+        /// </summary>
+        /// <param name="RAD"></param>
+        /// <returns></returns>
+        public static double ToDegree(double RAD)
+        {
+            return RAD * 180d / Math.PI;
         }
 
         /// <summary>Switches a direction

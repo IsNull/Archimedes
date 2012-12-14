@@ -12,8 +12,9 @@ namespace Archimedes.Geometry.Extensions
             return new Point((int)Math.Round(pntF.X), (int)Math.Round(pntF.Y));
         }
 
-        public static PointF Scale(this PointF pntF, float factor) {
-            return new PointF(pntF.X * factor, pntF.Y * factor);
+        public static PointF Scale(this PointF pntF, double factor)
+        {
+            return new PointF((float)(pntF.X * factor), (float)(pntF.Y * factor));
         }
 
         /// <summary>
@@ -23,10 +24,11 @@ namespace Archimedes.Geometry.Extensions
         /// <param name="size"></param>
         /// <param name="angle">Angle in degree</param>
         /// <returns></returns>
-        public static PointF GetPoint(this PointF pntF, float size, float angle) {
+        public static PointF GetPoint(this PointF pntF, double size, double angle)
+        {
             var newPnt = new PointF();
-            newPnt.X = pntF.X + (float)(size * Math.Cos(MathHelper.ToRadians(angle)));
-            newPnt.Y = pntF.Y + (float)(size * Math.Sin(MathHelper.ToRadians(angle)));
+            newPnt.X = (float)(pntF.X + size * Math.Cos(MathHelper.ToRadians(angle)));
+            newPnt.Y = (float)(pntF.Y + size * Math.Sin(MathHelper.ToRadians(angle)));
             return newPnt;
         }
 
@@ -44,29 +46,9 @@ namespace Archimedes.Geometry.Extensions
             return new Point((int)Math.Round(pntF.X), (int)Math.Round(pntF.Y));
         }
 
-        public static Vector2 Scale(this Vector2 pntF, float factor) {
+        public static Vector2 Scale(this Vector2 pntF, double factor)
+        {
             return new Vector2(pntF.X * factor, pntF.Y * factor);
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <param name="pntF"></param>
-        ///// <param name="size"></param>
-        ///// <param name="angle">Angle in degree</param>
-        ///// <returns></returns>
-        //public static Vector2 GetPoint(this Vector2 pntF, float size, float angle) {
-        //    var newPnt = new Vector2();
-        //    newPnt.X = pntF.X + (float)(size * Math.Cos(MathHelper.ToRadians(angle)));
-        //    newPnt.Y = pntF.Y + (float)(size * Math.Sin(MathHelper.ToRadians(angle)));
-        //    return newPnt;
-        //}
-
-        //public static Vector2 Round(this Vector2 pntF, int value) {
-        //    var newPnt = new Vector2();
-        //    newPnt.X = (float)Math.Round(pntF.X, value);
-        //    newPnt.Y = (float)Math.Round(pntF.Y, value);
-        //    return newPnt;
-        //}
     }
 }

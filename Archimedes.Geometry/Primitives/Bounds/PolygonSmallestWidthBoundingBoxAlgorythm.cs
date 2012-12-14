@@ -14,15 +14,15 @@ namespace Archimedes.Geometry.Primitives.Bounds
         protected override bool IsCurrentRectangleTheBest() {
             bool isBetter = false;
 
-            float vx0 = _currentRectangle[0].X - _currentRectangle[1].X;
-            float vy0 = _currentRectangle[0].Y - _currentRectangle[1].Y;
-            float len0 = (float)Math.Sqrt(vx0 * vx0 + vy0 * vy0);
+            var vx0 = _currentRectangle[0].X - _currentRectangle[1].X;
+            var vy0 = _currentRectangle[0].Y - _currentRectangle[1].Y;
+            var len0 = Math.Sqrt(vx0 * vx0 + vy0 * vy0);
 
-            float vx1 = _currentRectangle[1].X - _currentRectangle[2].X;
-            float vy1 = _currentRectangle[1].Y - _currentRectangle[2].Y;
-            float len1 = (float)Math.Sqrt(vx1 * vx1 + vy1 * vy1);
+            var vx1 = _currentRectangle[1].X - _currentRectangle[2].X;
+            var vy1 = _currentRectangle[1].Y - _currentRectangle[2].Y;
+            var len1 = Math.Sqrt(vx1 * vx1 + vy1 * vy1);
             
-            Aerea thisRectDim = Aerea.Create(len0, len1);
+            var thisRectDim = Aerea.Create(len0, len1);
 
             if (_bestRectDimension.HasValue) {
                 if (_bestRectDimension.Value.Width > thisRectDim.Width) {
@@ -39,12 +39,14 @@ namespace Archimedes.Geometry.Primitives.Bounds
 
         struct Aerea
         {
-            public Aerea(float lenght, float width) {
+            private Aerea(double lenght, double width)
+            {
                 Lenght = lenght;
                 Width = width;
             }
-            public float Lenght;
-            public float Width;
+
+            private double Lenght;
+            public double Width;
 
             /// <summary>
             /// Create the Aerea Struct from given 2 numbers
@@ -52,7 +54,8 @@ namespace Archimedes.Geometry.Primitives.Bounds
             /// <param name="n1"></param>
             /// <param name="n2"></param>
             /// <returns></returns>
-            public static Aerea Create(float n1, float n2) {
+            public static Aerea Create(double n1, double n2)
+            {
                 return (n1 >= n2) ? new Aerea(n1, n2) : new Aerea(n2, n1);
             }
         }

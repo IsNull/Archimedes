@@ -143,7 +143,8 @@ namespace Archimedes.Geometry.Primitives
         /// results for non-simple polygons.
         /// </summary>
         /// <returns></returns>
-        public float Area {
+        public double Area
+        {
             get {
                 // Return the absolute value of the signed area.
                 // The signed area is negative if the polyogn is
@@ -167,7 +168,8 @@ namespace Archimedes.Geometry.Primitives
         /// oriented clockwise.
         /// </summary>
         /// <returns></returns>
-        private float SignedPolygonArea() {
+        private double SignedPolygonArea()
+        {
             // Add the first point to the end.
             int num_points = _vertices.Count;
             if (num_points == 0)
@@ -177,7 +179,7 @@ namespace Archimedes.Geometry.Primitives
             pts[num_points] = _vertices[0];
 
             // Get the areas.
-            float area = 0;
+            double area = 0;
             for (int i = 0; i < num_points; i++) {
                 area +=
                     (pts[i + 1].X - pts[i].X) *
@@ -211,7 +213,7 @@ namespace Archimedes.Geometry.Primitives
                 B = (A + 1) % num_points;
                 C = (B + 1) % num_points;
 
-                float cross_product =
+                var cross_product =
                     CrossProductLength(
                         _vertices[A].X, _vertices[A].Y,
                         _vertices[B].X, _vertices[B].Y,
@@ -351,7 +353,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="boxfindingAlgorythm">Concrete implementation of the bounding finder Algorythm to use</param>
         /// <returns></returns>
         public Rectangle2 FindBoundingBox(PolygonBoundingBoxAlgorythm boxfindingAlgorythm) {
-            Rectangle2 rect = new Rectangle2();
+            var rect = new Rectangle2();
             if (this.IsConvex()) {
                 boxfindingAlgorythm.SetPolygon(this);
                 var vertices = boxfindingAlgorythm.FindBounds();
@@ -402,10 +404,10 @@ namespace Archimedes.Geometry.Primitives
             pts[num_points] = _vertices[0];
 
             // Find the centroid.
-            float x = 0;
-            float y = 0;
-            float second_factor;
-            for (int i = 0; i < num_points; i++) {
+            double x = 0;
+            double y = 0;
+            double second_factor;
+            for (var i = 0; i < num_points; i++) {
                 second_factor =
                     pts[i].X * pts[i + 1].Y -
                     pts[i + 1].X * pts[i].Y;
@@ -414,9 +416,9 @@ namespace Archimedes.Geometry.Primitives
             }
 
             // Divide by 6 times the polygon's area.
-            float polygon_area = this.Area;
-            x /= (6 * polygon_area);
-            y /= (6 * polygon_area);
+            var polygonArea = this.Area;
+            x /= (6 * polygonArea);
+            y /= (6 * polygonArea);
 
             // If the values are negative, the polygon is
             // oriented counterclockwise so reverse the signs.
@@ -453,8 +455,8 @@ namespace Archimedes.Geometry.Primitives
             Invalidate();
         }
 
-        public void Scale(float fact) {
-            for (int i = 0; i < _vertices.Count; i++) {
+        public void Scale(double fact) {
+            for (var i = 0; i < _vertices.Count; i++) {
                 _vertices[i] = _vertices[i].Scale(fact);
             }
             Invalidate();
@@ -534,13 +536,14 @@ namespace Archimedes.Geometry.Primitives
         // For two vectors in the X-Y plane, the result is a
         // vector with X and Y components 0 so the Z component
         // gives the vector's length and direction.
-        public static float CrossProductLength(float Ax, float Ay,
-            float Bx, float By, float Cx, float Cy) {
+        public static double CrossProductLength(double Ax, double Ay,
+            double Bx, double By, double Cx, double Cy)
+        {
             // Get the vectors' coordinates.
-            float BAx = Ax - Bx;
-            float BAy = Ay - By;
-            float BCx = Cx - Bx;
-            float BCy = Cy - By;
+            var BAx = Ax - Bx;
+            var BAy = Ay - By;
+            var BCx = Cx - Bx;
+            var BCy = Cy - By;
 
             // Calculate the Z coordinate of the cross product.
             return (BAx * BCy - BAy * BCx);
@@ -548,13 +551,14 @@ namespace Archimedes.Geometry.Primitives
 
         // Return the dot product AB · BC.
         // Note that AB · BC = |AB| * |BC| * Cos(theta).
-        private static float DotProduct(float Ax, float Ay,
-            float Bx, float By, float Cx, float Cy) {
+        private static double DotProduct(double Ax, double Ay,
+            double Bx, double By, double Cx, double Cy)
+        {
             // Get the vectors' coordinates.
-            float BAx = Ax - Bx;
-            float BAy = Ay - By;
-            float BCx = Cx - Bx;
-            float BCy = Cy - By;
+            var BAx = Ax - Bx;
+            var BAy = Ay - By;
+            var BCx = Cx - Bx;
+            var BCy = Cy - By;
 
             // Calculate the dot product.
             return (BAx * BCx + BAy * BCy);

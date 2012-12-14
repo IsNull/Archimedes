@@ -4,8 +4,6 @@
  *  
  *  Last updated: December, 2012 
  *  
- * TODO: Use type double for more precision
- * TODO: Make Vector2 unmodifyable struct
  * *****************************************
  * *****************************************/
 using System;
@@ -26,7 +24,7 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        public Vector2(float x, float y)
+        public Vector2(double x, double y)
             : this() {
             this.X = x;
             this.Y = y;
@@ -64,20 +62,21 @@ namespace Archimedes.Geometry
         #region Public Propertys
 
         /// <summary>
-        /// The X Component of the Vector
+        /// Gets the X Component of the Vector
         /// </summary>
-        public float X;
+        public readonly double X;
 
         /// <summary>
-        /// The Y Component of the Vector
+        /// Gets the Y Component of the Vector
         /// </summary>
-        public float Y;
+        public readonly double Y;
 
         /// <summary>
         /// Gets or Sets the Lenght of this Vector
         /// </summary>
-        public float Lenght {
-            get { return (float)(Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2))); }
+        public double Lenght
+        {
+            get { return (Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2))); }
             set {
                 if (this.Lenght != 0) {
                     //v * newsize / |v|
@@ -90,7 +89,8 @@ namespace Archimedes.Geometry
         /// <summary>
         /// Returns the slope of this Vector
         /// </summary>
-        public float Slope {
+        public double Slope
+        {
             get { return (this.X != 0) ? (this.Y / this.X) : 0; }
         }
 
@@ -104,22 +104,19 @@ namespace Archimedes.Geometry
 
         #region Operator Overloads
 
-        public static Vector2 operator *(float f1, Vector2 v1) {
-            v1.X = v1.X * f1;
-            v1.Y = v1.Y * f1;
-            return v1;
+        public static Vector2 operator *(double f1, Vector2 v1)
+        {
+            return new Vector2(v1.X * f1, v1.Y * f1);
         }
 
-        public static Vector2 operator *(Vector2 v1, float f1) {
-            v1.X = v1.X * f1;
-            v1.Y = v1.Y * f1;
-            return v1;
+        public static Vector2 operator *(Vector2 v1, double f1)
+        {
+            return new Vector2(v1.X * f1, v1.Y * f1);
         }
 
-        public static Vector2 operator /(Vector2 v1, float f1) {
-            v1.X = v1.X / f1;
-            v1.Y = v1.Y / f1;
-            return v1;
+        public static Vector2 operator /(Vector2 v1, double f1)
+        {
+            return new Vector2(v1.X / f1, v1.Y / f1);
         }
 
         /// <summary>
@@ -128,20 +125,17 @@ namespace Archimedes.Geometry
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         /// <returns></returns>
-        public static float operator *(Vector2 v1, Vector2 v2) {
+        public static double operator *(Vector2 v1, Vector2 v2)
+        {
             return v1.DotP(v2);
         }
 
         public static Vector2 operator +(Vector2 v1, Vector2 v2) {
-            v1.X += v2.X;
-            v1.Y += v2.Y;
-            return v1;
+            return new Vector2(v1.X + v2.X, v1.Y + v2.Y); ;
         }
 
         public static Vector2 operator -(Vector2 v1, Vector2 v2) {
-            v1.X -= v2.X;
-            v1.Y -= v2.Y;
-            return v1;
+            return new Vector2(v1.X - v2.X, v1.Y - v2.Y); ;
         }
 
         public static bool operator ==(Vector2 v1, Vector2 v2){
@@ -152,8 +146,13 @@ namespace Archimedes.Geometry
             return !(v1 == v2);
         }
 
+        /// <summary>
+        /// Loosing precision in this conversion
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public static implicit operator PointF(Vector2 other) {
-            return new PointF(other.X, other.Y);
+            return new PointF((float)other.X, (float)other.Y);
         }
 
         public static implicit operator Vector2(PointF other) {
@@ -177,9 +176,10 @@ namespace Archimedes.Geometry
 
         #region Static Methods
 
-        public static Vector2 VectorFromAngle(float angle, float length) {
-            var gk = length * (float)Math.Sin(MathHelper.ToRadians(angle));
-            var ak = length * (float)Math.Cos(MathHelper.ToRadians(angle));
+        public static Vector2 VectorFromAngle(double angle, double length)
+        {
+            var gk = length * Math.Sin(MathHelper.ToRadians(angle));
+            var ak = length * Math.Cos(MathHelper.ToRadians(angle));
             return new Vector2(ak, gk);
         }
 
@@ -187,7 +187,8 @@ namespace Archimedes.Geometry
         /// Multiplicate a Vector with a Scalar (Equal to v1[Vector] * Operator[Number])
         /// </summary>
         /// <param name="scalar"></param>
-        public static Vector2 Multiply(Vector2 v, float scalar) {
+        public static Vector2 Multiply(Vector2 v, double scalar)
+        {
             return new Vector2(v.X * scalar, v.Y * scalar);
         }
 
@@ -195,7 +196,8 @@ namespace Archimedes.Geometry
         /// Divides this Vector with a scalar
         /// </summary>
         /// <param name="scalar"></param>
-        public Vector2 Divide(float scalar) {
+        public Vector2 Divide(double scalar)
+        {
             if (scalar != 0) {
                 return new Vector2(this.X / scalar, this.Y / scalar);
             } else
@@ -224,7 +226,8 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="v2">Other Vector</param>
         /// <returns></returns>
-        public float DotP(Vector2 v2) {
+        public double DotP(Vector2 v2)
+        {
             return (this.X * v2.X) + (this.Y * v2.Y);
         }
 
@@ -232,7 +235,8 @@ namespace Archimedes.Geometry
         /// Gets an new Vector based on this rotated by the specified amount
         /// </summary>
         /// <param name="angle">Rotation Angle</param>
-        public Vector2 GetRotated(float angle) {
+        public Vector2 GetRotated(double angle)
+        {
             var v2 = this;
             v2.Rotate(angle);
             return v2;
@@ -242,10 +246,11 @@ namespace Archimedes.Geometry
         /// Rotates this Vector by the given amount
         /// </summary>
         /// <param name="angle"></param>
-        public void Rotate(float angle) {
-            float r = this.Lenght;
-            float thisAngle = MathHelper.ToRadians(angle + this.GetAngle2X());
-            this = new Vector2(r * (float)Math.Cos(thisAngle), r * (float)Math.Sin(thisAngle));
+        public void Rotate(double angle)
+        {
+            double r = this.Lenght;
+            double thisAngle = MathHelper.ToRadians(angle + this.GetAngle2X());
+            this = new Vector2(r * Math.Cos(thisAngle), r * Math.Sin(thisAngle));
         }
 
         /// <summary>
@@ -261,7 +266,7 @@ namespace Archimedes.Geometry
                 this = Vector2.Zero;
             } else {
                 // find the inverse of the vectors magnitude
-                float inverse = 1 / len;
+                double inverse = 1d / len;
                 this = new Vector2
                     (
                         // multiply each component by the inverse of the magnitude
@@ -283,15 +288,15 @@ namespace Archimedes.Geometry
         /// <returns></returns>
         public Vector2 GetOrthogonalVector(Direction direction) {
             // Crossproduct as unary operator (getting orthogonal)
-            Vector2 orthVector = new Vector2();
+            double orthVectorX, orthVectorY;
             if (direction == Direction.LEFT) {
-                orthVector.X = this.Y * (-1);
-                orthVector.Y = this.X;
+                orthVectorX = this.Y * (-1);
+                orthVectorY = this.X;
             } else { // RIGHT
-                orthVector.X = this.Y;
-                orthVector.Y = this.X * (-1);
+                orthVectorX = this.Y;
+                orthVectorY = this.X * (-1);
             }
-            return orthVector;
+            return new Vector2(orthVectorX, orthVectorY);
         }
 
 
@@ -306,8 +311,10 @@ namespace Archimedes.Geometry
         /// <param name="value"></param>
         /// <returns></returns>
         public Vector2 Rounded(int value) {
-            return new Vector2((float)Math.Round(this.X, value),
-            (float)Math.Round(this.Y, value));
+            return new Vector2(
+                Math.Round(this.X, value), 
+                Math.Round(this.Y, value));
+           
         }
 
         /// <summary>
@@ -316,10 +323,11 @@ namespace Archimedes.Geometry
         /// <param name="distance">distance to the new point</param>
         /// <param name="angle">angle to the new point</param>
         /// <returns></returns>
-        public Vector2 GetPoint(float distance, float angle) {
-            Vector2 newPnt = new Vector2(
-                this.X + (float)(distance * Math.Cos(MathHelper.ToRadians(angle))),
-                this.Y + (float)(distance * Math.Sin(MathHelper.ToRadians(angle))));
+        public Vector2 GetPoint(double distance, double angle)
+        {
+            var newPnt = new Vector2(
+                this.X + (distance * Math.Cos(MathHelper.ToRadians(angle))),
+                this.Y + (distance * Math.Sin(MathHelper.ToRadians(angle))));
             return newPnt;
         }
 
@@ -343,16 +351,17 @@ namespace Archimedes.Geometry
             return bEqual;
         }
 
-        public float GetAngle2X() {
+        public double GetAngle2X()
+        {
 
-            float degree;
+            double degree;
             var xVector = Vector2.UnitX;
 
-            degree = MathHelper.ToDegree((float)Math.Acos(this.DotP(xVector) / this.Lenght));
+            degree = MathHelper.ToDegree(Math.Acos(this.DotP(xVector) / this.Lenght));
             if (this.Y < 0) {
                 degree = 360 - degree;
             }
-            return (float)Math.Round(degree, GeometrySettings.GEOMETRY_GLOBAL_ROUND);
+            return Math.Round(degree, GeometrySettings.GEOMETRY_GLOBAL_ROUND);
 
         }
 
@@ -362,14 +371,15 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="vbase"></param>
         /// <returns></returns>
-        public float GetAngle2V(Vector2 vbase) {
-            float gamma;
-            float tmp = this.DotP(vbase) / (this.Lenght * vbase.Lenght);
-            gamma = MathHelper.ToDegree((float)Math.Acos(tmp));
+        public double GetAngle2V(Vector2 vbase)
+        {
+            double gamma;
+            double tmp = this.DotP(vbase) / (this.Lenght * vbase.Lenght);
+            gamma = MathHelper.ToDegree(Math.Acos(tmp));
             if (gamma > 180) {          //from mathematic definition, it's always the shorter angle to return.
                 gamma = 360 - gamma;
             }
-            return (float)Math.Round(gamma, GeometrySettings.GEOMETRY_GLOBAL_ROUND);
+            return Math.Round(gamma, GeometrySettings.GEOMETRY_GLOBAL_ROUND);
         }
 
         /// <summary>
@@ -379,8 +389,9 @@ namespace Archimedes.Geometry
         /// <param name="b"></param>
         /// <param name="direction">RIGHT = Clockwise, LEFT = other direction</param>
         /// <returns>0° - 360° Angle in degree</returns>
-        public float GetAngleBetweenClockWise(Vector2 b, Direction direction) {
-            float theta;
+        public double GetAngleBetweenClockWise(Vector2 b, Direction direction)
+        {
+            double theta;
 
             theta = GetAngle2V(b);
 

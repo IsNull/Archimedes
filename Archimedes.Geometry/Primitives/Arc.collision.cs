@@ -116,9 +116,6 @@ namespace Archimedes.Geometry.Primitives
         /// <returns>Returns the interception Point(s) if the Objects collide</returns>
         private List<Vector2> InterceptLine(Line2 uLine) {
             var intersections = new List<Vector2>();
-            float Angle2YMin = 0; //this.Angle2X;
-            float Angle2YMax = Angle2YMin + this.Angle;
-
 
             using (var clArc = (this.Clone() as Arc)) {
                 // clone and round arc

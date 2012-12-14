@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -13,8 +14,11 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="other"></param>
         /// <returns>Returns a Point if func succeeds. If there is no interception, empty point is returned.</returns>
-        private Vector2? InterceptLine(Line2 other) {
-            Vector2 interPnt = new Vector2();
+        private Vector2? InterceptLine(Line2 other)
+        {
+
+            double interPntX = 0;
+            double interPntY = 0;
 
             if (other == null || this.EqualSlope(other)) {
                 return null;            // Lines are parralell
@@ -22,15 +26,18 @@ namespace Archimedes.Geometry.Primitives
 
             //intercept of two endless lines
             if (!this.IsVertical && !other.IsVertical) {    // both NOT vertical
-                interPnt.X = (float)((-1 * (this.YMovement - other.YMovement)) / (this.Slope - other.Slope));
-                interPnt.Y = (float)(this.Slope * interPnt.X + this.YMovement);
+                interPntX = ((-1 * (this.YMovement - other.YMovement)) / (this.Slope - other.Slope));
+                interPntY = (this.Slope * interPntX + this.YMovement);
             } else if (this.IsVertical) {                  // this vertical (so it must lie on this.X)
-                interPnt.X = this.Start.X;
-                interPnt.Y = (float)(other.Slope * interPnt.X + other.YMovement);
+                interPntX = this.Start.X;
+                interPntY = (other.Slope * interPntX + other.YMovement);
             } else if (other.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
-                interPnt.X = other.Start.X;
-                interPnt.Y = (float)(this.Slope * interPnt.X + this.YMovement);
+                interPntX = other.Start.X;
+                interPntY = (this.Slope * interPntX + this.YMovement);
             }
+
+            var interPnt = new Vector2(interPntX, interPntY);
+
             //check if computed intercept lies on our line.
             if (this.Contains(interPnt) && other.Contains(interPnt)) {
                 return interPnt;
@@ -43,23 +50,27 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="other"></param>
         /// <returns>Returns true/false.</returns>
-        public bool InterceptLineWith(Line2 other) {
-            var IsP = new Vector2();
+        public bool InterceptLineWith(Line2 other)
+        {
+            double IsPX = 0;
+            double IsPY = 0;
 
             if (other == null || this.EqualSlope(other))
                 return false;
 
             //intercept of two endless lines
             if ((!this.IsVertical) && (!other.IsVertical)) {    // both NOT vertical
-                IsP.X = (float)((-1 * (this.YMovement - other.YMovement)) / (this.Slope - other.Slope));
-                IsP.Y = (float)(this.Slope * IsP.X + this.YMovement);
+                IsPX = (float)((-1 * (this.YMovement - other.YMovement)) / (this.Slope - other.Slope));
+                IsPY = (float)(this.Slope * IsPX + this.YMovement);
             } else if (this.IsVertical) {                  // this vertical (so it must lie on this.X)
-                IsP.X = this.Start.X;
-                IsP.Y = (float)(other.Slope * IsP.X + other.YMovement);
+                IsPX = this.Start.X;
+                IsPY = (float)(other.Slope * IsPX + other.YMovement);
             } else if (other.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
-                IsP.X = other.Start.X;
-                IsP.Y = (float)(this.Slope * IsP.X + this.YMovement);
+                IsPX = other.Start.X;
+                IsPY = (float)(this.Slope * IsPX + this.YMovement);
             }
+
+            var IsP = new Vector2(IsPX, IsPY);
 
             // check if computed intercept lies on our line.
             return (this.Contains(IsP, 1) && other.Contains(IsP, 1));
@@ -68,20 +79,18 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Returns true if there is at least one Interception Point.
         /// </summary>
-        /// <param name="Rect1"></param>
+        /// <param name="rect1"></param>
         /// <returns></returns>
-        public bool InterceptRectWith(RectangleF Rect1) {
+        public bool InterceptRectWith(RectangleF rect1) {
             
             // is Start/EndPoint in the Rectangle?
-            if (Rect1.Contains(this.Start) || Rect1.Contains(this.End))
+            if (rect1.Contains(this.Start) || rect1.Contains(this.End))
                 return true; 
             // crosses the Line a Rectangle Border?
-            var BorderLines = Line2.RectExplode(Rect1); //get 4 borderlines from rect
-            foreach (Line2 border in BorderLines) {
-                if (this.InterceptLineWith(border))
-                    return true;
-            }
-            return false;
+            var borderLines = Line2.RectExplode(rect1); //get 4 borderlines from rect
+
+            // check if any of the borderlines intercept with this line
+            return borderLines.Any(border => this.InterceptLineWith(border));
         }
 
 
@@ -92,11 +101,11 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="Intercepts">Points</param>
         /// <returns>Returns count of Interception Points</returns>
         public List<Vector2> InterceptRect(RectangleF Rect1) {
-            List<Vector2> intercepts = new List<Vector2>(2);
+            var intercepts = new List<Vector2>(2);
             short i = 0;
             var borderLines = Line2.RectExplode(Rect1); //get 4 borderlines from rect
 
-            foreach (Line2 border in borderLines) {
+            foreach (var border in borderLines) {
                 if (this.InterceptLineWith(border)) {
                     // found interception
                     var pnt = this.InterceptLine(border);

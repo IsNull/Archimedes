@@ -17,9 +17,9 @@ namespace Archimedes.Geometry.Primitives
         //Internal Data which defines a rotatable rect
 
         Vector2 _middlePoint;
-        float _width;
-        float _height;
-        float _rotateAngle = 0; //rotation is considered centric
+        double _width;
+        double _height;
+        double _rotateAngle = 0; //rotation is considered centric
 
         Pen _pen = null;
         Brush _brush = null;
@@ -33,7 +33,8 @@ namespace Archimedes.Geometry.Primitives
             set { _brush = value;}
         }
 
-        public float Angle {
+        public double Angle
+        {
             get { return _rotateAngle; }
             set { _rotateAngle = value; }
         }
@@ -42,7 +43,8 @@ namespace Archimedes.Geometry.Primitives
             get { return (this.Angle != 0); }
         }
 
-        public float Height {
+        public double Height
+        {
             get {
                 return _height;
             }
@@ -51,7 +53,8 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public float Width {
+        public double Width
+        {
             get {
                 return _width;
             }
@@ -63,7 +66,7 @@ namespace Archimedes.Geometry.Primitives
 
         public SizeF Size {
             get {
-                return new SizeF(_width, _height);
+                return new SizeF((float)_width, (float)_height);
             }
             set {
                 _width = value.Width;
@@ -74,7 +77,8 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Area of this Rectangle
         /// </summary>
-        public float Area {
+        public double Area
+        {
             get { return Height * Width; }
         }
 
@@ -223,7 +227,8 @@ namespace Archimedes.Geometry.Primitives
             MiddlePoint += mov;
         }
 
-        public void Scale(float fact) {
+        public void Scale(double fact)
+        {
             throw new NotImplementedException();
         }
 

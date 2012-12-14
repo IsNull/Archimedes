@@ -139,7 +139,7 @@ namespace Archimedes.Geometry.Primitives
                 _gpath.PathPoints[i] +=  mov;
         }
 
-        public void Scale(float fact) {
+        public void Scale(double fact) {
             for (int i = 0; i < _gpath.PathPoints.Count(); i++)
                 _gpath.PathPoints[i] = _gpath.PathPoints[i].Scale(fact);
         }

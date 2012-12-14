@@ -21,12 +21,12 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Private Data
 
-        float? _radius = null;
-        float? _angle = null;
-        float? _bowlen = null;
+        double? _radius = null;
+        double? _angle = null;
+        double? _bowlen = null;
 
-        float _anglediff = 0f;
-        
+        double _anglediff = 0f;
+
         Direction _direction = Direction.LEFT;
         Vector2 _startPoint;
         Vector2 _base;
@@ -34,34 +34,39 @@ namespace Archimedes.Geometry.Primitives
         Pen _pen = null;
         bool _verticesInvalidated = true;
 
-        #endregion 
+        #endregion
 
         #region Contructors
 
         public Arc() { }
 
-        public Arc(Arc prototype) {
+        public Arc(Arc prototype)
+        {
             ArcFromProtoType(prototype);
         }
 
-        public Arc(Vector2 start, Vector2 inter, Vector2 end) {
+        public Arc(Vector2 start, Vector2 inter, Vector2 end)
+        {
             ArcFromProtoType(FromDescriptorPoints(start, inter, end));
         }
 
-        private void ArcFromProtoType(Arc prototype){
+        private void ArcFromProtoType(Arc prototype)
+        {
             Prototype(prototype);
         }
 
 
-        public Arc(float? radius, float? angle, float? bowLen, Vector2 baseVector) {
+        public Arc(double? radius, double? angle, double? bowLen, Vector2 baseVector)
+        {
             _angle = angle;
             _radius = radius;
             _bowlen = bowLen;
             _base = baseVector;
         }
 
-        public Arc(float? uRadius, float? uAngle, float? uBowLen, Vector2 BaseVector, float AngleDiff)
-            : this(uRadius, uAngle, uBowLen, BaseVector) {
+        public Arc(double? uRadius, double? uAngle, double? uBowLen, Vector2 BaseVector, double AngleDiff)
+            : this(uRadius, uAngle, uBowLen, BaseVector)
+        {
             _anglediff = AngleDiff;
         }
 
@@ -69,22 +74,22 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Methods (Transformators)
 
-        public Vector2 GetPointOnArc(float DeltaAngle) {
+        public Vector2 GetPointOnArc(double deltaAngle)
+        {
 
             Vector2 pointOnArc;
             var fakeBaseVector = _base.GetRotated(this.AngleDiff);
 
-            using (var helperArc = new Arc(Radius, DeltaAngle, null, _base, AngleDiff)) {
+            using (var helperArc = new Arc(Radius, deltaAngle, null, _base, AngleDiff))
+            {
                 helperArc.Direction = this.Direction;
                 helperArc.Location = this.Location;
 
-                var relAngle = CalcRelAngle(helperArc.Angle, (float)fakeBaseVector.GetAngle2X(), helperArc.Direction);
+                var relAngle = CalcRelAngle(helperArc.Angle, fakeBaseVector.GetAngle2X(), helperArc.Direction);
                 pointOnArc = CalcEndpointDelta2M(helperArc.Radius, relAngle);
 
                 var helperMP = helperArc.MiddlePoint;
-
-                pointOnArc.X += helperMP.X;
-                pointOnArc.Y += helperMP.Y;
+                pointOnArc = new Vector2(pointOnArc.X + helperMP.X, pointOnArc.Y + helperMP.Y);
             }
             return pointOnArc;
         }
@@ -96,11 +101,12 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="relAngle"></param>
         /// <returns></returns>
         /// 
-        private Vector2 CalcEndpointDelta2M(float radius, float relAngle) {
-            var delta2M = new Vector2(radius, radius);
-            delta2M.X = (float)(delta2M.X * Math.Cos(MathHelper.ToRadians(relAngle)));
-            delta2M.Y = (float)(delta2M.Y * Math.Sin(MathHelper.ToRadians(relAngle)));
-            return delta2M;
+        private Vector2 CalcEndpointDelta2M(double radius, double relAngle)
+        {
+            var radAngle = MathHelper.ToRadians(relAngle);
+            return new Vector2(
+                radius * Math.Cos(radAngle),
+                radius * Math.Sin(radAngle));
         }
 
         /// <summary> 
@@ -110,15 +116,19 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="BaseAngle">Winkel des Base Vector</param>
         /// <param name="Direction">Links oder Rechts</param>
         /// <returns>Relativer Winkel</returns>
-        private float CalcRelAngle(float BowAngle, float BaseAngle, Direction Direction) {
-            float RelAngle;
+        private double CalcRelAngle(double BowAngle, double BaseAngle, Direction Direction)
+        {
+            double RelAngle;
             if (BowAngle > 360) { BowAngle -= 360; }
 
             RelAngle = BowAngle + BaseAngle;
 
-            if (Direction == Direction.LEFT) {
+            if (Direction == Direction.LEFT)
+            {
                 RelAngle += 270;
-            } else {
+            }
+            else
+            {
                 RelAngle += 90 - 2 * (BowAngle - 180);
             }
 
@@ -128,10 +138,11 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public void Scale(float factor) {
+        public void Scale(double factor)
+        {
             this.Location = this.Location.Scale(factor);
 
-            if(_radius.HasValue)
+            if (_radius.HasValue)
                 _radius *= factor;
 
             if (_bowlen.HasValue)
@@ -146,12 +157,15 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>Effective Start Angle to draw
         /// 
         /// </summary>
-        public float Angle2X {
-            get {
-                float angle = _base.GetAngle2X() + AngleDiff;
+        public double Angle2X
+        {
+            get
+            {
+                var angle = _base.GetAngle2X() + AngleDiff;
 
                 // correct angle if we have opposite direction
-                if (Direction == Direction.RIGHT) {
+                if (Direction == Direction.RIGHT)
+                {
                     angle -= (this.Angle - 180);
                 }
                 return angle;
@@ -161,8 +175,10 @@ namespace Archimedes.Geometry.Primitives
         /// <summary> 
         /// Get the Arc's Endpoint
         /// </summary>
-        public Vector2 EndPoint {
-            get {
+        public Vector2 EndPoint
+        {
+            get
+            {
                 return GetPointOnArc(this.Angle);
             }
         }
@@ -171,93 +187,123 @@ namespace Archimedes.Geometry.Primitives
         /// NULL = The Bow is tangent like and has no break.
         /// </summary>
         /// 
-        public float AngleDiff {
+        public double AngleDiff
+        {
             get { return _anglediff; }
-            set { 
+            set
+            {
                 _anglediff = value;
                 Invalidate();
             }
         }
 
-        public Direction Direction {
+        public Direction Direction
+        {
             get { return _direction; }
-            set {
+            set
+            {
                 _direction = value;
                 Invalidate();
             }
         }
 
-        public float Radius {
-            set {
+        public float Radius
+        {
+            set
+            {
                 _radius = value;
                 if (_angle.HasValue && _bowlen.HasValue)
                     _bowlen = null;
 
                 Invalidate();
             }
-            get {
-                if (_radius == null) { // radius not set!
+            get
+            {
+                if (_radius == null)
+                { // radius not set!
                     // possible to calc radius?
-                    if (_bowlen != null && _angle != null && _angle != 0) {
+                    if (_bowlen != null && _angle != null && _angle != 0)
+                    {
                         return (float)((180 * _bowlen) / (Math.PI * _angle));
-                    } else {
+                    }
+                    else
+                    {
                         return 0f;
                     }
-                } else {
+                }
+                else
+                {
                     return (float)_radius;
                 }
 
             }
         }
 
-        public float Angle {
-            set {
+        public double Angle
+        {
+            set
+            {
                 _angle = value;
                 if (_radius.HasValue && _bowlen.HasValue)
                     _bowlen = null;
 
                 Invalidate();
             }
-            get {
-                if (!_angle.HasValue) {  // angle not set!
-                    // possible to calc angle?
-                    if (_bowlen.HasValue && _radius.HasValue && _radius != 0) {
-                        return (float)((180 * _bowlen) / (Math.PI * _radius));
-                    } else {
-                        return 0f;
-                    }
-                } else {
-                    return (float)_angle;
+            get
+            {
+                if (_angle.HasValue)
+                {
+                    return _angle.Value;
                 }
+                
+                // angle not set!
+                // possible to calc angle?
+                if (_bowlen.HasValue && _radius.HasValue && _radius != 0)
+                {
+                    return (180*_bowlen.Value)/(Math.PI*_radius.Value);
+                }
+
+                return 0f;
             }
         }
 
-        public float BowLen {
-            set {
+        public float BowLen
+        {
+            set
+            {
                 _bowlen = value;
-                if(_radius.HasValue && _angle.HasValue)
+                if (_radius.HasValue && _angle.HasValue)
                     _radius = null;
                 Invalidate();
             }
-            get {
-                if (_bowlen == null) {
+            get
+            {
+                if (_bowlen == null)
+                {
 
                     // possible to calc bowlen?
-                    if (_radius != null && _angle != null) {
+                    if (_radius != null && _angle != null)
+                    {
                         return (float)(_radius * Math.PI * (_angle / 180));
-                    } else {
+                    }
+                    else
+                    {
                         return 0f;
                     }
-                } else {
+                }
+                else
+                {
                     return (float)_bowlen;
                 }
             }
         }
 
-        public RectangleF DrawingRect {
-            get {
+        public RectangleF DrawingRect
+        {
+            get
+            {
                 var middlePoint = this.MiddlePoint;
-                return new RectangleF(middlePoint.X - this.Radius, middlePoint.Y - this.Radius, 2 * this.Radius, 2 * this.Radius);
+                return new RectangleF((float)(middlePoint.X - this.Radius), (float)(middlePoint.Y - this.Radius), 2 * this.Radius, 2 * this.Radius);
             }
         }
 
@@ -270,7 +316,8 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="splitPoint">Point to split</param>
         /// <returns></returns>
-        public IEnumerable<Arc> Split(Vector2 splitPoint) {
+        public IEnumerable<Arc> Split(Vector2 splitPoint)
+        {
             var vstart = new Vector2(this.MiddlePoint, this.Location);
             var vsplit = new Vector2(this.MiddlePoint, splitPoint);
             return Split(vstart.GetAngle2V(vsplit));
@@ -281,14 +328,18 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="splitAngle"></param>
         /// <returns></returns>
-        public IEnumerable<Arc> Split(float splitAngle) {
+        public IEnumerable<Arc> Split(double splitAngle)
+        {
             var arcs = new List<Arc>();
 
             splitAngle = Math.Abs(splitAngle);
-            if ((splitAngle > this.Angle)) {
+            if ((splitAngle > this.Angle))
+            {
                 arcs.Add(this); // can't split...
-            } else { /* split the arc */
-                
+            }
+            else
+            { /* split the arc */
+
                 //segment uno
                 var split = new Arc(this.Radius, splitAngle, null, _base);
                 split.Location = this.Location;
@@ -298,9 +349,12 @@ namespace Archimedes.Geometry.Primitives
 
                 //segment due
                 Vector2 newBase;
-                if (this.Direction == Direction.LEFT) {
+                if (this.Direction == Direction.LEFT)
+                {
                     newBase = _base.GetRotated(splitAngle);
-                } else {
+                }
+                else
+                {
                     newBase = _base.GetRotated(-splitAngle);
                 }
                 split = new Arc(this.Radius, this.Angle - splitAngle, null, newBase);
@@ -311,36 +365,45 @@ namespace Archimedes.Geometry.Primitives
             }
             return arcs;
         }
-#endregion
+        #endregion
 
         #region To Methods
 
-        public GraphicsPath ToPath() {
+        public GraphicsPath ToPath()
+        {
             var path = new GraphicsPath();
-            try {
-                path.AddArc(this.DrawingRect, this.Angle2X - 90, this.Angle);
-            } catch (ArgumentException) {
+            try
+            {
+                path.AddArc(this.DrawingRect, (float)this.Angle2X - 90, (float)this.Angle);
+            }
+            catch (ArgumentException)
+            {
                 //igonore - return void path
             }
             return path;
         }
 
-        public Vertices ToVertices() {
+        public Vertices ToVertices()
+        {
             Vertices vertices = new Vertices();
-            try {
+            try
+            {
                 var path = ToPath();
                 path.Flatten();
                 vertices.AddRange(path.PathPoints);
                 Invalidate();
-            } catch (ArgumentException) {
+            }
+            catch (ArgumentException)
+            {
                 // igonroe yield nothing
             }
             return vertices;
         }
 
-        public Circle2 ToCircle() {
+        public Circle2 ToCircle()
+        {
             var c = new Circle2(this.MiddlePoint, this.Radius);
-            if(c.Pen != null)
+            if (c.Pen != null)
                 c.Pen = this.Pen.Clone() as Pen;
             return c;
         }
@@ -349,41 +412,49 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geomerty Base
 
-        public Vector2 MiddlePoint {
-            get {
+        public Vector2 MiddlePoint
+        {
+            get
+            {
                 // calc vector which points to the arc middlepoint
                 var orthBaseVector = _base.GetOrthogonalVector(this.Direction);
                 orthBaseVector = orthBaseVector.GetRotated(this.AngleDiff);
-                orthBaseVector.Lenght = this.Radius;                              
+                orthBaseVector.Lenght = this.Radius;
 
                 return new Vector2((float)(this.Location.X + orthBaseVector.X), (float)(this.Location.Y + orthBaseVector.Y));
             }
-            set {
+            set
+            {
                 var vMove = new Vector2(this.MiddlePoint, value);
                 this.Location += vMove;
             }
         }
 
-        public void Move(Vector2 mov) {
+        public void Move(Vector2 mov)
+        {
             this.Location += mov;
         }
 
         /// <summary> Arc StartPoint
         /// 
         /// </summary>
-        public Vector2 Location {
+        public Vector2 Location
+        {
             get { return _startPoint; }
-            set {
+            set
+            {
                 _startPoint = value;
                 Invalidate();
             }
         }
 
-        public IGeometryBase Clone() {
+        public IGeometryBase Clone()
+        {
             return new Arc(this);
         }
 
-        public void Prototype(IGeometryBase iprototype) {
+        public void Prototype(IGeometryBase iprototype)
+        {
 
             var prototype = (iprototype as Arc);
             if (prototype == null)
@@ -397,26 +468,35 @@ namespace Archimedes.Geometry.Primitives
             Location = prototype.Location;
             Direction = prototype.Direction;
             AngleDiff = prototype.AngleDiff;
-            try {
+            try
+            {
                 if (prototype.Pen != null)
                     this.Pen = prototype.Pen.Clone() as Pen;
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
                 /// ignore
             }
         }
 
 
 
-        public Circle2 BoundingCircle {
+        public Circle2 BoundingCircle
+        {
             get { return this.ToCircle(); }
         }
 
-        public RectangleF BoundingBox {
-            get {
+        public RectangleF BoundingBox
+        {
+            get
+            {
                 RectangleF box;
-                try {
+                try
+                {
                     box = new Polygon2(ToVertices()).BoundingBox;
-                } catch(Exception) {
+                }
+                catch (Exception)
+                {
                     box = new RectangleF();
                     //igonre - return void boundingbox
                 }
@@ -424,12 +504,17 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public Rectangle2 BoundingBoxSmallest {
-            get {
+        public Rectangle2 BoundingBoxSmallest
+        {
+            get
+            {
                 Rectangle2 box;
-                try {
+                try
+                {
                     box = new Polygon2(ToVertices()).FindSmallestBoundingBox();
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     box = new Rectangle2();
                 }
                 return box;
@@ -440,42 +525,51 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geomerty Base Drawing
 
-        public Pen Pen {
+        public Pen Pen
+        {
             get { return _pen; }
             set { _pen = value; }
         }
 
-        public void Draw(Graphics G) {
+        public void Draw(Graphics G)
+        {
             if (this.Pen != null)
-                G.DrawArc(this.Pen, this.DrawingRect, this.Angle2X - 90, this.Angle);
+                G.DrawArc(this.Pen, this.DrawingRect, (float)(this.Angle2X - 90), (float)this.Angle);
         }
-        public void AddToPath(GraphicsPath path) {
-            path.AddArc(this.DrawingRect, this.Angle2X - 90, this.Angle);
+        public void AddToPath(GraphicsPath path)
+        {
+            path.AddArc(this.DrawingRect, (float)(this.Angle2X - 90), (float)this.Angle);
         }
 
         #endregion
 
-        public Vector2 EndVector {
-            get {
-                return Vector2.VectorFromAngle(this.AngleDiff + this.Angle, 1);   
+        public Vector2 EndVector
+        {
+            get
+            {
+                return Vector2.VectorFromAngle(this.AngleDiff + this.Angle, 1);
             }
         }
 
-        public Vector2 BaseVector {
+        public Vector2 BaseVector
+        {
             get { return _base; }
             set { _base = value; }
         }
 
-        public virtual void Dispose() {
+        public virtual void Dispose()
+        {
             //if(Pen != null)
             //    Pen.Dispose();
         }
-        
-        private void Invalidate() {
+
+        private void Invalidate()
+        {
             _verticesInvalidated = true;
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
             string str = "";
 
             str += "MiddlePoint: " + this.MiddlePoint.ToString() + "\n";

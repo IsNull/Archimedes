@@ -113,18 +113,21 @@ namespace Archimedes.Geometry.Primitives
 
         public Vector2 MiddlePoint {
             get {
-                Vector2 mpoint = new Vector2(0, 0);
+
+                double mpointX = 0;
+                double mpointY = 0;
 
                 var middlepoints = (from g in _geometries
                                    select g.MiddlePoint).ToList();
 
                 foreach (var pnt in middlepoints){
-                    mpoint.X += pnt.X;
-                    mpoint.Y += pnt.Y;
+                    mpointX += pnt.X;
+                    mpointY += pnt.Y;
                 }
-                mpoint.X /= middlepoints.Count;
-                mpoint.Y /= middlepoints.Count;
-                return mpoint;
+
+               return new Vector2(
+                   mpointX / middlepoints.Count,
+                   mpointY / middlepoints.Count);
             }
             set {
                 var mov = new Vector2(MiddlePoint, value);
@@ -142,7 +145,7 @@ namespace Archimedes.Geometry.Primitives
             Invalidate();
         }
 
-        public void Scale(float fact) {
+        public void Scale(double fact) {
             foreach (var g in _geometries)
                 g.Scale(fact);
             Invalidate();

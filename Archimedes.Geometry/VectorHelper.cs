@@ -25,7 +25,8 @@ namespace Archimedes.Geometry
         /// <param name="direction"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        public static float GetSignedAngleBetween(Line2 direction, Vector2 next) {
+        public static double GetSignedAngleBetween(Line2 direction, Vector2 next)
+        {
             var angle = next.GetAngle2V(direction.ToVector());
 
             return angle * (direction.IsLeft(next) ?

@@ -11,10 +11,11 @@ namespace Archimedes.Geometry.Extensions
     {
         #region Area
 
-        public static float Area(this Rectangle rect) {
+        public static double Area(this Rectangle rect)
+        {
             return rect.Width * rect.Height;
         }
-        public static float Area(this RectangleF rect) {
+        public static double Area(this RectangleF rect) {
             return rect.Width * rect.Height;
         }
 

@@ -20,7 +20,7 @@ namespace Archimedes.Geometry
         void Prototype(IGeometryBase prototype);
 
         void Move(Vector2 mov);
-        void Scale(float fact);
+        void Scale(double fact);
 
         Vertices ToVertices();
 

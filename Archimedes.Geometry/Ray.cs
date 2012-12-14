@@ -28,7 +28,7 @@ namespace Archimedes.Geometry
         public Ray(Ray prototype)
             : this(prototype.Vector, prototype.Location) { }
 
-        public Ray(float x, float y, Vector2 p) {
+        public Ray(double x, double y, Vector2 p) {
             _rayvector = new Vector2(x, y);
             this.Location = p;
         }
@@ -52,12 +52,12 @@ namespace Archimedes.Geometry
             get { return _rayvector; }
         }
 
-        public float YDist {
+        public double YDist {
             get {   // q = y1 - m * x1 
                 if (Vector.IsVertical) {
                     return 0;
                 } else {
-                    return this.Location.Y - ((float)Vector.Slope * this.Location.X);
+                    return this.Location.Y - (Vector.Slope * this.Location.X);
                 }
             }
         }
@@ -110,22 +110,28 @@ namespace Archimedes.Geometry
         /// <param name="uRay"></param>
         /// <returns></returns>
         Vector2? IntersectN(Ray uRay) {
-            Vector2 intersectionpnt = new Vector2();
+           
 
             if (Vector.IsParallel(uRay.Vector)) {
                 return null;
             }
 
+            double intersectionpntX = 0;
+            double intersectionpntY = 0;
+
             if (!Vector.IsVertical && !uRay.Vector.IsVertical) {    // both NOT vertical
-                intersectionpnt.X = (float)((-1 * (this.YDist - uRay.YDist)) / (Vector.Slope - uRay.Vector.Slope));
-                intersectionpnt.Y = (float)(Vector.Slope * intersectionpnt.X + this.YDist);
+                intersectionpntX = (float)((-1 * (this.YDist - uRay.YDist)) / (Vector.Slope - uRay.Vector.Slope));
+                intersectionpntY = (float)(Vector.Slope * intersectionpntX + this.YDist);
             } else if (Vector.IsVertical) {                  // this vertical (so it must lie on this.X)
-                intersectionpnt.X = Vector.X;
-                intersectionpnt.Y = (float)(uRay.Vector.Slope * intersectionpnt.X + uRay.YDist);
+                intersectionpntX = Vector.X;
+                intersectionpntY = (float)(uRay.Vector.Slope * intersectionpntX + uRay.YDist);
             } else if (uRay.Vector.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
-                intersectionpnt.X = uRay.Vector.X;
-                intersectionpnt.Y = (float)(Vector.Slope * intersectionpnt.X + this.YDist);
+                intersectionpntX = uRay.Vector.X;
+                intersectionpntY = (float)(Vector.Slope * intersectionpntX + this.YDist);
             }
+
+            var intersectionpnt = new Vector2(intersectionpntX, intersectionpntY);
+
             //check if computed intercept lies on our line.
             if (this.Contains(intersectionpnt) || uRay.Contains(intersectionpnt)) {
                 return intersectionpnt;

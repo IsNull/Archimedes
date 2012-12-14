@@ -31,9 +31,9 @@ namespace Archimedes.Geometry.Primitives.Bounds
         protected int currentControlPoint = -1;
 
         // The area of the current and best bounding rectangles.
-        private float _currentArea = float.MaxValue;
+        private double _currentArea = float.MaxValue;
         protected Vector2[] _currentRectangle = null;
-        private float _bestArea = float.MaxValue;
+        private double _bestArea = float.MaxValue;
         protected Vector2[] _bestRectangle = null;
 
         #endregion
@@ -99,14 +99,14 @@ namespace Archimedes.Geometry.Primitives.Bounds
 
             // Find the minimum and maximum points
             // in all four directions.
-            float minx = _vertices[0].X;
-            float maxx = minx;
-            float miny = _vertices[0].Y;
-            float maxy = miny;
-            float minxi = 0;
-            float maxxi = 0;
-            float minyi = 0;
-            float maxyi = 0;
+            double minx = _vertices[0].X;
+            double maxx = minx;
+            double miny = _vertices[0].Y;
+            double maxy = miny;
+            double minxi = 0;
+            double maxxi = 0;
+            double minyi = 0;
+            double maxyi = 0;
 
             for (int i = 1; i < _numPoints; i++) {
                 if (minx > _vertices[i].X) {
@@ -162,26 +162,26 @@ namespace Archimedes.Geometry.Primitives.Bounds
             }
 
             // Find the next point on an edge to use.
-            float xmindx = 0, xmindy = 0, ymaxdx = 0, ymaxdy = 0;
-            float xmaxdx = 0, xmaxdy = 0, ymindx = 0, ymindy = 0;
+            double xmindx = 0, xmindy = 0, ymaxdx = 0, ymaxdy = 0;
+            double xmaxdx = 0, xmaxdy = 0, ymindx = 0, ymindy = 0;
             FindDxDy(ref xmindx, ref xmindy, _controlPoints[0]);
             FindDxDy(ref ymaxdx, ref ymaxdy, _controlPoints[1]);
             FindDxDy(ref xmaxdx, ref xmaxdy, _controlPoints[2]);
             FindDxDy(ref ymindx, ref ymindy, _controlPoints[3]);
 
             // Switch so we can look for the smallest opposite/adjacent ratio.
-            float xminopp = xmindx;
-            float xminadj = xmindy;
-            float ymaxopp = -ymaxdy;
-            float ymaxadj = ymaxdx;
-            float xmaxopp = -xmaxdx;
-            float xmaxadj = -xmaxdy;
-            float yminopp = ymindy;
-            float yminadj = -ymindx;
+            var xminopp = xmindx;
+            var xminadj = xmindy;
+            var ymaxopp = -ymaxdy;
+            var ymaxadj = ymaxdx;
+            var xmaxopp = -xmaxdx;
+            var xmaxadj = -xmaxdy;
+            var yminopp = ymindy;
+            var yminadj = -ymindx;
 
             // Pick initial values that will make every point an improvement.
-            float bestopp = 1;
-            float bestadj = 0;
+            double bestopp = 1;
+            double bestadj = 0;
             int best_control_point = -1;
 
             // Pick the best control point to use next.
@@ -241,15 +241,15 @@ namespace Archimedes.Geometry.Primitives.Bounds
             // See which point has the current edge.
             int i1 = _controlPoints[currentControlPoint];
             int i2 = (i1 + 1) % _numPoints;
-            float dx = _vertices[i2].X - _vertices[i1].X;
-            float dy = _vertices[i2].Y - _vertices[i1].Y;
+            var dx = _vertices[i2].X - _vertices[i1].X;
+            var dy = _vertices[i2].Y - _vertices[i1].Y;
 
             // Make dx and dy work for the first line.
             switch (currentControlPoint) {
                 case 0: // Nothing to do.
                     break;
                 case 1: // dx = -dy, dy = dx
-                    float temp1 = dx;
+                    var temp1 = dx;
                     dx = -dy;
                     dy = temp1;
                     break;
@@ -258,28 +258,28 @@ namespace Archimedes.Geometry.Primitives.Bounds
                     dy = -dy;
                     break;
                 case 3: // dx = dy, dy = -dx
-                    float temp2 = dx;
+                    var temp2 = dx;
                     dx = dy;
                     dy = -temp2;
                     break;
             }
 
-            float px0 = _vertices[_controlPoints[0]].X;
-            float py0 = _vertices[_controlPoints[0]].Y;
-            float dx0 = dx;
-            float dy0 = dy;
-            float px1 = _vertices[_controlPoints[1]].X;
-            float py1 = _vertices[_controlPoints[1]].Y;
-            float dx1 = dy;
-            float dy1 = -dx;
-            float px2 = _vertices[_controlPoints[2]].X;
-            float py2 = _vertices[_controlPoints[2]].Y;
-            float dx2 = -dx;
-            float dy2 = -dy;
-            float px3 = _vertices[_controlPoints[3]].X;
-            float py3 = _vertices[_controlPoints[3]].Y;
-            float dx3 = -dy;
-            float dy3 = dx;
+            var px0 = _vertices[_controlPoints[0]].X;
+            var py0 = _vertices[_controlPoints[0]].Y;
+            var dx0 = dx;
+            var dy0 = dy;
+            var px1 = _vertices[_controlPoints[1]].X;
+            var py1 = _vertices[_controlPoints[1]].Y;
+            var dx1 = dy;
+            var dy1 = -dx;
+            var px2 = _vertices[_controlPoints[2]].X;
+            var py2 = _vertices[_controlPoints[2]].Y;
+            var dx2 = -dx;
+            var dy2 = -dy;
+            var px3 = _vertices[_controlPoints[3]].X;
+            var py3 = _vertices[_controlPoints[3]].Y;
+            var dx3 = -dy;
+            var dy3 = dx;
 
             // Find the points of intersection.
             _currentRectangle = new Vector2[4];
@@ -300,13 +300,13 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// <returns></returns>
         protected virtual bool IsCurrentRectangleTheBest() {
 
-            float vx0 = _currentRectangle[0].X - _currentRectangle[1].X;
-            float vy0 = _currentRectangle[0].Y - _currentRectangle[1].Y;
-            float len0 = (float)Math.Sqrt(vx0 * vx0 + vy0 * vy0);
-
-            float vx1 = _currentRectangle[1].X - _currentRectangle[2].X;
-            float vy1 = _currentRectangle[1].Y - _currentRectangle[2].Y;
-            float len1 = (float)Math.Sqrt(vx1 * vx1 + vy1 * vy1);
+            var vx0 = _currentRectangle[0].X - _currentRectangle[1].X;
+            var vy0 = _currentRectangle[0].Y - _currentRectangle[1].Y;
+            var len0 = Math.Sqrt(vx0 * vx0 + vy0 * vy0);
+            
+            var vx1 = _currentRectangle[1].X - _currentRectangle[2].X;
+            var vy1 = _currentRectangle[1].Y - _currentRectangle[2].Y;
+            var len1 = Math.Sqrt(vx1 * vx1 + vy1 * vy1);
 
             // See if this is an improvement.
             _currentArea = len0 * len1;
@@ -325,7 +325,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// <param name="dx"></param>
         /// <param name="dy"></param>
         /// <param name="i"></param>
-        private void FindDxDy(ref float dx, ref float dy, int i) {
+        private void FindDxDy(ref double dx, ref double dy, int i) {
             int i2 = (i + 1) % _numPoints;
             dx = _vertices[i2].X - _vertices[i].X;
             dy = _vertices[i2].Y - _vertices[i].Y;
@@ -344,12 +344,13 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// <param name="B2"></param>
         /// <param name="intersect"></param>
         /// <returns></returns>
-        private bool FindIntersection(float X1, float Y1, float X2, float Y2, float A1, float B1, float A2, float B2, ref Vector2 intersect) {
-            float dx = X2 - X1;
-            float dy = Y2 - Y1;
-            float da = A2 - A1;
-            float db = B2 - B1;
-            float s, t;
+        private bool FindIntersection(double X1, double Y1, double X2, double Y2, double A1, double B1, double A2, double B2, ref Vector2 intersect)
+        {
+            var dx = X2 - X1;
+            var dy = Y2 - Y1;
+            var da = A2 - A1;
+            var db = B2 - B1;
+            double s, t;
 
             // If the segments are parallel, return False.
             if (Math.Abs(da * dy - db * dx) < 0.001) return false;
