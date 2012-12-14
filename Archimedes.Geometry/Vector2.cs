@@ -1,8 +1,8 @@
 ﻿/*******************************************
  * 
- *  Written by P. Büttiker (c) Summer 2011
+ *  Written by P. Büttiker
  *  
- * 
+ *  Last updated: December, 2012 
  * *****************************************
  * *****************************************/
 using System;
@@ -14,7 +14,7 @@ namespace Archimedes.Geometry
     /// <summary> 
     /// 2D Vector Type
     /// </summary>
-    public struct Vector2 : IEquatable<Vector2>
+    public struct Vector2 : IEquatable<Vector2>, IOrdered<Vector2>
     {
         #region Constructors
 
@@ -197,6 +197,18 @@ namespace Archimedes.Geometry
                 return new Vector2(this.X / scalar, this.Y / scalar);
             } else
                 return Vector2.Zero;
+        }
+
+        /// <summary>
+        ///  Calculates twice the signed area of the given triangle (p0, p1, p2)
+        /// </summary>
+        /// <param name="p0"></param>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        public static double Area2(Vector2 p0, Vector2 p1, Vector2 p2)
+        {
+            return p0.X * (p1.Y - p2.Y) + p1.X * (p2.Y - p0.Y) + p2.X * (p0.Y - p1.Y);
         }
 
 
@@ -404,6 +416,21 @@ namespace Archimedes.Geometry
 
         public override int GetHashCode() {
             return this.X.GetHashCode() ^ this.Y.GetHashCode();
+        }
+
+        #endregion
+
+        #region IOrdered
+
+        /// <summary>
+        /// Lexically check if the given Vector is less than this one
+        /// </summary>
+        /// <param name="o2"></param>
+        /// <returns></returns>
+        public bool Less(IOrdered<Vector2> o2)
+        {
+            var p2 = (Vector2)o2;
+            return X < p2.X || X == p2.X && Y < p2.Y;
         }
 
         #endregion

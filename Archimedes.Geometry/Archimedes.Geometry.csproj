@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Builder\ConvexHullBuilder.cs" />
     <Compile Include="Builder\PathConnector.cs" />
+    <Compile Include="IOrdered.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Extensions\BitmapBoundingBox.cs" />
