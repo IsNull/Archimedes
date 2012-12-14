@@ -472,7 +472,8 @@ namespace Archimedes.Geometry.Primitives
         public Polygon2 ToConvexPolygon() {
             var clone = this.Clone() as Polygon2;
             clone.Clear();
-            clone.AddRange(ConvexHullBuilder.Convexhull(this.ToVertices()).ToVertices());
+            var convexhull = ConvexHullBuilder.Convexhull(this.ToVertices());
+            clone.AddRange(convexhull.ToVertices());
             return clone;
         }
 

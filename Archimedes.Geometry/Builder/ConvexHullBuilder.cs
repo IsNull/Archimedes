@@ -3,7 +3,6 @@
 // Peter Sestoft (sestoft@itu.dk) * Java 2000-10-07, GC# 2001-10-27
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using Archimedes.Geometry.Primitives;
 
@@ -43,16 +42,16 @@ namespace Archimedes.Geometry.Builder
             Polysort.Quicksort<PointEx>(pts);
             PointEx left = pts[0], right = pts[N - 1];
             // Partition into lower hull and upper hull
-            CDLL<PointEx> lower = new CDLL<PointEx>(left), upper = new CDLL<PointEx>(left);
+            CircularDoublyLinkedList<PointEx> lower = new CircularDoublyLinkedList<PointEx>(left), upper = new CircularDoublyLinkedList<PointEx>(left);
             for (int i = 0; i < N; i++) {
                 double det = PointEx.Area2(left, right, pts[i]);
                 if (det > 0)
-                    upper = upper.Append(new CDLL<PointEx>(pts[i]));
+                    upper = upper.Append(new CircularDoublyLinkedList<PointEx>(pts[i]));
                 else if (det < 0)
-                    lower = lower.Prepend(new CDLL<PointEx>(pts[i]));
+                    lower = lower.Prepend(new CircularDoublyLinkedList<PointEx>(pts[i]));
             }
-            lower = lower.Prepend(new CDLL<PointEx>(right));
-            upper = upper.Append(new CDLL<PointEx>(right)).Next;
+            lower = lower.Prepend(new CircularDoublyLinkedList<PointEx>(right));
+            upper = upper.Append(new CircularDoublyLinkedList<PointEx>(right)).Next;
             // Eliminate points not on the hull
             eliminate(lower);
             eliminate(upper);
@@ -62,7 +61,7 @@ namespace Archimedes.Geometry.Builder
             if (upper.Prev.val.Equals(lower.val))
                 upper.Prev.Delete();
             // Join the lower and upper hull
-            PointEx[] res = new PointEx[lower.Size() + upper.Size()];
+            var res = new PointEx[lower.Size() + upper.Size()];
             lower.CopyInto(res, 0);
             upper.CopyInto(res, lower.Size());
             return new Polygon2(PointEx.ToVertices(res));
@@ -70,8 +69,8 @@ namespace Archimedes.Geometry.Builder
 
 
         // Graham's scan
-        private static void eliminate(CDLL<PointEx> start) {
-            CDLL<PointEx> v = start, w = start.Prev;
+        private static void eliminate(CircularDoublyLinkedList<PointEx> start) {
+            CircularDoublyLinkedList<PointEx> v = start, w = start.Prev;
             bool fwd = false;
             while (v.Next != start || !fwd) {
                 if (v.Next == w)
@@ -90,7 +89,7 @@ namespace Archimedes.Geometry.Builder
 
     // Points in the plane
 
-    class PointEx : Ordered<PointEx>
+    class PointEx : IOrdered<PointEx>
     {
         private static readonly Random rnd = new Random();
 
@@ -125,8 +124,8 @@ namespace Archimedes.Geometry.Builder
                     select (new PointEx(p.X,p.Y))).ToArray();
         }
 
-        public override bool Less(Ordered<PointEx> o2) {
-            PointEx p2 = (PointEx)o2;
+        public bool Less(IOrdered<PointEx> o2) {
+            var p2 = (PointEx)o2;
             return x < p2.x || x == p2.x && y < p2.y;
         }
 
@@ -138,108 +137,104 @@ namespace Archimedes.Geometry.Builder
 
     // ------------------------------------------------------------
 
-    // Circular doubly linked lists of T
-
-    class CDLL<T>
+    /// <summary>
+    /// Circular doubly linked lists of T
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    class CircularDoublyLinkedList<T>
     {
-        private CDLL<T> prev, next;     // not null, except in deleted elements
         public T val;
 
-        // A new CDLL node is a one-element circular list
-        public CDLL(T val) {
-            this.val = val; next = prev = this;
+        // A new CircularDoublyLinkedList node is a one-element circular list
+        public CircularDoublyLinkedList(T val) {
+            this.val = val; Next = Prev = this;
         }
 
-        public CDLL<T> Prev {
-            get { return prev; }
-        }
+        public CircularDoublyLinkedList<T> Prev { get; private set; }
 
-        public CDLL<T> Next {
-            get { return next; }
-        }
+        public CircularDoublyLinkedList<T> Next { get; private set; }
 
         // Delete: adjust the remaining elements, make this one point nowhere
         public void Delete() {
-            next.prev = prev; prev.next = next;
-            next = prev = null;
+            Next.Prev = Prev; Prev.Next = Next;
+            Next = Prev = null;
         }
 
-        public CDLL<T> Prepend(CDLL<T> elt) {
-            elt.next = this; elt.prev = prev; prev.next = elt; prev = elt;
+        public CircularDoublyLinkedList<T> Prepend(CircularDoublyLinkedList<T> elt) {
+            elt.Next = this; elt.Prev = Prev; Prev.Next = elt; Prev = elt;
             return elt;
         }
 
-        public CDLL<T> Append(CDLL<T> elt) {
-            elt.prev = this; elt.next = next; next.prev = elt; next = elt;
+        public CircularDoublyLinkedList<T> Append(CircularDoublyLinkedList<T> elt) {
+            elt.Prev = this; elt.Next = Next; Next.Prev = elt; Next = elt;
             return elt;
         }
 
         public int Size() {
             int count = 0;
-            CDLL<T> node = this;
+            var node = this;
             do {
                 count++;
-                node = node.next;
+                node = node.Next;
             } while (node != this);
             return count;
         }
 
         public void PrintFwd() {
-            CDLL<T> node = this;
+            var node = this;
             do {
                 Console.WriteLine(node.val);
-                node = node.next;
+                node = node.Next;
             } while (node != this);
             Console.WriteLine();
         }
 
         public void CopyInto(T[] vals, int i) {
-            CDLL<T> node = this;
+            var node = this;
             do {
                 vals[i++] = node.val;	// still, implicit checkcasts at runtime 
-                node = node.next;
+                node = node.Next;
             } while (node != this);
         }
     }
 
-    // ------------------------------------------------------------
+    #region Polysort
 
-    class Polysort
+    static class Polysort
     {
-        private static void swap<T>(T[] arr, int s, int t) {
+        private static void Swap<T>(T[] arr, int s, int t) {
             T tmp = arr[s]; arr[s] = arr[t]; arr[t] = tmp;
         }
 
         // Typed OO-style quicksort a la Hoare/Wirth
 
-        private static void qsort<T>(Ordered<T>[] arr, int a, int b) {
+        private static void Qsort<T>(IOrdered<T>[] arr, int a, int b) {
             // sort arr[a..b]
             if (a < b) {
                 int i = a, j = b;
-                Ordered<T> x = arr[(i + j) / 2];
+                IOrdered<T> x = arr[(i + j) / 2];
                 do {
                     while (arr[i].Less(x)) i++;
                     while (x.Less(arr[j])) j--;
                     if (i <= j) {
-                        swap<Ordered<T>>(arr, i, j);
+                        Swap<IOrdered<T>>(arr, i, j);
                         i++; j--;
                     }
                 } while (i <= j);
-                qsort<T>(arr, a, j);
-                qsort<T>(arr, i, b);
+                Qsort<T>(arr, a, j);
+                Qsort<T>(arr, i, b);
             }
         }
 
-        public static void Quicksort<T>(Ordered<T>[] arr) {
-            qsort<T>(arr, 0, arr.Length - 1);
+        public static void Quicksort<T>(IOrdered<T>[] arr) {
+            Qsort<T>(arr, 0, arr.Length - 1);
         }
     }
 
-    public abstract class Ordered<T>
+    public interface IOrdered<T>
     {
-        public abstract bool Less(Ordered<T> that);
+        bool Less(IOrdered<T> that);
     }
 
-    // ------------------------------------------------------------
-
+    #endregion
 }
