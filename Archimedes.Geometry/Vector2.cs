@@ -3,6 +3,9 @@
  *  Written by P. Büttiker
  *  
  *  Last updated: December, 2012 
+ *  
+ * TODO: Use type double for more precision
+ * TODO: Make Vector2 unmodifyable struct
  * *****************************************
  * *****************************************/
 using System;
@@ -276,11 +279,12 @@ namespace Archimedes.Geometry
         /// 
         /// </summary>
         /// <param name="LEFT">The desired Direction of the new orthogonal Vector</param>
+        /// <param name="direction"> </param>
         /// <returns></returns>
-        public Vector2 GetOrthogonalVector(Direction Direction) {
+        public Vector2 GetOrthogonalVector(Direction direction) {
             // Crossproduct as unary operator (getting orthogonal)
             Vector2 orthVector = new Vector2();
-            if (Direction == Direction.LEFT) {
+            if (direction == Direction.LEFT) {
                 orthVector.X = this.Y * (-1);
                 orthVector.Y = this.X;
             } else { // RIGHT
@@ -342,7 +346,7 @@ namespace Archimedes.Geometry
         public float GetAngle2X() {
 
             float degree;
-            Vector2 xVector = new Vector2(1, 0); // X-Vector
+            var xVector = Vector2.UnitX;
 
             degree = MathHelper.ToDegree((float)Math.Acos(this.DotP(xVector) / this.Lenght));
             if (this.Y < 0) {
@@ -372,15 +376,15 @@ namespace Archimedes.Geometry
         /// Returns Angle between two vectors. 
         /// The Angle is calculated from this vector until to the Destination Vector.
         /// </summary>
-        /// <param name="B"></param>
-        /// <param name="Direction">RIGHT = Clockwise, LEFT = other direction</param>
+        /// <param name="b"></param>
+        /// <param name="direction">RIGHT = Clockwise, LEFT = other direction</param>
         /// <returns>0° - 360° Angle in degree</returns>
-        public float GetAngleBetweenClockWise(Vector2 B, Direction Direction) {
+        public float GetAngleBetweenClockWise(Vector2 b, Direction direction) {
             float theta;
 
-            theta = GetAngle2V(B);
+            theta = GetAngle2V(b);
 
-            if (((this.Y * B.X - this.X * B.Y) > 0) == (Direction == Direction.RIGHT)) {
+            if (((this.Y * b.X - this.X * b.Y) > 0) == (direction == Direction.RIGHT)) {
                 return theta;
             } else {
                 return 360 - theta;

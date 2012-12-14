@@ -28,6 +28,9 @@ namespace Archimedes.Geometry.Builder
     ///
     /// Code bases upon Peter Sestoft (sestoft@itu.dk) reference implementation
     /// * Java 2000-10-07
+    /// 
+    /// Further modifications and tuning by P. Büttiker 2010-2012
+    /// 
     /// </summary>
     public class ConvexHullBuilder
     {
