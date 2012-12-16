@@ -9,7 +9,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
 {
     public class PolygonSmallestWidthBoundingBoxAlgorythm : PolygonSmallestBoundingBoxAlgorythm
     {
-        Aerea? _bestRectDimension;
+        Area? _bestRectDimension;
 
         protected override bool IsCurrentRectangleTheBest() {
             bool isBetter = false;
@@ -22,7 +22,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
             var vy1 = _currentRectangle[1].Y - _currentRectangle[2].Y;
             var len1 = Math.Sqrt(vx1 * vx1 + vy1 * vy1);
             
-            var thisRectDim = Aerea.Create(len0, len1);
+            var thisRectDim = Area.Create(len0, len1);
 
             if (_bestRectDimension.HasValue) {
                 if (_bestRectDimension.Value.Width > thisRectDim.Width) {
@@ -37,9 +37,9 @@ namespace Archimedes.Geometry.Primitives.Bounds
         }
 
 
-        struct Aerea
+        struct Area
         {
-            private Aerea(double lenght, double width)
+            private Area(double lenght, double width)
             {
                 Lenght = lenght;
                 Width = width;
@@ -49,14 +49,14 @@ namespace Archimedes.Geometry.Primitives.Bounds
             public double Width;
 
             /// <summary>
-            /// Create the Aerea Struct from given 2 numbers
+            /// Create the Area Struct from given 2 numbers
             /// </summary>
             /// <param name="n1"></param>
             /// <param name="n2"></param>
             /// <returns></returns>
-            public static Aerea Create(double n1, double n2)
+            public static Area Create(double n1, double n2)
             {
-                return (n1 >= n2) ? new Aerea(n1, n2) : new Aerea(n2, n1);
+                return (n1 >= n2) ? new Area(n1, n2) : new Area(n2, n1);
             }
         }
 
