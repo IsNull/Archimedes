@@ -32,6 +32,13 @@ namespace Archimedes.Genetics
             get { return _populationMembers.Count; }
         }
 
+
+        public void SortDescending()
+        {
+            _populationMembers.Sort();
+            _populationMembers.Reverse();
+        }
+
         /// <summary>
         /// Gets the Generation of this population
         /// </summary>

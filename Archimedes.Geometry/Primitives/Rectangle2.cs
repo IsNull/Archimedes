@@ -105,31 +105,41 @@ namespace Archimedes.Geometry.Primitives
             _height = vH.Lenght;
         }
 
-        public Rectangle2(float x, float y, float uwidth, float uheight, float angle = 0 ) {
+        public Rectangle2(double x, double y, double uwidth, double uheight, double angle = 0)
+        {
             _width = uwidth;
             _height = uheight;
             this.Location = new Vector2(x, y);
             this.Angle = angle;
         }
-        public Rectangle2(Vector2 uLocation, SizeF uSize, float angle = 0) {
+        public Rectangle2(Vector2 uLocation, SizeF uSize, double angle = 0)
+        {
             this.Size = uSize;
             this.Location = uLocation;
             this.Angle = angle;
         }
 
-        public Rectangle2(RectangleF uRectF, float angle = 0) {
+        public Rectangle2(RectangleF uRectF, double angle = 0)
+        {
             this.Size = uRectF.Size;
             this.Location = uRectF.Location;
             this.Angle = angle;
         }
-        public Rectangle2(Rectangle2 prototype, float angle = 0) {
-            Prototype(prototype, angle); 
+
+        public Rectangle2(Rectangle2 prototype)
+            : this(prototype, prototype.Angle)
+        {
         }
 
-        
-        public void Prototype(Rectangle2 prototype, float angle) {
+        public Rectangle2(Rectangle2 prototype, double angle)
+        {
+            Prototype(prototype, angle);
+        }
+
+        public void Prototype(Rectangle2 prototype, double angle)
+        {
             Prototype(prototype);
-            this.Angle += angle;
+            this.Angle = angle;
         }
 
         public void Prototype(IGeometryBase iprototype) {

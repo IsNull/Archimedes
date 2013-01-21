@@ -213,14 +213,14 @@ namespace Archimedes.Geometry.Primitives
                 B = (A + 1) % num_points;
                 C = (B + 1) % num_points;
 
-                var cross_product =
+                var crossProduct =
                     CrossProductLength(
                         _vertices[A].X, _vertices[A].Y,
                         _vertices[B].X, _vertices[B].Y,
                         _vertices[C].X, _vertices[C].Y);
-                if (cross_product < 0) {
+                if (crossProduct < 0) {
                     got_negative = true;
-                } else if (cross_product > 0) {
+                } else if (crossProduct > 0) {
                     got_positive = true;
                 }
                 if (got_negative && got_positive) return false;
@@ -240,15 +240,17 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="p">The Point to check</param>
         /// <returns>True if the Point is contained in the Polygon</returns>
         public bool Contains(Vector2 p) {
+
+
+            if (!this.BoundingCircle.Contains(p)) {
+                return false;
+            }
+
             int counter = 0;
             int i;
             double xinters;
             Vector2 p1, p2;
             int N = _vertices.Count;
-
-            if (!this.BoundingCircle.Contains(p)) {
-                return false;
-            }
 
             p1 = _vertices[0];
             for (i = 1; i <= N; i++) {
@@ -275,12 +277,14 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="poly"></param>
         /// <returns></returns>
         public bool Contains(Polygon2 poly) {
-            foreach (var vertex in poly.ToVertices()) {
-                if (!this.Contains(vertex))
-                    return false;
-            }
-            return true;
+            return Contains(poly.ToVertices());
         }
+
+        public bool Contains(Vertices vertices)
+        {
+            return vertices.All(this.Contains);
+        }
+
 
         public bool IntersectsWith(IGeometryBase other) {
             IEnumerable<Vector2> collisionPoints;
@@ -315,9 +319,13 @@ namespace Archimedes.Geometry.Primitives
             return (collisionPoints.Count() != 0);
         }
 
+        /// <summary>
+        /// Gets the bounding circle of this polygon
+        /// </summary>
         public Circle2 BoundingCircle {
             get {
-                if(_boundCircleChanged) {
+                if (_boundingCircle == null || _boundCircleChanged)
+                {
                     double dist;
                     var middlePoint = this.MiddlePoint;
                     double longestDist = 0;
@@ -521,7 +529,9 @@ namespace Archimedes.Geometry.Primitives
             return new Polygon2(this);
         }
 
-
+        /// <summary>
+        /// Gets the BoundingBox (Axis Parallel) of this Polygon
+        /// </summary>
         public RectangleF BoundingBox {
             get { return _vertices.BoundingBox; }
         }

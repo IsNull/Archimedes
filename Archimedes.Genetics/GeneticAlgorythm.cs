@@ -2,34 +2,81 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Archimedes.Genetics
 {
     /// <summary>
     /// Encapsulates the toplevel logic of the genetic algorythm
-    /// 
+    /// Subclasses specialize the algorythm to solve the actual problem
     /// </summary>
     public abstract class GeneticAlgorythm<T> where T : Candidate
     {
+        #region Fields
+
+        protected Random Random = new Random();
+
         private int _generation = 0;
+        private double _mutationProbability = 0.9;
+        private double _recombinationProbability = 0.9;
+        private int _maxGeneration = 50;
+        private int _maxPopulation = 100;
+
+        #endregion
+
+        public event EventHandler GenerationDoneEvent;
+
+        public int Generation
+        {
+            get { return _generation; }
+        }
+
+        public virtual void Reset()
+        {
+            _generation = 0;
+            BestCandidate = null;
+            CurrentPopulation = null;
+        }
+
 
         /// <summary>
         /// Start the evolution with the given initial population
         /// </summary>
         /// <param name="initialPopulation"></param>
-        public void StartEvolution(List<T> initialPopulation)
+        /// <param name="cancellationToken"> </param>
+        public void StartEvolution(IEnumerable<T> initialPopulation, CancellationToken cancellationToken)
         {
             CurrentPopulation = new Population<T>(0, initialPopulation);
 
             while (!IsAbort())
             {
-                CurrentPopulation =  CreateNewPopulationGeneration();
+                CurrentPopulation = CreateNewPopulationGeneration(CurrentPopulation.GetSnapShot());
+
                 // calculate fitness
 
                 foreach (var candidate in CurrentPopulation)
                 {
                     candidate.Fitness = CalculateFitness(candidate);
+                }
+                CurrentPopulation.SortDescending();
+
+
+                // remember the best candidate so far
+
+                var populationSuccessor = CurrentPopulation.FirstOrDefault();
+                if(populationSuccessor != null)
+                {
+                    if (BestCandidate == null || BestCandidate.Fitness < populationSuccessor.Fitness)
+                        BestCandidate = populationSuccessor;
+                }
+
+                if (GenerationDoneEvent != null)
+                    GenerationDoneEvent(this, EventArgs.Empty);
+
+                if(cancellationToken.IsCancellationRequested)
+                {
+                    break;
                 }
             }
         }
@@ -38,14 +85,19 @@ namespace Archimedes.Genetics
         /// Creates a new generation of population
         /// </summary>
         /// <returns></returns>
-        protected virtual Population<T> CreateNewPopulationGeneration()
+        protected virtual Population<T> CreateNewPopulationGeneration(IEnumerable<T> parents)
         {
             //  selection
-            var newPopulation = Selection(CurrentPopulation.GetSnapShot());
+            var newPopulation = Selection(parents).ToList();
+
+            int count = newPopulation.Count();
+            //Console.WriteLine("population count" + count + "max population:" +  MaxPopulation);
+
             // recombination
-            newPopulation = Recombination(newPopulation);
+            newPopulation = Recombination(newPopulation).ToList();
+
             // mutation
-            newPopulation = Mutation(newPopulation);
+            newPopulation = Mutation(newPopulation).ToList();
 
             return new Population<T>(++_generation, newPopulation);
         }
@@ -62,14 +114,52 @@ namespace Archimedes.Genetics
         /// </summary>
         /// <param name="currentPopulation"></param>
         /// <returns></returns>
-        protected abstract IEnumerable<T> Recombination(IEnumerable<T> currentPopulation);
+        protected virtual IEnumerable<T> Recombination(IEnumerable<T> currentPopulation)
+        {
+            var population = currentPopulation.ToList();
+            var pop = new List<T>(population);
+
+            if (population.Count > 2)
+            {
+                foreach (var candidate in population)
+                {
+                    if (Random.NextDouble() < RecombinationProbability)
+                    {
+                        pop.Add(Recombine(candidate, population[Random.Next(0, population.Count)]));
+                    }
+                }
+            }
+
+            return pop;
+        }
 
         /// <summary>
-        /// Mutate existing, add new mutated
+        /// Mutate existing as new mutated candidates
         /// </summary>
         /// <param name="currentPopulation"></param>
         /// <returns></returns>
-        protected abstract IEnumerable<T> Mutation(IEnumerable<T> currentPopulation); 
+        protected virtual IEnumerable<T> Mutation(IEnumerable<T> currentPopulation)
+        {
+            var population = currentPopulation.ToList();
+
+            var pop = new List<T>(population);
+
+
+            foreach (var candidate in population)
+            {
+                if(Random.NextDouble() < MutationProbability)
+                {
+                    pop.Add(Mutate(candidate));
+                }
+            }
+
+
+            return pop;
+        }
+
+        public abstract T Mutate(T candidate);
+
+        public abstract T Recombine(T parent1, T parent2);
 
         /// <summary>
         /// Do we have to abort the evolution?
@@ -80,12 +170,45 @@ namespace Archimedes.Genetics
             return CurrentPopulation == null || CurrentPopulation.Generation >= MaxGeneration || CurrentPopulation.Count == 0;
         }
 
-        public int MaxGeneration { get; set; }
+
+        /// <summary>
+        /// Gets the best Candidate
+        /// </summary>
+        public T BestCandidate { get; set; }
+
+
+        /// <summary>
+        /// Maximum generation in evolution
+        /// </summary>
+        public int MaxGeneration
+        {
+            get { return _maxGeneration; }
+            set { _maxGeneration = value; }
+        }
+
+        /// <summary>
+        /// The size of a Population
+        /// </summary>
+        public int MaxPopulation
+        {
+            get { return _maxPopulation; }
+            set { _maxPopulation = value; }
+        }
 
         /// <summary>
         /// 
         /// </summary>
-        public int PopulationSize { get; set; }
+        public double MutationProbability
+        {
+            get { return _mutationProbability; }
+            set { _mutationProbability = value; }
+        }
+
+        public double RecombinationProbability
+        {
+            get { return _recombinationProbability; }
+            set { _recombinationProbability = value; }
+        }
 
         /// <summary>
         /// Gets the current population

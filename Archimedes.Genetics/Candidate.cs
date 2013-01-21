@@ -11,12 +11,32 @@ namespace Archimedes.Genetics
     /// </summary>
     public abstract class Candidate : IComparable<Candidate>
     {
-        private Dictionary<Allel, double> _gen;
 
-        protected Candidate(Dictionary<Allel, double> gen)
+
+
+        protected Candidate()
         {
-            _gen = gen;
+
         }
+
+
+
+        public abstract double GetAllelValue(Allel allel);
+
+        public abstract void SetAllelValue(Allel allel, double value);
+   
+
+        public virtual void Prototype(Candidate prototype)
+        {
+            
+        }
+
+
+        /// <summary>
+        /// Gets all allels (gen properties)
+        /// </summary>
+        public abstract Allel[] Allels { get; }
+
 
         /// <summary>
         /// Gets the Fitness of this candidate
@@ -31,5 +51,10 @@ namespace Archimedes.Genetics
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return "Fitness: " + Fitness;
+        }
     }
 }
