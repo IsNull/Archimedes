@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes", "Archimedes\Archimedes.csproj", "{60DBCF96-F3D4-46C4-A399-AC08E4874BD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns", "Archimedes.Patterns\Archimedes.Patterns.csproj", "{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}"
@@ -29,6 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPFThemes", "WPFThemes", "{
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.Themes", "WPFThemes\WPF.Themes\WPF.Themes.csproj", "{5CFE766A-C920-437A-8BBB-B227BC163259}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Genetics", "Archimedes.Genetics\Archimedes.Genetics.csproj", "{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -150,6 +152,16 @@ Global
 		{5CFE766A-C920-437A-8BBB-B227BC163259}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5CFE766A-C920-437A-8BBB-B227BC163259}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5CFE766A-C920-437A-8BBB-B227BC163259}.Release|x86.ActiveCfg = Release|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
