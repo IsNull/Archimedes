@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Drawing;
@@ -131,6 +132,7 @@ namespace Archimedes.Geometry
         public void RemoveAt(int index) {
             _vertices.RemoveAt(index);
         }
+
 
         public Vector2 this[int index] {
             get {

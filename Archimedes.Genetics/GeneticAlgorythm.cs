@@ -21,7 +21,7 @@ namespace Archimedes.Genetics
         private double _mutationProbability = 0.9;
         private double _recombinationProbability = 0.9;
         private int _maxGeneration = 50;
-        private int _maxPopulation = 100;
+        private int _maxPopulation = 500;
 
         #endregion
 
@@ -55,12 +55,12 @@ namespace Archimedes.Genetics
 
                 // calculate fitness
 
-                foreach (var candidate in CurrentPopulation)
-                {
-                    candidate.Fitness = CalculateFitness(candidate);
-                }
-                CurrentPopulation.SortDescending();
+                CurrentPopulation.AsParallel().ForAll(CalculateFitness);
 
+
+                CurrentPopulation.SortDescending();
+                // trim population
+                CurrentPopulation = new Population<T>(CurrentPopulation.Generation, Selection(CurrentPopulation.GetSnapShot()));
 
                 // remember the best candidate so far
 
@@ -221,7 +221,7 @@ namespace Archimedes.Genetics
         /// </summary>
         /// <param name="candidate"></param>
         /// <returns></returns>
-        protected abstract double CalculateFitness(T candidate);
+        protected abstract void CalculateFitness(T candidate);
 
     }
 }

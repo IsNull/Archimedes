@@ -141,8 +141,11 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
             return newCandidate;
         }
 
-        protected override double CalculateFitness(SquareCandidate candidate)
+        protected override void CalculateFitness(SquareCandidate candidate)
         {
+
+            if (candidate.Fitness.HasValue) return;
+
             double fitness = 0;
 
             var vertices = candidate.Geometry.ToVertices();
@@ -155,7 +158,7 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
                 candidate.IsOutside = true;
             }
 
-            return fitness;
+            candidate.Fitness = fitness;
         }
 
         #endregion

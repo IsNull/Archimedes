@@ -12,13 +12,10 @@ namespace Archimedes.Genetics
     public abstract class Candidate : IComparable<Candidate>
     {
 
-
-
         protected Candidate()
         {
 
         }
-
 
 
         public abstract double GetAllelValue(Allel allel);
@@ -40,14 +37,20 @@ namespace Archimedes.Genetics
 
         /// <summary>
         /// Gets the Fitness of this candidate
+        /// Fitness will be null until it has been calculated
         /// </summary>
-        public double Fitness { get; internal set; }
+        public double? Fitness { get; set; }
+
+
+
 
         #region Implementation of IComparable<in Candidate>
 
         public int CompareTo(Candidate other)
         {
-            return this.Fitness.CompareTo(other.Fitness);
+            if (this.Fitness.HasValue)
+                return this.Fitness.Value.CompareTo(other.Fitness);
+            return -1;
         }
 
         #endregion
