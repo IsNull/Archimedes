@@ -166,7 +166,7 @@ namespace Archimedes.Genetics
 
         public abstract T Mutate(T candidate);
 
-        public abstract T Recombine(T parent1, T parent2);
+        public abstract T Recombine(T parent1, T submissive);
 
         /// <summary>
         /// Do we have to abort the evolution?

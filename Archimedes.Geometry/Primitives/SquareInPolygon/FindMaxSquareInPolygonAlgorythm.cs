@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using Archimedes.Genetics;
 using Archimedes.Genetics.Mutators;
+using Archimedes.Genetics.Recombinator;
 
 namespace Archimedes.Geometry.Primitives.SquareInPolygon
 {
@@ -90,32 +91,20 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         /// Recombine two candidates into a new candidate
         /// </summary>
         /// <param name="dominator">the stronger parent</param>
-        /// <param name="slave">the weaker parent</param>
+        /// <param name="submissive">the weaker parent</param>
         /// <returns></returns>
-        public override SquareCandidate Recombine(SquareCandidate dominator, SquareCandidate slave)
+        public override SquareCandidate Recombine(SquareCandidate dominator, SquareCandidate submissive)
         {
-            var child = new SquareCandidate();
-
             // check if the dominators fitness is really better 
             // if not, swap them
-            if (dominator.Fitness < slave.Fitness) 
+            if (dominator.Fitness < submissive.Fitness) 
             {   // adjust the slots
                 SquareCandidate tmp = dominator;
-                dominator = slave;
-                slave = dominator;
+                dominator = submissive;
+                submissive = dominator;
             }
 
-            // now apply each allel from either the dominator or the slave parent
-            foreach (var allel in dominator.Allels)
-            {
-                // genes of the successor parent are dominating
-                // we simulate this with a monte carlo selection
-                // 75% chance that the dominators allel is used
-
-                double value = (Random.NextDouble() < 0.75) ? dominator.GetAllelValue(allel) : slave.GetAllelValue(allel);
-                child.SetAllelValue(allel, value); 
-            }
-            return child;
+            return GenericRecombinator.RecombinateSoft(dominator, submissive);
         }
 
 
