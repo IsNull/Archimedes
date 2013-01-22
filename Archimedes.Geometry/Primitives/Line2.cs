@@ -237,16 +237,33 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Explodes a Rectangle into the 4 border lines and returns an array of lines
         /// </summary>
-        /// <param name="Rect"></param>
+        /// <param name="rect"></param>
         /// <returns>Line2d List<></returns>
-        public static Line2[] RectExplode(RectangleF Rect) {
-            var Sides = new Line2[4];
-            Sides[0] = new Line2(Rect.X, Rect.Y, Rect.X + Rect.Width, Rect.Y);                                 // upper horz line
-            Sides[1] = new Line2(Rect.X, Rect.Y + Rect.Height, Rect.X + Rect.Width, Rect.Y + Rect.Height);     // lower horz line
-            Sides[2] = new Line2(Rect.X, Rect.Y, Rect.X, Rect.Y + Rect.Height);                                // left  vert line
-            Sides[3] = new Line2(Rect.X + Rect.Width, Rect.Y, Rect.X + Rect.Width, Rect.Y + Rect.Height);      // right  vert line
-            return Sides;
+        public static Line2[] RectExplode(RectangleF rect) {
+            var sides = new Line2[4];
+            sides[0] = new Line2(rect.X, rect.Y, rect.X + rect.Width, rect.Y);                                 // upper horz line
+            sides[1] = new Line2(rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);     // lower horz line
+            sides[2] = new Line2(rect.X, rect.Y, rect.X, rect.Y + rect.Height);                                // left  vert line
+            sides[3] = new Line2(rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);      // right  vert line
+            return sides;
         }
+
+        /// <summary>
+        /// Buils lines from the vertices
+        /// </summary>
+        /// <param name="vertices">The vertices - they must be ordered as the lines shall be created</param>
+        /// <returns></returns>
+        public static IEnumerable<Line2> LinesFromVertices(Vertices vertices)
+        {
+            if (vertices.Count > 1)
+            {
+                for (int i = 0; i < vertices.Count - 1; i++)
+                {
+                    yield return new Line2(vertices[i], vertices[i + 1]);
+                }
+            }
+        }
+
 
         public Vector2 ToVector() {
             return new Vector2(this.Start, this.End);
@@ -343,9 +360,9 @@ namespace Archimedes.Geometry.Primitives
             set { _pen = value; }
         }
 
-        public void Draw(Graphics G) {
+        public void Draw(Graphics g) {
             if (this.Pen != null && !Start.Equals(End))
-                G.DrawLine(this.Pen, this.Start, this.End);
+                g.DrawLine(this.Pen, this.Start, this.End);
         }
 
         #endregion

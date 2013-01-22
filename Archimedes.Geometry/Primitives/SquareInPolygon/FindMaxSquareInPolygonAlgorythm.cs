@@ -144,13 +144,14 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         protected override void CalculateFitness(SquareCandidate candidate)
         {
 
+            // was the fitness already calculated?
             if (candidate.Fitness.HasValue) return;
 
             double fitness = 0;
 
-            var vertices = candidate.Geometry.ToVertices();
+            var rectPoly = candidate.Geometry.ToPolygon2();
 
-            if (_polygon.Contains(vertices))
+            if (_polygon.Contains(rectPoly))
             {
                 fitness = candidate.Geometry.Width;
             }else

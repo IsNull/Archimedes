@@ -7,14 +7,19 @@ using System.Drawing;
 
 namespace Archimedes.Geometry
 {
-    public class Vertices : IList<Vector2>, IEnumerable<Vector2>
+    public class Vertices : IList<Vector2>
     {
-        List<Vector2> _vertices;
+        readonly List<Vector2> _vertices;
 
         #region Constructor
 
         public Vertices() {
             _vertices = new List<Vector2>();
+        }
+
+        public Vertices(int capacity)
+        {
+            _vertices = new List<Vector2>(capacity);
         }
 
         public Vertices(IEnumerable<Vector2> vertices) {
