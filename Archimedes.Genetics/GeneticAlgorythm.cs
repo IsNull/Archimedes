@@ -47,7 +47,14 @@ namespace Archimedes.Genetics
         /// <param name="cancellationToken"> </param>
         public void StartEvolution(IEnumerable<T> initialPopulation, CancellationToken cancellationToken)
         {
+            
             CurrentPopulation = new Population<T>(0, initialPopulation);
+            CurrentPopulation.AsParallel().ForAll(CalculateFitness);
+
+
+            if (GenerationDoneEvent != null)
+                GenerationDoneEvent(this, EventArgs.Empty);
+
 
             while (!IsAbort())
             {
