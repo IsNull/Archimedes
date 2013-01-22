@@ -41,7 +41,6 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
             _boundingBox = _polygon.BoundingBox;
 
             AdjustAllels();
-
         }
 
 
@@ -68,7 +67,7 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         /// <returns></returns>
         public Rectangle2 FindMaxSquare(CancellationToken cancellationToken)
         {
-            StartEvolution(new[] { GodLike() }, cancellationToken);
+            StartEvolution(GodLikePopulation(), cancellationToken);
             return BestCandidate != null ? BestCandidate.Geometry : null;
         }
 
@@ -82,7 +81,7 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
             //
 
             return (from c in currentPopulation
-                    where !c.IsOutside
+                    //where !c.IsOutside // we may remove all candidates which are no valid solutions
                     orderby c descending 
                     select c).Take(MaxPopulation);
         }
@@ -90,20 +89,23 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         /// <summary>
         /// Recombine two candidates into a new candidate
         /// </summary>
-        /// <param name="parent1"></param>
-        /// <param name="parent2"></param>
+        /// <param name="dominator">the stronger parent</param>
+        /// <param name="slave">the weaker parent</param>
         /// <returns></returns>
         public override SquareCandidate Recombine(SquareCandidate dominator, SquareCandidate slave)
         {
             var child = new SquareCandidate();
 
-            if (dominator.Fitness < slave.Fitness) // check if the dominator is really correct 
+            // check if the dominators fitness is really better 
+            // if not, swap them
+            if (dominator.Fitness < slave.Fitness) 
             {   // adjust the slots
                 SquareCandidate tmp = dominator;
                 dominator = slave;
                 slave = dominator;
             }
 
+            // now apply each allel from either the dominator or the slave parent
             foreach (var allel in dominator.Allels)
             {
                 // genes of the successor parent are dominating
@@ -134,16 +136,47 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         /// you guessed it from the name - this method creates a new candidate without any "parents"
         /// </summary>
         /// <returns></returns>
-        public SquareCandidate GodLike()
+        private SquareCandidate GodLike()
         {
             // that we don't create something completly useless, we base our new candidate on the middlepoint of the polygon
             var newCandidate = new SquareCandidate(_center, _areaSqrt / 10, 0);
             return newCandidate;
         }
 
+        /// <summary>
+        /// Returns an initial population - fills the whole world
+        /// </summary>
+        /// <returns></returns>
+        private  IEnumerable<SquareCandidate> GodLikePopulation()
+        {
+            var world = _boundingBox;
+            double size = _areaSqrt / 10d;
+            double sizeHalf = size / 2d;
+            int columns = (int)world.Width / (int)size;
+            int rows = (int)world.Height / (int)size;
+
+            var population = new SquareCandidate[columns * rows];
+
+            int z = 0;
+            for (int i = 0; i < columns; i++)
+            {
+                for (int j = 0; j < rows; j++)
+                {
+                    population[z++] = new SquareCandidate(
+                        new Vector2(
+                            i * size + sizeHalf + world.X,
+                            j * size + sizeHalf + world.Y),
+                        size,
+                        0);
+                }
+            }
+
+            return population;
+        }
+
+
         protected override void CalculateFitness(SquareCandidate candidate)
         {
-
             // was the fitness already calculated?
             if (candidate.Fitness.HasValue) return;
 
@@ -151,11 +184,13 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
 
             var rectPoly = candidate.Geometry.ToPolygon2();
 
-            if (_polygon.Contains(rectPoly))
+            fitness = candidate.Geometry.Width;
+
+            if (!_polygon.Contains(rectPoly))
             {
-                fitness = candidate.Geometry.Width;
-            }else
-            {
+                // the candidate is not fully inside the polygon
+                // we have to reduce the fitness dramatically
+                fitness = candidate.Geometry.Width * 0.001;
                 candidate.IsOutside = true;
             }
 
