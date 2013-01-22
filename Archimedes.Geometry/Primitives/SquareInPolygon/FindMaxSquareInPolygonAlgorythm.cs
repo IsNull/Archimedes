@@ -16,13 +16,26 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
     /// </summary>
     public class FindMaxSquareInPolygonAlgorythm : GeneticAlgorythm<SquareCandidate>
     {
+        #region Fields
+
         private Polygon2 _polygon;
         private Vector2 _center;
         private double _area;
         private double _areaSqrt;
         private RectangleF _boundingBox;
+        private double _minMutationPitch = 0.5;
 
-        
+        #endregion
+
+        /// <summary>
+        /// Minimal allowed mutation pitch for standard mutations
+        /// </summary>
+        public double MinMutationPitch
+        {
+            get { return _minMutationPitch; }
+            set { _minMutationPitch = value; }
+        }
+
 
         [DebuggerStepThrough]
         public void SetPolygon(Polygon2 polygon)
@@ -82,7 +95,6 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
             //
 
             return (from c in currentPopulation
-                    //where !c.IsOutside // we may remove all candidates which are no valid solutions
                     orderby c descending 
                     select c).Take(MaxPopulation);
         }
@@ -104,8 +116,9 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
                 submissive = dominator;
             }
 
-            return GenericRecombinator.RecombinateSoft(dominator, submissive);
+            return GenericRecombinator.RecombinateSoft(dominator, submissive, () => new SquareCandidate(Generation));
         }
+
 
 
         /// <summary>
@@ -116,10 +129,16 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         public override SquareCandidate Mutate(SquareCandidate candidate)
         {
             var mutationTarget = GenericAlleleMutator.PickRandomAllel(candidate);
-            var mutant =  GenericAlleleMutator.MutateRandom(candidate, mutationTarget);
+            var mutant = GenericAlleleMutator.MutateSlightlyRandom(
+                candidate, 
+                mutationTarget, 
+                ChildCurrentGenerationCreator, 
+                Math.Max(MinMutationPitch,Random.NextDouble()));
 
             return mutant;
         }
+
+
 
         /// <summary>
         /// you guessed it from the name - this method creates a new candidate without any "parents"
@@ -128,7 +147,7 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         private SquareCandidate GodLike()
         {
             // that we don't create something completly useless, we base our new candidate on the middlepoint of the polygon
-            var newCandidate = new SquareCandidate(_center, _areaSqrt / 10, 0);
+            var newCandidate = new SquareCandidate(Generation,_center, _areaSqrt / 10, 0);
             return newCandidate;
         }
 
@@ -152,6 +171,7 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
                 for (int j = 0; j < rows; j++)
                 {
                     population[z++] = new SquareCandidate(
+                        Generation,
                         new Vector2(
                             i * size + sizeHalf + world.X,
                             j * size + sizeHalf + world.Y),
@@ -159,7 +179,6 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
                         0);
                 }
             }
-
             return population;
         }
 
@@ -179,11 +198,16 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
             {
                 // the candidate is not fully inside the polygon
                 // we have to reduce the fitness dramatically
-                fitness = candidate.Geometry.Width * 0.001;
+                fitness = 0; //candidate.Geometry.Width * 0.001;
                 candidate.IsOutside = true;
             }
 
             candidate.Fitness = fitness;
+        }
+
+        protected override Func<SquareCandidate> ChildCurrentGenerationCreator
+        {
+            get { return () => new SquareCandidate(Generation);}
         }
 
         #endregion

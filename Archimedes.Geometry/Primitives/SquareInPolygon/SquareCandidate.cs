@@ -40,17 +40,24 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
 
         #region Constructors
 
-        public SquareCandidate()
+        /// <summary>
+        /// Create a new Candidate from the given generation
+        /// </summary>
+        /// <param name="originGeneration"></param>
+        public SquareCandidate(int originGeneration)
+            : base(originGeneration)
         {
             _rectangle = new Rectangle2();
         }
 
-        public SquareCandidate(SquareCandidate prototype)
+        public SquareCandidate(int originGeneration, SquareCandidate prototype)
+            : base(originGeneration)
         {
             _rectangle = new Rectangle2(prototype.Geometry);
         }
 
-        public SquareCandidate(Vector2 middlePoint, double size, double rotation)
+        public SquareCandidate(int originGeneration, Vector2 middlePoint, double size, double rotation)
+            : base(originGeneration)
         {
             _rectangle = new Rectangle2()
                             {
@@ -76,7 +83,6 @@ namespace Archimedes.Geometry.Primitives.SquareInPolygon
         public void Prototype(SquareCandidate prototype)
         {
             _rectangle.Prototype(prototype.Geometry);
-            base.Prototype(prototype);
         }
 
 

@@ -33,10 +33,15 @@ namespace Archimedes.Genetics
         }
 
 
-        public void SortDescending()
+        public virtual void SortDescending()
         {
-            _populationMembers.Sort();
-            _populationMembers.Reverse();
+            SortDescending(_populationMembers);
+        }
+
+        public static void SortDescending(List<T> populationCandidates)
+        {
+            populationCandidates.Sort();
+            populationCandidates.Reverse();
         }
 
         /// <summary>

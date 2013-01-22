@@ -16,8 +16,6 @@ namespace Archimedes.Genetics.Recombinator
         private const double DEFAULT_DOMINATOR_ALLEL_PROBABILITY = 0.75;
 
 
-
-
         /// <summary>
         /// Hard recombination of two candidates. 
         /// This mens that either the allel value of the dominator or the submissive is applied.
@@ -26,11 +24,12 @@ namespace Archimedes.Genetics.Recombinator
         /// <typeparam name="T"></typeparam>
         /// <param name="dominator"></param>
         /// <param name="submissive"></param>
+        /// <param name="childCreator"> </param>
         /// <param name="dominatorAllelProbability"></param>
         /// <returns></returns>
-        public static T RecombinateHard<T>(T dominator, T submissive, double dominatorAllelProbability = DEFAULT_DOMINATOR_ALLEL_PROBABILITY) where T : Candidate, new()
+        public static T RecombinateHard<T>(T dominator, T submissive, Func<T> childCreator, double dominatorAllelProbability = DEFAULT_DOMINATOR_ALLEL_PROBABILITY) where T : Candidate
         {
-            var child = new T();
+            var child = childCreator();
 
             // apply each allel from either the dominator or the submissive parent
             foreach (var allel in dominator.Allels)
@@ -53,11 +52,13 @@ namespace Archimedes.Genetics.Recombinator
         /// <typeparam name="T"></typeparam>
         /// <param name="dominator">The stronger parent</param>
         /// <param name="submissive">The weaker parent</param>
+        /// <param name="childCreator"> </param>
         /// <param name="dominatorAllelProbability">Aritmethic weighted mean of the dominator 0.0 - 1.0</param>
         /// <returns></returns>
-        public static T RecombinateSoft<T>(T dominator, T submissive, double dominatorAllelProbability = DEFAULT_DOMINATOR_ALLEL_PROBABILITY) where T : Candidate, new()
+        public static T RecombinateSoft<T>(T dominator, T submissive, Func<T> childCreator, double dominatorAllelProbability = DEFAULT_DOMINATOR_ALLEL_PROBABILITY) 
+            where T : Candidate
         {
-            var child = new T();
+            var child = childCreator();
 
             // apply each allel from either the dominator or the submissive parent
             foreach (var allel in dominator.Allels)
