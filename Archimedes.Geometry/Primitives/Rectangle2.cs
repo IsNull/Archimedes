@@ -163,8 +163,17 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <returns></returns>
         public Vertices ToVertices() {
-            var rect = new RectangleF(new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2), this.Size);
-            var vertices = rect.ToVertices();
+
+            var location = new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2);
+
+            var vertices = new Vertices()
+            {
+                location,
+                new Vector2(location.X + Width, location.Y),
+                new Vector2(location.X + Width, location.Y + Height),
+                new Vector2(location.X, location.Y + Height)
+            };
+
             return  vertices.RotateVertices(this.MiddlePoint, Angle);
         }
 
@@ -193,7 +202,7 @@ namespace Archimedes.Geometry.Primitives
             if (vertices.Count() != 4)
                 return new Line2[0]; 
 
-            var lines = new Line2[] 
+            var lines = new[] 
             {
                 new Line2(vertices[0], vertices[1]),
                 new Line2(vertices[1], vertices[2]),
@@ -256,8 +265,8 @@ namespace Archimedes.Geometry.Primitives
             set { _pen = value; }
         }
 
-        public virtual void Draw(Graphics G) {
-            this.ToPolygon2().Draw(G);
+        public virtual void Draw(Graphics g) {
+            this.ToPolygon2().Draw(g);
         } 
 
         #endregion
