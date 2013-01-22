@@ -51,6 +51,7 @@
     <Compile Include="Mutators\GenericAlleleMutator.cs" />
     <Compile Include="Population.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Recombinator\GenericRecombinator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Archimedes.snk" />
