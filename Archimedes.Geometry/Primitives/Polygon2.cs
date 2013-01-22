@@ -241,25 +241,24 @@ namespace Archimedes.Geometry.Primitives
         /// <returns>True if the Point is contained in the Polygon</returns>
         public bool Contains(Vector2 p) {
 
-
-            if (!this.BoundingCircle.Contains(p)) {
+            if (!BoundingCircle.Contains(p)) {
                 return false;
             }
 
             int counter = 0;
             int i;
-            double xinters;
-            Vector2 p1, p2;
+            Vector2 p2;
             int N = _vertices.Count;
 
-            p1 = _vertices[0];
+            var p1 = _vertices[0];
             for (i = 1; i <= N; i++) {
                 p2 = _vertices[i % N];
                 if (p.Y > Math.Min(p1.Y, p2.Y)) {
                     if (p.Y <= Math.Max(p1.Y, p2.Y)) {
                         if (p.X <= Math.Max(p1.X, p2.X)) {
-                            if (p1.Y != p2.Y) {
-                                xinters = (p.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
+                            if (p1.Y != p2.Y)
+                            {
+                                double xinters = (p.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
                                 if (p1.X == p2.X || p.X <= xinters)
                                     counter++;
                             }
@@ -274,15 +273,40 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Is the given Polygon fully contained in this one?
         /// </summary>
-        /// <param name="poly"></param>
+        /// <param name="polygon"> </param>
         /// <returns></returns>
-        public bool Contains(Polygon2 poly) {
-            return Contains(poly.ToVertices());
+        public bool Contains(Polygon2 polygon)
+        {
+            if(polygon.ToVertices().All(this.Contains))
+            {
+                // when all vertices are contained in a convex polygon
+                // we already know that the given vertices are inside
+                // this polygon thus we are done
+                if (IsConvex()) return true;
+
+                // this is a concave polygon
+                // we need to ensure, that the vertices do not intersect any line
+                var otherLines = polygon.ToLines();
+                return !IntersectLinesWith(otherLines);
+            }
+
+            return false;
         }
 
-        public bool Contains(Vertices vertices)
+
+        public bool IntersectLinesWith(Line2[] otherLines)
         {
-            return vertices.All(this.Contains);
+            var myLines = this.ToLines();
+
+            foreach (var myLine in myLines)
+            {
+                foreach (var other in otherLines)
+                {
+                    if (myLine.InterceptLineWith(other))
+                        return true;
+                }
+            }
+            return false;
         }
 
 
@@ -297,26 +321,32 @@ namespace Archimedes.Geometry.Primitives
             return collisionPoints;
         }
 
-
-        private bool InterSectsOther(IGeometryBase other, bool collectAllPoints, out IEnumerable<Vector2> _collisionPoints) {
-            var collisionPoints = new List<Vector2>();
-            _collisionPoints = collisionPoints;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="collectAllPoints"></param>
+        /// <param name="collisionPoints"></param>
+        /// <returns></returns>
+        private bool InterSectsOther(IGeometryBase other, bool collectAllPoints, out IEnumerable<Vector2> collisionPoints) {
+            var collisionPointsL = new List<Vector2>();
+            collisionPoints = collisionPointsL;
 
             if (other is IClosedGeometry) { /* if other is not a closed element, it must have one vertex in this polygon */
                 foreach (var vertex in this.ToVertices()) {
                     if (other.Contains(vertex)) {
-                        collisionPoints.Add(vertex);
+                        collisionPointsL.Add(vertex);
                         if (!collectAllPoints) return true;
                     }
                 }
             }
             foreach (var vertex in other.ToVertices()) {
                 if (this.Contains(vertex)) {
-                    collisionPoints.Add(vertex);
+                    collisionPointsL.Add(vertex);
                     if (!collectAllPoints) return true;
                 }
             }
-            return (collisionPoints.Count() != 0);
+            return (collisionPointsL.Count() != 0);
         }
 
         /// <summary>
@@ -475,7 +505,31 @@ namespace Archimedes.Geometry.Primitives
         #region To Methods
 
         /// <summary>
-        /// Returns this Polygon as convex polygon. If this polygon is convex, a clone of it is returned.
+        /// Gets all border lines of this polygon including the closing line
+        /// </summary>
+        /// <returns></returns>
+        public Line2[] ToLines()
+        {
+            var lines = new Line2[_vertices.Count];
+
+            if(_vertices.Count > 1)
+            {
+                for (int i = 0; i < _vertices.Count; i++)
+                {
+                    lines[i] = new Line2(
+                        _vertices[i], 
+                        _vertices[(i + 1) % _vertices.Count] // next vertex, cycle on end to the beginning
+                        );
+                }
+            }
+            return lines;
+        } 
+
+
+        /// <summary>
+        /// Returns this Polygon as convex polygon.
+        /// 
+        /// If this polygon is convex, a clone of it is returned.
         /// If this polygon is concave, the Graham's (1972) "points to convex hull" enhanched algorythm is used to generate a convex polygon hull.
         /// </summary>
         /// <returns></returns>
@@ -499,13 +553,13 @@ namespace Archimedes.Geometry.Primitives
 
         #region IDrawable
 
-        public void Draw(Graphics G) {
+        public void Draw(Graphics g) {
             try {
                 var path = new GraphicsPath();
                 path.AddPolygon(_vertices.ToPointArray());
                 if (this.FillBrush != null)
-                    G.FillPath(this.FillBrush, path);
-                G.DrawPath(_pen, path);
+                    g.FillPath(this.FillBrush, path);
+                g.DrawPath(_pen, path);
             } catch (Exception) {
                 //ignore
             }
