@@ -5,6 +5,6 @@
     /// </summary>
     public interface IDrawable
     {
-        void Draw(System.Drawing.Graphics G);
+        void Draw(System.Drawing.Graphics g);
     }
 }

@@ -41,8 +41,8 @@ namespace Archimedes.Geometry.Rendering.Effects
 
         #endregion
 
-        public void Draw(Graphics G) {
-            geometry.Draw(G);
+        public void Draw(Graphics g) {
+            geometry.Draw(g);
         }
     }
 }

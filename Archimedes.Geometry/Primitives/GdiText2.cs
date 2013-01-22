@@ -237,9 +237,9 @@ namespace Archimedes.Geometry.Primitives
             set { _pen = value; }
         }
 
-        public void Draw(Graphics G) {
-            G.FillRectangle(new SolidBrush(this.BackGroundColor), this.BoundingBox);
-            G.DrawString(this.Text, this.Font, this.Pen.Brush, this.BoundingBox, GetStringFormat());
+        public void Draw(Graphics g) {
+            g.FillRectangle(new SolidBrush(this.BackGroundColor), this.BoundingBox);
+            g.DrawString(this.Text, this.Font, this.Pen.Brush, this.BoundingBox, GetStringFormat());
         }
 
         private StringFormat GetStringFormat() {

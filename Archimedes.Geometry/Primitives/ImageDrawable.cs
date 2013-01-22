@@ -87,10 +87,10 @@ namespace Archimedes.Geometry.Primitives
 
         #region IDrawable
 
-        public override void Draw(Graphics G) {
+        public override void Draw(Graphics g) {
             lock (_syncLOCK) {
                 if (_image != null)
-                    G.DrawImage(_image, new RectangleF(Location, Size));
+                    g.DrawImage(_image, new RectangleF(Location, Size));
             }
         }
 

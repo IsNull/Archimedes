@@ -531,10 +531,10 @@ namespace Archimedes.Geometry.Primitives
             set { _pen = value; }
         }
 
-        public void Draw(Graphics G)
+        public void Draw(Graphics g)
         {
             if (this.Pen != null)
-                G.DrawArc(this.Pen, this.DrawingRect, (float)(this.Angle2X - 90), (float)this.Angle);
+                g.DrawArc(this.Pen, this.DrawingRect, (float)(this.Angle2X - 90), (float)this.Angle);
         }
         public void AddToPath(GraphicsPath path)
         {

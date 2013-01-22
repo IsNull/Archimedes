@@ -66,9 +66,9 @@ namespace Archimedes.Geometry.Primitives
 
         #region IDrawable
 
-        public void Draw(Graphics G) {
+        public void Draw(Graphics g) {
             foreach (var geometry in _geometries)
-                geometry.Draw(G);
+                geometry.Draw(g);
         }
 
         public void AddToPath(GraphicsPath path) {

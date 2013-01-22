@@ -173,9 +173,9 @@ namespace Archimedes.Geometry.Primitives
             return this.ToVertices().Contains(pnt);
         }
 
-        public void Draw(System.Drawing.Graphics G) {
+        public void Draw(System.Drawing.Graphics g) {
             if (_gpath.PointCount > 0)
-                G.DrawPath(Pen, _gpath);
+                g.DrawPath(Pen, _gpath);
         }
 
         public void AddToPath(GraphicsPath path) {

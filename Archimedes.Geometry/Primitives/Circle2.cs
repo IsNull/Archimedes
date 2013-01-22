@@ -354,12 +354,12 @@ namespace Archimedes.Geometry.Primitives
             set { _pen = value; }
         }
 
-        public virtual void Draw(Graphics G) {
+        public virtual void Draw(Graphics g) {
             try {
                 if (this.FillBrush != null)
-                    G.FillEllipse(this.FillBrush, this.DrawingRect);
+                    g.FillEllipse(this.FillBrush, this.DrawingRect);
                 if (this.Pen != null)
-                    G.DrawArc(this.Pen, this.DrawingRect, 0, 360);
+                    g.DrawArc(this.Pen, this.DrawingRect, 0, 360);
             } catch (Exception) {
                 //ignore
             }

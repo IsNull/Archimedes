@@ -86,12 +86,12 @@ namespace Archimedes.Geometry.Rendering
         /// <summary>
         /// Draws all Elements to the given Gfx Context
         /// </summary>
-        /// <param name="G"></param>
-        public void Draw(System.Drawing.Graphics G) {
+        /// <param name="g"></param>
+        public void Draw(System.Drawing.Graphics g) {
             foreach (var d in GetSnapshot()) {
                 if (d != null) {
                     try {
-                        d.Draw(G);
+                        d.Draw(g);
                     } catch (Exception e) {
                         //_drawingErrors.Add(e);
                     }

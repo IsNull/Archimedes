@@ -142,12 +142,12 @@ namespace Archimedes.Geometry
 
         #region Drawing Methods
 
-        public void Draw(Graphics G) {
+        public void Draw(Graphics g) {
             if (this.Pen != null) {
                 var v = Vector;
                 v.Lenght = 500;
                 var end = this.Location + v;
-                G.DrawLine(this.Pen, this.Location, end);
+                g.DrawLine(this.Pen, this.Location, end);
             }
         }
 
