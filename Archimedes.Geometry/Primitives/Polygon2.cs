@@ -47,6 +47,15 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Properties
 
+        /// <summary>
+        /// Gets the Vertices count in this polygon
+        /// </summary>
+        public int VerticesCount
+        {
+            get { return _vertices != null ? _vertices.Count : 0; }
+        }
+
+
         public Brush FillBrush {
             set { _fillBrush = value; }
             get { return _fillBrush; }
@@ -654,6 +663,11 @@ namespace Archimedes.Geometry.Primitives
 
         private void Invalidate() {
             _boundCircleChanged = true;
+        }
+
+        public override string ToString()
+        {
+            return "Polygon Vertices(" + VerticesCount + ")";
         }
     }
 }
