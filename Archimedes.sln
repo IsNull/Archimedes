@@ -32,6 +32,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF.Themes", "WPFThemes\WPF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Genetics", "Archimedes.Genetics\Archimedes.Genetics.csproj", "{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Maps", "Archimedes.Maps\Archimedes.Maps.csproj", "{D772892F-8520-45B3-BFDA-1B7F3EA873CC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -162,6 +164,16 @@ Global
 		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D772892F-8520-45B3-BFDA-1B7F3EA873CC}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
