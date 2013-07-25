@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using Archimedes.Patterns.Data;
 
@@ -9,12 +10,12 @@ namespace Archimedes.Patterns.Conditions
     /// <summary>
     /// Represents an abstract condition
     /// </summary>
+    [DataContract]
     public abstract class ConditionExpression : Entity<Guid, ConditionExpression>
     {
+        protected ConditionExpression() : this(Guid.NewGuid()) { }
 
-        public ConditionExpression() { }
-
-        public ConditionExpression(Guid id) { this.ID = id; }
+        protected ConditionExpression(Guid id) { this.ID = id; }
 
         /// <summary>
         /// Filters a enumerable list of objects by this condtition
@@ -31,6 +32,7 @@ namespace Archimedes.Patterns.Conditions
         /// <summary>
         /// Gets the Name of this Condtion
         /// </summary>
+        [DataMember]
         public abstract string Name { get; }
 
         /// <summary>

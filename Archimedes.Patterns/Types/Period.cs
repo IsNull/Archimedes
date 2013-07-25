@@ -1,24 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Globalization;
 
 namespace Archimedes.Patterns.Types
 {
+    [DataContract]
     public enum PeriodFormat
     {
-        MonthsAndYears,
-        Months,
-        Years
+        [EnumMember] MonthsAndYears,
+        [EnumMember] Months,
+        [EnumMember] Years
     }
 
     /// <summary>
     /// Represents a TimePeriod
     /// </summary>
+    [DataContract]
     public struct Period
     {
-        const int daysPerMonth = 30;
+        const int DaysPerMonth = 30;
+
+        [DataMember]
         long _hours;
 
         public Period(long hours) {
@@ -28,11 +33,11 @@ namespace Archimedes.Patterns.Types
         #region Static Creators
 
         public static Period FromYears(long years) {
-            return new Period(years * 24 * daysPerMonth * 12);
+            return new Period(years * 24 * DaysPerMonth * 12);
         }
 
         public static Period FromMonths(long months) {
-            return new Period(months * 24 * daysPerMonth);
+            return new Period(months * 24 * DaysPerMonth);
         }
 
         public static Period FromDays(long days) {
@@ -58,11 +63,11 @@ namespace Archimedes.Patterns.Types
         }
 
         public long Months {
-            get { return _hours / (24 * daysPerMonth); }
+            get { return _hours / (24 * DaysPerMonth); }
         }
 
         public long Years {
-            get { return _hours / (24 * daysPerMonth * 12); }
+            get { return _hours / (24 * DaysPerMonth * 12); }
         }
 
         public bool IsEmpty {
@@ -168,6 +173,7 @@ namespace Archimedes.Patterns.Types
             return left + right;
         }
 
+        
         public static DateTime operator -(DateTime date, Period period) {
             int years = (int)period.Years;
             if (years > 0) {
@@ -186,7 +192,7 @@ namespace Archimedes.Patterns.Types
 
             return date;
         }
-
+        
         public static DateTime operator -(Period right, DateTime left) {
             return left - right;
         }
@@ -219,10 +225,10 @@ namespace Archimedes.Patterns.Types
             switch (pformat) {
 
                 case PeriodFormat.Months:
-                return this.Months.ToString();
+                return this.Months.ToString(CultureInfo.CurrentCulture);
 
                 case PeriodFormat.Years:
-                return this.Years.ToString();
+                return this.Years.ToString(CultureInfo.CurrentCulture);
 
                 default:
                 return this.ToString();
@@ -230,9 +236,9 @@ namespace Archimedes.Patterns.Types
         }
 
         public override string ToString() {
-            StringBuilder sb = new StringBuilder(); 
+            var sb = new StringBuilder(); 
 
-            Period per = this;
+            var per = this;
 
             if (per.Years > 0) {
                 sb.Append(per.Years + " Years");

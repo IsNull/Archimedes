@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Reflection;
 using Archimedes.Patterns.Reflection;
@@ -13,17 +14,25 @@ namespace Archimedes.Patterns.Conditions
     /// There are hardcoded greater/smallerthan emiters,
     /// which basicaly can handle numeric types / dates
     /// </summary>
+    [DataContract]
     public class DynamicConditionExpression : ConditionExpression
     {
         #region Fields
 
+        static readonly Type Number = typeof(double);
+
+        [DataMember]
         string _propertyName;
+
+        [DataMember]
         Operator _compOP = Operator.None;
-        
+
+        [DataMember]
         object _value;
+        
+        // working fields
         Type _itemType;
         PropertyInfo _property = null;
-        static Type NUMBER = typeof(double);
         bool _isNumeric;
 
         #endregion
@@ -191,7 +200,7 @@ namespace Archimedes.Patterns.Conditions
 
             if ((_compOP & Operator.GreaterThan) == Operator.GreaterThan) {
                 if (_isNumeric) {
-                    res = (double)Convert.ChangeType(val, NUMBER) > (double)Convert.ChangeType(_value, NUMBER);
+                    res = (double)Convert.ChangeType(val, Number) > (double)Convert.ChangeType(_value, Number);
                 } else if (val != null && TypeHelper.IsTypeOrUnderlingType(_itemType, typeof(DateTime))) {
                     res = (DateTime)val > (DateTime)_value;
                 }
@@ -199,7 +208,7 @@ namespace Archimedes.Patterns.Conditions
 
             if ((_compOP & Operator.SmallerThan) == Operator.SmallerThan) {
                 if (_isNumeric) {
-                    res = (double)Convert.ChangeType(val, NUMBER) < (double)Convert.ChangeType(_value, NUMBER);
+                    res = (double)Convert.ChangeType(val, Number) < (double)Convert.ChangeType(_value, Number);
                 } else if (val != null && TypeHelper.IsTypeOrUnderlingType(_itemType, typeof(DateTime))) {
                     res = (DateTime)val < (DateTime)_value;
                 }
@@ -211,7 +220,8 @@ namespace Archimedes.Patterns.Conditions
 
         #endregion
 
-        static string _name = "Dynamische Bedingung";
+        private const string _name = "Dynamische Bedingung";
+
         public override string Name {
             get { return _name; }
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace Archimedes.Patterns.Data
 {
@@ -9,6 +10,7 @@ namespace Archimedes.Patterns.Data
     /// Entity which uses a int as PK
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [DataContract]
     public class EntityInt<T> : Entity<int, T> 
         where T : class
     {
@@ -20,6 +22,7 @@ namespace Archimedes.Patterns.Data
     /// Entity which uses a Guid as PK
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [DataContract]
     public class EntityGuid<T> : Entity<Guid, T>
         where T : class
     {
@@ -33,12 +36,14 @@ namespace Archimedes.Patterns.Data
     /// </summary>
     /// <typeparam name="Tid">ID type of this entity</typeparam>
     /// <typeparam name="T">Type of this entity</typeparam>
+    [DataContract]
     public class Entity<Tid, T> : EntityBase<Tid, T>
         where Tid : struct
         where T : class
     {
         public Entity() : base() { }
         public Entity(Tid id) : base(id) {}
+
     }
 
     /// <summary>
@@ -46,9 +51,10 @@ namespace Archimedes.Patterns.Data
     /// </summary>
     /// <typeparam name="Tid">ID type of this entity</typeparam>
     /// <typeparam name="T">Type of this entity</typeparam>
+    [DataContract]
     public class EntityBase<Tid, T> : IEntityBase<Tid,T> where T : class
     {
-        public EntityBase(){ }
+        public EntityBase() { }
 
         public EntityBase(Tid id) { ID = id; }
 
@@ -58,6 +64,11 @@ namespace Archimedes.Patterns.Data
         public virtual Tid ID {
             get;
             set;
+        }
+
+        protected virtual void Prototype(EntityBase<Tid, T> prototype)
+        {
+            ID = prototype.ID;
         }
 
         #region IEquatable
