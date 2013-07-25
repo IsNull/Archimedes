@@ -420,11 +420,10 @@ namespace Archimedes.Services.WPF.WorkBenchServices
         }
 
         DockableContent CreateDockableContent(DependencyObject view, WorkspaceViewModel viewModel) {
-            var dockableContent = new DockableContent();
-            dockableContent.HideOnClose = false;
+            var dockableContent = new DockableContent {HideOnClose = false};
 
             //bind title to WorkspaceViewModel.DisplayName
-            dockableContent.SetBinding(DockableContent.TitleProperty, new System.Windows.Data.Binding("DisplayName"));
+            dockableContent.SetBinding(ManagedContent.TitleProperty, new System.Windows.Data.Binding("DisplayName"));
             
 
             dockableContent.Content = view;
@@ -446,9 +445,7 @@ namespace Archimedes.Services.WPF.WorkBenchServices
 
                 };
             
-            viewModel.RequestFocus += (s, e) => {
-                dockableContent.Focus();
-                };
+            viewModel.RequestFocus += (s, e) => dockableContent.Focus();
 
 
             dockableContent.Hiding += (s, e) => {

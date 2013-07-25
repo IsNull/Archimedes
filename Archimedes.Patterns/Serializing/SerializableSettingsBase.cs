@@ -10,6 +10,7 @@ namespace Archimedes.Patterns.Serializing
     /// Represents an Settingsfile which can be serialized to an xml file
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public abstract class SerializableSettingsBase<T>
             where T : SerializableSettingsBase<T>
     {
@@ -17,8 +18,8 @@ namespace Archimedes.Patterns.Serializing
 
         #region Serialisation Helpers
 
-        public SerializableSettingsBase() { }
-        public SerializableSettingsBase(string path) { SettingsSerialisationPath = path; }
+        protected SerializableSettingsBase() { }
+        protected SerializableSettingsBase(string path) { SettingsSerialisationPath = path; }
 
         [NonSerialized()]
         internal string SettingsSerialisationPath;

@@ -42,9 +42,9 @@ namespace Archimedes.Patterns.Serializing
 
             Directory.CreateDirectory(Path.GetDirectoryName(filename));
 
-            XmlSerializer xs = new XmlSerializer(pObject.GetType());
-            using(TextWriter WriteFileStream = new StreamWriter(filename)) {
-                xs.Serialize(WriteFileStream, pObject);
+            var xs = new XmlSerializer(pObject.GetType());
+            using(TextWriter writeFileStream = new StreamWriter(filename)) {
+                xs.Serialize(writeFileStream, pObject);
             }
         }
 
@@ -54,9 +54,9 @@ namespace Archimedes.Patterns.Serializing
         /// <param name="pXmlizedString"></param>
         /// <returns></returns>
         public static T DeserializeObjectFromFile<T>(string filePath) where T : class {
-            XmlSerializer xs = new XmlSerializer(typeof(T));
-            FileStream ReadFileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
-            return xs.Deserialize(ReadFileStream) as T;
+            var xs = new XmlSerializer(typeof(T));
+            var readFileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return xs.Deserialize(readFileStream) as T;
         }
 
 

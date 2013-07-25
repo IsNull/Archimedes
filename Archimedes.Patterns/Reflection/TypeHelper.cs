@@ -31,7 +31,8 @@ namespace Archimedes.Patterns.Reflection
             return TypeHelper.NUMERIC_TYPES.Contains(type);
         }
 
-        public static bool IsNullableType(Type type) {
+        public static bool IsNullableType(Type type)
+        {
             return (type.IsGenericType && type.
               GetGenericTypeDefinition().Equals
               (typeof(Nullable<>)));

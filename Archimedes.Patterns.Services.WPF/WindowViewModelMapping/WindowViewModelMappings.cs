@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -10,35 +11,35 @@ namespace Archimedes.Services.WPF.WindowViewModelMapping
     /// </summary>
     public class WindowViewModelMappings : IWindowViewModelMappings
     {
-        private IDictionary<Type, Type> mappings;
+        private readonly IDictionary<Type, Type> _mappings;
 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WindowViewModelMappings"/> class.
         /// </summary>
         public WindowViewModelMappings() {
-            mappings = new Dictionary<Type, Type>();
+            _mappings = new Dictionary<Type, Type>();
         }
 
         public void RegisterMapping(Type viewModel, Type view){
-            if (!mappings.ContainsKey(viewModel))
-                mappings.Add(viewModel, view);
+            if (!_mappings.ContainsKey(viewModel))
+                _mappings.Add(viewModel, view);
             else
-                mappings[viewModel] = view;
+                _mappings[viewModel] = view;
         }
 
-
+        [DebuggerStepThrough]
         public Type GetViewTypeFromViewModelType(Type viewModelType) {
-            if (mappings.ContainsKey(viewModelType))
-                return mappings[viewModelType];
+            if (_mappings.ContainsKey(viewModelType))
+                return _mappings[viewModelType];
             else {
-                var possibleMatches = from kt in mappings.Keys
+                var possibleMatches = from kt in _mappings.Keys
                                       where kt.IsAssignableFrom(viewModelType)
                                       select kt;
                 if (possibleMatches.Any())
-                    return mappings[possibleMatches.First()];
+                    return _mappings[possibleMatches.First()];
             }
-            throw new KeyNotFoundException(viewModelType.ToString() + " was not found!");
+            throw new KeyNotFoundException(viewModelType + " was not found!");
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace Archimedes.Services.WPF.WindowViewModelMapping
         /// <param name="viewModelType">The type of the ViewModel.</param>
         /// <returns>The window type based on registered ViewModel type.</returns>
         public Type GetWindowTypeFromViewModelType(Type viewModelType) {
-            return mappings[viewModelType];
+            return _mappings[viewModelType];
         }
 
 

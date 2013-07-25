@@ -84,7 +84,7 @@ namespace Archimedes.Patterns.Deployment
         /// <summary>
         /// Gets/Sets the Destination path of this file
         /// </summary>
-        public string Destionation {
+        public string Destination {
             get;
             set;
         }
@@ -131,11 +131,11 @@ namespace Archimedes.Patterns.Deployment
         /// </summary>
         /// <exception cref="FileNotFoundException"/>
         public virtual void Install() {
-            if (string.IsNullOrEmpty(Destionation) ||
+            if (string.IsNullOrEmpty(Destination) ||
                 (Handling != FileHandling.DeleteIfNewer && string.IsNullOrEmpty(Source)))
                 throw new NotSupportedException("Destionation required");
 
-            var targetDir = Path.GetDirectoryName(Destionation);
+            var targetDir = Path.GetDirectoryName(Destination);
             if (!Directory.Exists(targetDir))
                 Directory.CreateDirectory(targetDir);
 
@@ -146,11 +146,11 @@ namespace Archimedes.Patterns.Deployment
                 //
                 case FileHandling.CopyIfNotExists:
                     // Install only if the file not exists
-                    if (!File.Exists(Destionation)) {
+                    if (!File.Exists(Destination)) {
 
                         if (!File.Exists(Source))
                             throw new FileNotFoundException(Source);
-                        File.Copy(Source, Destionation);
+                        File.Copy(Source, Destination);
                     }
                 break;
 
@@ -160,7 +160,7 @@ namespace Archimedes.Patterns.Deployment
                 case FileHandling.CopyAlways:
                     if (!File.Exists(Source))
                         throw new FileNotFoundException(Source);
-                    File.Copy(Source, Destionation, true);
+                    File.Copy(Source, Destination, true);
                 break;
 
 
@@ -176,7 +176,7 @@ namespace Archimedes.Patterns.Deployment
 
                         if (!File.Exists(Source))
                             throw new FileNotFoundException("Sourcefile not found!", Source);
-                        File.Copy(Source, Destionation, true);
+                        File.Copy(Source, Destination, true);
                         if (NewVersionInstalledCallback != null)
                             NewVersionInstalledCallback(this.FileVersion);
                     }
@@ -190,8 +190,11 @@ namespace Archimedes.Patterns.Deployment
                         throw new NotSupportedException("CurrentVersionCallback must be set!");
 
                     if (CurrentVersionCallback() == null || this.FileVersion > CurrentVersionCallback()) {
-                        if (File.Exists(Destionation))
-                            File.Delete(Destionation);
+                        if (File.Exists(Destination)) 
+                            File.Delete(Destination);
+
+                        if (NewVersionInstalledCallback != null)
+                            NewVersionInstalledCallback(this.FileVersion);
                     }
                 break;
 

@@ -13,10 +13,17 @@ namespace Archimedes.Patterns.WPF.ViewModels
         public static ICollectionView BuildView(IEnumerable enumeration) {
 
             if (enumeration == null)
-                throw new ArgumentNullException("enumeration can not be null!");
-            var clsrc = new CollectionViewSource();
-            clsrc.Source = enumeration;
-            return clsrc.View;
+                throw new ArgumentNullException("enumeration");
+
+
+            var clsrc = new CollectionViewSource
+                            {
+                                Source = enumeration,
+                            };
+            
+            var view = clsrc.View;
+
+            return view;
         }
     }
 }
