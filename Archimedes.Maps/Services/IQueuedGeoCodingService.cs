@@ -1,11 +1,13 @@
 ﻿using System;
+using Archimedes.Maps.GeoCoding;
 
-namespace Archimedes.Maps.GeoCoding
+namespace Archimedes.Maps.Services
 {
     /// <summary>
-    /// This Service exports Methods to async resolve (geocoding) a couple of locations
+    /// This service manages a batch queue of locations to be geocoded
+    /// If a location has been processed it will raise the LocationResolved
     /// </summary>
-    public interface IAsyncGeoCodingService
+    public interface IQueuedGeoCodingService
     {
         #region Events
 
@@ -27,14 +29,24 @@ namespace Archimedes.Maps.GeoCoding
 
         #endregion
 
+        /// <summary>
+        /// Adds the given location to the queue to be resolved
+        /// </summary>
+        /// <param name="location"></param>
         void AddToQueue(WorldLocation location);
 
         void CancelResolvingAsync();
 
         void ResolveLocationsAsync();
 
+        /// <summary>
+        /// Is the service currently busy?
+        /// </summary>
         bool IsBusy { get; }
 
+        /// <summary>
+        /// Time between a location resolving
+        /// </summary>
         int WaitTime { get; set; }
     }
 }

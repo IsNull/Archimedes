@@ -12,7 +12,7 @@ namespace Archimedes.Maps.GeoCoding
     /// Class to assync resolve Locations.
     /// This Class is Thread safe
     /// </summary>
-    public class GeoCoderResolveTask
+    internal class GeoCoderResolveTask
     {
         #region Fields
 

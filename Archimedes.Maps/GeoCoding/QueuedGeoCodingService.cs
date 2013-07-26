@@ -4,6 +4,7 @@ using System.Linq;
 using Archimedes.Maps.Services;
 using System.Threading;
 using System.ComponentModel;
+using Archimedes.Patterns.Services;
 using RIEDOMaps.Model.Locations;
 
 namespace Archimedes.Maps.GeoCoding
@@ -12,7 +13,7 @@ namespace Archimedes.Maps.GeoCoding
     /// Class to assync resolve Locations.
     /// This Class is Thread safe
     /// </summary>
-    public class ThreadSaveGeoCoder : IAsyncGeoCodingService
+    public class QueuedGeoCodingService : IQueuedGeoCodingService
     {
         #region Fields
 
@@ -46,7 +47,12 @@ namespace Archimedes.Maps.GeoCoding
 
         #region Constructor
 
-        public ThreadSaveGeoCoder(IGeoCodingService geocoderService)
+        public QueuedGeoCodingService()
+            : this(ServiceLocator.ResolveService<IGeoCodingService>())
+        {
+        }
+
+        public QueuedGeoCodingService(IGeoCodingService geocoderService)
         {
             _locationsToResolve = new List<WorldLocation>();
             _geocoder = geocoderService;
@@ -95,7 +101,6 @@ namespace Archimedes.Maps.GeoCoding
         }
 
         #endregion
-
 
         #region Public Properties
 

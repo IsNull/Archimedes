@@ -35,6 +35,17 @@ namespace Archimedes.Maps
             get { return _coordinates.Count; }
         }
 
+        public bool IsEmpty
+        {
+            get { return !_coordinates.Any(); }
+        }
+
+
+        public GeoCoordinate this[int index]
+        {
+            get { return _coordinates[index]; }
+        }
+
 
         /// <summary>
         /// Gets the Coordinates of this Geo-Polygon

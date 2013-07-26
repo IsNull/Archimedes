@@ -118,12 +118,19 @@ namespace Archimedes.Maps
             return new Location(this);
         }
 
-        public override string ToString() {
+        public override string ToString()
+        {
+            return Street + ", " + Place + ", " + Country;
+        }
+
+        public virtual string ToFormatedAddress()
+        {
             string addr = "";
             var nl = Environment.NewLine;
             addr = Title + nl + Street + nl + Country;
             return addr;
         }
+
 
         #endregion
 
