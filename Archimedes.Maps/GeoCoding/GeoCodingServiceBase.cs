@@ -68,6 +68,18 @@ namespace Archimedes.Maps.GeoCoding
         public abstract bool GeoCoderResolve(Location loc, bool cacheOnly, out GeoCoordinate point, out GeoCodeStatus status, out bool fromCache);
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <param name="cacheOnly"></param>
+        /// <param name="point"></param>
+        /// <param name="status"></param>
+        /// <param name="fromCache"></param>
+        /// <returns></returns>
+        public abstract bool GeoCoderResolve(string keywords, bool cacheOnly, out GeoCoordinate point, out GeoCodeStatus status,
+                                             out bool fromCache);
+
+        /// <summary>
         /// Reverse Geocode the given coordinate
         /// </summary>
         /// <param name="point"></param>

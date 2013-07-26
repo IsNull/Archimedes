@@ -49,7 +49,16 @@ namespace Archimedes.Maps.Services
         /// <returns></returns>
         bool GeoCoderResolve(Location loc, bool cacheOnly, out GeoCoordinate point, out GeoCodeStatus status, out bool fromCache);
 
-
+        /// <summary>
+        /// Resolve the given address to a world coordinate
+        /// </summary>
+        /// <param name="loc">The address</param>
+        /// <param name="cacheOnly">Only check the cache</param>
+        /// <param name="point">Out: The found coordinates</param>
+        /// <param name="status">Out: GeoCoderStatus</param>
+        /// <param name="fromCache">True indicates that the returned position was fetched from the cache</param>
+        /// <returns></returns>
+        bool GeoCoderResolve(string keywords, bool cacheOnly, out GeoCoordinate point, out GeoCodeStatus status, out bool fromCache);
 
 
         /// <summary>
