@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Archimedes.Maps
 {
-    public class GeoRectRegion : GeoPolygon
+    /// <summary>
+    /// Represents a geo bounding box of a region
+    /// </summary>
+    public class GeoRectRegion : IGeoPolygonData
     {
         readonly GeoCoordinate[] _coordinates = new GeoCoordinate[4];
 
@@ -19,7 +22,6 @@ namespace Archimedes.Maps
         /// Name of the region
         /// </summary>
         public string Name { get; set; }
-
 
 
         public GeoCoordinate Bottom {
@@ -46,19 +48,31 @@ namespace Archimedes.Maps
         }
 
 
-        public override int Count
+        public int Count
         {
             get { return _coordinates.Length; }
+        }
+
+        public bool IsEmpty {
+            get { return false; } 
+        }
+
+        public GeoCoordinate this[int index]
+        {
+            get { return _coordinates[index]; }
         }
 
 
         /// <summary>
         /// Gets the Coordinates of this GeoRectRegion
         /// </summary>
-        public override IEnumerable<GeoCoordinate> GetCoordinates()
+        public IEnumerable<GeoCoordinate> GetCoordinates()
         {
             return new List<GeoCoordinate>(_coordinates);
         }
+
+
+
 
 
     }
