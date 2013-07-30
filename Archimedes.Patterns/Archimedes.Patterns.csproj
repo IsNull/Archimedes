@@ -142,6 +142,7 @@
     <Compile Include="Threading\UIDispatcher.cs" />
     <Compile Include="Types\Period.cs" />
     <Compile Include="Utils\AsciiHelper.cs" />
+    <Compile Include="Utils\ExceptionUtil.cs" />
     <Compile Include="Utils\ThrowUtil.cs" />
   </ItemGroup>
   <ItemGroup>
