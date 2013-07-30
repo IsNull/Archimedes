@@ -8,17 +8,24 @@ namespace Archimedes.Patterns.Conditions
 {
     public class OperatorManagerService : Archimedes.Patterns.Conditions.IOperatorManagerService
     {
-        static Operator[] _numericOperators = new Operator[]
+        static readonly Operator[] _numericOperators = new []
         {
             Operator.Equal, Operator.Not | Operator.Equal,
             Operator.GreaterThan, Operator.Equal | Operator.GreaterThan,
             Operator.SmallerThan, Operator.Equal | Operator.SmallerThan
         };
 
-        Dictionary<Type, Operator[]> _opmap = new Dictionary<Type, Operator[]>()
-        {
-            { typeof(bool), new Operator[] { Operator.Equal, Operator.Not | Operator.Equal}}
-        };
+        private readonly Dictionary<Type, Operator[]> _opmap = new Dictionary<Type, Operator[]>()
+                                                                   {
+                                                                       {
+                                                                           typeof (bool),
+                                                                           new[]
+                                                                               {
+                                                                                   Operator.Equal,
+                                                                                   Operator.Not | Operator.Equal
+                                                                               }
+                                                                       }
+                                                                   };
 
 
         public OperatorManagerService() {
@@ -28,10 +35,9 @@ namespace Archimedes.Patterns.Conditions
             //
             // This list can be enlarged by user code with the RegisterOperatorsForType(t, operators) Method.
             //
-            List<Type> _fullcompareablePrimitiveTypes = new List<Type>(TypeHelper.GetAllNumericTypes());
-            _fullcompareablePrimitiveTypes.Add(typeof(DateTime));
+            var fullcompareablePrimitiveTypes = new List<Type>(TypeHelper.GetAllNumericTypes()) {typeof (DateTime)};
 
-            foreach (var t in _fullcompareablePrimitiveTypes) {
+            foreach (var t in fullcompareablePrimitiveTypes) {
                 RegisterOperatorsForType(t, _numericOperators);
             }
         }
@@ -62,7 +68,7 @@ namespace Archimedes.Patterns.Conditions
         /// <param name="opFlags"></param>
         /// <returns></returns>
         public virtual string OperatorToString(Operator opFlags) {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             if ((opFlags & Operator.Not) == Operator.Not)
                 sb.Append("!");

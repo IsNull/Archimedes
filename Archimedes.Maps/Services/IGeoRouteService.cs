@@ -20,7 +20,7 @@ namespace Archimedes.Maps.Services
         /// <param name="avoidHighways"></param>
         /// <param name="walkingMode"></param>
         /// <param name="zoom">Route-Point resolution</param>
-        /// <returns></returns>
+        /// <returns>Returns the route or, in case no route was found, null.</returns>
         GeoRoute GetRoute(GeoCoordinate start, GeoCoordinate end, bool avoidHighways, bool walkingMode, int zoom);
     }
 }
