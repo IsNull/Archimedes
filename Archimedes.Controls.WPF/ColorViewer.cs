@@ -10,6 +10,14 @@ namespace Archimedes.Controls.WPF
 {
     public class ColorViewer : FrameworkElement
     {
+        private const bool UseRenderCache = true;
+
+        /// <summary>
+        /// Cache for every size of the chart
+        /// </summary>
+        private readonly IDictionary<int, BitmapSource> _bmpCache = new Dictionary<int, BitmapSource>();
+        private readonly object _bmpCacheLock = new object();
+
         #region --- DependencyProperties ---
 
         public static readonly DependencyProperty SectorBrushesProperty =
@@ -33,9 +41,10 @@ namespace Archimedes.Controls.WPF
 
         private static void OnSectorBrushesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var colorViewer = d as UIElement;
+            var colorViewer = d as ColorViewer;
             if (colorViewer != null)
             {
+                colorViewer.ClearCache();
                 colorViewer.InvalidateVisual();
             }
         }
@@ -52,9 +61,10 @@ namespace Archimedes.Controls.WPF
 
         private static void OnStrokeColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var colorViewer = d as UIElement;
+            var colorViewer = d as ColorViewer;
             if (colorViewer != null)
             {
+                colorViewer.ClearCache();
                 colorViewer.InvalidateVisual();
             }
         }
@@ -132,35 +142,28 @@ namespace Archimedes.Controls.WPF
 
         #region --- Handlers ---
 
-        private void SectorBrushes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            //If the collection of Brushes (and thus sectors) changed, we need to redraw the control.
-            InvalidateVisual();
-        }
-
-        private bool useRenderCache = true;
 
         protected override void OnRender(DrawingContext dc)
         {
-            //We do all the rendering so skip the call to the default OnRender-method
-            //base.OnRender(dc);
+            // We do all the rendering so skip the call to the default OnRender-method
+            // base.OnRender(dc);
 
 
             if ((SectorBrushes == null || SectorBrushes.Count == 0))
                 return;
 
 
-            if (useRenderCache)
+            if (UseRenderCache)
             {
-                // if the given image is not present in this size, render in a offscreen bitmap and cache it.
+                // If the given image is not present in this size, render in a offscreen bitmap and cache it.
                 // otherwise the cached version is returned imedialty
 
-                BitmapSource bs = CachedRenderColorChartToBitmap(RenderSize.Width, RenderSize.Height);
-                dc.DrawImage(bs, new Rect(0, 0, bs.Width, bs.Height));
+                var chart = CachedRenderColorChartToBitmap(RenderSize.Width, RenderSize.Height);
+                dc.DrawImage(chart, new Rect(0, 0, chart.Width, chart.Height));
             }
             else
             {
-                //render directly into the dc
+                // Render directly into the dc
                 RenderColorChart(dc, (int) RenderSize.Width, (int) RenderSize.Height);
             }
         }
@@ -169,21 +172,31 @@ namespace Archimedes.Controls.WPF
 
         #region Visual Render Cache
 
-        private readonly IDictionary<int, BitmapSource> bmpCache = new Dictionary<int, BitmapSource>();
 
         private BitmapSource CachedRenderColorChartToBitmap(double width, double height)
         {
-            int hash = calcHash(width, height);
+            int hash = CalcHash(width, height);
 
-            if (!bmpCache.ContainsKey(hash))
+            lock (_bmpCacheLock)
             {
-                bmpCache.Add(hash, RenderColorChartToBitmap(width, height));
-            }
+                if (!_bmpCache.ContainsKey(hash))
+                {
+                    _bmpCache.Add(hash, RenderColorChartToBitmap(width, height));
+                }
 
-            return bmpCache[hash];
+                return _bmpCache[hash];
+            }
         }
 
-        private int calcHash(double a, double b)
+        private void ClearCache()
+        {
+            lock (_bmpCacheLock)
+            {
+                _bmpCache.Clear();
+            }
+        }
+
+        private int CalcHash(double a, double b)
         {
             return ((int) a*1000) + (int) b;
         }
@@ -241,8 +254,8 @@ namespace Archimedes.Controls.WPF
                 for (int intSectorCounter = 0; intSectorCounter < SectorBrushes.Count; intSectorCounter++)
                 {
                     //Get the start- and end-points of the current arc segment to be drawn
-                    Point ptArcStartPoint = getPointAtAngle(ptCenter, dblRadius, intSectorCounter*dblSectorRadius);
-                    Point ptArcEndPoint = getPointAtAngle(ptCenter, dblRadius, (intSectorCounter + 1)*dblSectorRadius);
+                    var ptArcStartPoint = GetPointAtAngle(ptCenter, dblRadius, intSectorCounter * dblSectorRadius);
+                    var ptArcEndPoint = GetPointAtAngle(ptCenter, dblRadius, (intSectorCounter + 1) * dblSectorRadius);
 
                     //The bounding rectangle of the current arc Sector
                     var rctArcRect = new Rect(ptArcStartPoint, ptArcEndPoint);
@@ -297,7 +310,7 @@ namespace Archimedes.Controls.WPF
         /// <param name="ptCenter">The center-coordinates of the circle</param>
         /// <param name="dblRadius">The radius of the circle</param>
         /// <param name="dblAtAngle">The angle at which to retrieve the coordinates</param>
-        private Point getPointAtAngle(Point ptCenter, double dblRadius, double dblAtAngle)
+        private Point GetPointAtAngle(Point ptCenter, double dblRadius, double dblAtAngle)
         {
             double dblX = ptCenter.X + (dblRadius*Math.Cos(dblAtAngle/180*Math.PI));
             double dblY = ptCenter.Y + (dblRadius*Math.Sin(dblAtAngle/180*Math.PI));
