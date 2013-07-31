@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Collections;
-using System.Windows.Media.Imaging;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace Archimedes.Controls.WPF
 {
@@ -14,42 +13,48 @@ namespace Archimedes.Controls.WPF
         #region --- DependencyProperties ---
 
         public static readonly DependencyProperty SectorBrushesProperty =
-          DependencyProperty.Register(
-             "SectorBrushes",
-             typeof(ObservableCollection<Brush>),
-             typeof(ColorViewer),
-             new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender, OnSectorBrushesPropertyChanged)
-          );
+            DependencyProperty.Register(
+                "SectorBrushes",
+                typeof (ObservableCollection<Brush>),
+                typeof (ColorViewer),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.AffectsRender,
+                                              OnSectorBrushesPropertyChanged)
+                );
 
         /// <summary>
         /// The Brushes that draw the circle's sectors; The number of sectors is determined by
         /// the number of brushes contained in this list.
         /// </summary>
-        public ObservableCollection<Brush> SectorBrushes {
-            get { return (ObservableCollection<Brush>)GetValue(SectorBrushesProperty); }
+        public ObservableCollection<Brush> SectorBrushes
+        {
+            get { return (ObservableCollection<Brush>) GetValue(SectorBrushesProperty); }
             set { SetValue(SectorBrushesProperty, value); }
         }
 
-        private static void OnSectorBrushesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        private static void OnSectorBrushesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             var colorViewer = d as UIElement;
-            if (colorViewer != null) {
+            if (colorViewer != null)
+            {
                 colorViewer.InvalidateVisual();
             }
         }
 
 
         public static readonly DependencyProperty StrokeColorProperty =
-          DependencyProperty.Register(
-             "StrokeColor",
-             typeof(Color),
-             typeof(ColorViewer),
-             new UIPropertyMetadata(Colors.Transparent, OnStrokeColorPropertyChanged)
-          );
+            DependencyProperty.Register(
+                "StrokeColor",
+                typeof (Color),
+                typeof (ColorViewer),
+                new UIPropertyMetadata(Colors.Transparent, OnStrokeColorPropertyChanged)
+                );
 
 
-        private static void OnStrokeColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        private static void OnStrokeColorPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
             var colorViewer = d as UIElement;
-            if (colorViewer != null) {
+            if (colorViewer != null)
+            {
                 colorViewer.InvalidateVisual();
             }
         }
@@ -58,32 +63,37 @@ namespace Archimedes.Controls.WPF
         /// Sets/retrieves the color of the outer circle.
         /// This needs to be non-transparent if a line is to be drawn around the control (circle).
         /// </summary>
-        public Color StrokeColor {
-            get { return (Color)GetValue(StrokeColorProperty); }
-            set { 
+        public Color StrokeColor
+        {
+            get { return (Color) GetValue(StrokeColorProperty); }
+            set
+            {
                 SetValue(StrokeColorProperty, value);
                 _strokePen = null;
-                this.InvalidateVisual(); 
+                InvalidateVisual();
             }
         }
 
         public static readonly DependencyProperty StrokeWidthProperty =
-          DependencyProperty.Register(
-             "StrokeWidth",
-             typeof(double),
-             typeof(ColorViewer),
-             new UIPropertyMetadata(1.0)
-          );
+            DependencyProperty.Register(
+                "StrokeWidth",
+                typeof (double),
+                typeof (ColorViewer),
+                new UIPropertyMetadata(1.0)
+                );
+
         /// <summary>
         /// Sets/retrieves the width of the outer circle's stroke.
         /// This needs to be >0 if a line is to be drawn around the control (circle).
         /// </summary>
-        public double StrokeWidth {
-            get { return (double)GetValue(StrokeWidthProperty); }
-            set { 
+        public double StrokeWidth
+        {
+            get { return (double) GetValue(StrokeWidthProperty); }
+            set
+            {
                 SetValue(StrokeWidthProperty, value);
                 _strokePen = null;
-                this.InvalidateVisual();
+                InvalidateVisual();
             }
         }
 
@@ -91,7 +101,7 @@ namespace Archimedes.Controls.WPF
 
         #region Protected Properties
 
-        private Pen _strokePen = null;
+        private Pen _strokePen;
 
         protected Pen CachedStrokePen
         {
@@ -99,7 +109,7 @@ namespace Archimedes.Controls.WPF
             {
                 if (_strokePen == null)
                 {
-                    _strokePen = new Pen(new SolidColorBrush(this.StrokeColor), this.StrokeWidth);
+                    _strokePen = new Pen(new SolidColorBrush(StrokeColor), StrokeWidth);
                 }
                 return _strokePen;
             }
@@ -112,8 +122,9 @@ namespace Archimedes.Controls.WPF
         /// <summary>
         /// C'tor
         /// </summary>
-        public ColorViewer() {
-            this.SectorBrushes = new ObservableCollection<Brush>();
+        public ColorViewer()
+        {
+            SectorBrushes = new ObservableCollection<Brush>();
             //this.CacheMode = new BitmapCache();
         }
 
@@ -121,19 +132,21 @@ namespace Archimedes.Controls.WPF
 
         #region --- Handlers ---
 
-        void SectorBrushes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+        private void SectorBrushes_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
             //If the collection of Brushes (and thus sectors) changed, we need to redraw the control.
-            this.InvalidateVisual();
+            InvalidateVisual();
         }
 
         private bool useRenderCache = true;
 
-        protected override void OnRender(System.Windows.Media.DrawingContext dc) {
+        protected override void OnRender(DrawingContext dc)
+        {
             //We do all the rendering so skip the call to the default OnRender-method
             //base.OnRender(dc);
 
 
-            if ((this.SectorBrushes == null || this.SectorBrushes.Count == 0))
+            if ((SectorBrushes == null || SectorBrushes.Count == 0))
                 return;
 
 
@@ -142,27 +155,23 @@ namespace Archimedes.Controls.WPF
                 // if the given image is not present in this size, render in a offscreen bitmap and cache it.
                 // otherwise the cached version is returned imedialty
 
-                BitmapSource bs = CachedRenderColorChartToBitmap(this.RenderSize.Width, this.RenderSize.Height);
+                BitmapSource bs = CachedRenderColorChartToBitmap(RenderSize.Width, RenderSize.Height);
                 dc.DrawImage(bs, new Rect(0, 0, bs.Width, bs.Height));
             }
             else
             {
                 //render directly into the dc
-                RenderColorChart(dc, (int)this.RenderSize.Width, (int)this.RenderSize.Height);
+                RenderColorChart(dc, (int) RenderSize.Width, (int) RenderSize.Height);
             }
-
-           
-
         }
 
         #endregion
-
 
         #region Visual Render Cache
 
         private readonly IDictionary<int, BitmapSource> bmpCache = new Dictionary<int, BitmapSource>();
 
-        BitmapSource CachedRenderColorChartToBitmap(double width, double height)
+        private BitmapSource CachedRenderColorChartToBitmap(double width, double height)
         {
             int hash = calcHash(width, height);
 
@@ -176,24 +185,23 @@ namespace Archimedes.Controls.WPF
 
         private int calcHash(double a, double b)
         {
-            return ((int)a * 1000) + (int)b;
+            return ((int) a*1000) + (int) b;
         }
 
         #endregion
-        
 
         private BitmapSource RenderColorChartToBitmap(double width, double height)
         {
-            DrawingVisual drawingVisual = new DrawingVisual();
+            var drawingVisual = new DrawingVisual();
             using (DrawingContext drawingContext = drawingVisual.RenderOpen())
             {
                 RenderColorChart(drawingContext, width, height);
                 drawingContext.Close();
             }
 
-            RenderTargetBitmap bitmap = new RenderTargetBitmap(
-                (int)Math.Ceiling(width),
-                (int)Math.Ceiling(height),
+            var bitmap = new RenderTargetBitmap(
+                (int) Math.Ceiling(width),
+                (int) Math.Ceiling(height),
                 96, // dpi x
                 96, // dpi y
                 PixelFormats.Pbgra32);
@@ -215,69 +223,71 @@ namespace Archimedes.Controls.WPF
         }
 
 
-        private void RenderColorChart(System.Windows.Media.DrawingContext dc, double width, double height)
+        private void RenderColorChart(DrawingContext dc, double width, double height)
         {
             //Determine the radius of the overall circle; we want this to be square in order to get a true circle, so use the min. extent
-            double dblRadius = Math.Min(width / 2, height / 2);
-            Size szRadius = new Size(dblRadius, dblRadius);
+            double dblRadius = Math.Min(width/2, height/2);
+            var szRadius = new Size(dblRadius, dblRadius);
 
             //Calculate the center of the control
-            Point ptCenter = new Point(dblRadius, dblRadius);
+            var ptCenter = new Point(dblRadius, dblRadius);
 
 
-            if (this.SectorBrushes != null && this.SectorBrushes.Count > 1) {
-
+            if (SectorBrushes != null && SectorBrushes.Count > 1)
+            {
                 //The radius (degrees) that a single sector will cover
-                double dblSectorRadius = 360d / this.SectorBrushes.Count;
+                double dblSectorRadius = 360d/SectorBrushes.Count;
 
-                for (int intSectorCounter = 0; intSectorCounter < this.SectorBrushes.Count; intSectorCounter++) {
+                for (int intSectorCounter = 0; intSectorCounter < SectorBrushes.Count; intSectorCounter++)
+                {
                     //Get the start- and end-points of the current arc segment to be drawn
-                    Point ptArcStartPoint = getPointAtAngle(ptCenter, dblRadius, intSectorCounter * dblSectorRadius);
-                    Point ptArcEndPoint = getPointAtAngle(ptCenter, dblRadius, (intSectorCounter + 1) * dblSectorRadius);
+                    Point ptArcStartPoint = getPointAtAngle(ptCenter, dblRadius, intSectorCounter*dblSectorRadius);
+                    Point ptArcEndPoint = getPointAtAngle(ptCenter, dblRadius, (intSectorCounter + 1)*dblSectorRadius);
 
                     //The bounding rectangle of the current arc Sector
-                    Rect rctArcRect = new Rect(ptArcStartPoint, ptArcEndPoint);
+                    var rctArcRect = new Rect(ptArcStartPoint, ptArcEndPoint);
 
                     //Construct the shape
-                    PathGeometry pg = new PathGeometry();
-                    PathFigure pf = new PathFigure();
+                    var pg = new PathGeometry();
+                    var pf = new PathFigure();
                     pg.Figures.Add(pf);
                     pf.StartPoint = ptArcStartPoint;
                     pf.IsFilled = true;
 
                     // Add the current sector's arc-segment
                     pf.Segments.Add(
-                      new ArcSegment(
-                         ptArcEndPoint,
-                         szRadius,
-                         dblSectorRadius,
-                         (dblSectorRadius >= 180),
-                         SweepDirection.Clockwise,
-                         false
-                       )
-                      );
+                        new ArcSegment(
+                            ptArcEndPoint,
+                            szRadius,
+                            dblSectorRadius,
+                            (dblSectorRadius >= 180),
+                            SweepDirection.Clockwise,
+                            false
+                            )
+                        );
 
                     // Add a line that ends in the center of the control
                     pf.Segments.Add(
-                       new LineSegment(ptCenter, true)
-                      );
+                        new LineSegment(ptCenter, true)
+                        );
 
                     // Close the figure (IOW, this will add a line between the center of the control and 
                     // the arc's start point, resulting in a pie shape)
                     pf.IsClosed = true;
 
                     //Draw the arc (skipping the Pen used for drawing a line around the shape)
-                    dc.DrawGeometry(this.SectorBrushes[intSectorCounter], null, pg);
+                    dc.DrawGeometry(SectorBrushes[intSectorCounter], null, pg);
                 }
-            } else if (this.SectorBrushes != null && this.SectorBrushes.Count == 1) {
-                dc.DrawEllipse(this.SectorBrushes[0], null, ptCenter, dblRadius, dblRadius);
+            }
+            else if (SectorBrushes != null && SectorBrushes.Count == 1)
+            {
+                dc.DrawEllipse(SectorBrushes[0], null, ptCenter, dblRadius, dblRadius);
             }
 
             //Draw a circle around the sectors, if both a non-transparent color and a StrokeWidth>0 have been supplied.
-            if (this.StrokeColor != null && this.StrokeColor != Colors.Transparent && this.StrokeWidth > 0)
-                dc.DrawEllipse(null, this.CachedStrokePen, ptCenter, dblRadius, dblRadius);
+            if (StrokeColor != null && StrokeColor != Colors.Transparent && StrokeWidth > 0)
+                dc.DrawEllipse(null, CachedStrokePen, ptCenter, dblRadius, dblRadius);
         }
-
 
         #region --- Helpers ---
 
@@ -287,9 +297,10 @@ namespace Archimedes.Controls.WPF
         /// <param name="ptCenter">The center-coordinates of the circle</param>
         /// <param name="dblRadius">The radius of the circle</param>
         /// <param name="dblAtAngle">The angle at which to retrieve the coordinates</param>
-        private Point getPointAtAngle(Point ptCenter, double dblRadius, double dblAtAngle) {
-            double dblX = ptCenter.X + (dblRadius * Math.Cos(dblAtAngle / 180 * Math.PI));
-            double dblY = ptCenter.Y + (dblRadius * Math.Sin(dblAtAngle / 180 * Math.PI));
+        private Point getPointAtAngle(Point ptCenter, double dblRadius, double dblAtAngle)
+        {
+            double dblX = ptCenter.X + (dblRadius*Math.Cos(dblAtAngle/180*Math.PI));
+            double dblY = ptCenter.Y + (dblRadius*Math.Sin(dblAtAngle/180*Math.PI));
 
             return new Point(dblX, dblY);
         }
