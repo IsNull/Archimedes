@@ -8,10 +8,18 @@ using System.Windows.Media.Imaging;
 
 namespace Archimedes.Controls.WPF
 {
+    /// <summary>
+    /// ColorViewer is a fast pie-chart plotter. 
+    /// 
+    /// This control is thiny and optimized when used in a dynamic container,
+    /// such as a canvas and is moved and resized frequently.
+    /// 
+    /// For a good render performance this control uses a backbuffer cache
+    /// for each requested
+    /// 
+    /// </summary>
     public class ColorViewer : FrameworkElement
     {
-        private const bool UseRenderCache = true;
-
         /// <summary>
         /// Cache for every size of the chart
         /// </summary>
@@ -135,7 +143,7 @@ namespace Archimedes.Controls.WPF
         public ColorViewer()
         {
             SectorBrushes = new ObservableCollection<Brush>();
-            //this.CacheMode = new BitmapCache();
+            UseRenderCache = true;
         }
 
         #endregion
@@ -172,6 +180,11 @@ namespace Archimedes.Controls.WPF
 
         #region Visual Render Cache
 
+        /// <summary>
+        /// Cache the rendered frame, for each requested size
+        /// If you have fluent zoom (=> leading to very lot cached images), you should not use the cache
+        /// </summary>
+        public bool UseRenderCache { get; set; }
 
         private BitmapSource CachedRenderColorChartToBitmap(double width, double height)
         {
@@ -188,6 +201,9 @@ namespace Archimedes.Controls.WPF
             }
         }
 
+        /// <summary>
+        /// Clears the backing buffer cache. The pie-chart is freshly rendered in the next cycle.
+        /// </summary>
         private void ClearCache()
         {
             lock (_bmpCacheLock)
