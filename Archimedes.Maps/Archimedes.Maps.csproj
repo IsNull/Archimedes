@@ -50,6 +50,7 @@
     <Compile Include="GeoCoding\GeoCoderResponse.cs" />
     <Compile Include="GeoCoding\GeoCodeStatus.cs" />
     <Compile Include="GeoCoding\GeoCodingServiceBase.cs" />
+    <Compile Include="Routes\GeoRouteServiceCachedProxy.cs" />
     <Compile Include="Services\IQueuedGeoCodingService.cs" />
     <Compile Include="GeoCoding\QueuedGeoCodingService.cs" />
     <Compile Include="GeoCoordinate.cs" />

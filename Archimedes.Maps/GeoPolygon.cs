@@ -69,17 +69,27 @@ namespace Archimedes.Maps
             _coordinates.Remove(coordinate);
         }
 
+        /// <summary>
+        /// Returns the amount of geo coordinates in this polygon
+        /// </summary>
         public virtual int Count
         {
             get { return _coordinates.Count; }
         }
 
+        /// <summary>
+        /// Is this geo polygon empty?
+        /// </summary>
         public bool IsEmpty
         {
             get { return !_coordinates.Any(); }
         }
 
-
+        /// <summary>
+        /// Returns the geo coordinate at the given index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public GeoCoordinate this[int index]
         {
             get { return _coordinates[index]; }
