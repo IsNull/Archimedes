@@ -15,12 +15,15 @@ namespace Archimedes.Maps
     [DataContract]
     public struct GeoCoordinate
     {
+        [NonSerialized]
         public static readonly GeoCoordinate Empty = new GeoCoordinate();
+
         [DataMember]
         private double _lat;
         [DataMember]
         private double _lng;
 
+        [NonSerialized]
         bool _notEmpty;
 
         public GeoCoordinate(double lat, double lng)

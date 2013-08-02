@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Archimedes.Maps.GeoCoding;
 using Archimedes.Maps.Services;
@@ -13,11 +14,14 @@ namespace Archimedes.Maps
     public class WorldLocation : Location, IEquatable<WorldLocation>, IComparable<WorldLocation>
     {
         #region Fields
-
+        [DataMember]
         GeoCoordinate _position = GeoCoordinate.Empty;
-        bool _positionResolveMade = false;
 
+        [NonSerialized]
+        bool _positionResolveMade = false;
+        [NonSerialized]
         readonly IGeoProjectionService _projectionService = ServiceLocator.Instance.Resolve<IGeoProjectionService>();
+        [NonSerialized]
         readonly IGeoCodingService _geoCodingService = ServiceLocator.Instance.Resolve<IGeoCodingService>();
 
         #endregion
@@ -39,7 +43,14 @@ namespace Archimedes.Maps
             this.Prototype(location); 
         }
 
-        public WorldLocation(Location location){
+        public WorldLocation(Location location)
+            : this(location, GeoCoordinate.Empty)
+        {
+        }
+
+        public WorldLocation(Location location, GeoCoordinate coordinate)
+        {
+            _position = coordinate;
             base.Prototype(location);
         }
 
@@ -49,13 +60,12 @@ namespace Archimedes.Maps
 
         public static WorldLocation WorldLocationFrom(GeoCoordinate point)
         {
-            var location = new WorldLocation();
+   
+            var geoCodingService = ServiceLocator.Instance.Resolve<IGeoCodingService>();
+            var location = new Location();
+            geoCodingService.GeoCoderReverseResolve(point, out location);
 
-            // todo resolve adress infromation from point
-
-            throw new NotImplementedException();
-
-            //return location;
+            return new WorldLocation(location);
         }
 
         #endregion
@@ -126,7 +136,7 @@ namespace Archimedes.Maps
             var stat = GeoCodeStatus.None;
             await Task.Run(() =>
             {
-                stat = QueryPosition(true);
+                stat = QueryPosition(force);
             });
             return stat;
         }
