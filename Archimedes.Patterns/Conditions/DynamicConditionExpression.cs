@@ -19,6 +19,7 @@ namespace Archimedes.Patterns.Conditions
     {
         #region Fields
 
+        [NonSerialized]
         static readonly Type Number = typeof(double);
 
         [DataMember]
@@ -31,8 +32,11 @@ namespace Archimedes.Patterns.Conditions
         object _value;
         
         // working fields
+        [NonSerialized]
         Type _itemType;
+        [NonSerialized]
         PropertyInfo _property = null;
+        [NonSerialized]
         bool _isNumeric;
 
         #endregion
@@ -220,6 +224,7 @@ namespace Archimedes.Patterns.Conditions
 
         #endregion
 
+        [NonSerialized]
         private const string _name = "Dynamische Bedingung";
 
         public override string Name {
