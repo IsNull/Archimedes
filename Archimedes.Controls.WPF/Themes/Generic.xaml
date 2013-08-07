@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:Archimedes.Controls.WPF"
     
-    xmlns:toolKitEx="clr-namespace:Microsoft.Windows.Controls;assembly=WPFToolkit.Extended"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
     xmlns:chrome="clr-namespace:Microsoft.Windows.Controls.Chromes;assembly=WPFToolkit.Extended"
     xmlns:coreConverters="clr-namespace:Microsoft.Windows.Controls.Core.Converters;assembly=WPFToolkit.Extended"
     >
@@ -32,8 +32,8 @@
     <!-- =============================================================================== -->
     <!-- ResourceDictionary for PeriodPicker and related controls                          -->
     <!-- =============================================================================== -->
-    <coreConverters:InverseBoolConverter x:Key="InverseBoolConverter" />
-    <coreConverters:TimeFormatToDateTimeFormatConverter x:Key="TimeFormatToDateTimeFormatConverter" />
+    <xctk:InverseBoolConverter x:Key="InverseBoolConverter" />
+    <xctk:TimeFormatToDateTimeFormatConverter x:Key="TimeFormatToDateTimeFormatConverter" />
 
     <DataTemplate x:Key="DefaultWatermarkTemplate">
         <ContentControl Content="{Binding}" Foreground="Gray" Focusable="False" />

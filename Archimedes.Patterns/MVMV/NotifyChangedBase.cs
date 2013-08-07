@@ -100,10 +100,10 @@ namespace Archimedes.Patterns.MVMV
                 return;
 
             foreach (string propertyName in propertyNames)
-                OnPropertyChangedInternal(propertyName);
+                OnPropertyChanged(propertyName);
         }
 
-        void OnPropertyChangedInternal(string propertyName) {
+        protected void OnPropertyChanged(string propertyName){
             if (_propChangedHandler != null) {
                 var args = GetEventArgs(propertyName);
                 _propChangedHandler(this, args);
@@ -114,6 +114,15 @@ namespace Archimedes.Patterns.MVMV
                     a(this);
             }
         }
+
+        protected void OnPropertyChanged(PropertyChangedEventArgs propertyChangeEventArgs)
+        {
+            if (_propChangedHandler != null)
+            {
+                _propChangedHandler(this, propertyChangeEventArgs);
+            }
+        }
+
 
         static PropertyChangedEventArgs GetEventArgs(string propertyName) {
             PropertyChangedEventArgs pe = null;
