@@ -14,8 +14,13 @@ namespace Archimedes.Maps
     public class WorldLocation : Location, IEquatable<WorldLocation>, IComparable<WorldLocation>
     {
         #region Fields
+
         [DataMember]
-        GeoCoordinate _position = GeoCoordinate.Empty;
+        private GeoCoordinate _position = GeoCoordinate.Zero;
+
+        [DataMember]
+        private LocationAccuracy _accuracy = LocationAccuracy.Unknown;
+
 
         [NonSerialized]
         bool _positionResolveMade = false;
@@ -33,6 +38,13 @@ namespace Archimedes.Maps
         /// </summary>
         public virtual event EventHandler PositionChanged;
 
+        /// <summary>
+        /// Raised when the Accuracy has changed
+        /// </summary>
+        public virtual event EventHandler AccuracyChanged;
+
+        
+
         #endregion
 
         #region Constructor
@@ -44,7 +56,7 @@ namespace Archimedes.Maps
         }
 
         public WorldLocation(Location location)
-            : this(location, GeoCoordinate.Empty)
+            : this(location, GeoCoordinate.Zero)
         {
         }
 
@@ -60,9 +72,8 @@ namespace Archimedes.Maps
 
         public static WorldLocation WorldLocationFrom(GeoCoordinate point)
         {
-   
             var geoCodingService = ServiceLocator.Instance.Resolve<IGeoCodingService>();
-            var location = new Location();
+            Location location;
             geoCodingService.GeoCoderReverseResolve(point, out location);
 
             return new WorldLocation(location);
@@ -71,6 +82,14 @@ namespace Archimedes.Maps
         #endregion
 
         #region Properties
+
+
+        public virtual void SetPosition(GeoCoordinate pos, LocationAccuracy accuracy)
+        {
+            Position = pos;
+            Accuracy = accuracy;
+        }
+
 
         /// <summary>
         /// Gets the position in World Coordinates
@@ -83,7 +102,8 @@ namespace Archimedes.Maps
                 }
                 return _position;
             }
-            set {
+            protected set
+            {
                 if (_position != value) {
                     _position = value;
                     OnPositionChanged();
@@ -92,20 +112,37 @@ namespace Archimedes.Maps
         }
 
         /// <summary>
+        /// Gets the accuracy of the resolved position
+        /// </summary>
+        public virtual LocationAccuracy Accuracy
+        {
+            get { return _accuracy; }
+            protected set
+            {
+                if (_accuracy != value)
+                {
+                    _accuracy = value;
+                    OnAccuracyChanged();
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Returns true if the current Adress is resolved into Geo Coords
         /// </summary>
         public virtual bool IsPositionResolved {
-            get { return (!_position.IsEmpty); }
+            get { return !_position.IsZero; }
         }
 
         #endregion
 
         #region Public Methods
 
+
         public virtual void Prototype(WorldLocation location) {
             base.Prototype(location);
-            if (location.IsPositionResolved)
-                this.Position = location.Position;
+            this.SetPosition(location.Position, location.Accuracy);
         }
 
         /// <summary>
@@ -154,16 +191,19 @@ namespace Archimedes.Maps
             if (!force && IsPositionResolved)
                 return GeoCodeStatus.Success; ;
 
-            var position = GeoCoordinate.Empty;
+            var position = GeoCoordinate.Zero;
+            var accuracy = LocationAccuracy.Unknown;
             bool res = false;
 
             if (_geoCodingService != null)
             {
-                res = _geoCodingService.GeoCoderResolve(this, out position, out status);
+                bool fromCache;
+                
+                res = _geoCodingService.GeoCoderResolve(this, false, out position, out status, out fromCache, out accuracy);
                 _positionResolveMade = true;
             }
 
-            Position = (res) ? position : GeoCoordinate.Empty;
+            SetPosition((res) ? position : GeoCoordinate.Zero, accuracy);
 
             return status;
         }
@@ -191,6 +231,13 @@ namespace Archimedes.Maps
             if (PositionChanged != null)
                 PositionChanged(this, null);
         }
+
+        protected virtual void OnAccuracyChanged() {
+            if (AccuracyChanged != null)
+                AccuracyChanged(this, null);
+        }
+
+
 
         public override object Clone() {
             return new WorldLocation(this);

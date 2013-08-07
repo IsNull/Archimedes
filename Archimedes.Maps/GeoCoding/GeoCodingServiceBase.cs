@@ -25,7 +25,8 @@ namespace Archimedes.Maps.GeoCoding
         public bool GeoCoderResolve(Location loc, out GeoCoordinate point) {
             GeoCodeStatus dummy;
             bool fromCache;
-            return GeoCoderResolve(loc, false, out point, out dummy, out fromCache);
+            LocationAccuracy accuracyDummy;
+            return GeoCoderResolve(loc, false, out point, out dummy, out fromCache, out accuracyDummy);
         }
 
         /// <summary>
@@ -38,7 +39,8 @@ namespace Archimedes.Maps.GeoCoding
         public bool GeoCoderResolve(Location loc, out GeoCoordinate point, out GeoCodeStatus status)
         {
             bool fromCache;
-            return GeoCoderResolve(loc, false, out point, out status, out fromCache);
+            LocationAccuracy accuracyDummy;
+            return GeoCoderResolve(loc, false, out point, out status, out fromCache, out accuracyDummy);
         }
 
         
@@ -50,9 +52,10 @@ namespace Archimedes.Maps.GeoCoding
         /// <returns></returns>
         public bool GeoCoderResolveCacheOnly(Location loc, out GeoCoordinate point)
         {
-            GeoCodeStatus dummy;
+            GeoCodeStatus statusDummy;
             bool fromCache;
-            return GeoCoderResolve(loc, true, out point, out dummy, out fromCache);
+            LocationAccuracy accuracyDummy;
+            return GeoCoderResolve(loc, true, out point, out statusDummy, out fromCache, out accuracyDummy);
         }
 
 
@@ -64,8 +67,9 @@ namespace Archimedes.Maps.GeoCoding
         /// <param name="point"></param>
         /// <param name="status"></param>
         /// <param name="fromCache"></param>
+        /// <param name="accuracy"> </param>
         /// <returns></returns>
-        public abstract bool GeoCoderResolve(Location loc, bool cacheOnly, out GeoCoordinate point, out GeoCodeStatus status, out bool fromCache);
+        public abstract bool GeoCoderResolve(Location loc, bool cacheOnly, out GeoCoordinate point, out GeoCodeStatus status, out bool fromCache, out LocationAccuracy accuracy);
 
         /// <summary>
         /// 
@@ -75,9 +79,10 @@ namespace Archimedes.Maps.GeoCoding
         /// <param name="point"></param>
         /// <param name="status"></param>
         /// <param name="fromCache"></param>
+        /// <param name="accuracy"> </param>
         /// <returns></returns>
         public abstract bool GeoCoderResolve(string keywords, bool cacheOnly, out GeoCoordinate point, out GeoCodeStatus status,
-                                             out bool fromCache);
+                                             out bool fromCache, out LocationAccuracy accuracy);
 
         /// <summary>
         /// Reverse Geocode the given coordinate

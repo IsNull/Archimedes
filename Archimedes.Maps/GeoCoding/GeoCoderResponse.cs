@@ -15,37 +15,35 @@ namespace RIEDOMaps.Model.Locations
         /// <summary>
         /// Status of the Geocoder
         /// </summary>
-        public GeoCodeStatus Status
-        {
-            get;
-            private set;
-        }
+        public GeoCodeStatus Status { get; private set; }
+
+        /// <summary>
+        /// Accuracy of the resolved point
+        /// </summary>
+        public LocationAccuracy Accuracy { get; private set; }
 
         /// <summary>
         /// Gets the Resolved point
         /// </summary>
-        public GeoCoordinate? ResolvedPoint {
-            get;
-            private set;
-        }
+        public GeoCoordinate? ResolvedPoint { get; private set; }
 
-        public bool HasPoint {
+        public bool HasPoint
+        {
             get { return ResolvedPoint.HasValue; }
         }
 
         /// <summary>
         /// Returns true if the response was from the cache
         /// </summary>
-        public bool FromCache {
-            get;
-            private set;
-        }
+        public bool FromCache { get; private set; }
 
-        public GeoCoderResponse(GeoCoordinate? point, GeoCodeStatus status, bool fromCache) 
-            : this() {
+        public GeoCoderResponse(GeoCoordinate? point, GeoCodeStatus status, bool fromCache, LocationAccuracy accuracy)
+            : this()
+        {
             Status = status;
             ResolvedPoint = point;
             FromCache = fromCache;
+            Accuracy = accuracy;
         }
     }
 }

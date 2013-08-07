@@ -16,32 +16,17 @@ namespace Archimedes.Maps
     public struct GeoCoordinate
     {
         [NonSerialized]
-        public static readonly GeoCoordinate Empty = new GeoCoordinate();
+        public static readonly GeoCoordinate Zero = new GeoCoordinate();
 
         [DataMember]
-        private double _lat;
+        private readonly double _lat;
         [DataMember]
-        private double _lng;
-
-        [NonSerialized]
-        bool _notEmpty;
+        private readonly double _lng;
 
         public GeoCoordinate(double lat, double lng)
         {
             this._lat = lat;
             this._lng = lng;
-            _notEmpty = true;
-        }
-
-        /// <summary>
-        /// Returns true if coordinates wasn't assigned
-        /// </summary>
-        public bool IsEmpty
-        {
-            get
-            {
-                return !_notEmpty;
-            }
         }
 
         /// <summary>
@@ -52,11 +37,6 @@ namespace Archimedes.Maps
             get
             {
                 return this._lat;
-            }
-            set
-            {
-                this._lat = value;
-                _notEmpty = true;
             }
         }
 
@@ -69,11 +49,11 @@ namespace Archimedes.Maps
             {
                 return this._lng;
             }
-            set
-            {
-                this._lng = value;
-                _notEmpty = true;
-            }
+        }
+
+        public bool IsZero
+        {
+            get { return this == Zero; }
         }
 
         #region Operators
@@ -92,29 +72,33 @@ namespace Archimedes.Maps
 
         public override bool Equals(object obj)
         {
-            if (!(obj is GeoCoordinate))
-            {
-                return false;
-            }
-            var tf = (GeoCoordinate)obj;
-            return (((tf.Lng == this.Lng) && (tf.Lat == this.Lat)) && tf.GetType().Equals(base.GetType()));
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is GeoCoordinate && Equals((GeoCoordinate) obj);
         }
 
-        public void Offset(GeoCoordinate pos)
+        public bool Equals(GeoCoordinate other)
         {
-            this.Offset(pos.Lat, pos.Lng);
-        }
-
-        public void Offset(double lat, double lng)
-        {
-            this.Lng += lng;
-            this.Lat -= lat;
+            return _lat.Equals(other._lat) && _lng.Equals(other._lng);
         }
 
         public override int GetHashCode()
         {
-            return (this.Lng.GetHashCode() ^ this.Lat.GetHashCode());
+            unchecked
+            {
+                return (_lat.GetHashCode() * 397) ^ _lng.GetHashCode();
+            }
         }
+
+        public GeoCoordinate Offset(GeoCoordinate pos)
+        {
+            return this.Offset(pos.Lat, pos.Lng);
+        }
+
+        public GeoCoordinate Offset(double lat, double lng)
+        {
+            return new GeoCoordinate(Lat + lat, Lng + lng);
+        }
+
 
         public override string ToString()
         {

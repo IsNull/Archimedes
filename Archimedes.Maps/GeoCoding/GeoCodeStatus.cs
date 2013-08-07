@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Archimedes.Maps.GeoCoding
 {
+    /// <summary>
+    /// Represents the status code of a GeoCode operation
+    /// </summary>
     public enum GeoCodeStatus
     {
         /// <summary>

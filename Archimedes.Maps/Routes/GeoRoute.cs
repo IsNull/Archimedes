@@ -88,5 +88,10 @@ namespace Archimedes.Maps.Routes
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
     }
 }

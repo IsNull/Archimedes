@@ -130,6 +130,7 @@ namespace Archimedes.Maps.GeoCoding
         /// <param name="e"></param>
         void OnStartResolveLocations(object sender, DoWorkEventArgs e) {
             GeoCodeStatus status;
+            LocationAccuracy accuracy;
             GeoCoordinate locationPoint;
             var worker = sender as BackgroundWorker;
             bool fromCache;
@@ -148,53 +149,93 @@ namespace Archimedes.Maps.GeoCoding
 
                         if (_geocoder.GeoCoderResolveCacheOnly(toResolve, out locationPoint)) {
                             status = GeoCodeStatus.Success;
-                            toResolve.Position = locationPoint;
-                            sleepNeeded = false;
-                        } else if (_geocoder.GeoCoderResolve(toResolve, false, out locationPoint, out status, out fromCache)) {
-
-                            if (sleepNeeded) {
-                                // wait the time beeing
+                            toResolve.SetPosition(locationPoint, LocationAccuracy.NotSupported);
+                        }
+                        else
+                        {
+                            if (sleepNeeded)
+                            {
+                                // cool down
                                 Thread.Sleep(WaitTime);
                                 sleepNeeded = false;
                             }
-                            toResolve.Position = locationPoint;
-                            sleepNeeded = true;
+
+                            if (_geocoder.GeoCoderResolve(toResolve, false, out locationPoint, out status, out fromCache, out accuracy))
+                            {
+                                toResolve.SetPosition(locationPoint, accuracy);
+                            }
                         }
+                        
  
                         switch (status) {
 
                             case GeoCodeStatus.ExeededQueryLimit:
                                 // leave this location object in the list and requery it later again
+                                sleepNeeded = true;
                             break;
 
                             case GeoCodeStatus.ServerError:
                                 // leave this location object in the list and requery it later again
                             break;
 
+                                // TODO: only try a certain amount of times - no endles loop here...
 
                             default:
                             // We had a success or unresolvable error - take the location out of our ToDo List
-                            ReportLocation(toResolve, status);
+                            HandleLocation(toResolve, status);
                             break;
                         }
 
                         // check for cancel
-                        if (worker.CancellationPending == true) {
+                        if (worker != null && worker.CancellationPending)
+                        {
                             e.Cancel = true;
                             return; // exit this thread
                         }
                     } else {
-                        ReportLocation(toResolve, GeoCodeStatus.Success);
+                        HandleLocation(toResolve, GeoCodeStatus.Success);
                     }
                 }
             }
         }
 
-        void ReportLocation(WorldLocation resolvedTarget, GeoCodeStatus geoCoderStatus)
+        /// <summary>
+        /// Handle a resolved location
+        /// </summary>
+        /// <param name="resolvedTarget"></param>
+        /// <param name="geoCoderStatus"></param>
+        void HandleLocation(WorldLocation resolvedTarget, GeoCodeStatus geoCoderStatus)
         {
-            lock (_locationsLock) {
+            /*
+            if (geoCoderStatus == GeoCodeStatus.Success)
+            {
+                switch (resolvedTarget.Accuracy)
+                {
+                        case LocationAccuracy.Unknown:
+                        case LocationAccuracy.GeometricCenter:
+                        case LocationAccuracy.Approximate:
+                        return;
+                }
+            }
+             */
+
+
+            OnLocationResolved(resolvedTarget, geoCoderStatus);
+        }
+
+        /// <summary>
+        /// Occurs when a location has been resolved.
+        /// The location is removed from the queue and reported to listeners as resolved
+        /// </summary>
+        /// <param name="resolvedTarget"></param>
+        /// <param name="geoCoderStatus"></param>
+        void OnLocationResolved(WorldLocation resolvedTarget, GeoCodeStatus geoCoderStatus)
+        {
+            lock (_locationsLock)
+            {
                 _locationsToResolve.Remove(resolvedTarget);
             }
+            // report the resolved location
             if (LocationResolved != null)
                 LocationResolved(this, new LocationResolvedEventArgs(resolvedTarget, geoCoderStatus));
         }

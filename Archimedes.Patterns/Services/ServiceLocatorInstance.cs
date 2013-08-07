@@ -9,7 +9,7 @@ namespace Archimedes.Patterns.Services
 {
     public class ServiceLocatorInstance : IServiceLocator
     {
-        Dictionary<Type, ServiceInfo> services = new Dictionary<Type, ServiceInfo>();
+        readonly Dictionary<Type, ServiceInfo> _services = new Dictionary<Type, ServiceInfo>();
 
         /// <summary>
         /// Registers a service.
@@ -32,10 +32,9 @@ namespace Archimedes.Patterns.Services
         /// Registers a service with specific instance (this will automatically be handled as a singleton)
         /// </summary>
         /// <typeparam name="TInterface"></typeparam>
-        /// <typeparam name="TImplemention"></typeparam>
         /// <param name="instance"></param>
         public void RegisterInstance<TInterface>(TInterface instance) {
-            services.Add(typeof(TInterface), new ServiceInfo(instance));
+            _services.Add(typeof(TInterface), new ServiceInfo(instance));
         }
 
 
@@ -48,10 +47,10 @@ namespace Archimedes.Patterns.Services
         /// <returns></returns>
         [DebuggerStepThrough]
         public TInterface Resolve<TInterface>() {
-            if (!services.ContainsKey(typeof(TInterface))) {
+            if (!_services.ContainsKey(typeof(TInterface))) {
                 throw new ServiceNotFoundException(typeof(TInterface));
             }
-            return (TInterface)services[typeof(TInterface)].ServiceImplementation;
+            return (TInterface)_services[typeof(TInterface)].ServiceImplementation;
         }
 
 
@@ -60,15 +59,15 @@ namespace Archimedes.Patterns.Services
         /// </summary>
         /// <param name="isSingleton">true if service is Singleton; otherwise false.</param>
         void Register<TInterface, TImplemention>(bool isSingleton) where TImplemention : TInterface {
-            services.Add(typeof(TInterface), new ServiceInfo(typeof(TImplemention), isSingleton));
+            _services.Add(typeof(TInterface), new ServiceInfo(typeof(TImplemention), isSingleton));
         }
 
         private bool Contains(Type t) {
-            return services.ContainsKey(t);
+            return _services.ContainsKey(t);
         }
 
         private object GetServiceImplementation(Type t) {
-            return services[t].ServiceImplementation;
+            return _services[t].ServiceImplementation;
         }
 
         #region ServiceInfo Class
@@ -78,10 +77,10 @@ namespace Archimedes.Patterns.Services
         /// </summary>
         class ServiceInfo
         {
-            Type _serviceImplementationType;
+            readonly Type _serviceImplementationType;
+            readonly bool _isSingleton;
             object _serviceImplementation;
-            bool _isSingleton;
-
+            
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ServiceInfo"/> class.
@@ -97,8 +96,9 @@ namespace Archimedes.Patterns.Services
             /// Initializes a new instance of the <see cref="ServiceInfo"/> class.
             /// </summary>
             /// <param name="serviceImplementation">Instance. of service</param>
+            /// <param name="type"> </param>
             public ServiceInfo(object serviceImplementation) {
-                _serviceImplementationType = serviceImplementation.GetType();
+                _serviceImplementationType = serviceImplementation != null ? serviceImplementation.GetType() : null;
                 _serviceImplementation = serviceImplementation;
                 _isSingleton = true;
             }
@@ -109,7 +109,8 @@ namespace Archimedes.Patterns.Services
             public object ServiceImplementation {
                 get {
                     if (_isSingleton) {
-                        if (_serviceImplementation == null) {
+                        if (_serviceImplementation == null && _serviceImplementationType != null)
+                        {
                             _serviceImplementation = CreateInstance(_serviceImplementationType);
                         }
                         return _serviceImplementation;
@@ -129,10 +130,10 @@ namespace Archimedes.Patterns.Services
                     return ServiceLocator.Instance.GetServiceImplementation(type);
                 }
 
-                ConstructorInfo ctor = type.GetConstructors().First();
+                var constructor = type.GetConstructors().First();
 
                 var parameters =
-                    from parameter in ctor.GetParameters()
+                    from parameter in constructor.GetParameters()
                     select CreateInstance(parameter.ParameterType);
 
                 return Activator.CreateInstance(type, parameters.ToArray());

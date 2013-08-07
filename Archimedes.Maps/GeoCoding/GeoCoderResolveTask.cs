@@ -48,8 +48,6 @@ namespace Archimedes.Maps.GeoCoding
         /// ASync resolving of positions
         /// </summary>
         /// <param name="loc"></param>
-        /// <param name="point"></param>
-        /// <param name="status"></param>
         /// <returns></returns>
         public Task<GeoCoderResponse> GeoCoderResolveAsync(Location loc) {
             return GeoCoderResolveAsync(loc, false);
@@ -59,7 +57,6 @@ namespace Archimedes.Maps.GeoCoding
         /// Sync resolving of cached positions
         /// </summary>
         /// <param name="loc"></param>
-        /// <param name="point"></param>
         /// <returns></returns>
         public Task<GeoCoderResponse> GeoCoderResolveCacheOnlyAsync(Location loc) {
             return GeoCoderResolveAsync(loc, true);
@@ -75,14 +72,15 @@ namespace Archimedes.Maps.GeoCoding
 
             bool fromCache = false;
             var status = GeoCodeStatus.None;
+            var accuracy = LocationAccuracy.Unknown;
             GeoCoordinate? p = null;
 
             await Task.Run(() =>
             {
                GeoCoordinate result;
-               _geoCodeService.GeoCoderResolve(loc, cacheOnly, out result, out status, out fromCache);
+               _geoCodeService.GeoCoderResolve(loc, cacheOnly, out result, out status, out fromCache, out accuracy);
             });
-            return new GeoCoderResponse(p, status, fromCache);;
+            return new GeoCoderResponse(p, status, fromCache, accuracy);
         }
 
         #endregion
@@ -115,11 +113,10 @@ namespace Archimedes.Maps.GeoCoding
                             var res = await GeoCoderResolveCacheOnlyAsync(toResolve);
 
                             if (res.HasPoint) {
-                                toResolve.Position = res.ResolvedPoint.Value;
-                                sleepNeeded = false;
+                                toResolve.SetPosition(res.ResolvedPoint.Value, res.Accuracy);
                             } else {
                                 res = await GeoCoderResolveAsync(toResolve, false);
-                                toResolve.Position = res.ResolvedPoint.Value;
+                                toResolve.SetPosition(res.ResolvedPoint.Value, res.Accuracy);
 
                                 if (sleepNeeded) {
                                     // wait the time beeing
