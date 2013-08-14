@@ -79,6 +79,7 @@
     <Compile Include="FrameWorkDialogs\OpenFile\OpenFileDialog.cs" />
     <Compile Include="FrameWorkDialogs\OpenFile\OpenFileDialogViewModel.cs" />
     <Compile Include="FrameWorkDialogs\WindowWrapper.cs" />
+    <Compile Include="Notifications\ProgressMonitor.cs" />
     <Compile Include="Notifications\NotificationPresenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Strings.de.Designer.cs">
