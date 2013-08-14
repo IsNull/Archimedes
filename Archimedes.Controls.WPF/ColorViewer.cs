@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -23,8 +24,7 @@ namespace Archimedes.Controls.WPF
         /// <summary>
         /// Cache for every size of the chart
         /// </summary>
-        private readonly IDictionary<int, BitmapSource> _bmpCache = new Dictionary<int, BitmapSource>();
-        private readonly object _bmpCacheLock = new object();
+        private readonly static SharedBackbufferCache SharedBackbufferCache = new SharedBackbufferCache();
 
         #region --- DependencyProperties ---
 
@@ -52,7 +52,7 @@ namespace Archimedes.Controls.WPF
             var colorViewer = d as ColorViewer;
             if (colorViewer != null)
             {
-                colorViewer.ClearCache();
+                colorViewer.MarkContentDirty();
                 colorViewer.InvalidateVisual();
             }
         }
@@ -72,7 +72,7 @@ namespace Archimedes.Controls.WPF
             var colorViewer = d as ColorViewer;
             if (colorViewer != null)
             {
-                colorViewer.ClearCache();
+                colorViewer.MarkContentDirty();
                 colorViewer.InvalidateVisual();
             }
         }
@@ -97,8 +97,18 @@ namespace Archimedes.Controls.WPF
                 "StrokeWidth",
                 typeof (double),
                 typeof (ColorViewer),
-                new UIPropertyMetadata(1.0)
+                new UIPropertyMetadata(1.0, OnStrokeWidthPropertyChanged)
                 );
+
+        private static void OnStrokeWidthPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var colorViewer = d as ColorViewer;
+            if (colorViewer != null)
+            {
+                colorViewer.MarkContentDirty();
+                colorViewer.InvalidateVisual();
+            }
+        }
 
         /// <summary>
         /// Sets/retrieves the width of the outer circle's stroke.
@@ -180,6 +190,33 @@ namespace Archimedes.Controls.WPF
 
         #region Visual Render Cache
 
+        private int? _contentHash = null;
+
+        private void MarkContentDirty()
+        {
+            // setting _contentHash to NULL will cause an update 
+            // in the next render iteration
+            _contentHash = null;
+        }
+
+        private int ContentHash {
+            get
+            {
+                if (!_contentHash.HasValue)
+                {
+                    int hash = SectorBrushes.Aggregate(19,
+                        (current, brush) =>
+                            current * 31 + brush.GetHashCode());
+
+                    hash = hash * 31 + StrokeColor.GetHashCode();
+                    hash = hash * 31 + StrokeWidth.GetHashCode();
+
+                    _contentHash = hash;
+                }
+                return _contentHash.Value;
+            }
+        }
+
         /// <summary>
         /// Cache the rendered frame, for each requested size
         /// If you have fluent zoom (=> leading to very lot cached images), you should not use the cache
@@ -188,36 +225,30 @@ namespace Archimedes.Controls.WPF
 
         private BitmapSource CachedRenderColorChartToBitmap(double width, double height)
         {
-            int hash = CalcHash(width, height);
+            int sizeHash = CalcHash(width, height);
+            int contentHash = ContentHash;
 
-            lock (_bmpCacheLock)
+            var source = SharedBackbufferCache.GetBackbuffer(sizeHash, contentHash);
+            if (source == null)
             {
-                if (!_bmpCache.ContainsKey(hash))
-                {
-                    _bmpCache.Add(hash, RenderColorChartToBitmap(width, height));
-                }
-
-                return _bmpCache[hash];
+                source = RenderColorChartToBitmap(width, height);
+                SharedBackbufferCache.UpdateBackbuffer(sizeHash, contentHash, source);
             }
-        }
 
-        /// <summary>
-        /// Clears the backing buffer cache. The pie-chart is freshly rendered in the next cycle.
-        /// </summary>
-        private void ClearCache()
-        {
-            lock (_bmpCacheLock)
-            {
-                _bmpCache.Clear();
-            }
+            return source;
         }
 
         private int CalcHash(double a, double b)
         {
-            return ((int) a*1000) + (int) b;
+            int hash = 19;
+            hash = hash * 31 + a.GetHashCode();
+            hash = hash * 31 + b.GetHashCode();
+            return hash;
         }
 
         #endregion
+
+        #region Rendering
 
         private BitmapSource RenderColorChartToBitmap(double width, double height)
         {
@@ -317,6 +348,8 @@ namespace Archimedes.Controls.WPF
             if (StrokeColor != null && StrokeColor != Colors.Transparent && StrokeWidth > 0)
                 dc.DrawEllipse(null, CachedStrokePen, ptCenter, dblRadius, dblRadius);
         }
+
+        #endregion
 
         #region --- Helpers ---
 
