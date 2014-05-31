@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Archimedes.Geometry</RootNamespace>
     <AssemblyName>Archimedes.Geometry</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -90,6 +90,7 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderEventArgs.cs" />
     <Compile Include="Rendering\ZoomWorker.cs" />
+    <Compile Include="SizeD.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="_3D\Point3.cs" />
     <Compile Include="_3D\StraightLine3.cs" />
@@ -101,12 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Archimedes.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Archimedes.Genetics\Archimedes.Genetics.csproj">
-      <Project>{ee1066d7-5dc0-4eae-8290-cd5e1cebfe5c}</Project>
-      <Name>Archimedes.Genetics</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
