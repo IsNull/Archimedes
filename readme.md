@@ -1,10 +1,10 @@
-﻿Archimedes
+﻿#Archimedes
 
 .NET Common Patterns & Practics Libs
 
 
     
-    Copyright (c) 2011 by Pascal Buettiker & other contributors
+    Copyright (c) 2014 by Pascal Buettiker & other contributors
 
 
     Archimedes is free software: you can redistribute it and/or modify
