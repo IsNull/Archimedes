@@ -80,8 +80,6 @@
     <Compile Include="Primitives\Path2.cs" />
     <Compile Include="Primitives\Polygon2.cs" />
     <Compile Include="Primitives\Rectangle2.cs" />
-    <Compile Include="Primitives\SquareInPolygon\FindMaxSquareInPolygonAlgorythm.cs" />
-    <Compile Include="Primitives\SquareInPolygon\SquareCandidate.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ray.cs" />
     <Compile Include="Rendering\DrawingGroup.cs" />
