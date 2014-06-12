@@ -126,8 +126,8 @@ namespace Archimedes.Patterns.Data.Tree
         public void MergeNodeIntoChildren(T source) {
             MergeNodeIntoChildren(source, (this as T));
         }
-        /// <summary>Merges the source node into the destnode childs
-        /// 
+        /// <summary>
+        /// Merges the source node into the destnode childs
         /// </summary>
         /// <param name="source"></param>
         /// <param name="dest"></param>
@@ -144,15 +144,17 @@ namespace Archimedes.Patterns.Data.Tree
         public void MergeNodes(T source) {
             MergeNodeIntoChildren(source, (this as T));
         }
-        /// <summary>Merges every sourcechild from source node into the dest node childs.
-        /// 
+        /// <summary>
+        /// Merges every sourcechild from source node into the dest node childs.
         /// </summary>
-        /// <param name="Node2Merge"></param>
-        /// <param name="DestinationNode"></param>
+        /// <param name="source"></param>
+        /// <param name="dest"></param>
         public void MergeNodes(T source, T dest) {
-            int childindex = 0;
-            foreach (T sourcechild in source.Children) {
-                if ((childindex = IsNodeInChildern(sourcechild, dest)) != -1) {
+            foreach (T sourcechild in source.Children)
+            {
+                int childindex = IsNodeInChildern(sourcechild, dest);
+                if (childindex != -1)
+                {
                     MergeNodes(sourcechild, (dest.Children[childindex] as T));
                 } else {
                     dest.Children.Add((sourcechild.Clone() as T));
@@ -164,16 +166,16 @@ namespace Archimedes.Patterns.Data.Tree
 
         #region Walker
 
-        /// <summary>Checks if the node exists in this childern
-        /// 
+        /// <summary>
+        /// Checks if the node exists in this childern
         /// </summary>
         /// <param name="scannode"></param>
         /// <returns></returns>
         public int IsNodeInChildern(T node) {
             return IsNodeInChildern(node, (this as T));
         }
-        /// <summary>Checks if the node exists in the scannodes childern
-        /// 
+        /// <summary>
+        /// Checks if the node exists in the scannodes childern
         /// </summary>
         /// <param name="node"></param>
         /// <param name="scannode"></param>
@@ -190,33 +192,36 @@ namespace Archimedes.Patterns.Data.Tree
         }
 
 
-        /// <summary>Walks in this node along the given Path (SimpleNode) and returns the node which the path points to.
-        /// 
+        /// <summary>
+        /// Walks in this node along the given Path (SimpleNode) and returns the node which the path points to.
         /// </summary>
-        /// <param name="SimpleNode"></param>
+        /// <param name="simpleNode"></param>
         /// <returns></returns>
-        public T WalkLast(T SimpleNode) {
-            return WalkLast((this as T), SimpleNode);
+        public T WalkLast(T simpleNode) {
+            return WalkLast((this as T), simpleNode);
         }
 
-        /// <summary>Walks in MasterNode along the SimpleNode Path and returns the subnode from MasterNode where SimpleNode (the path) points to. Got it? :)
-        /// 
+        /// <summary>
+        /// Walks in MasterNode along the SimpleNode Path and returns the subnode from MasterNode where SimpleNode (the path) points to. Got it? :)
         /// </summary>
-        /// <param name="MasterNode">Complex Tree to search/walk in</param>
-        /// <param name="SimpleNode">Flat Tree which is used as Path</param>
+        /// <param name="masterNode">Complex Tree to search/walk in</param>
+        /// <param name="simpleNode">Flat Tree which is used as Path</param>
         /// <returns>node from Masternode</returns>
-        public T WalkLast(T MasterNode, T SimpleNode) {
+        public T WalkLast(T masterNode, T simpleNode) {
             int index;
 
-            if (SimpleNode.Children.Count == 0) {
-                return MasterNode;
+            if (simpleNode.Children.Count == 0)
+            {
+                return masterNode;
             }
 
-            if ((index = MasterNode.IsNodeInChildern((SimpleNode.Children[0] as T))) != -1) {
-                if (SimpleNode.Children[0].Children.Count != 0) {
-                    return WalkLast((MasterNode.Children[index] as T), (SimpleNode.Children[0] as T));
+            if ((index = masterNode.IsNodeInChildern((simpleNode.Children[0] as T))) != -1)
+            {
+                if (simpleNode.Children[0].Children.Count != 0)
+                {
+                    return WalkLast((masterNode.Children[index] as T), (simpleNode.Children[0] as T));
                 } else {
-                    return (MasterNode.Children[index] as T);
+                    return (masterNode.Children[index] as T);
                 }
             } else {
                 return null;
@@ -227,8 +232,8 @@ namespace Archimedes.Patterns.Data.Tree
 
         #region Flat Tree
 
-        /// <summary>Returns the deepest (Last) Element of a flat Tree
-        /// 
+        /// <summary>
+        /// Returns the deepest (Last) Element of a flat Tree
         /// </summary>
         /// <returns></returns>
         public T WalkLastFlat() {
@@ -291,11 +296,11 @@ namespace Archimedes.Patterns.Data.Tree
         #endregion
 
         public override string ToString() {
-            string Description = "Depth=" + Depth.ToString() + ", Children=" + Children.Count.ToString();
+            string description = "Depth=" + Depth + ", Children=" + Children.Count;
             if (this == Root) {
-                Description += " (Root)";
+                description += " (Root)";
             }
-            return Description;
+            return description;
         }
 
         public override bool Equals(object obj) {
