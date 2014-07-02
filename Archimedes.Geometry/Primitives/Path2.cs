@@ -18,7 +18,7 @@ namespace Archimedes.Geometry.Primitives
         #region Fields
 
         System.Drawing.Pen _pen;
-        GraphicsPath _gpath = new GraphicsPath();
+        readonly GraphicsPath _gpath = new GraphicsPath();
 
         #endregion
 
@@ -103,7 +103,6 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public virtual void Dispose() {
-            //Pen.Dispose();
             _gpath.Dispose();
         }
 

@@ -13,10 +13,10 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Fields
 
-        List<IGeometryBase> _geometries = new List<IGeometryBase>();
-        Vertices _vertices = new Vertices();
-        object _verticesLock = new object();
-        bool _verticesInvalidated = true;
+        readonly List<IGeometryBase> _geometries = new List<IGeometryBase>();
+        Vertices _verticesCache = null;
+        readonly object _verticesCacheLock = new object();
+
         RectangleF _boundingbox;
         Rectangle2 _boundingboxsmall;
 
@@ -101,7 +101,10 @@ namespace Archimedes.Geometry.Primitives
         }
 
         private void Invalidate() {
-            _verticesInvalidated = true;
+            lock (_verticesCacheLock)
+            {
+                _verticesCache = null;
+            }
             _boundingboxInvalidated = true;
             _boundingboxsmallInvalidated = true;
         }
@@ -254,18 +257,18 @@ namespace Archimedes.Geometry.Primitives
 
         #region To -> Transformer Methods
 
+        /// <summary>
+        /// Returns vertices of this geometry
+        /// </summary>
+        /// <returns></returns>
         public Vertices ToVertices() {
-            lock (_verticesLock) {
-                if (_verticesInvalidated) {
-                    _vertices.Clear();
-                    try {
-                        _vertices = new Vertices(ToPath().ToVertices().Distinct());
-                        _verticesInvalidated = false;
-                    } catch (ArgumentException) {
-                        // igonre
-                    }
+            lock (_verticesCacheLock) {
+                if (_verticesCache == null)
+                {
+                    var vertices = ToPath().ToVertices().Distinct();
+                    _verticesCache = new Vertices(vertices);
                 }
-                return new Vertices(_vertices);
+                return new Vertices(_verticesCache);
             }
         }
 
@@ -296,6 +299,7 @@ namespace Archimedes.Geometry.Primitives
             foreach (var g in _geometries) {
                 g.Dispose();
             }
+            _geometries.Clear();
         }
 
         #endregion

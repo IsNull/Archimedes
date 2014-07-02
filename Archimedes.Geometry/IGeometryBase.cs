@@ -11,7 +11,6 @@ namespace Archimedes.Geometry
     /// </summary>
     public interface IGeometryBase : IDrawable, IDisposable
     {
-        //Pen Pen { get; set; }
         Vector2 Location { get; set; }
         Vector2 MiddlePoint { get; set; }
         
@@ -41,9 +40,9 @@ namespace Archimedes.Geometry
         /// <summary>
         /// Intersects the Gemoetry Element with a other Geometry Element
         /// </summary>
-        /// <param name="GeometryObject"></param>
+        /// <param name="geometryObject"></param>
         /// <returns>true if the objects collide</returns>
-        bool IntersectsWith(IGeometryBase GeometryObject);
+        bool IntersectsWith(IGeometryBase geometryObject);
 
         /// <summary>
         /// Checks Intersection and returns all Points which Intersects
