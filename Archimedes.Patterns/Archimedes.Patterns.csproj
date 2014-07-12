@@ -90,6 +90,7 @@
     <Compile Include="Data\IPersistentList.cs" />
     <Compile Include="Data\LimitedStack.cs" />
     <Compile Include="Data\ObservableLimitedStack.cs" />
+    <Compile Include="Data\Sorting\NaturalSortComparer.cs" />
     <Compile Include="Data\Tree\ComplexSubtree.cs" />
     <Compile Include="Data\Tree\ComplexTree.cs" />
     <Compile Include="Data\Tree\ComplexTreeNode.cs" />
