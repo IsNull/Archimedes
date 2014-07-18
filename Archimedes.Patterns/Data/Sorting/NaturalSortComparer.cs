@@ -26,10 +26,20 @@ namespace Archimedes.Patterns.Data.Sorting
         /// </summary>
         public ListSortDirection SortDirection { get; set; } 
 
+        /// <summary>
+        /// Returns -1, 0 or 1.
+        /// Return value Less than zero means x is less than y.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public int Compare(string x, string y)
         {
-            if (x == y)
-                return 0;
+            // Handle base cases and prevent null pointers
+
+            if (x == y) return 0;
+            if (x == null) return -1;
+            if (y == null) return 1;
 
             string[] x1, y1;
 
