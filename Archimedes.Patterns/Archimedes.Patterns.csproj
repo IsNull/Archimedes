@@ -113,13 +113,6 @@
     <Compile Include="Notifications\NotificationCollection.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Conditions\DynamicConditionExpression.cs" />
-    <Compile Include="Plugins\DefaultPluginAttribute.cs" />
-    <Compile Include="Plugins\IPlugin.cs" />
-    <Compile Include="Plugins\IPluginHostProvider.cs" />
-    <Compile Include="Plugins\Plugin.cs" />
-    <Compile Include="Plugins\PluginHost.cs" />
-    <Compile Include="Plugins\PluginHostProvider.cs" />
-    <Compile Include="Plugins\PluginManager.cs" />
     <Compile Include="Reflection\TypeHelper.cs" />
     <Compile Include="RegEx\RegExReplaceAggregate.cs" />
     <Compile Include="RegEx\RegExReplacer.cs" />
@@ -173,9 +166,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Archimedes.snk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Plugins\Info\Plugins.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
