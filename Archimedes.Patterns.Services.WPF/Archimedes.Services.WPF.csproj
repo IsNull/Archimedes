@@ -128,6 +128,10 @@
     <Resource Include="Images\dialog-clean.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RIEDOMaps\Libs\AvalonDock\AvalonDock\AvalonDock.csproj">
+      <Project>{87e61430-4243-45f2-b74e-0a4c096cebf3}</Project>
+      <Name>AvalonDock</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Archimedes.Patterns.WPF\Archimedes.Patterns.WPF.csproj">
       <Project>{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}</Project>
       <Name>Archimedes.Patterns.WPF</Name>

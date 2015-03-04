@@ -52,9 +52,9 @@
   <ItemGroup>
     <Compile Include="Builder\ConvexHullBuilder.cs" />
     <Compile Include="Builder\PathConnector.cs" />
+    <Compile Include="Direction.cs" />
     <Compile Include="IOrdered.cs" />
     <Compile Include="MathHelper.cs" />
-    <Compile Include="Enums.cs" />
     <Compile Include="Extensions\BitmapBoundingBox.cs" />
     <Compile Include="Extensions\NumberExtension.cs" />
     <Compile Include="Extensions\PointExtension.cs" />
@@ -88,7 +88,6 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderEventArgs.cs" />
     <Compile Include="Rendering\ZoomWorker.cs" />
-    <Compile Include="SizeD.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="_3D\Point3.cs" />
     <Compile Include="_3D\StraightLine3.cs" />

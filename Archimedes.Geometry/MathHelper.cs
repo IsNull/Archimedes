@@ -66,32 +66,7 @@ namespace Archimedes.Geometry
             return RAD * 180d / Math.PI;
         }
 
-        /// <summary>Switches a direction
-        /// 
-        /// </summary>
-        /// <param name="uDirection"></param>
-        /// <returns></returns>
-        public static Direction Switch(Direction uDirection) {
-            return (uDirection == Direction.LEFT) ? Direction.RIGHT : Direction.LEFT;
-        }
-
-        /// <summary>
-        /// Get -1 or 1, depending on the Direction
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        public static int Mul(Direction direction) {
-            return (direction == Direction.LEFT) ? 1 : -1;
-        }
-
-        /// <summary>
-        /// Get the direction depending on positive/negative number
-        /// </summary>
-        /// <param name="direction"></param>
-        /// <returns></returns>
-        public static Direction UnMul(double mul) {
-            return (mul > 0) ? Direction.LEFT : Direction.RIGHT;
-        }
+        
 
 
         public static void GetStartEndPoint(IGeometryBase geometry, out Point? start, out Point? end) {
