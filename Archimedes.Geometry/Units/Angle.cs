@@ -362,6 +362,16 @@ namespace Archimedes.Geometry.Units
             return this.ToString(format, formatProvider, AngleUnit.Radians);
         }
 
+        public string ToString(AngleUnit unit)
+        {
+            return ToString((string)null, (IFormatProvider)NumberFormatInfo.CurrentInfo, unit);
+        }
+
+        public string ToString(string format, AngleUnit unit)
+        {
+            return ToString(format, (IFormatProvider)NumberFormatInfo.CurrentInfo, unit);
+        }
+
         public string ToString(string format, IFormatProvider formatProvider, AngleUnit unit)
         {
             var value = GetAngleAs(unit);
