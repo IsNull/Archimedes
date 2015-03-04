@@ -17,6 +17,35 @@ namespace Archimedes.Geometry
     /// </summary>
     public struct Vector2 : IEquatable<Vector2>, IOrdered<Vector2>
     {
+
+        #region Static Builder methods
+
+        /// <summary>
+        /// Creates a Vector from the given angle and of the given length
+        /// </summary>
+        /// <param name="angle"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static Vector2 VectorFromAngle(double angle, double length)
+        {
+            var gk = length * Math.Sin(MathHelper.ToRadians(angle));
+            var ak = length * Math.Cos(MathHelper.ToRadians(angle));
+            return new Vector2(ak, gk);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Vector2 Parse(string value)
+        {
+            var doubles = Parser.ParseItem2D(value);
+            return new Vector2(doubles);
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -30,13 +59,22 @@ namespace Archimedes.Geometry
             this.Y = y;
         }
 
+        public Vector2(double[] data)
+            : this(data[0], data[1])
+        {
+            if (data.Length != 2)
+            {
+                throw new ArgumentException("data.Length != 2!");
+            }
+        }
+
         /// <summary>
         /// Create a new 2D Vector from 2 given Points
         /// </summary>
-        /// <param name="P1"></param>
-        /// <param name="P2"></param>
-        public Vector2(Vector2 P1, Vector2 P2)
-            : this(P2.X - P1.X, P2.Y - P1.Y) { }
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public Vector2(Vector2 from, Vector2 to)
+            : this(to.X - from.X, to.Y - from.Y) { }
 
         #endregion
 
@@ -74,13 +112,14 @@ namespace Archimedes.Geometry
         /// <summary>
         /// Gets or Sets the Lenght of this Vector
         /// </summary>
-        public double Lenght
+        public double Length
         {
             get { return (Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2))); }
             set {
-                if (this.Lenght != 0) {
+                if (this.Length != 0)
+                {
                     //v * newsize / |v|
-                    this = this * (value / this.Lenght);
+                    this = this * (value / this.Length);
                 } else
                     this = Vector2.Zero;
             }
@@ -176,13 +215,6 @@ namespace Archimedes.Geometry
 
         #region Static Methods
 
-        public static Vector2 VectorFromAngle(double angle, double length)
-        {
-            var gk = length * Math.Sin(MathHelper.ToRadians(angle));
-            var ak = length * Math.Cos(MathHelper.ToRadians(angle));
-            return new Vector2(ak, gk);
-        }
-
         /// <summary>
         /// Multiplicate a Vector with a Scalar (Equal to v1[Vector] * Operator[Number])
         /// </summary>
@@ -248,7 +280,7 @@ namespace Archimedes.Geometry
         /// <param name="angle"></param>
         public void Rotate(double angle)
         {
-            double r = this.Lenght;
+            double r = this.Length;
             double thisAngle = MathHelper.ToRadians(angle + this.GetAngle2X());
             this = new Vector2(r * Math.Cos(thisAngle), r * Math.Sin(thisAngle));
         }
@@ -260,7 +292,7 @@ namespace Archimedes.Geometry
         /// <returns></returns>
         public void Normalize() {
 
-            var len = this.Lenght;
+            var len = this.Length;
             // Check for divide by zero errors
             if (len == 0) {
                 this = Vector2.Zero;
@@ -357,7 +389,7 @@ namespace Archimedes.Geometry
             double degree;
             var xVector = Vector2.UnitX;
 
-            degree = MathHelper.ToDegree(Math.Acos(this.DotP(xVector) / this.Lenght));
+            degree = MathHelper.ToDegree(Math.Acos(this.DotP(xVector) / this.Length));
             if (this.Y < 0) {
                 degree = 360 - degree;
             }
@@ -374,7 +406,7 @@ namespace Archimedes.Geometry
         public double GetAngle2V(Vector2 vbase)
         {
             double gamma;
-            double tmp = this.DotP(vbase) / (this.Lenght * vbase.Lenght);
+            double tmp = this.DotP(vbase) / (this.Length * vbase.Length);
             gamma = MathHelper.ToDegree(Math.Acos(tmp));
             if (gamma > 180) {          //from mathematic definition, it's always the shorter angle to return.
                 gamma = 360 - gamma;
@@ -408,9 +440,9 @@ namespace Archimedes.Geometry
 
         public override string ToString() {
             string vecDump = "";
-            vecDump += "X: " + this.X.ToString() + "\n";
-            vecDump += "Y: " + this.Y.ToString() + "\n";
-            vecDump += "norm: " + this.Lenght.ToString() + "\n";
+            vecDump += "X: " + this.X + "\n";
+            vecDump += "Y: " + this.Y + "\n";
+            vecDump += "norm: " + this.Length + "\n";
             return vecDump;
         }
 
@@ -420,6 +452,17 @@ namespace Archimedes.Geometry
 
         public bool Equals(Vector2 other) {
             return this.Y == other.Y && this.X == other.X;
+        }
+
+        public bool Equals(Vector2 other, double tolerance)
+        {
+            if (tolerance < 0)
+            {
+                throw new ArgumentException("epsilon < 0");
+            }
+
+            return Math.Abs(other.X - this.X) < tolerance &&
+                   Math.Abs(other.Y - this.Y) < tolerance;
         }
 
         public override bool Equals(object obj) {

@@ -101,8 +101,8 @@ namespace Archimedes.Geometry.Primitives
             _middlePoint = vertices[0] + ((vW / 2) + (vH / 2));
 
             _rotateAngle = vW.GetAngle2X();
-            _width = vW.Lenght;
-            _height = vH.Lenght;
+            _width = vW.Length;
+            _height = vH.Length;
         }
 
         public Rectangle2(double x, double y, double uwidth, double uheight, double angle = 0)

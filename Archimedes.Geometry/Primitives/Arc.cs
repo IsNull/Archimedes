@@ -419,7 +419,7 @@ namespace Archimedes.Geometry.Primitives
                 // calc vector which points to the arc middlepoint
                 var orthBaseVector = _base.GetOrthogonalVector(this.Direction);
                 orthBaseVector = orthBaseVector.GetRotated(this.AngleDiff);
-                orthBaseVector.Lenght = this.Radius;
+                orthBaseVector.Length = this.Radius;
 
                 return new Vector2((float)(this.Location.X + orthBaseVector.X), (float)(this.Location.Y + orthBaseVector.Y));
             }

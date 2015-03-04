@@ -16,7 +16,7 @@ namespace Archimedes.Geometry
 
         Vector2 _location;
         Pen _pen = null;
-        Vector2 _rayvector;
+        Vector2 _direction;
 
         #endregion
 
@@ -29,7 +29,7 @@ namespace Archimedes.Geometry
             : this(prototype.Vector, prototype.Location) { }
 
         public Ray(double x, double y, Vector2 p) {
-            _rayvector = new Vector2(x, y);
+            _direction = new Vector2(x, y);
             this.Location = p;
         }
 
@@ -49,7 +49,7 @@ namespace Archimedes.Geometry
         /// Vector of this Ray
         /// </summary>
         public Vector2 Vector {
-            get { return _rayvector; }
+            get { return _direction; }
         }
 
         public double YDist {
@@ -145,7 +145,7 @@ namespace Archimedes.Geometry
         public void Draw(Graphics g) {
             if (this.Pen != null) {
                 var v = Vector;
-                v.Lenght = 500;
+                v.Length = 500;
                 var end = this.Location + v;
                 g.DrawLine(this.Pen, this.Location, end);
             }

@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.CodeDOM", "Archi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Genetics", "Archimedes.Genetics\Archimedes.Genetics.csproj", "{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Geometry.Tests", "Archimedes.Geometry.Tests\Archimedes.Geometry.Tests.csproj", "{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,16 @@ Global
 		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{EE1066D7-5DC0-4EAE-8290-CD5E1CEBFE5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

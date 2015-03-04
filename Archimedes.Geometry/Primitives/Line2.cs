@@ -138,10 +138,10 @@ namespace Archimedes.Geometry.Primitives
             var vThis = new Vector2(this.Start, this.End);
 
             if (direction == Direction.RIGHT) {
-                vThis.Lenght += len;
+                vThis.Length += len;
                 this.End = this.Start + vThis;
             } else {
-                vThis.Lenght = len;
+                vThis.Length = len;
                 vThis *= -1;
                 this.Start += vThis;
             }

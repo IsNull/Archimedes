@@ -23,7 +23,7 @@ namespace Archimedes.Geometry.Primitives
             var rays = RaysFromDescriptorPoints(startPoint, interPoint, endPoint, DirectionUtil.Switch(calcdirection));
             // The two Rays intercept in the Arc's Middlepoint:
             var arcCenter = rays[0].Intersect(rays[1]);
-            var arcRadius = new Vector2(startPoint, arcCenter).Lenght;
+            var arcRadius = new Vector2(startPoint, arcCenter).Length;
 
             // Take Vectors from these Points
             var vMPToStartPoint = new Vector2(arcCenter, startPoint);
