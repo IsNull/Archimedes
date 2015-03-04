@@ -9,6 +9,7 @@
 using System;
 using System.Drawing;
 using Archimedes.Geometry.Extensions;
+using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry
 {
@@ -26,15 +27,15 @@ namespace Archimedes.Geometry
         /// <param name="angle"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        public static Vector2 VectorFromAngle(double angle, double length)
+        public static Vector2 FromAngleAndLenght(Angle angle, double length)
         {
-            var gk = length * Math.Sin(MathHelper.ToRadians(angle));
-            var ak = length * Math.Cos(MathHelper.ToRadians(angle));
+            var gk = length * Math.Sin(angle.Radians);
+            var ak = length * Math.Cos(angle.Radians);
             return new Vector2(ak, gk);
         }
 
         /// <summary>
-        /// 
+        /// Parses the string to a vector
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
@@ -166,7 +167,7 @@ namespace Archimedes.Geometry
         /// <returns></returns>
         public static double operator *(Vector2 v1, Vector2 v2)
         {
-            return v1.DotP(v2);
+            return v1.DotProduct(v2);
         }
 
         public static Vector2 operator +(Vector2 v1, Vector2 v2) {
@@ -254,11 +255,11 @@ namespace Archimedes.Geometry
         #region Transformation Methods
 
         /// <summary> 
-        /// Calculates the Dot-Product of two Vectors
+        /// Calculates the Dot-Product between this and the given vector
         /// </summary>
         /// <param name="v2">Other Vector</param>
         /// <returns></returns>
-        public double DotP(Vector2 v2)
+        public double DotProduct(Vector2 v2)
         {
             return (this.X * v2.X) + (this.Y * v2.Y);
         }
@@ -267,7 +268,7 @@ namespace Archimedes.Geometry
         /// Gets an new Vector based on this rotated by the specified amount
         /// </summary>
         /// <param name="angle">Rotation Angle</param>
-        public Vector2 GetRotated(double angle)
+        public Vector2 GetRotated(Angle angle)
         {
             var v2 = this;
             v2.Rotate(angle);
@@ -278,11 +279,11 @@ namespace Archimedes.Geometry
         /// Rotates this Vector by the given amount
         /// </summary>
         /// <param name="angle"></param>
-        public void Rotate(double angle)
+        public void Rotate(Angle angle)
         {
             double r = this.Length;
-            double thisAngle = MathHelper.ToRadians(angle + this.GetAngle2X());
-            this = new Vector2(r * Math.Cos(thisAngle), r * Math.Sin(thisAngle));
+            var thisAngle = angle + this.GetAngle2X();
+            this = new Vector2(r * Math.Cos(thisAngle.Radians), r * Math.Sin(thisAngle.Radians));
         }
 
         /// <summary>
@@ -290,81 +291,37 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="newLenght"></param>
         /// <returns></returns>
-        public void Normalize() {
-
+        public Vector2 Normalize()
+        {
             var len = this.Length;
-            // Check for divide by zero errors
-            if (len == 0) {
-                this = Vector2.Zero;
-            } else {
-                // find the inverse of the vectors magnitude
-                double inverse = 1d / len;
-                this = new Vector2
-                    (
-                        // multiply each component by the inverse of the magnitude
-                        this.X * inverse,
-                        this.Y * inverse
-                    );
+            if (len != 0) // Avoid Division by Zero
+            {
+                return new Vector2(this.X/len, this.Y/len);
+            }
+            else
+            {
+                return Vector2.Zero;
             }
         }
-
-        #endregion
-
-        #region Specail Factorys
-
-        /// <summary>Calculate a Vector which stands orthogonal on this Vector.
-        /// 
-        /// </summary>
-        /// <param name="LEFT">The desired Direction of the new orthogonal Vector</param>
-        /// <param name="direction"> </param>
-        /// <returns></returns>
-        public Vector2 GetOrthogonalVector(Direction direction) {
-            // Crossproduct as unary operator (getting orthogonal)
-            double orthVectorX, orthVectorY;
-            if (direction == Direction.LEFT) {
-                orthVectorX = this.Y * (-1);
-                orthVectorY = this.X;
-            } else { // RIGHT
-                orthVectorX = this.Y;
-                orthVectorY = this.X * (-1);
-            }
-            return new Vector2(orthVectorX, orthVectorY);
-        }
-
-
 
         #endregion
 
         #region Public Query Methods
 
-        /// <summary>
-        /// Returns a new Vector values rounded by the given amount
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public Vector2 Rounded(int value) {
-            return new Vector2(
-                Math.Round(this.X, value), 
-                Math.Round(this.Y, value));
-           
-        }
-
-        /// <summary>
-        /// Get a point starting from this, with the given distance and angle
-        /// </summary>
-        /// <param name="distance">distance to the new point</param>
-        /// <param name="angle">angle to the new point</param>
-        /// <returns></returns>
-        public Vector2 GetPoint(double distance, double angle)
+        public bool IsParallelTo(Vector2 othervector, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            var newPnt = new Vector2(
-                this.X + (distance * Math.Cos(MathHelper.ToRadians(angle))),
-                this.Y + (distance * Math.Sin(MathHelper.ToRadians(angle))));
-            return newPnt;
+            this.Normalize();
+            var @this = this.Normalize();
+            var other = othervector.Normalize();
+            var dp = Math.Abs(@this.DotProduct(other));
+            return Math.Abs(1 - dp) < tolerance;
         }
 
-        public bool IsParallel(Vector2 v2) {
-            return (Math.Round((this.X / this.Y)) == Math.Round((v2.X / v2.Y)));
+        public bool IsPerpendicularTo(Vector2 othervector, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            var @this = this.Normalize();
+            var other = othervector.Normalize();
+            return Math.Abs(@this.DotProduct(other)) < tolerance;
         }
 
         public bool IsVertical {
@@ -375,26 +332,43 @@ namespace Archimedes.Geometry
             get { return (this.Y == 0); }
         }
 
-        public bool IsDirectionEqual(Vector2 v2) {
+        public bool IsDirectionEqual(Vector2 v2, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             bool bEqual = false;
-            if (this.IsParallel(v2)) {
+            if (this.IsParallelTo(v2, tolerance))
+            {
                 bEqual = (this.X.IsSignEqual(v2.X) && this.Y.IsSignEqual(v2.Y));
             }
             return bEqual;
         }
 
-        public double GetAngle2X()
+        /// <summary>
+        /// Get a point starting from this, with the given distance and angle
+        /// </summary>
+        /// <param name="distance">distance to the new point</param>
+        /// <param name="angle">angle to the new point</param>
+        /// <returns></returns>
+        public Vector2 GetPoint(double distance, Angle angle)
         {
+            var newPnt = new Vector2(
+                this.X + (distance * Math.Cos(angle.Radians)),
+                this.Y + (distance * Math.Sin(angle.Radians)));
+            return newPnt;
+        }
 
-            double degree;
+
+        /// <summary>
+        /// Returns the angle to the X-Axis
+        /// </summary>
+        /// <returns></returns>
+        public Angle GetAngle2X()
+        {
             var xVector = Vector2.UnitX;
-
-            degree = MathHelper.ToDegree(Math.Acos(this.DotP(xVector) / this.Length));
+            var angle = Angle.FromRadians(Math.Acos(this.DotProduct(xVector) / this.Length));
             if (this.Y < 0) {
-                degree = 360 - degree;
+                angle = Angle.FromDegrees(360) - angle;
             }
-            return Math.Round(degree, GeometrySettings.GEOMETRY_GLOBAL_ROUND);
-
+            return angle;
         }
 
         /// <summary>
@@ -403,15 +377,15 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="vbase"></param>
         /// <returns></returns>
-        public double GetAngle2V(Vector2 vbase)
+        public Angle GetAngle2V(Vector2 vbase)
         {
             double gamma;
-            double tmp = this.DotP(vbase) / (this.Length * vbase.Length);
-            gamma = MathHelper.ToDegree(Math.Acos(tmp));
+            double tmp = this.DotProduct(vbase) / (this.Length * vbase.Length);
+            gamma = Angle.ConvertRadiansToDegrees(Math.Acos(tmp));
             if (gamma > 180) {          //from mathematic definition, it's always the shorter angle to return.
                 gamma = 360 - gamma;
             }
-            return Math.Round(gamma, GeometrySettings.GEOMETRY_GLOBAL_ROUND);
+            return new Angle(gamma, AngleUnit.Degrees);
         }
 
         /// <summary>
@@ -421,17 +395,37 @@ namespace Archimedes.Geometry
         /// <param name="b"></param>
         /// <param name="direction">RIGHT = Clockwise, LEFT = other direction</param>
         /// <returns>0° - 360° Angle in degree</returns>
-        public double GetAngleBetweenClockWise(Vector2 b, Direction direction)
+        public Angle GetAngleBetweenClockWise(Vector2 b, Direction direction)
         {
-            double theta;
-
-            theta = GetAngle2V(b);
+            var theta = GetAngle2V(b);
 
             if (((this.Y * b.X - this.X * b.Y) > 0) == (direction == Direction.RIGHT)) {
                 return theta;
             } else {
-                return 360 - theta;
+                return Angle.FromDegrees(360) - theta;
             }
+        }
+
+        /// <summary>
+        /// Calculate a Vector which stands orthogonal on this Vector.
+        /// </summary>
+        /// <param name="direction">The desired Direction of the new orthogonal Vector</param>
+        /// <returns></returns>
+        public Vector2 GetOrthogonalVector(Direction direction)
+        {
+            // Crossproduct as unary operator (getting orthogonal)
+            double orthVectorX, orthVectorY;
+            if (direction == Direction.LEFT)
+            {
+                orthVectorX = this.Y * (-1);
+                orthVectorY = this.X;
+            }
+            else
+            { // RIGHT
+                orthVectorX = this.Y;
+                orthVectorY = this.X * (-1);
+            }
+            return new Vector2(orthVectorX, orthVectorY);
         }
 
         #endregion

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Extensions
 {
@@ -24,11 +25,11 @@ namespace Archimedes.Geometry.Extensions
         /// <param name="size"></param>
         /// <param name="angle">Angle in degree</param>
         /// <returns></returns>
-        public static PointF GetPoint(this PointF pntF, double size, double angle)
+        public static PointF GetPoint(this PointF pntF, double size, Angle angle)
         {
             var newPnt = new PointF();
-            newPnt.X = (float)(pntF.X + size * Math.Cos(MathHelper.ToRadians(angle)));
-            newPnt.Y = (float)(pntF.Y + size * Math.Sin(MathHelper.ToRadians(angle)));
+            newPnt.X = (float)(pntF.X + size * Math.Cos(angle.Radians));
+            newPnt.Y = (float)(pntF.Y + size * Math.Sin(angle.Radians));
             return newPnt;
         }
 

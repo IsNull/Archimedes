@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry
 {
@@ -105,17 +106,15 @@ namespace Archimedes.Geometry
         /// <param name="rotationOrigin">Origin location of rotation</param>
         /// <param name="angle">Rotation angle</param>
         /// <returns>New vertices array</returns>
-        public Vertices RotateVertices(Vector2 rotationOrigin, double angle)
+        public Vertices RotateVertices(Vector2 rotationOrigin, Angle angle)
         {
-
-            if (angle == 0)
+            if (angle == Angle.Zero)
                 return new Vertices(_vertices);
 
-            Vector2 vrotate;
             var cnt = _vertices.Count();
             var rotVertices = new Vertices();
             foreach (var vertex in _vertices) {
-                vrotate = new Vector2(rotationOrigin, vertex);
+                var vrotate = new Vector2(rotationOrigin, vertex);
                 Vector2 pnt = rotationOrigin + vrotate.GetRotated(angle);
                 rotVertices.Add(pnt);
             }

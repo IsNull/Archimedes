@@ -89,6 +89,9 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderEventArgs.cs" />
     <Compile Include="Rendering\ZoomWorker.cs" />
+    <Compile Include="Units\Angle.cs" />
+    <Compile Include="Units\AngleParser.cs" />
+    <Compile Include="Units\AngleUnit.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="_3D\Point3.cs" />
     <Compile Include="_3D\StraightLine3.cs" />
@@ -101,6 +104,7 @@
   <ItemGroup>
     <None Include="Archimedes.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

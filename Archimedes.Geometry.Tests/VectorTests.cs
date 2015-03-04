@@ -87,5 +87,32 @@ namespace Archimedes.Geometry.Tests
             var v = Vector2.Parse(vs);
             Assert.AreEqual(expected, v.Length, 1e-6);
         }
+
+
+        [TestCase("1, 0", "1, 0", 1e-4, false)]
+        [TestCase("1, 0", "0, -1", 1e-4, true)]
+        [TestCase("1, 0", "0, 1", 1e-4, true)]
+        [TestCase("0, 1", "1, 0", 1e-4, true)]
+        [TestCase("0, 1", "0, 1", 1e-4, false)]
+        public void IsPerpendicularTo(string v1s, string v2s, double tol, bool expected)
+        {
+            var v1 = Vector2.Parse(v1s);
+            var v2 = Vector2.Parse(v2s);
+            Assert.AreEqual(expected, v1.IsPerpendicularTo(v2, tol));
+            Assert.AreEqual(expected, v2.IsPerpendicularTo(v1, tol));
+        }
+
+        [TestCase("1, 0", "1, 0", 1e-4, true)]
+        [TestCase("1, 0", "-1, 0", 1e-4, true)]
+        [TestCase("1, 0", "1, 1", 1e-4, false)]
+        [TestCase("1, 1", "1, 1", 1e-4, true)]
+        [TestCase("1, -1", "-1, 1", 1e-4, true)]
+        public void IsParallelTo(string v1s, string v2s, double tol, bool expected)
+        {
+            var v1 = Vector2.Parse(v1s);
+            var v2 = Vector2.Parse(v2s);
+            Assert.AreEqual(expected, v1.IsParallelTo(v2, tol));
+            Assert.AreEqual(expected, v2.IsParallelTo(v1, tol));
+        }
     }
 }

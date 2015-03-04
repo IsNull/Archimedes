@@ -109,10 +109,11 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="uRay"></param>
         /// <returns></returns>
-        Vector2? IntersectN(Ray uRay) {
-           
+        private Vector2? IntersectN(Ray uRay, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
 
-            if (Vector.IsParallel(uRay.Vector)) {
+            if (Vector.IsParallelTo(uRay.Vector, tolerance))
+            {
                 return null;
             }
 

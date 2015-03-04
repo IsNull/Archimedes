@@ -98,13 +98,13 @@ namespace Archimedes.Geometry.Primitives
 
         #region Arc - Line
 
-        private IEnumerable<Vector2> InterceptLine(Line2 uLine, float Range) {
+        private IEnumerable<Vector2> InterceptLine(Line2 uLine, float range) {
             IEnumerable<Vector2> intersections;
-            using (var StrechtedLine = (uLine.Clone() as Line2)) {
+            using (var strechtedLine = (uLine.Clone() as Line2)) {
 
-                StrechtedLine.Stretch(Range, Direction.LEFT);
-                StrechtedLine.Stretch(Range, Direction.RIGHT);
-                intersections = InterceptLine(StrechtedLine);
+                strechtedLine.Stretch(range, Direction.LEFT);
+                strechtedLine.Stretch(range, Direction.RIGHT);
+                intersections = InterceptLine(strechtedLine);
             }
             return intersections;
         }
@@ -119,8 +119,8 @@ namespace Archimedes.Geometry.Primitives
 
             using (var clArc = (this.Clone() as Arc)) {
                 // clone and round arc
-                clArc.Radius = (float)Math.Round(clArc.Radius, 2);
-                clArc.Angle = (float)Math.Round(clArc.Angle, 2);
+                clArc.Radius = Math.Round(clArc.Radius, 2);
+                clArc.Angle = Units.Angle.FromDegrees(Math.Round(clArc.Angle.Degrees, 2));
                 clArc.Location = new Vector2((float)Math.Round(clArc.Location.X), (float)Math.Round(clArc.Location.Y));
                 //------<
 
@@ -252,15 +252,15 @@ namespace Archimedes.Geometry.Primitives
             if (Math.Round(Line2.CalcLenght(this.MiddlePoint, Point)) == Math.Round(this.Radius)) {
                 using (var clArc = (this.Clone() as Arc)) {
                     // clone and round original values
-                    clArc.Radius = (float)Math.Round(clArc.Radius, 2);
-                    clArc.Angle = (float)Math.Round(clArc.Angle, 2);
+                    clArc.Radius = Math.Round(clArc.Radius, 2);
+                    clArc.Angle = Units.Angle.FromDegrees(Math.Round(clArc.Angle.Degrees, 2));
                     clArc.Location = new Vector2((float)Math.Round(clArc.Location.X), (float)Math.Round(clArc.Location.Y));
 
                     var bowMiddle = clArc.GetPointOnArc(clArc.Angle / 2);
-                    var L1 = new Line2(clArc.Location, bowMiddle);
-                    var L2 = new Line2(clArc.GetPointOnArc(clArc.Angle), bowMiddle);
-                    var LInter = new Line2(clArc.MiddlePoint, Point);
-                    conatins = LInter.InterceptLineWith(L1) || LInter.InterceptLineWith(L2);
+                    var l1 = new Line2(clArc.Location, bowMiddle);
+                    var l2 = new Line2(clArc.GetPointOnArc(clArc.Angle), bowMiddle);
+                    var intersection = new Line2(clArc.MiddlePoint, Point);
+                    conatins = intersection.InterceptLineWith(l1) || intersection.InterceptLineWith(l2);
                 }
             }
             return conatins;

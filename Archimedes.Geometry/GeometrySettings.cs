@@ -9,6 +9,8 @@ namespace Archimedes.Geometry
 
     public static class GeometrySettings
     {
-        static public int GEOMETRY_GLOBAL_ROUND = 3;
+        public const int GEOMETRY_GLOBAL_ROUND = 3;
+
+        public const double DEFAULT_TOLERANCE = 1.40129846432482E-45;
     }
 }

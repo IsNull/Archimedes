@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using Archimedes.Geometry.Extensions;
 using System.Drawing.Drawing2D;
+using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -14,12 +15,13 @@ namespace Archimedes.Geometry.Primitives
     public class Rectangle2 : IGeometryBase, IClosedGeometry
     {
         #region Fields
+
         //Internal Data which defines a rotatable rect
 
         Vector2 _middlePoint;
         double _width;
         double _height;
-        double _rotateAngle = 0; //rotation is considered centric
+        Angle _rotateAngle = Units.Angle.Zero; // Rotation is considered centric
 
         Pen _pen = null;
         Brush _brush = null;
@@ -33,14 +35,14 @@ namespace Archimedes.Geometry.Primitives
             set { _brush = value;}
         }
 
-        public double Angle
+        public Angle Angle
         {
             get { return _rotateAngle; }
             set { _rotateAngle = value; }
         }
 
         public bool IsRotated {
-            get { return (this.Angle != 0); }
+            get { return (this.Angle != Units.Angle.Zero); }
         }
 
         public double Height
@@ -105,21 +107,38 @@ namespace Archimedes.Geometry.Primitives
             _height = vH.Length;
         }
 
-        public Rectangle2(double x, double y, double uwidth, double uheight, double angle = 0)
+        public Rectangle2(double x, double y, double uwidth, double uheight)
+            : this(x, y, uwidth, uheight, Angle.Zero)
+        {
+        }
+
+
+        public Rectangle2(double x, double y, double uwidth, double uheight, Angle angle)
         {
             _width = uwidth;
             _height = uheight;
             this.Location = new Vector2(x, y);
             this.Angle = angle;
         }
-        public Rectangle2(Vector2 uLocation, SizeF uSize, double angle = 0)
+
+        public Rectangle2(Vector2 uLocation, SizeF uSize)
+            : this(uLocation, uSize, Angle.Zero)
+        {
+        }
+
+        public Rectangle2(Vector2 uLocation, SizeF uSize, Angle angle)
         {
             this.Size = uSize;
             this.Location = uLocation;
             this.Angle = angle;
         }
 
-        public Rectangle2(RectangleF uRectF, double angle = 0)
+        public Rectangle2(RectangleF uRectF)
+            : this(uRectF, Angle.Zero)
+        {
+        }
+
+        public Rectangle2(RectangleF uRectF, Angle angle)
         {
             this.Size = uRectF.Size;
             this.Location = uRectF.Location;
@@ -127,21 +146,20 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public Rectangle2(Rectangle2 prototype)
-            : this(prototype, prototype.Angle)
-        {
-        }
-
-        public Rectangle2(Rectangle2 prototype, double angle)
-        {
-            Prototype(prototype, angle);
-        }
-
-        public void Prototype(Rectangle2 prototype, double angle)
         {
             Prototype(prototype);
-            this.Angle = angle;
         }
 
+        public Rectangle2(Rectangle2 prototype, Angle angle)
+        {
+            Prototype(prototype);
+            Angle = angle;
+        }
+
+        /// <summary>
+        /// Prototype methods, which copies al values from the prototype to this instance.
+        /// </summary>
+        /// <param name="iprototype"></param>
         public void Prototype(IGeometryBase iprototype) {
             var prototype = iprototype as Rectangle2;
             if (prototype == null)
@@ -186,7 +204,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public RectangleF ToRectangleF(bool forceConversation = false) {
-            if (this.Angle != 0 || forceConversation)
+            if (this.Angle != Angle.Zero || forceConversation)
                 throw new NotSupportedException("Can not transform rotated Rectangle2 to RectangleF!");
             return new RectangleF(this.Location, this.Size);
         }

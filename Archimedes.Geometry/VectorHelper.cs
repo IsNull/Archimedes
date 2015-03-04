@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Archimedes.Geometry.Primitives;
+using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry
 {
@@ -25,7 +26,7 @@ namespace Archimedes.Geometry
         /// <param name="direction"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        public static double GetSignedAngleBetween(Line2 direction, Vector2 next)
+        public static Angle GetSignedAngleBetween(Line2 direction, Vector2 next)
         {
             var angle = next.GetAngle2V(direction.ToVector());
             return angle * (direction.IsLeft(next) ? 1 : -1);

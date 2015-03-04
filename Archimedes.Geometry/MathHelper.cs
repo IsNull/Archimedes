@@ -25,49 +25,6 @@ namespace Archimedes.Geometry
             }
         }
 
-        /// <summary>
-        /// To convert a degrees value to radians, multiply it by pi/180 (approximately 0.01745329252).
-        /// 
-        /// </summary>
-        /// <param name="degree"></param>
-        /// <returns></returns>
-        public static float ToRadians(float degree) {
-            return (float)(degree * Math.PI / 180f);
-        }
-
-        /// <summary>
-        ///  To convert a radians value to degrees, multiply it by 180/pi (approximately 57.29578).
-        /// </summary>
-        /// <param name="RAD"></param>
-        /// <returns></returns>
-        public static float ToDegree(float RAD) {
-            return (float)(RAD * 180f / Math.PI);
-        }
-
-
-        /// <summary>
-        /// To convert a degrees value to radians, multiply it by pi/180 (approximately 0.01745329252).
-        /// 
-        /// </summary>
-        /// <param name="degree"></param>
-        /// <returns></returns>
-        public static double ToRadians(double degree)
-        {
-            return degree * Math.PI / 180d;
-        }
-
-        /// <summary>
-        ///  To convert a radians value to degrees, multiply it by 180/pi (approximately 57.29578).
-        /// </summary>
-        /// <param name="RAD"></param>
-        /// <returns></returns>
-        public static double ToDegree(double RAD)
-        {
-            return RAD * 180d / Math.PI;
-        }
-
-        
-
 
         public static void GetStartEndPoint(IGeometryBase geometry, out Point? start, out Point? end) {
 

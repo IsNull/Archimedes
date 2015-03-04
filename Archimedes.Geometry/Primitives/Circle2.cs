@@ -7,6 +7,8 @@
  * *****************************************/
 
 
+using Archimedes.Geometry.Units;
+
 namespace Archimedes.Geometry.Primitives
 {
     using System;
@@ -87,10 +89,10 @@ namespace Archimedes.Geometry.Primitives
 
         #region Exp Methods
 
-        public Vector2 GetPoint(float Angle){
+        public Vector2 GetPoint(Angle angle){
             var circlePoint = new Vector2(
-                (float)Math.Cos(MathHelper.ToRadians(Angle)) * this.Radius,
-                (float)Math.Sin(MathHelper.ToRadians(Angle)) * this.Radius);
+                (float)Math.Cos(angle.Radians) * this.Radius,
+                (float)Math.Sin(angle.Radians) * this.Radius);
 
             circlePoint += this.Location;
             return circlePoint;

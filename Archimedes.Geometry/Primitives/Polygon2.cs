@@ -6,6 +6,7 @@ using System.Linq;
 using Archimedes.Geometry.Builder;
 using Archimedes.Geometry.Extensions;
 using Archimedes.Geometry.Primitives.Bounds;
+using Archimedes.Geometry.Units;
 
 
 namespace Archimedes.Geometry.Primitives
@@ -485,7 +486,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="angle">Angle to rotate</param>
         /// <param name="origin">Point to rotate around. Default is middlepoint of this polygon</param>
-        public void Rotate(float angle, Vector2? origin = null) {
+        public void Rotate(Angle angle, Vector2? origin = null) {
             _vertices = _vertices.RotateVertices(origin ?? this.MiddlePoint, angle);
             Invalidate();
         }
