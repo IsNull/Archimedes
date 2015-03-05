@@ -8,17 +8,25 @@ using Archimedes.Geometry.Primitives;
 namespace Archimedes.Geometry
 {
     /// <summary>
-    /// Represents a closed geometry
+    /// Represents a shape (a closed geometry)
     /// </summary>
-    public interface IClosedGeometry
+    public interface IShape : IGeometryBase
     {
         /// <summary>
         /// Gets the area of this geometry shape
         /// </summary>
         double Area { get; }
 
-        Brush FillBrush { get; set; }
-
+        /// <summary>
+        /// Turns this shape into a polygon
+        /// </summary>
+        /// <returns></returns>
         Polygon2 ToPolygon2();
+
+
+        /// <summary>
+        /// The fill brush
+        /// </summary>
+        Brush FillBrush { get; set; } // TODO refactor drawing stuff away...
     }
 }

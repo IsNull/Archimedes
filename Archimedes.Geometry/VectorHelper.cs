@@ -28,7 +28,7 @@ namespace Archimedes.Geometry
         /// <returns></returns>
         public static Angle GetSignedAngleBetween(Line2 direction, Vector2 next)
         {
-            var angle = next.GetAngle2V(direction.ToVector());
+            var angle = next.GetAngleTo(direction.ToVector());
             return angle * (direction.IsLeft(next) ? 1 : -1);
         }
 

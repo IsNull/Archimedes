@@ -14,14 +14,12 @@ using System.Drawing.Drawing2D;
 namespace Archimedes.Geometry.Primitives
 {
     /// <summary>
-    /// Represents a Line in a 2D coord space
+    /// Represents a Line in a 2D coord space defined by two points.
     /// </summary>
     public partial class Line2 : IGeometryBase
     {
         
         #region Fields
-
-        const float roundingDiff = 0.5f;
 
         Vector2 _start;
         Vector2 _end;
@@ -126,7 +124,8 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         public double Slope {
             get {
-                if ((this.End.X - this.Start.X) == 0) { // prevent divison by zero
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if ((this.End.X - this.Start.X) == 0) { // Prevents divison by zero
                     return 0;
                 }
                 return (this.End.Y - this.Start.Y) / (this.End.X - this.Start.X);
@@ -134,7 +133,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public void Stretch(float len, Direction direction){
+        public void Stretch(double len, Direction direction){
             var vThis = new Vector2(this.Start, this.End);
 
             if (direction == Direction.RIGHT) {
@@ -157,10 +156,17 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="c"></param>
         /// <returns></returns>
         public bool IsLeft(Vector2 c) {
-            return isLeft(this.Start, this.End, c);
+            return IsLeft(this.Start, this.End, c);
         }
 
-        bool isLeft(Vector2 a, Vector2 b, Vector2 c) {
+        /// <summary>
+        /// Calculates if the given point is on the left side of the given line
+        /// </summary>
+        /// <param name="start">Start point of the line</param>
+        /// <param name="end">End point of the line</param>
+        /// <param name="point">The point to test</param>
+        /// <returns></returns>
+        static bool IsLeft(Vector2 a, Vector2 b, Vector2 c) {
             return ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X)) > 0;
         }
 
@@ -178,39 +184,38 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Compare the slope of two lines  
         /// </summary>
-        /// <param name="Line2"></param>
+        /// <param name="line"></param>
+        /// <param name="tolerance"></param>
         /// <returns>true, if the solpes are equal</returns>
-        public bool EqualSlope(Line2 Line2, short Round = 3) {
+        public bool EqualSlope(Line2 line, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) { // TODO proper tolerance handling
 
-            if (Line2 == null) {
-                return false;
+            if (line == null) throw new ArgumentNullException("line");
+            if ((this.IsVertical && line.IsVertical) ||
+                (this.IsHorizontal && line.IsHorizontal)) {
+                return true; // Both are either horizontal or vertical
             }
-            if (this.IsVertical && Line2.IsVertical) {
-                return true;
+            if (this.IsVertical || line.IsVertical) {
+                return false; // If only one is vertical they cant have same slope
             }
-            else if (this.IsVertical || Line2.IsVertical) {
-                return false;
-            }
-            else if (Math.Round(this.Slope,Round) == Math.Round(Line2.Slope,Round)) {
-                return true;
-            } else {
-                return false;
-            }
+
+            // Compare the two slopes which must be equal
+            return (Math.Abs(this.Slope - line.Slope) < tolerance);
         }
 
         /// <summary>
         /// Is this Line vertical?
         /// </summary>
         public bool IsVertical {
-            get { return (Math.Abs(this.End.X - this.Start.X) <= roundingDiff); }
+            get { return (Math.Abs(this.End.X - this.Start.X) <= GeometrySettings.DEFAULT_TOLERANCE); }
         }
 
         /// <summary>
         /// Is this Line horizontal?
         /// </summary>
         public bool IsHorizontal {
-            get { return (Math.Abs(this.End.Y - this.Start.Y) <= roundingDiff); }
+            get { return (Math.Abs(this.End.Y - this.Start.Y) <= GeometrySettings.DEFAULT_TOLERANCE); }
         }
+
         /// <summary>
         /// Is this Line horizontal or vertical?
         /// </summary>
@@ -313,12 +318,8 @@ namespace Archimedes.Geometry.Primitives
         /// <returns></returns>
         public static Line2 CreateMoved(Line2 origin, Vector2 move) {
             var clone = origin.Clone() as Line2;
-            if (clone != null)
-            {
-                clone.Translate(move);
-                return clone;
-            }
-            return null;
+            clone.Translate(move);
+            return clone;
         }
 
 
@@ -346,7 +347,7 @@ namespace Archimedes.Geometry.Primitives
         public Circle2 BoundingCircle {
             get { 
                 var m = this.MiddlePoint;
-                return new Circle2(m, (float)Line2.CalcLenght(m, this.Start));
+                return new Circle2(m, Line2.CalcLenght(m, this.Start));
             }
         }
 
@@ -370,41 +371,36 @@ namespace Archimedes.Geometry.Primitives
         #region Geomtry Base Collision
 
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
             var pnts = new List<Vector2>();
 
             if (other is Line2) {
-                var pnt = this.InterceptLine(other as Line2);
+                var pnt = this.InterceptLine(other as Line2, tolerance);
                 if(pnt.HasValue)
                     pnts.Add(pnt.Value);
             } else if (other is GdiText2) {
-                pnts.AddRange(this.InterceptRect(other.BoundingBox));
+                pnts.AddRange(this.InterceptRect(other.BoundingBox, tolerance));
             } else
                 other.Intersect(this);
             return pnts;
         }
 
 
-        public bool IntersectsWith(IGeometryBase GeometryObject) {
+        public bool IntersectsWith(IGeometryBase geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
 
-            if (GeometryObject is Line2) {
-                return this.InterceptLineWith(GeometryObject as Line2);
-            } else if (GeometryObject is GdiText2 || GeometryObject is ImageDrawable) {
-                return this.InterceptRectWith(GeometryObject.BoundingBox);
+            if (geometry is Line2)
+            {
+                return this.InterceptLineWith(geometry as Line2, tolerance);
+            }
+            else if (geometry is GdiText2 || geometry is ImageDrawable)
+            {
+                return this.InterceptRectWith(geometry.BoundingBox, tolerance);
             } else { //delegate Collision Detection to other Geometry Object
-                return GeometryObject.IntersectsWith(this);
+                return geometry.IntersectsWith(this, tolerance);
             }
         }
 
-
-        /// <summary>Checks if a Point is on the 2dLine
-        /// 
-        /// </summary>
-        /// <param name="Point"></param>
-        /// <returns>true/false</returns>
-        public bool Contains(Vector2 Point) {
-            return Contains(Point, 0.0);
-        }
 
         #endregion
 

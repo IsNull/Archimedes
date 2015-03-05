@@ -12,7 +12,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Represents an rectangle in 2D space, which can be arbitary rotated.
     /// </summary>
-    public class Rectangle2 : IGeometryBase, IClosedGeometry
+    public class Rectangle2 : IShape
     {
         #region Fields
 
@@ -102,7 +102,7 @@ namespace Archimedes.Geometry.Primitives
             //Use Vector Geometry to walk to the middlepoint
             _middlePoint = vertices[0] + ((vW / 2) + (vH / 2));
 
-            _rotateAngle = vW.GetAngle2X();
+            _rotateAngle = vW.GetAngleToX();
             _width = vW.Length;
             _height = vH.Length;
         }
@@ -300,11 +300,12 @@ namespace Archimedes.Geometry.Primitives
 
         #region IGeometryBase Collision Detection
 
-        public bool Contains(Vector2 point) {
+        public bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             if (this.IsRotated)
-                return this.ToPolygon2().Contains(point);
+                return this.ToPolygon2().Contains(point, tolerance);
             else //optimisation - use simple rect if no rotation is given
-                return this.ToRectangleF().Contains(point);
+                return this.ToRectangleF().Contains(point); // TODO Handle Tolerance!
         }
 
         public Circle2 BoundingCircle {
@@ -317,18 +318,20 @@ namespace Archimedes.Geometry.Primitives
             get { return this.ToPolygon2().BoundingBox; }
         }
 
-        public bool IntersectsWith(IGeometryBase other) {
+        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             foreach (var line in this.ToLines()) {
-                if (other.IntersectsWith(line))
+                if (other.IntersectsWith(line, tolerance))
                     return true;
             }
             return false;
         }
-        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
 
             foreach (var line in this.ToLines())
-                intersections.AddRange(other.Intersect(line));
+                intersections.AddRange(other.Intersect(line, tolerance));
 
             return intersections;
         }

@@ -15,7 +15,7 @@ namespace Archimedes.Geometry.Rendering.Effects
             geometry = ugeometry.Clone();
 
             EffectPen = effectPen;
-            if (geometry is IClosedGeometry)
+            if (geometry is IShape)
                 EffectBrush = effectBrush;         
         }
 
@@ -28,11 +28,11 @@ namespace Archimedes.Geometry.Rendering.Effects
 
         public Brush EffectBrush {
             get { 
-                return (geometry is IClosedGeometry) ? (geometry as IClosedGeometry).FillBrush : null;
+                return (geometry is IShape) ? (geometry as IShape).FillBrush : null;
             }
             set {
-                if (geometry is IClosedGeometry) {
-                    (geometry as IClosedGeometry).FillBrush = value;
+                if (geometry is IShape) {
+                    (geometry as IShape).FillBrush = value;
                 } else
                     throw new NotSupportedException("This Geometry doesn't support FillBrush Property!");
 

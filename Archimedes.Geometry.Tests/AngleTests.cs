@@ -19,5 +19,8 @@ namespace Archimedes.Geometry.Tests
             Assert.AreEqual(expected, v1.Equals(v2, tol));
             Assert.AreNotEqual(expected, v1 != v2);
         }
+
+
+
     }
 }

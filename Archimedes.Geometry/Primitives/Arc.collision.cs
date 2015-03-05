@@ -19,11 +19,11 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, true is returned, false otherwise</returns>
-        private bool InterceptRectWith(Rectangle2 rect) {
-
+        private bool InterceptRectWith(Rectangle2 rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var borderLines = rect.ToLines(); //get 4 borderlines from rect
             if (borderLines != null) {
-                return InterceptLinesWith(borderLines);
+                return InterceptLinesWith(borderLines, tolerance);
             }
             return false;
         }
@@ -33,11 +33,12 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, a List of interception Points is returned</returns>
-        private List<Vector2> InterceptRect(Rectangle2 rect) {
+        private List<Vector2> InterceptRect(Rectangle2 rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
             var borderLines = rect.ToLines(); //get 4 borderlines from rect
             if (borderLines != null) {
-                intersections.AddRange(InterceptLines(borderLines));
+                intersections.AddRange(InterceptLines(borderLines, tolerance));
             }
             return intersections;
         }
@@ -51,11 +52,12 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, true is returned, false otherwise</returns>
-        private bool InterceptRectWith(RectangleF rect) {
+        private bool InterceptRectWith(RectangleF rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             
             var borderLines = Line2.RectExplode(rect); //get 4 borderlines from rect
             if (borderLines != null) {
-                return InterceptLinesWith(borderLines);
+                return InterceptLinesWith(borderLines, tolerance);
             }
             return false;
         }
@@ -65,29 +67,32 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, a List of interception Points is returned</returns>
-        private List<Vector2> InterceptRect(RectangleF rect) {
+        private List<Vector2> InterceptRect(RectangleF rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
             var borderLines = Line2.RectExplode(rect); //get 4 borderlines from rect
             if (borderLines != null) {
-                    intersections.AddRange(InterceptLines(borderLines));
+                intersections.AddRange(InterceptLines(borderLines, tolerance));
             }
             return intersections;
         }
 
         #endregion
 
-        private List<Vector2> InterceptLines(IEnumerable<Line2> lines) {
+        private List<Vector2> InterceptLines(IEnumerable<Line2> lines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
             foreach (var border in lines) {
-                intersections.AddRange(this.InterceptLine(border));
+                intersections.AddRange(this.InterceptLine(border, tolerance));
             }
             return intersections;
         }
 
-        private bool InterceptLinesWith(IEnumerable<Line2> lines) {
+        private bool InterceptLinesWith(IEnumerable<Line2> lines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
             foreach (var border in lines) {
-                if (this.InterceptLine(border).Count != 0) {
+                if (this.InterceptLine(border, tolerance).Count != 0) {
                     return true;
                 }
             }
@@ -98,40 +103,36 @@ namespace Archimedes.Geometry.Primitives
 
         #region Arc - Line
 
-        private IEnumerable<Vector2> InterceptLine(Line2 uLine, float range) {
-            IEnumerable<Vector2> intersections;
-            using (var strechtedLine = (uLine.Clone() as Line2)) {
 
-                strechtedLine.Stretch(range, Direction.LEFT);
-                strechtedLine.Stretch(range, Direction.RIGHT);
-                intersections = InterceptLine(strechtedLine);
-            }
-            return intersections;
-        }
 
         /// <summary>
         /// Bow-Line Interception
         /// </summary>
         /// <param name="uLine">Line to check</param>
         /// <returns>Returns the interception Point(s) if the Objects collide</returns>
-        private List<Vector2> InterceptLine(Line2 uLine) {
+        private List<Vector2> InterceptLine(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
 
-            using (var clArc = (this.Clone() as Arc)) {
-                // clone and round arc
-                clArc.Radius = Math.Round(clArc.Radius, 2);
-                clArc.Angle = Units.Angle.FromDegrees(Math.Round(clArc.Angle.Degrees, 2));
-                clArc.Location = new Vector2((float)Math.Round(clArc.Location.X), (float)Math.Round(clArc.Location.Y));
-                //------<
+            // Stretch the line on both ends by tolerance
+            // TODO Is this still necessary??
+            var strechtedLine = (uLine.Clone() as Line2);
+            strechtedLine.Stretch(tolerance, Direction.LEFT);
+            strechtedLine.Stretch(tolerance, Direction.RIGHT);
+            uLine = strechtedLine;
+            
 
-                // intercept with a circle and test inter points if they lie on our arc
-                var circle = new Circle2(clArc.MiddlePoint, clArc.Radius);
-                foreach (var possiblePnt in circle.Intersect(uLine)) {
-                    if (clArc.Contains(possiblePnt)) {
-                        intersections.Add(possiblePnt);
-                    }
+
+            // Intersect with a circle and test inter points if they lie on our arc
+            var circle = new Circle2(this.MiddlePoint, this.Radius);
+            foreach (var possiblePnt in circle.Intersect(uLine, tolerance))
+            {
+                if (this.Contains(possiblePnt, tolerance))
+                {
+                    intersections.Add(possiblePnt);
                 }
             }
+            
             return intersections;
         }
 
@@ -140,31 +141,39 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="uLine">Line to check</param>
         /// <returns>Returns true, if the objects collide, false otherwise</returns>
-        private bool InterceptLineWith(Line2 uLine) {
-            return (InterceptLine(uLine).Count != 0);
+        private bool InterceptLineWith(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            return InterceptLine(uLine, tolerance).Any();
         }
 
         #endregion
 
         #region Arc - Circle
 
-        private IEnumerable<Vector2> InterceptCircle(Circle2 circle) {
+        private IEnumerable<Vector2> InterceptCircle(Circle2 circle, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
 
-            var possibles = this.ToCircle().Intersect(circle);
+            var possibles = this.ToCircle().Intersect(circle, tolerance);
             foreach (var p in possibles)
-                if (this.Contains(p))
+            {
+                if (this.Contains(p, tolerance))
+                {
                     intersections.Add(p);
+                }
+            }
 
             return intersections;
         }
 
-        private bool InterceptCircleWith(Circle2 circle) {
-            var possibles = this.ToCircle().Intersect(circle);
+        private bool InterceptCircleWith(Circle2 circle, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            var possibles = this.ToCircle().Intersect(circle, tolerance);
             foreach (var p in possibles)
-                if (this.Contains(p))
-                    return true;
-
+            {
+                if (this.Contains(p, tolerance)) return true;
+                    
+            }
             return false;
         }
 
@@ -173,29 +182,36 @@ namespace Archimedes.Geometry.Primitives
 
         #region Arc - Arc
 
-        private IEnumerable<Vector2> InterceptArc(Arc arc) {
+        private IEnumerable<Vector2> InterceptArc(Arc arc, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var intersections = new List<Vector2>();
 
             using(var c1 = this.ToCircle())
             using (var c2 = arc.ToCircle()) {
-                var possibles = c1.Intersect(c2);
+                var possibles = c1.Intersect(c2, tolerance);
 
                 foreach (var p in possibles)
-                    if (this.Contains(p) && arc.Contains(p))
+                {
+                    if (this.Contains(p, tolerance) && arc.Contains(p, tolerance))
                         intersections.Add(p);
+                }
+
             }
             return intersections;
         }
 
-        private bool InterceptArcWith(Arc arc) {
+        private bool InterceptArcWith(Arc arc, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
 
             using (var c1 = this.ToCircle())
             using (var c2 = arc.ToCircle()) {
-                var possibles = c1.Intersect(c2);
+                var possibles = c1.Intersect(c2, tolerance);
 
                 foreach (var p in possibles)
-                    if (this.Contains(p) && arc.Contains(p))
+                {
+                    if (this.Contains(p, tolerance) && arc.Contains(p, tolerance))
                         return true;
+                }
             }
             return false;
         }
@@ -203,37 +219,38 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        public bool IntersectsWith(IGeometryBase other) {
-
+        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             if (other is Line2) {
-                return this.InterceptLineWith(other as Line2);
+                return this.InterceptLineWith(other as Line2, tolerance);
             } else if (other is GdiText2 || other is Rectangle2) {
-                return this.InterceptRectWith(other.BoundingBox);
+                return this.InterceptRectWith(other.BoundingBox, tolerance);
             } else if (other is Circle2) {
-                return this.InterceptCircleWith(other as Circle2);
+                return this.InterceptCircleWith(other as Circle2, tolerance);
             } else if (other is Arc) {
-                return this.InterceptArcWith(other as Arc);
+                return this.InterceptArcWith(other as Arc, tolerance);
             } else {
-                return other.IntersectsWith(this);
+                return other.IntersectsWith(this, tolerance);
             }
         }
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var pnts = new List<Vector2>();
 
             if (other is Line2) {
-                pnts.AddRange(this.InterceptLine(other as Line2));
+                pnts.AddRange(this.InterceptLine(other as Line2, tolerance));
             } else if (other is GdiText2) {
-                pnts.AddRange(this.InterceptRect(other.BoundingBox));
+                pnts.AddRange(this.InterceptRect(other.BoundingBox, tolerance));
             } else if (other is Rectangle2) {
-                pnts.AddRange(this.InterceptRect(other as Rectangle2));
+                pnts.AddRange(this.InterceptRect(other as Rectangle2, tolerance));
             } else if (other is Circle2) {
-                pnts.AddRange(this.InterceptCircle(other as Circle2));
+                pnts.AddRange(this.InterceptCircle(other as Circle2, tolerance));
             } else if (other is Arc) {
-                pnts.AddRange(this.InterceptArc(other as Arc));
+                pnts.AddRange(this.InterceptArc(other as Arc, tolerance));
             } else {
-                if (other is IClosedGeometry)
-                    pnts.AddRange(new Polygon2(other.ToVertices()).Intersect(this));
+                if (other is IShape)
+                    pnts.AddRange(new Polygon2(other.ToVertices()).Intersect(this, tolerance));
             }
             return pnts;
         }
@@ -243,25 +260,25 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Does a Point lie on the Arc line?
         /// </summary>
-        /// <param name="Point"></param>
+        /// <param name="point"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        public bool Contains(Vector2 Point) {
+        public bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             bool conatins = false;
 
-            // first, the distance from middlepoint to our Point must be equal to the radius:
-            if (Math.Round(Line2.CalcLenght(this.MiddlePoint, Point)) == Math.Round(this.Radius)) {
-                using (var clArc = (this.Clone() as Arc)) {
-                    // clone and round original values
-                    clArc.Radius = Math.Round(clArc.Radius, 2);
-                    clArc.Angle = Units.Angle.FromDegrees(Math.Round(clArc.Angle.Degrees, 2));
-                    clArc.Location = new Vector2((float)Math.Round(clArc.Location.X), (float)Math.Round(clArc.Location.Y));
+            // First, the distance from middlepoint to our Point must be equal to the radius:
+            var distance = Line2.CalcLenght(this.MiddlePoint, point);
+            if (Math.Abs(distance - this.Radius) < tolerance)
+            {
+                // If this is true, we only need to check if we are in the arc angle
 
-                    var bowMiddle = clArc.GetPointOnArc(clArc.Angle / 2);
-                    var l1 = new Line2(clArc.Location, bowMiddle);
-                    var l2 = new Line2(clArc.GetPointOnArc(clArc.Angle), bowMiddle);
-                    var intersection = new Line2(clArc.MiddlePoint, Point);
-                    conatins = intersection.InterceptLineWith(l1) || intersection.InterceptLineWith(l2);
-                }
+                var bowMiddle = this.GetPointOnArc(this.Angle/2);
+                var l1 = new Line2(this.Location, bowMiddle);
+                var l2 = new Line2(this.GetPointOnArc(this.Angle), bowMiddle);
+                var intersection = new Line2(this.MiddlePoint, point);
+                conatins = intersection.InterceptLineWith(l1, tolerance) || intersection.InterceptLineWith(l2, tolerance);
+
             }
             return conatins;
         }

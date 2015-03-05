@@ -94,7 +94,7 @@ namespace Archimedes.Geometry.Primitives
                 helperArc.Direction = this.Direction;
                 helperArc.Location = this.Location;
 
-                var relAngle = CalcRelAngle(helperArc.Angle, fakeBaseVector.GetAngle2X(), helperArc.Direction);
+                var relAngle = CalcRelAngle(helperArc.Angle, fakeBaseVector.GetAngleToX(), helperArc.Direction);
                 pointOnArc = CalcEndpointDelta2M(helperArc.Radius, relAngle);
 
                 var helperMP = helperArc.MiddlePoint;
@@ -169,7 +169,7 @@ namespace Archimedes.Geometry.Primitives
         {
             get
             {
-                var angle = _base.GetAngle2X() + AngleDiff;
+                var angle = _base.GetAngleToX() + AngleDiff;
 
                 // correct angle if we have opposite direction
                 if (Direction == Direction.RIGHT)
@@ -327,7 +327,7 @@ namespace Archimedes.Geometry.Primitives
         {
             var vstart = new Vector2(this.MiddlePoint, this.Location);
             var vsplit = new Vector2(this.MiddlePoint, splitPoint);
-            return Split(vstart.GetAngle2V(vsplit));
+            return Split(vstart.GetAngleTo(vsplit));
         }
 
         /// <summary>

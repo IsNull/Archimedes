@@ -22,7 +22,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Simple 2D Text, supports no rotation/orientation
     /// </summary>
-    public class GdiText2 : IGeometryBase, IClosedGeometry
+    public class GdiText2 : IShape
     {
         #region Fields
 
@@ -259,24 +259,25 @@ namespace Archimedes.Geometry.Primitives
 
         #region GeomertryBase Collision
 
-        public bool IntersectsWith(IGeometryBase other) {
-            if (other is GdiText2) 
-                return this.BoundingBox.IntersectsWith(other.BoundingBox);
-             else 
-                return other.IntersectsWith(this);
+        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
+            if (other is GdiText2)
+                return this.BoundingBox.IntersectsWith(other.BoundingBox); // TODO handle tolerance!!
+             else
+                return other.IntersectsWith(this, tolerance);
         }
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
-            if (other is GdiText2) 
-                return IntersectRect(other.BoundingBox);
+        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
+            if (other is GdiText2)
+                return IntersectRect(other.BoundingBox, tolerance);
             else
-                return other.Intersect(this);
+                return other.Intersect(this, tolerance);
         }
 
-        private IEnumerable<Vector2> IntersectRect(RectangleF other) {
+        private IEnumerable<Vector2> IntersectRect(RectangleF other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var pnts = new List<Vector2>();
             foreach (var side in Line2.RectExplode(this.BoundingBox)) {
-                pnts.AddRange(side.InterceptRect(other));
+                pnts.AddRange(side.InterceptRect(other, tolerance));
             }
             return pnts;
         }
@@ -289,16 +290,18 @@ namespace Archimedes.Geometry.Primitives
         public RectangleF BoundingBox {
             get {
                 if (_updateBoundingBox) {
-                    var BoundingBox = GetTextBoundRect();
-                    _textSizeBounding = BoundingBox;
+                    var boundingBox = GetTextBoundRect();
+                    _textSizeBounding = boundingBox;
                     _updateBoundingBox = false;
                 }
                 return _textSizeBounding;
             }
         }
 
-        public bool Contains(Vector2 uPoint) {
-            return this.BoundingBox.Contains(new Point((int)uPoint.X, (int)uPoint.Y));
+        public bool Contains(Vector2 uPoint, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            // TODO handle tolerance
+            return this.BoundingBox.Contains(new PointF((float)uPoint.X, (float)uPoint.Y));
         }
 
         #endregion
@@ -325,7 +328,7 @@ namespace Archimedes.Geometry.Primitives
             return str;
         }
 
-        #region IClosedGeometry
+        #region IShape
 
         public double Area {
             get { return BoundingBox.Area(); }

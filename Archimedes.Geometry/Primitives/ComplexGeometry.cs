@@ -177,19 +177,21 @@ namespace Archimedes.Geometry.Primitives
             this.Pen = prototype.Pen;
         }
 
-        public bool Contains(Vector2 point) {
+        public bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             foreach (var g in _geometries) {
-                if (g.Contains(point)) {
+                if (g.Contains(point, tolerance)) {
                     return true;
                 }
             }
             return false;
         }
 
-        public bool Contains(Vector2 point, ref IGeometryBase subGeometry) {
+        public bool Contains(Vector2 point, ref IGeometryBase subGeometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
             subGeometry = null;
             foreach (var g in _geometries) {
-                if (g.Contains(point)) {
+                if (g.Contains(point, tolerance))
+                {
                     subGeometry = g;
                     return true;
                 }
@@ -236,17 +238,20 @@ namespace Archimedes.Geometry.Primitives
 
         #region Intersection Methods
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other){
+        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
            var intercepts = new List<Vector2>();
            foreach (var g in _geometries) {
-                intercepts.AddRange(g.Intersect(other));
+               intercepts.AddRange(g.Intersect(other, tolerance));
            }
            return intercepts;
         }
 
-        public bool IntersectsWith(IGeometryBase geometry) {
+        public bool IntersectsWith(IGeometryBase geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             foreach (var g in _geometries) {
-                if (g.IntersectsWith(geometry)) {
+                if (g.IntersectsWith(geometry, tolerance))
+                {
                     return true;
                 }
             }

@@ -11,9 +11,10 @@ using Archimedes.Geometry.Builder;
 namespace Archimedes.Geometry.Primitives
 {
     /// <summary>
-    /// Collection of connected Points
+    /// A line string of connected points.
+    /// // TODO all intersetion methods missing
     /// </summary>
-    public class Path2 : IGeometryBase
+    public class Path2 : IGeometryBase // TODO maybe rename to LineString
     {
         #region Fields
 
@@ -160,16 +161,19 @@ namespace Archimedes.Geometry.Primitives
             get { return BoundingBox.BoundingCircle(); }
         }
 
-        public bool IntersectsWith(IGeometryBase GeometryObject) {
+        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             throw new NotImplementedException();
         }
 
-        public bool Contains(Vector2 pnt) {
-            return this.ToVertices().Contains(pnt);
+        public bool Contains(Vector2 pnt, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            return this.ToVertices().Contains(pnt); // TODO
         }
 
         public void Draw(System.Drawing.Graphics g) {

@@ -15,9 +15,10 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="interPoint">A point anywhere the Arc</param>
         /// <param name="endPoint">End-Point of the Arc</param>
         /// <returns></returns>
-        private static Arc FromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint) {
+        private static Arc FromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint)
+        {
 
-            var calcdirection = Direction.RIGHT;
+            const Direction calcdirection = Direction.RIGHT;
 
             // Calculate Rays from the 3 given Points
             var rays = RaysFromDescriptorPoints(startPoint, interPoint, endPoint, DirectionUtil.Switch(calcdirection));
@@ -26,15 +27,19 @@ namespace Archimedes.Geometry.Primitives
             var arcRadius = new Vector2(startPoint, arcCenter).Length;
 
             // Take Vectors from these Points
-            var vMPToStartPoint = new Vector2(arcCenter, startPoint);
-            var vMPToEndPoint = new Vector2(arcCenter, endPoint);
+            var middleToStart = new Vector2(arcCenter, startPoint);
+            var middleToEnd = new Vector2(arcCenter, endPoint);
 
             // Calculate base vector
-            var vbase = vMPToStartPoint.GetOrthogonalVector(Direction.RIGHT) * -1;
-            var newArc = new Arc(arcRadius, vMPToEndPoint.GetAngleBetweenClockWise(vMPToStartPoint, calcdirection), null, vbase)
+            var vbase = middleToStart.GetOrthogonalVector(Direction.RIGHT)*-1;
+            var newArc = new Arc(
+                arcRadius,
+                middleToEnd.AngleSignedTo(middleToStart, true),
+                null,
+                vbase)
             {
-             Location = startPoint,
-             Direction = DirectionUtil.Switch(calcdirection)
+                Location = startPoint,
+                Direction = DirectionUtil.Switch(calcdirection)
             };
 
             return newArc;

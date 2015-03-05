@@ -7,10 +7,11 @@ using Archimedes.Geometry.Extensions;
 
 namespace Archimedes.Geometry.Primitives
 {
+    // TODO maybe refactor this for a general texture system...
     /// <summary>
     /// Wrapper Class Image <---> IGeometryBase
     /// </summary>
-    public class ImageDrawable : Rectangle2, IDisposable
+    public class ImageDrawable : Rectangle2
     {
         #region Fields
 

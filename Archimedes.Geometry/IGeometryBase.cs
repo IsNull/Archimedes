@@ -8,7 +8,7 @@ namespace Archimedes.Geometry
 {
     /// <summary>
     /// The base of every Geometry Object, which can be anything in 2D space.
-    /// I.e. a line, arc or any shape (polygon)
+    /// For example a line, arc or any shape / polygon
     /// </summary>
     public interface IGeometryBase : IDrawable, IDisposable
     {
@@ -67,22 +67,25 @@ namespace Archimedes.Geometry
         /// Checks if this geometry intersects with the given other one.
         /// </summary>
         /// <param name="geometryObject"></param>
+        /// <param name="tolerance"></param>
         /// <returns>true if the objects collide</returns>
-        bool IntersectsWith(IGeometryBase geometryObject);
+        bool IntersectsWith(IGeometryBase geometryObject, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
 
         /// <summary>
         /// Checks Intersection and returns all Points at intersection joints
         /// </summary>
         /// <param name="other"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        IEnumerable<Vector2> Intersect(IGeometryBase other);
+        IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
 
         /// <summary>
         /// Checks if a Point is contained in the geometry
         /// </summary>
-        /// <param name="Point"></param>
+        /// <param name="point"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        bool Contains(Vector2 pos);
+        bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
 
         #region Drawing
 

@@ -265,25 +265,14 @@ namespace Archimedes.Geometry
         }
 
         /// <summary>
-        /// Gets an new Vector based on this rotated by the specified amount
-        /// </summary>
-        /// <param name="angle">Rotation Angle</param>
-        public Vector2 GetRotated(Angle angle)
-        {
-            var v2 = this;
-            v2.Rotate(angle);
-            return v2;
-        }
-
-        /// <summary>
         /// Rotates this Vector by the given amount
         /// </summary>
         /// <param name="angle"></param>
-        public void Rotate(Angle angle)
+        public Vector2 GetRotated(Angle angle)
         {
             double r = this.Length;
-            var thisAngle = angle + this.GetAngle2X();
-            this = new Vector2(r * Math.Cos(thisAngle.Radians), r * Math.Sin(thisAngle.Radians));
+            var thisAngle = angle + this.GetAngleToX();
+            return new Vector2(r * Math.Cos(thisAngle.Radians), r * Math.Sin(thisAngle.Radians));
         }
 
         /// <summary>
@@ -361,50 +350,81 @@ namespace Archimedes.Geometry
         /// Returns the angle to the X-Axis
         /// </summary>
         /// <returns></returns>
-        public Angle GetAngle2X()
+        public Angle GetAngleToX()
         {
-            var xVector = Vector2.UnitX;
-            var angle = Angle.FromRadians(Math.Acos(this.DotProduct(xVector) / this.Length));
-            if (this.Y < 0) {
-                angle = Angle.FromDegrees(360) - angle;
-            }
-            return angle;
+            return GetAngleTo(Vector2.UnitX);
         }
 
         /// <summary>
-        /// Returns the Angle between two vectors 0° - 180° 
+        /// Returns the Angle between two vectors in range of [0° - 180°] 
         /// (If you need 0° -360°, use GetAngleBetweenClockWise() instead.)
         /// </summary>
-        /// <param name="vbase"></param>
+        /// <param name="toVector"></param>
         /// <returns></returns>
-        public Angle GetAngle2V(Vector2 vbase)
+        public Angle GetAngleTo(Vector2 toVector)
         {
-            double gamma;
-            double tmp = this.DotProduct(vbase) / (this.Length * vbase.Length);
-            gamma = Angle.ConvertRadiansToDegrees(Math.Acos(tmp));
-            if (gamma > 180) {          //from mathematic definition, it's always the shorter angle to return.
-                gamma = 360 - gamma;
-            }
-            return new Angle(gamma, AngleUnit.Degrees);
+            var @this = this.Normalize();
+            var other = toVector.Normalize();
+            return new Angle(Math.Acos(@this.DotProduct(other)), AngleUnit.Radians);
         }
 
         /// <summary>
-        /// Returns Angle between two vectors. 
+        /// Returns the Angle between two vectors. 
         /// The Angle is calculated from this vector until to the Destination Vector.
         /// </summary>
         /// <param name="b"></param>
         /// <param name="direction">RIGHT = Clockwise, LEFT = other direction</param>
         /// <returns>0° - 360° Angle in degree</returns>
+        /*
         public Angle GetAngleBetweenClockWise(Vector2 b, Direction direction)
         {
-            var theta = GetAngle2V(b);
+            var theta = GetAngleTo(b);
 
             if (((this.Y * b.X - this.X * b.Y) > 0) == (direction == Direction.RIGHT)) {
                 return theta;
             } else {
                 return Angle.FromDegrees(360) - theta;
             }
+        }*/
+
+        /// <summary>
+        /// Returns the Angle between this and the given vector in the range of [0-360°],
+        /// excpet when return negative is true, then for angles > 180°, a negative value is returned
+        /// 
+        /// </summary>
+        /// <param name="v2"></param>
+        /// <param name="clockWise">If true, calculate clock-wise</param>
+        /// <param name="returnNegative">If angle is > 180° a negative value is returned.</param>
+        /// <returns></returns>
+        public Angle AngleSignedTo(Vector2 v2, bool clockWise, bool returnNegative = false)
+        {
+            int sign = clockWise ? -1 : 1;
+            double a1 = Math.Atan2(this.Y, this.X);
+            if (a1 < 0)
+            {
+                a1 += 2 * Math.PI;
+            }
+
+            double a2 = Math.Atan2(v2.Y, v2.X);
+            if (a2 < 0)
+            {
+                a2 += 2 * Math.PI;
+            }
+
+            double a = sign * (a2 - a1);
+            if (a < 0 && !returnNegative)
+            {
+                a += 2 * Math.PI;
+            }
+
+            if (a > Math.PI && returnNegative)
+            {
+                a -= 2 * Math.PI;
+            }
+
+            return new Angle(a, AngleUnit.Radians);
         }
+
 
         /// <summary>
         /// Calculate a Vector which stands orthogonal on this Vector.

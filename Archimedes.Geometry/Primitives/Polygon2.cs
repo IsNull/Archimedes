@@ -14,7 +14,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Represents a closed 2D Area.
     /// </summary>
-    public class Polygon2 : IGeometryBase, IClosedGeometry
+    public class Polygon2 : IGeometryBase, IShape
     {
         #region Fields
 
@@ -249,9 +249,11 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="p">The Point to check</param>
         /// <returns>True if the Point is contained in the Polygon</returns>
-        public bool Contains(Vector2 p) {
+        public bool Contains(Vector2 p, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
 
-            if (!BoundingCircle.Contains(p)) {
+            if (!BoundingCircle.Contains(p, tolerance))
+            {
                 return false;
             }
 
@@ -266,7 +268,7 @@ namespace Archimedes.Geometry.Primitives
                 if (p.Y > Math.Min(p1.Y, p2.Y)) {
                     if (p.Y <= Math.Max(p1.Y, p2.Y)) {
                         if (p.X <= Math.Max(p1.X, p2.X)) {
-                            if (p1.Y != p2.Y)
+                            if (p1.Y != p2.Y) // TODO Handle tolerance!!
                             {
                                 double xinters = (p.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
                                 if (p1.X == p2.X || p.X <= xinters)
@@ -284,27 +286,28 @@ namespace Archimedes.Geometry.Primitives
         /// Is the given Polygon fully contained in this one?
         /// </summary>
         /// <param name="polygon"> </param>
+        /// <param name="tolerance"> </param>
         /// <returns></returns>
-        public bool Contains(Polygon2 polygon)
+        public bool Contains(Polygon2 polygon, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            if(polygon.ToVertices().All(this.Contains))
+            if(polygon.ToVertices().All(x => Contains(x, tolerance)))
             {
-                // when all vertices are contained in a convex polygon
+                // When all vertices are contained in a convex polygon
                 // we already know that the given vertices are inside
                 // this polygon thus we are done
                 if (IsConvex()) return true;
 
-                // this is a concave polygon
+                // Otherwise, this is a concave polygon
                 // we need to ensure, that the vertices do not intersect any line
                 var otherLines = polygon.ToLines();
-                return !IntersectLinesWith(otherLines);
+                return !IntersectLinesWith(otherLines, tolerance);
             }
 
             return false;
         }
 
 
-        public bool IntersectLinesWith(Line2[] otherLines)
+        public bool IntersectLinesWith(Line2[] otherLines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var myLines = this.ToLines();
 
@@ -312,7 +315,7 @@ namespace Archimedes.Geometry.Primitives
             {
                 foreach (var other in otherLines)
                 {
-                    if (myLine.InterceptLineWith(other))
+                    if (myLine.InterceptLineWith(other, tolerance))
                         return true;
                 }
             }
@@ -320,14 +323,16 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public bool IntersectsWith(IGeometryBase other) {
+        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             IEnumerable<Vector2> collisionPoints;
-            return InterSectsOther(other, false, out collisionPoints);
+            return InterSectsOther(other, false, out collisionPoints, tolerance);
         }
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other) {
+        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             IEnumerable<Vector2> collisionPoints;
-            InterSectsOther(other, true, out collisionPoints);
+            InterSectsOther(other, true, out collisionPoints, tolerance);
             return collisionPoints;
         }
 
@@ -337,26 +342,30 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="other"></param>
         /// <param name="collectAllPoints"></param>
         /// <param name="collisionPoints"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        private bool InterSectsOther(IGeometryBase other, bool collectAllPoints, out IEnumerable<Vector2> collisionPoints) {
+        private bool InterSectsOther(IGeometryBase other, bool collectAllPoints, out IEnumerable<Vector2> collisionPoints, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
             var collisionPointsL = new List<Vector2>();
             collisionPoints = collisionPointsL;
 
-            if (other is IClosedGeometry) { /* if other is not a closed element, it must have one vertex in this polygon */
+            if (other is IShape) { /* if other is not a closed element, it must have one vertex in this polygon */
                 foreach (var vertex in this.ToVertices()) {
-                    if (other.Contains(vertex)) {
+                    if (other.Contains(vertex, tolerance))
+                    {
                         collisionPointsL.Add(vertex);
                         if (!collectAllPoints) return true;
                     }
                 }
             }
             foreach (var vertex in other.ToVertices()) {
-                if (this.Contains(vertex)) {
+                if (this.Contains(vertex, tolerance))
+                {
                     collisionPointsL.Add(vertex);
                     if (!collectAllPoints) return true;
                 }
             }
-            return (collisionPointsL.Count() != 0);
+            return collisionPointsL.Any();
         }
 
         /// <summary>
