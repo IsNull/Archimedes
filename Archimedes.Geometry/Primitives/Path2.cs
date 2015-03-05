@@ -119,7 +119,7 @@ namespace Archimedes.Geometry.Primitives
             }
             set {
                 var move = new Vector2(this.MiddlePoint, value);
-                this.Move(move);
+                this.Translate(move);
             }
         }
 
@@ -133,7 +133,7 @@ namespace Archimedes.Geometry.Primitives
             this.Pen = prototype.Pen;
         }
 
-        public void Move(Vector2 mov) {
+        public void Translate(Vector2 mov) {
             for (int i = 0; i < _gpath.PathPoints.Count(); i++)
                 _gpath.PathPoints[i] +=  mov;
         }

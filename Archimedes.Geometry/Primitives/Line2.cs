@@ -286,7 +286,7 @@ namespace Archimedes.Geometry.Primitives
                 return this.Start;
             }
             set {
-                Move(new Vector2(this.Start, value));
+                Translate(new Vector2(this.Start, value));
             }
         }
 
@@ -296,11 +296,11 @@ namespace Archimedes.Geometry.Primitives
                 return Start + vLine;
             }
             set {
-                Move(new Vector2(this.MiddlePoint, value));
+                Translate(new Vector2(this.MiddlePoint, value));
             }
         }
 
-        public void Move(Vector2 mov) {
+        public void Translate(Vector2 mov) {
             this.Start += mov;
             this.End += mov;
         }
@@ -315,7 +315,7 @@ namespace Archimedes.Geometry.Primitives
             var clone = origin.Clone() as Line2;
             if (clone != null)
             {
-                clone.Move(move);
+                clone.Translate(move);
                 return clone;
             }
             return null;

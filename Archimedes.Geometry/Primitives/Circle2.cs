@@ -276,7 +276,7 @@ namespace Archimedes.Geometry.Primitives
             path.AddEllipse(this.DrawingRect);
         }
 
-        public void Move(Vector2 mov) {
+        public void Translate(Vector2 mov) {
             this.Location += mov;
         }
 

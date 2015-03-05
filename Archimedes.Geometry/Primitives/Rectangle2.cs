@@ -252,15 +252,15 @@ namespace Archimedes.Geometry.Primitives
                 return upperleftCorner;
             }
             set {
-                Move(new Vector2(Location, value));
+                Translate(new Vector2(Location, value));
             }
         }
 
         /// <summary>
-        /// Move this Rectangle along the given Vector
+        /// Translate this Rectangle along the given Vector
         /// </summary>
         /// <param name="mov"></param>
-        public void Move(Vector2 mov) {
+        public void Translate(Vector2 mov) {
             MiddlePoint += mov;
         }
 

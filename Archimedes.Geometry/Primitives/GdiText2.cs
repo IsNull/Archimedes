@@ -200,7 +200,7 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public void Move(Vector2 mov) {
+        public void Translate(Vector2 mov) {
             this.Location += mov;
         }
 

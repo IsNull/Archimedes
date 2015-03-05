@@ -11,9 +11,9 @@ namespace Archimedes.Geometry.Primitives
         /// <summary> 
         /// Create Arc from 3 given Points
         /// </summary>
-        /// <param name="startPoint"></param>
-        /// <param name="interPoint"></param>
-        /// <param name="endPoint"></param>
+        /// <param name="startPoint">Start-Point of the Arc</param>
+        /// <param name="interPoint">A point anywhere the Arc</param>
+        /// <param name="endPoint">End-Point of the Arc</param>
         /// <returns></returns>
         private static Arc FromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint) {
 
@@ -41,8 +41,8 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        /// <summary> Get 2 Ray's from 3 DescriptorPoints. The Ray's interception Point is the Middlepoint of the Arc
-        /// 
+        /// <summary> 
+        /// Get 2 rays from 3 points. The Rays interception Point is the Middlepoint of the Arc
         /// </summary>
         /// <param name="startPoint"></param>
         /// <param name="interPoint"></param>

@@ -134,7 +134,7 @@ namespace Archimedes.Geometry.Primitives
             }
             set {
                 var mov = new Vector2(MiddlePoint, value);
-                this.Move(mov);
+                this.Translate(mov);
             }
         }
 
@@ -142,9 +142,9 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Methods
 
-        public void Move(Vector2 mov) {
+        public void Translate(Vector2 mov) {
             foreach (var g in _geometries)
-                g.Move(mov);
+                g.Translate(mov);
             Invalidate();
         }
 

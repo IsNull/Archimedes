@@ -43,19 +43,25 @@ namespace Archimedes.Geometry.Primitives
 
         public Arc() { }
 
+        /// <summary>
+        /// Creates a new Arc with the same values as the given prototype
+        /// </summary>
+        /// <param name="prototype"></param>
         public Arc(Arc prototype)
         {
-            ArcFromProtoType(prototype);
+            Prototype(prototype);
         }
 
+
+        /// <summary>
+        /// Constructs a new Arc which goes through the given 3 points.
+        /// </summary>
+        /// <param name="start"></param>
+        /// <param name="inter"></param>
+        /// <param name="end"></param>
         public Arc(Vector2 start, Vector2 inter, Vector2 end)
         {
-            ArcFromProtoType(FromDescriptorPoints(start, inter, end));
-        }
-
-        private void ArcFromProtoType(Arc prototype)
-        {
-            Prototype(prototype);
+            Prototype(FromDescriptorPoints(start, inter, end));
         }
 
 
@@ -67,8 +73,8 @@ namespace Archimedes.Geometry.Primitives
             _base = baseVector;
         }
 
-        public Arc(double? uRadius, Angle? uAngle, double? uBowLen, Vector2 baseVector, Angle angleDiff)
-            : this(uRadius, uAngle, uBowLen, baseVector)
+        public Arc(double? uRadius, Angle? angle, double? uBowLen, Vector2 baseVector, Angle angleDiff)
+            : this(uRadius, angle, uBowLen, baseVector)
         {
             _anglediff = angleDiff;
         }
@@ -412,25 +418,32 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geomerty Base
 
+        /// <summary>
+        /// Gets or sets the middlepoint of this arc
+        /// </summary>
         public Vector2 MiddlePoint
         {
             get
             {
-                // calc vector which points to the arc middlepoint
+                // Calc vector which points to the arc middlepoint
                 var orthBaseVector = _base.GetOrthogonalVector(this.Direction);
                 orthBaseVector = orthBaseVector.GetRotated(this.AngleDiff);
-                orthBaseVector.Length = this.Radius;
+                orthBaseVector.Length = Radius;
 
-                return new Vector2((float)(this.Location.X + orthBaseVector.X), (float)(this.Location.Y + orthBaseVector.Y));
+                return new Vector2((Location.X + orthBaseVector.X), (Location.Y + orthBaseVector.Y));
             }
             set
             {
-                var vMove = new Vector2(this.MiddlePoint, value);
-                this.Location += vMove;
+                var delta = new Vector2(MiddlePoint, value);
+                Translate(delta);
             }
         }
 
-        public void Move(Vector2 mov)
+        /// <summary>
+        /// Translate this arc by the given vector
+        /// </summary>
+        /// <param name="mov"></param>
+        public void Translate(Vector2 mov)
         {
             this.Location += mov;
         }

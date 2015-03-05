@@ -432,7 +432,7 @@ namespace Archimedes.Geometry.Primitives
             }
             set {
                 var move = new Vector2(this.MiddlePoint, value);
-                this.Move(move);
+                this.Translate(move);
             }
         }
 
@@ -496,7 +496,7 @@ namespace Archimedes.Geometry.Primitives
         /// Moves the Polygon (each vertex) along the given Vector
         /// </summary>
         /// <param name="v"></param>
-        public void Move(Vector2 v) {
+        public void Translate(Vector2 v) {
             for(int i=0; i < _vertices.Count; i++) {
                 _vertices[i] = _vertices[i] + v;
             }
