@@ -10,7 +10,7 @@ using Archimedes.Geometry.Units;
 namespace Archimedes.Geometry.Primitives
 {
     /// <summary>
-    /// Represents an (rotated) 2D Rectangle
+    /// Represents an rectangle in 2D space, which can be arbitary rotated.
     /// </summary>
     public class Rectangle2 : IGeometryBase, IClosedGeometry
     {

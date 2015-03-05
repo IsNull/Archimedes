@@ -7,7 +7,8 @@ using Archimedes.Geometry.Primitives;
 namespace Archimedes.Geometry
 {
     /// <summary>
-    /// The Base of every Geometry Object.
+    /// The base of every Geometry Object, which can be anything in 2D space.
+    /// I.e. a line, arc or any shape (polygon)
     /// </summary>
     public interface IGeometryBase : IDrawable, IDisposable
     {
