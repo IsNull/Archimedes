@@ -13,6 +13,8 @@ namespace Archimedes.Geometry.Units
     [Serializable]
     public struct Angle : IComparable<Angle>, IEquatable<Angle>, IFormattable
     {
+        private const double Tolerance = 0.00000001;
+
         /// <summary>
         /// The value in radians
         /// </summary>
@@ -122,6 +124,12 @@ namespace Archimedes.Geometry.Units
             }
         }
 
+        #endregion
+
+
+        #region Public Methdos
+
+        
         public double GetAngleAs(AngleUnit unit)
         {
             switch (unit)
@@ -148,7 +156,13 @@ namespace Archimedes.Geometry.Units
             }
         }
 
+        public Angle Normalize()
+        {
+            return Angle.FromDegrees(Degrees % 360);
+        }
+
         #endregion
+
 
         #region Public Static methods
 
@@ -420,7 +434,7 @@ namespace Archimedes.Geometry.Units
         /// <param name="other">An Angle object to compare with this instance.</param>
         public bool Equals(Angle other)
         {
-            return this.Radians.Equals(other.Radians);
+            return Equals(other, Tolerance);
         }
 
         /// <summary>

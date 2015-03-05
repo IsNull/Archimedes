@@ -17,7 +17,6 @@ namespace Archimedes.Geometry.Tests
             Assert.AreEqual(c1.Radius, radius);
             Assert.AreEqual(c1.MiddlePoint, new Vector2(xs, ys));
             Assert.AreEqual(c1.Area, radius * radius * Math.PI);
-            
         }
 
         [TestCase(100, 100, 50, "70, 70", true)]

@@ -14,7 +14,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Represents a closed 2D Area.
     /// </summary>
-    public class Polygon2 : IGeometryBase, IShape
+    public class Polygon2 : IShape
     {
         #region Fields
 
@@ -26,9 +26,6 @@ namespace Archimedes.Geometry.Primitives
 
         protected Pen _pen = null;
         protected Brush _fillBrush = null;
-
-        PolygonBoundingBoxAlgorythm _smallestBoundingBoxFinder;
-        PolygonBoundingBoxAlgorythm _smallestWidthBoundingBoxFinder;
 
         #endregion
 
@@ -248,6 +245,7 @@ namespace Archimedes.Geometry.Primitives
         /// Does this polygon contain the given point?
         /// </summary>
         /// <param name="p">The Point to check</param>
+        /// <param name="tolerance">The Point to check</param>
         /// <returns>True if the Point is contained in the Polygon</returns>
         public bool Contains(Vector2 p, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
@@ -394,14 +392,14 @@ namespace Archimedes.Geometry.Primitives
         /// Returns the Boundingbox which Aera is the smallest
         /// </summary>
         public Rectangle2 FindSmallestBoundingBox() {
-            return FindBoundingBox(SmallestBoundingBoxFinderAlgorythm);
+            return FindBoundingBox(new PolygonSmallestBoundingBoxAlgorythm());
         }
 
         /// <summary>
         /// Returns the Boundingbox which one side (width) is the smallest possible
         /// </summary>
         public Rectangle2 FindSmallestWidthBoundingBox() {
-            return FindBoundingBox(SmallestWidthBoundingBoxFinder);
+            return FindBoundingBox(new PolygonSmallestWidthBoundingBoxAlgorythm());
         }
 
         /// <summary>
@@ -409,11 +407,10 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="boxfindingAlgorythm">Concrete implementation of the bounding finder Algorythm to use</param>
         /// <returns></returns>
-        public Rectangle2 FindBoundingBox(PolygonBoundingBoxAlgorythm boxfindingAlgorythm) {
+        public Rectangle2 FindBoundingBox(IPolygonBoundingBoxAlgorythm boxfindingAlgorythm) {
             var rect = new Rectangle2();
             if (this.IsConvex()) {
-                boxfindingAlgorythm.SetPolygon(this);
-                var vertices = boxfindingAlgorythm.FindBounds();
+                var vertices = boxfindingAlgorythm.FindBounds(this);
                 if (vertices.Count() == 4)
                     rect = new Rectangle2(vertices);
                 if (rect.Size.IsEmpty) // smallest boundingboxfinder failed - use simple boundingbox instead
@@ -647,24 +644,6 @@ namespace Archimedes.Geometry.Primitives
             return (BAx * BCx + BAy * BCy);
         }
         #endregion // Cross and Dot Products
-
-        PolygonBoundingBoxAlgorythm SmallestBoundingBoxFinderAlgorythm {
-            get {
-                if (_smallestBoundingBoxFinder == null) {
-                    _smallestBoundingBoxFinder = new PolygonSmallestBoundingBoxAlgorythm();
-                }
-                return _smallestBoundingBoxFinder;
-            }
-        }
-
-        PolygonBoundingBoxAlgorythm SmallestWidthBoundingBoxFinder {
-            get {
-                if (_smallestWidthBoundingBoxFinder == null) {
-                    _smallestWidthBoundingBoxFinder = new PolygonSmallestWidthBoundingBoxAlgorythm();
-                }
-                return _smallestWidthBoundingBoxFinder;
-            }
-        }
 
         public virtual void Dispose() {
             //Pen.Dispose();

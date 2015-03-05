@@ -10,79 +10,68 @@ namespace Archimedes.Geometry.Primitives.Bounds
     /// <summary>
     /// Algorythm which tries to find the smallest (Aera) BoundingBox Rectangle of the given Polygon
     /// </summary>
-    public class PolygonSmallestBoundingBoxAlgorythm : PolygonBoundingBoxAlgorythm
+    public class PolygonSmallestBoundingBoxAlgorythm : IPolygonBoundingBoxAlgorythm
     {
         #region Fields
 
-        protected int _numPoints = 0;
+        private int _numPoints = 0;
 
         // The points that have been used in test edges.
-        protected bool[] _edgeChecked;
+        private bool[] _edgeChecked = null;
 
         // The four caliper control points. They start:
         //       m_ControlPoints(0)      Left edge       xmin
         //       m_ControlPoints(1)      Bottom edge     ymax
         //       m_ControlPoints(2)      Right edge      xmax
         //       m_ControlPoints(3)      Top edge        ymin
-        private int[] _controlPoints = new int[4];
+        private readonly int[] _controlPoints = new int[4];
 
         // The line from this point to the next one forms
         // one side of the next bounding rectangle.
-        protected int currentControlPoint = -1;
+        private int currentControlPoint = -1;
 
         // The area of the current and best bounding rectangles.
         private double _currentArea = float.MaxValue;
-        protected Vector2[] _currentRectangle = null;
         private double _bestArea = float.MaxValue;
-        protected Vector2[] _bestRectangle = null;
+        private Vector2[] _bestRectangle = null;
 
         #endregion
 
         #region Constructor
 
         public PolygonSmallestBoundingBoxAlgorythm() { }
-        
-        public PolygonSmallestBoundingBoxAlgorythm(Polygon2 poly) {
-            SetPolygon(poly);
-        }
+
 
         #endregion
 
         #region Public Methods
 
-        public override void SetPolygon(Polygon2 poly) {
-
-            _polygon = poly.Clone() as Polygon2;
-
-            // This algorithm assumes the polygon
-            // is oriented counter-clockwise.
-            _polygon.OrientCounterClockwise();
-            //Its very important that we not have any points more than once - distinct
-            _vertices = _polygon.ToVertices().Distinct().ToArray();
-        }
-
         /// <summary>
         /// Find a smallest bounding rectangle.
         /// </summary>
         /// <returns></returns>
-        public override Vector2[] FindBounds() {
+        public Vector2[] FindBounds(Polygon2 polygon){
 
-            if (_polygon == null)
-                throw new ArgumentNullException();
+            if (polygon == null) throw new ArgumentNullException();
 
-            if (_vertices.Count() == 0)
+            polygon = polygon.Clone() as Polygon2;
+            polygon.OrientCounterClockwise();
+            var vertices = polygon.ToVertices().Distinct().ToArray();
+
+            if (vertices.Count() == 0)
+            {
                 return new Vector2[0];
+            }
 
-            // This algorithm assumes the polygon
-            // is oriented counter-clockwise.
-            Debug.Assert(!_polygon.IsOrientedClockwise());
+            // This algorithm assumes the polygon is oriented counter-clockwise.
 
             // Get ready;
-            ResetBoundingRect();
+            ResetBoundingRect(vertices);
 
             // Check all possible bounding rectangles.
-            for (int i = 0; i < _vertices.Count(); i++) {
-                CheckNextBoundingRectangle();
+            for (int i = 0; i < vertices.Count(); i++)
+            {
+                CheckNextBoundingRectangle(vertices);
             }
 
             // Return the best result.
@@ -94,14 +83,14 @@ namespace Archimedes.Geometry.Primitives.Bounds
         #region Private Methods
 
         // Get ready to start.
-        private void ResetBoundingRect() {
-            _numPoints = _vertices.Count();
+        private void ResetBoundingRect(Vector2[] vertices) {
+            _numPoints = vertices.Count();
 
             // Find the minimum and maximum points
             // in all four directions.
-            double minx = _vertices[0].X;
+            double minx = vertices[0].X;
             double maxx = minx;
-            double miny = _vertices[0].Y;
+            double miny = vertices[0].Y;
             double maxy = miny;
             double minxi = 0;
             double maxxi = 0;
@@ -109,20 +98,24 @@ namespace Archimedes.Geometry.Primitives.Bounds
             double maxyi = 0;
 
             for (int i = 1; i < _numPoints; i++) {
-                if (minx > _vertices[i].X) {
-                    minx = _vertices[i].X;
+                if (minx > vertices[i].X)
+                {
+                    minx = vertices[i].X;
                     minxi = i;
                 }
-                if (maxx < _vertices[i].X) {
-                    maxx = _vertices[i].X;
+                if (maxx < vertices[i].X)
+                {
+                    maxx = vertices[i].X;
                     maxxi = i;
                 }
-                if (miny > _vertices[i].Y) {
-                    miny = _vertices[i].Y;
+                if (miny > vertices[i].Y)
+                {
+                    miny = vertices[i].Y;
                     minyi = i;
                 }
-                if (maxy < _vertices[i].Y) {
-                    maxy = _vertices[i].Y;
+                if (maxy < vertices[i].Y)
+                {
+                    maxy = vertices[i].Y;
                     maxyi = i;
                 }
             }
@@ -134,7 +127,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
             currentControlPoint = -1;
 
             // Reset the current and best bounding rectangle.
-            _currentRectangle = new Vector2[] 
+            var currentRectangle = new Vector2[] 
             { 
                 new Vector2(minx, miny),
                 new Vector2(maxx, miny),
@@ -142,7 +135,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
                 new Vector2(minx, maxy),
             };
             _currentArea = (maxx - minx) * (maxy - miny);
-            _bestRectangle = _currentRectangle;
+            _bestRectangle = currentRectangle;
             _bestArea = _currentArea;
 
             // So far we have not checked any edges.
@@ -153,7 +146,8 @@ namespace Archimedes.Geometry.Primitives.Bounds
         }
 
         // Find the next bounding rectangle and check it.
-        private void CheckNextBoundingRectangle() {
+        private void CheckNextBoundingRectangle(Vector2[] vertices)
+        {
             // Increment the current control point.
             // This means we are done with using this edge.
             if (currentControlPoint >= 0) {
@@ -164,10 +158,10 @@ namespace Archimedes.Geometry.Primitives.Bounds
             // Find the next point on an edge to use.
             double xmindx = 0, xmindy = 0, ymaxdx = 0, ymaxdy = 0;
             double xmaxdx = 0, xmaxdy = 0, ymindx = 0, ymindy = 0;
-            FindDxDy(ref xmindx, ref xmindy, _controlPoints[0]);
-            FindDxDy(ref ymaxdx, ref ymaxdy, _controlPoints[1]);
-            FindDxDy(ref xmaxdx, ref xmaxdy, _controlPoints[2]);
-            FindDxDy(ref ymindx, ref ymindy, _controlPoints[3]);
+            FindDxDy(vertices, out xmindx, out xmindy, _controlPoints[0]);
+            FindDxDy(vertices, out ymaxdx, out ymaxdy, _controlPoints[1]);
+            FindDxDy(vertices, out xmaxdx, out xmaxdy, _controlPoints[2]);
+            FindDxDy(vertices, out ymindx, out ymindy, _controlPoints[3]);
 
             // Switch so we can look for the smallest opposite/adjacent ratio.
             var xminopp = xmindx;
@@ -229,7 +223,7 @@ namespace Archimedes.Geometry.Primitives.Bounds
 
             // Find the current bounding rectangle
             // and see if it is an improvement.
-            FindBoundingRectangle();
+            FindBoundingRectangle(vertices);
         }
 
 
@@ -237,12 +231,13 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// Find the current bounding rectangle and
         /// see if it is better than the previous best.
         /// </summary>
-        private void FindBoundingRectangle() {
+        private void FindBoundingRectangle(Vector2[] vertices)
+        {
             // See which point has the current edge.
             int i1 = _controlPoints[currentControlPoint];
             int i2 = (i1 + 1) % _numPoints;
-            var dx = _vertices[i2].X - _vertices[i1].X;
-            var dy = _vertices[i2].Y - _vertices[i1].Y;
+            var dx = vertices[i2].X - vertices[i1].X;
+            var dy = vertices[i2].Y - vertices[i1].Y;
 
             // Make dx and dy work for the first line.
             switch (currentControlPoint) {
@@ -264,32 +259,33 @@ namespace Archimedes.Geometry.Primitives.Bounds
                     break;
             }
 
-            var px0 = _vertices[_controlPoints[0]].X;
-            var py0 = _vertices[_controlPoints[0]].Y;
+            var px0 = vertices[_controlPoints[0]].X;
+            var py0 = vertices[_controlPoints[0]].Y;
             var dx0 = dx;
             var dy0 = dy;
-            var px1 = _vertices[_controlPoints[1]].X;
-            var py1 = _vertices[_controlPoints[1]].Y;
+            var px1 = vertices[_controlPoints[1]].X;
+            var py1 = vertices[_controlPoints[1]].Y;
             var dx1 = dy;
             var dy1 = -dx;
-            var px2 = _vertices[_controlPoints[2]].X;
-            var py2 = _vertices[_controlPoints[2]].Y;
+            var px2 = vertices[_controlPoints[2]].X;
+            var py2 = vertices[_controlPoints[2]].Y;
             var dx2 = -dx;
             var dy2 = -dy;
-            var px3 = _vertices[_controlPoints[3]].X;
-            var py3 = _vertices[_controlPoints[3]].Y;
+            var px3 = vertices[_controlPoints[3]].X;
+            var py3 = vertices[_controlPoints[3]].Y;
             var dx3 = -dy;
             var dy3 = dx;
 
             // Find the points of intersection.
-            _currentRectangle = new Vector2[4];
-            FindIntersection(px0, py0, px0 + dx0, py0 + dy0, px1, py1, px1 + dx1, py1 + dy1, ref _currentRectangle[0]);
-            FindIntersection(px1, py1, px1 + dx1, py1 + dy1, px2, py2, px2 + dx2, py2 + dy2, ref _currentRectangle[1]);
-            FindIntersection(px2, py2, px2 + dx2, py2 + dy2, px3, py3, px3 + dx3, py3 + dy3, ref _currentRectangle[2]);
-            FindIntersection(px3, py3, px3 + dx3, py3 + dy3, px0, py0, px0 + dx0, py0 + dy0, ref _currentRectangle[3]);
+            var currentRectangle = new Vector2[4];
+            FindIntersection(px0, py0, px0 + dx0, py0 + dy0, px1, py1, px1 + dx1, py1 + dy1, ref currentRectangle[0]);
+            FindIntersection(px1, py1, px1 + dx1, py1 + dy1, px2, py2, px2 + dx2, py2 + dy2, ref currentRectangle[1]);
+            FindIntersection(px2, py2, px2 + dx2, py2 + dy2, px3, py3, px3 + dx3, py3 + dy3, ref currentRectangle[2]);
+            FindIntersection(px3, py3, px3 + dx3, py3 + dy3, px0, py0, px0 + dx0, py0 + dy0, ref currentRectangle[3]);
 
-            if (IsCurrentRectangleTheBest()) {
-                _bestRectangle = _currentRectangle;
+            if (IsCurrentRectangleTheBest(currentRectangle))
+            {
+                _bestRectangle = currentRectangle;
             }
         }
 
@@ -298,14 +294,15 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// Get the area of the bounding rectangle.
         /// </summary>
         /// <returns></returns>
-        protected virtual bool IsCurrentRectangleTheBest() {
+        protected virtual bool IsCurrentRectangleTheBest(Vector2[] currentRectangle)
+        {
 
-            var vx0 = _currentRectangle[0].X - _currentRectangle[1].X;
-            var vy0 = _currentRectangle[0].Y - _currentRectangle[1].Y;
+            var vx0 = currentRectangle[0].X - currentRectangle[1].X;
+            var vy0 = currentRectangle[0].Y - currentRectangle[1].Y;
             var len0 = Math.Sqrt(vx0 * vx0 + vy0 * vy0);
-            
-            var vx1 = _currentRectangle[1].X - _currentRectangle[2].X;
-            var vy1 = _currentRectangle[1].Y - _currentRectangle[2].Y;
+
+            var vx1 = currentRectangle[1].X - currentRectangle[2].X;
+            var vy1 = currentRectangle[1].Y - currentRectangle[2].Y;
             var len1 = Math.Sqrt(vx1 * vx1 + vy1 * vy1);
 
             // See if this is an improvement.
@@ -322,13 +319,15 @@ namespace Archimedes.Geometry.Primitives.Bounds
         /// <summary>
         /// Find the slope of the edge from point i to point i + 1.
         /// </summary>
+        /// <param name="vertices"></param>
         /// <param name="dx"></param>
         /// <param name="dy"></param>
         /// <param name="i"></param>
-        private void FindDxDy(ref double dx, ref double dy, int i) {
+        private void FindDxDy(Vector2[] vertices, out double dx, out double dy, int i)
+        {
             int i2 = (i + 1) % _numPoints;
-            dx = _vertices[i2].X - _vertices[i].X;
-            dy = _vertices[i2].Y - _vertices[i].Y;
+            dx = vertices[i2].X - vertices[i].X;
+            dy = vertices[i2].Y - vertices[i].Y;
         }
 
         /// <summary>

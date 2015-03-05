@@ -69,8 +69,8 @@
     <Compile Include="PointD.cs" />
     <Compile Include="Primitives\Arc.collision.cs" />
     <Compile Include="Primitives\Arc.cs" />
-    <Compile Include="Primitives\Arc.Factory.cs" />
-    <Compile Include="Primitives\Bounds\PolygonBoundingBoxAlgorythm.cs" />
+    <Compile Include="Primitives\ArcBuilder.cs" />
+    <Compile Include="Primitives\Bounds\IPolygonBoundingBoxAlgorythm.cs" />
     <Compile Include="Primitives\Bounds\PolygonSmallestBoundingBoxAlgorythm.cs" />
     <Compile Include="Primitives\Bounds\PolygonSmallestWidthBoundingBoxAlgorythm.cs" />
     <Compile Include="Primitives\Circle2.cs" />

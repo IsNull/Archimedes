@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Archimedes.Geometry.Primitives
 {
-    public partial class Arc : IGeometryBase
+    public static class ArcBuilder
     {
         /// <summary> 
         /// Create Arc from 3 given Points
@@ -15,7 +15,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="interPoint">A point anywhere the Arc</param>
         /// <param name="endPoint">End-Point of the Arc</param>
         /// <returns></returns>
-        private static Arc FromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint)
+        public static Arc FromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint)
         {
 
             const Direction calcdirection = Direction.RIGHT;
@@ -35,7 +35,6 @@ namespace Archimedes.Geometry.Primitives
             var newArc = new Arc(
                 arcRadius,
                 middleToEnd.AngleSignedTo(middleToStart, true),
-                null,
                 vbase)
             {
                 Location = startPoint,
@@ -53,7 +52,8 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="interPoint"></param>
         /// <param name="endPoint"></param>
         /// <returns></returns>
-        private static Ray[] RaysFromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint, Direction direction) {
+        private static Ray[] RaysFromDescriptorPoints(Vector2 startPoint, Vector2 interPoint, Vector2 endPoint, Direction direction)
+        {
 
             Ray[] rays = new Ray[2];
 

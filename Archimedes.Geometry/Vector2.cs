@@ -34,6 +34,8 @@ namespace Archimedes.Geometry
             return new Vector2(ak, gk);
         }
 
+
+
         /// <summary>
         /// Parses the string to a vector
         /// </summary>
@@ -276,9 +278,8 @@ namespace Archimedes.Geometry
         }
 
         /// <summary>
-        /// Turns this Vector into an Unit-Vector - a Vector with the same orientation but with 1 unit lenght
+        /// Returns an Unit-Vector - a Vector with the same orientation but with 1 unit lenght
         /// </summary>
-        /// <param name="newLenght"></param>
         /// <returns></returns>
         public Vector2 Normalize()
         {
@@ -299,7 +300,6 @@ namespace Archimedes.Geometry
 
         public bool IsParallelTo(Vector2 othervector, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            this.Normalize();
             var @this = this.Normalize();
             var other = othervector.Normalize();
             var dp = Math.Abs(@this.DotProduct(other));
@@ -365,28 +365,19 @@ namespace Archimedes.Geometry
         {
             var @this = this.Normalize();
             var other = toVector.Normalize();
-            return new Angle(Math.Acos(@this.DotProduct(other)), AngleUnit.Radians);
+            var angle = new Angle(Math.Acos(@this.DotProduct(other)), AngleUnit.Radians);
+
+            if (angle > Angle.FromDegrees(180))
+            { // From mathematic definition, it's always the shorter angle to return.
+                angle = Angle.FromDegrees(360) - angle;
+            }
+            return angle;
         }
 
-        /// <summary>
-        /// Returns the Angle between two vectors. 
-        /// The Angle is calculated from this vector until to the Destination Vector.
-        /// </summary>
-        /// <param name="b"></param>
-        /// <param name="direction">RIGHT = Clockwise, LEFT = other direction</param>
-        /// <returns>0° - 360° Angle in degree</returns>
-        /*
-        public Angle GetAngleBetweenClockWise(Vector2 b, Direction direction)
-        {
-            var theta = GetAngleTo(b);
 
-            if (((this.Y * b.X - this.X * b.Y) > 0) == (direction == Direction.RIGHT)) {
-                return theta;
-            } else {
-                return Angle.FromDegrees(360) - theta;
-            }
-        }*/
 
+
+        /**/
         /// <summary>
         /// Returns the Angle between this and the given vector in the range of [0-360°],
         /// excpet when return negative is true, then for angles > 180°, a negative value is returned
@@ -425,6 +416,45 @@ namespace Archimedes.Geometry
             return new Angle(a, AngleUnit.Radians);
         }
 
+
+        /// <summary>
+        /// Returns the Angle between two vectors 0° - 180°
+        /// (If you need 0° -360°, use GetAngleBetweenClockWise() instead.)
+        /// </summary>
+        /// <param name="vbase"></param>
+        /// <returns></returns>
+        public Angle GetAngle2V(Vector2 vbase)
+        {
+            double gamma;
+            double tmp = this.DotProduct(vbase) / (this.Length * vbase.Length);
+            gamma = Angle.ConvertRadiansToDegrees(Math.Acos(tmp));
+            if (gamma > 180)
+            { //from mathematic definition, it's always the shorter angle to return.
+                gamma = 360 - gamma;
+            }
+            return new Angle(gamma, AngleUnit.Degrees);
+        }
+
+        /// <summary>
+        /// Returns Angle between two vectors.
+        /// The Angle is calculated from this vector until to the Destination Vector.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="direction">RIGHT = Clockwise, LEFT = other direction</param>
+        /// <returns>0° - 360° Angle in degree</returns>
+        public Angle GetAngleBetweenClockWise(Vector2 b, Direction direction)
+        {
+            var theta = GetAngle2V(b);
+            if (((this.Y * b.X - this.X * b.Y) > 0) == (direction == Direction.RIGHT))
+            {
+                return theta;
+            }
+            else
+            {
+                return Angle.FromDegrees(360) - theta;
+            }
+        }
+        
 
         /// <summary>
         /// Calculate a Vector which stands orthogonal on this Vector.
