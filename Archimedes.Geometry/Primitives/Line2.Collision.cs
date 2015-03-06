@@ -21,7 +21,7 @@ namespace Archimedes.Geometry.Primitives
             double interPntX = 0;
             double interPntY = 0;
 
-            if (other == null || this.EqualSlope(other, tolerance))
+            if (other == null || this.IsParallelTo(other, tolerance))
             {
                 return null;            // Lines are parralell
             }
@@ -58,7 +58,7 @@ namespace Archimedes.Geometry.Primitives
             double intersectionX = 0;
             double intersectionY = 0;
 
-            if (other == null || this.EqualSlope(other, tolerance))
+            if (other == null || this.IsParallelTo(other, tolerance))
                 return false;
 
             //intercept of two endless lines

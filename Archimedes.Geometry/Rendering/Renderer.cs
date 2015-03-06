@@ -100,22 +100,22 @@ namespace Archimedes.Geometry.Rendering
         /// <summary>
         /// Get Image from given ViewPort location/size
         /// </summary>
-        /// <param name="rect"></param>
+        /// <param name="viewPort"></param>
         /// <returns></returns>
-        public Image GetViewPortFrame(Rectangle? _viewPortRect = null) {
+        public Image GetViewPortFrame(Rectangle? viewPort = null) {
  
-                Bitmap viewPort;
+                Bitmap frame;
 
                 if (_frame == null)
-                    throw new ArgumentNullException();
+                    throw new NotSupportedException("Frame is null, can not get view-port!");
 
-                if (_viewPortRect.HasValue) {
-                    var viewPortRect = _viewPortRect.Value;
-                    if (viewPortRect == null || _frame == null)
-                        throw new ArgumentNullException();
+                if (viewPort.HasValue)
+                {
+                    var viewPortRect = viewPort.Value;
 
-                    viewPort = new Bitmap(viewPortRect.Width, viewPortRect.Height);
-                    using (Graphics g = Graphics.FromImage(viewPort)) {
+                    frame = new Bitmap(viewPortRect.Width, viewPortRect.Height);
+                    using (Graphics g = Graphics.FromImage(frame))
+                    {
                         try {
                             g.DrawImageUnscaled(_frame, viewPortRect.Location);
                         } catch(Exception e) {
@@ -123,8 +123,9 @@ namespace Archimedes.Geometry.Rendering
                         }
                     }
                 } else {
-                    viewPort = new Bitmap(_frame.Width, _frame.Height);
-                    using (Graphics g = Graphics.FromImage(viewPort)) {
+                    frame = new Bitmap(_frame.Width, _frame.Height);
+                    using (Graphics g = Graphics.FromImage(frame))
+                    {
                         try {
                             g.DrawImageUnscaled(_frame, new Point(0, 0));
                         } catch(Exception e) {
@@ -132,7 +133,7 @@ namespace Archimedes.Geometry.Rendering
                         }
                     }
                }
-                return viewPort;
+                return frame;
  
         }
 

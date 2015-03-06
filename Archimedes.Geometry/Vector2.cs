@@ -7,7 +7,9 @@
  * *****************************************
  * *****************************************/
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Archimedes.Geometry.Extensions;
 using Archimedes.Geometry.Units;
 
@@ -43,8 +45,19 @@ namespace Archimedes.Geometry
         /// <returns></returns>
         public static Vector2 Parse(string value)
         {
-            var doubles = Parser.ParseItem2D(value);
+            double[] doubles = Parser.ParseItem2D(value);
             return new Vector2(doubles);
+        }
+
+        public static Vector2[] ParseAll(string value)
+        {
+            var vertices = new List<Vector2>();
+            var allNumbers = Parser.ParseItems2D(value);
+            foreach (var d in allNumbers)
+            {
+                vertices.Add(new Vector2(d));
+            }
+            return vertices.ToArray();
         }
 
         #endregion
@@ -314,11 +327,11 @@ namespace Archimedes.Geometry
         }
 
         public bool IsVertical {
-            get { return (this.X == 0); }
+            get { return (Math.Abs(this.X) < GeometrySettings.DEFAULT_TOLERANCE); }
         }
 
         public bool IsHorizontal {
-            get { return (this.Y == 0); }
+            get { return (Math.Abs(this.Y) < GeometrySettings.DEFAULT_TOLERANCE); }
         }
 
         public bool IsDirectionEqual(Vector2 v2, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)

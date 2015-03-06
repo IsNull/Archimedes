@@ -29,6 +29,26 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
+        #region Static Builder
+
+        public static Line2 Parse(string value)
+        {
+            Line2 line;
+            var vertices = Vector2.ParseAll(value);
+            if (vertices.Length == 2)
+            {
+                line = new Line2(vertices[0], vertices[1]);
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException("value", 
+                    "Expected where 2 vertices to build a line, but got: " +vertices.Length + " - Parsed from '" + value+"'");
+            }
+            return line;
+        }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -40,7 +60,7 @@ namespace Archimedes.Geometry.Primitives
         /// Creates a new horizontal Line, starting from 0,0 with the given Length
         /// </summary>
         /// <param name="lenght">Lenght of the new Line</param>
-        public Line2(float lenght) {
+        public Line2(double lenght) {
             _start = Vector2.Zero;
             _end = new Vector2(lenght, 0);
         }
@@ -61,7 +81,8 @@ namespace Archimedes.Geometry.Primitives
             this.Pen = uPen;
         }
 
-        public Line2(float uP1x, float uP1y, float uP2x, float uP2y) {
+        public Line2(double uP1x, double uP1y, double uP2x, double uP2y)
+        {
             _start = new Vector2(uP1x, uP1y);
             _end = new Vector2(uP2x, uP2y);
         }
@@ -114,7 +135,7 @@ namespace Archimedes.Geometry.Primitives
                     return 0;
                 }
                 else {
-                    return this.Start.Y - ((float)this.Slope * this.Start.X);
+                    return this.Start.Y - (this.Slope * this.Start.X);
                 }
             }
         }
@@ -123,18 +144,19 @@ namespace Archimedes.Geometry.Primitives
         /// Returns the solpe of the line. Returns Zero if the slope isn't defined.
         /// </summary>
         public double Slope {
-            get {
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                if ((this.End.X - this.Start.X) == 0) { // Prevents divison by zero
-                    return 0;
-                }
-                return (this.End.Y - this.Start.Y) / (this.End.X - this.Start.X);
+            get
+            {
+                return ToVector().Slope;
             }
         }
 
-
+        /// <summary>
+        /// Extends this line in the given direction
+        /// </summary>
+        /// <param name="len"></param>
+        /// <param name="direction"></param>
         public void Stretch(double len, Direction direction){
-            var vThis = new Vector2(this.Start, this.End);
+            var vThis = ToVector();
 
             if (direction == Direction.RIGHT) {
                 vThis.Length += len;
@@ -146,6 +168,9 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
+        /// <summary>
+        /// Returns the lenght of this line
+        /// </summary>
         public double Lenght {
             get { return CalcLenght(this.Start, this.End); }
         }
@@ -153,10 +178,10 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Determites if the given Point/Vertex lies on the Left side of this Line
         /// </summary>
-        /// <param name="c"></param>
+        /// <param name="point">The point to test</param>
         /// <returns></returns>
-        public bool IsLeft(Vector2 c) {
-            return IsLeft(this.Start, this.End, c);
+        public bool IsLeft(Vector2 point) {
+            return IsLeft(this.Start, this.End, point);
         }
 
         /// <summary>
@@ -166,8 +191,9 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="end">End point of the line</param>
         /// <param name="point">The point to test</param>
         /// <returns></returns>
-        static bool IsLeft(Vector2 a, Vector2 b, Vector2 c) {
-            return ((b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X)) > 0;
+        static bool IsLeft(Vector2 start, Vector2 end, Vector2 c)
+        {
+            return ((end.X - start.X) * (c.Y - start.Y) - (end.Y - start.Y) * (c.X - start.X)) > 0;
         }
 
         /// <summary>
@@ -187,33 +213,46 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="line"></param>
         /// <param name="tolerance"></param>
         /// <returns>true, if the solpes are equal</returns>
-        public bool EqualSlope(Line2 line, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) { // TODO proper tolerance handling
+        public bool IsParallelTo(Line2 line, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            return ToVector().IsParallelTo(line.ToVector(), tolerance);
+        }
 
-            if (line == null) throw new ArgumentNullException("line");
-            if ((this.IsVertical && line.IsVertical) ||
-                (this.IsHorizontal && line.IsHorizontal)) {
-                return true; // Both are either horizontal or vertical
+        /// <summary>
+        /// Checks if this line has a congruent overlap with the given.
+        /// TODO Probably change this method to return the intersectin line segment
+        /// 
+        /// </summary>
+        /// <param name="line2"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
+        public bool IsCongruentTo(Line2 line2, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            if (IsParallelTo(line2, tolerance))
+            {
+                return (this.Contains(line2.Start, tolerance) || this.Contains(line2.End, tolerance));
             }
-            if (this.IsVertical || line.IsVertical) {
-                return false; // If only one is vertical they cant have same slope
-            }
-
-            // Compare the two slopes which must be equal
-            return (Math.Abs(this.Slope - line.Slope) < tolerance);
+            return false;
         }
 
         /// <summary>
         /// Is this Line vertical?
         /// </summary>
         public bool IsVertical {
-            get { return (Math.Abs(this.End.X - this.Start.X) <= GeometrySettings.DEFAULT_TOLERANCE); }
+            get
+            {
+                return ToVector().IsVertical;
+            }
         }
 
         /// <summary>
         /// Is this Line horizontal?
         /// </summary>
         public bool IsHorizontal {
-            get { return (Math.Abs(this.End.Y - this.Start.Y) <= GeometrySettings.DEFAULT_TOLERANCE); }
+            get
+            {
+                return ToVector().IsHorizontal;
+            }
         }
 
         /// <summary>

@@ -17,6 +17,35 @@ namespace Archimedes.Geometry
         public static readonly string PlanePointVectorPattern = string.Format(@"^ *p: *{{(?<p>{0})}} *v: *{{(?<v>{0})}} *$", _item3DPattern);
         public static readonly string PlaneAbcdPattern = string.Format(@"^ *\(?(?<a>{0}){1}(?<b>{0}){1}(?<c>{0}){1}(?<d>{0})\)? *$", DoublePattern, SeparatorPattern);
 
+        /// <summary>
+        /// Expects a string like (2, 3),(3,5),(4,5)
+        /// </summary>
+        /// <param name="verticesString"></param>
+        /// <returns></returns>
+        internal static List<double[]> ParseItems2D(string verticesString)
+        {
+            var items = new List<double[]>();
+
+            var chars = verticesString.ToCharArray();
+            int pos = 0;
+            for (int i = 0; i < verticesString.Length; i++)
+            {
+                if (chars[i] == '(')
+                {
+                    pos = i;
+                }
+                if (chars[i] == ')')
+                {
+                    var contentStr = verticesString.Substring(pos, i - pos);
+                    var item = ParseItem2D(contentStr);
+                    items.Add(item);
+                }
+            }
+
+            return items;
+        }
+
+
         internal static double[] ParseItem2D(string vectorString)
         {
             var match = Regex.Match(vectorString, Vector2DPattern);

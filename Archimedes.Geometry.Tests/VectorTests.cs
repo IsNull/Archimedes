@@ -6,6 +6,19 @@ namespace Archimedes.Geometry.Tests
 {
     public class VectorTests
     {
+
+        [TestCase("(1, 0)", 1)]
+        [TestCase("(1, 0) (1, 0)", 2)]
+        [TestCase("(1, 0) (1, 0) (3,6)", 3)]
+        public void Parse(string v1s, int expected)
+        {
+            var vertices = Vector2.ParseAll(v1s);
+            Assert.AreEqual(vertices.Length, expected);
+        }
+
+
+
+
         [TestCase("1, 0", "1, 0", 1e-4, true)]
         [TestCase("-1, 1", "-1, 1", 1e-4, true)]
         [TestCase("1, 0", "1, 1", 1e-4, false)]
@@ -212,7 +225,15 @@ namespace Archimedes.Geometry.Tests
             Assert.True(expected.Equals(v1.Normalize(), 1e-6));
         }
 
-
+        [TestCase("1, 1", 1)]
+        [TestCase("10, 0", 0)] // Horizontal slope = 0
+        [TestCase("0, 10", 0)] // Vertical slope = 0
+        [TestCase("3, 4", 1.33333333333333333333333333333)]
+        public void Slope(string vs, double expected)
+        {
+            var v1 = Vector2.Parse(vs);
+            Assert.AreEqual(v1.Slope, expected);
+        }
         
     }
 }
