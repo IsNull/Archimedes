@@ -7,8 +7,8 @@ namespace Archimedes.Geometry.Rendering
 {
     public class ZoomControler
     {
-        private float zoomMultiplier = 1.5f;
-        private float currentZoom = 1.0f;
+        private double _zoomMultiplier = 1.5f;
+        private double _currentZoom = 1.0f;
 
         public ZoomControler() { }
 
@@ -17,21 +17,22 @@ namespace Archimedes.Geometry.Rendering
         }
 
         public void ZoomIn() {
-            currentZoom *= (1 * zoomMultiplier);
+            _currentZoom *= (1 * _zoomMultiplier);
         }
         public void ZoomOut() {
-            currentZoom *= (1 / zoomMultiplier); 
+            _currentZoom *= (1 / _zoomMultiplier); 
         }
 
-        public float CurrentZoom {
-            get { return currentZoom; }
+        public double CurrentZoom {
+            get { return _currentZoom; }
         }
-        public float ZoomMultiplier {
-            get { return zoomMultiplier; }
+        public double ZoomMultiplier
+        {
+            get { return _zoomMultiplier; }
             set {
                 if (value <= 0)
                     throw new ArgumentException("multiplier must be greater than Null");
-                zoomMultiplier = value; 
+                _zoomMultiplier = value; 
             }
         }
 

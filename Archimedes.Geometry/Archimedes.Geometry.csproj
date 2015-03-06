@@ -90,6 +90,7 @@
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderEventArgs.cs" />
     <Compile Include="Rendering\ZoomWorker.cs" />
+    <Compile Include="SizeD.cs" />
     <Compile Include="Units\Angle.cs" />
     <Compile Include="Units\AngleParser.cs" />
     <Compile Include="Units\AngleUnit.cs" />

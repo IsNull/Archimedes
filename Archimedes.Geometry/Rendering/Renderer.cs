@@ -49,12 +49,9 @@ namespace Archimedes.Geometry.Rendering
 
         #region Public Render Methods
 
-        public void Render(int width, int height, float zoom = 1) {
-            Render(new Size(width, height), zoom);
-        }
-
-        public void Render(Size frameSize) {
-            Render(frameSize, 1);
+        public void Render(int width, int height, double zoom = 1.0)
+        {
+            Render(new SizeD(width, height), zoom);
         }
 
         /// <summary>
@@ -62,7 +59,7 @@ namespace Archimedes.Geometry.Rendering
         /// </summary>
         /// <param name="frameSize"></param>
         /// <param name="zoom"></param>
-        public void Render(Size frameSize, float zoom = 1.0f) {
+        public void Render(SizeD frameSize, double zoom = 1.0) {
             if (zoom <= 0)
                 throw new ArgumentException("zoom factor must not be negative!");
 
@@ -73,7 +70,7 @@ namespace Archimedes.Geometry.Rendering
 
                 using (var G = Graphics.FromImage(_frame)) {
                     G.SmoothingMode = SmoothingMode.AntiAlias;
-                    G.ScaleTransform(zoom, zoom);
+                    G.ScaleTransform((float)zoom, (float)zoom);
 
                     if (OnPostRender != null)
                         OnPostRender(this, new RenderEventArgs(G));
