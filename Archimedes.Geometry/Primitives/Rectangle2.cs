@@ -102,7 +102,7 @@ namespace Archimedes.Geometry.Primitives
             //Use Vector Geometry to walk to the middlepoint
             _middlePoint = vertices[0] + ((vW / 2) + (vH / 2));
 
-            _rotateAngle = vW.GetAngleToX();
+            _rotateAngle = vW.AngleSignedTo(Vector2.UnitX, true);
             _width = vW.Length;
             _height = vH.Length;
         }

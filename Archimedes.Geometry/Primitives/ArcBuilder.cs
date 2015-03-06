@@ -32,9 +32,12 @@ namespace Archimedes.Geometry.Primitives
 
             // Calculate base vector
             var vbase = middleToStart.GetOrthogonalVector(Direction.RIGHT)*-1;
+
+            var arcAngle = middleToEnd.AngleSignedTo(middleToStart, true);
+
             var newArc = new Arc(
                 arcRadius,
-                middleToEnd.AngleSignedTo(middleToStart, true),
+                arcAngle,
                 vbase)
             {
                 Location = startPoint,

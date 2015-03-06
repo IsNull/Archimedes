@@ -286,7 +286,7 @@ namespace Archimedes.Geometry
         public Vector2 GetRotated(Angle angle)
         {
             double r = this.Length;
-            var thisAngle = angle + this.GetAngleToX();
+            var thisAngle = angle + AngleSignedTo(Vector2.UnitX, true);
             return new Vector2(r * Math.Cos(thisAngle.Radians), r * Math.Sin(thisAngle.Radians));
         }
 
@@ -363,7 +363,7 @@ namespace Archimedes.Geometry
         /// Returns the angle to the X-Axis
         /// </summary>
         /// <returns></returns>
-        public Angle GetAngleToX()
+        public Angle GetAngleToXLegacy()
         {
             return GetAngleTo(Vector2.UnitX);
         }
@@ -430,12 +430,7 @@ namespace Archimedes.Geometry
         }
 
 
-        /// <summary>
-        /// Returns the Angle between two vectors 0° - 180°
-        /// (If you need 0° -360°, use GetAngleBetweenClockWise() instead.)
-        /// </summary>
-        /// <param name="vbase"></param>
-        /// <returns></returns>
+        /*
         public Angle GetAngle2V(Vector2 vbase)
         {
             double gamma;
@@ -448,13 +443,6 @@ namespace Archimedes.Geometry
             return new Angle(gamma, AngleUnit.Degrees);
         }
 
-        /// <summary>
-        /// Returns Angle between two vectors.
-        /// The Angle is calculated from this vector until to the Destination Vector.
-        /// </summary>
-        /// <param name="b"></param>
-        /// <param name="direction">RIGHT = Clockwise, LEFT = other direction</param>
-        /// <returns>0° - 360° Angle in degree</returns>
         public Angle GetAngleBetweenClockWise(Vector2 b, Direction direction)
         {
             var theta = GetAngle2V(b);
@@ -466,7 +454,7 @@ namespace Archimedes.Geometry
             {
                 return Angle.FromDegrees(360) - theta;
             }
-        }
+        }*/
         
 
         /// <summary>

@@ -121,6 +121,7 @@ namespace Archimedes.Geometry.Tests
         [TestCase("1, 0", "1, 1", 1e-4, false)]
         [TestCase("1, 1", "1, 1", 1e-4, true)]
         [TestCase("1, -1", "-1, 1", 1e-4, true)]
+        [TestCase("-100, 260", "-39.321608040201028, 102.2361809045226", 1e-4, true)]
         public void IsParallelTo(string v1s, string v2s, double tol, bool expected)
         {
             var v1 = Vector2.Parse(v1s);
@@ -234,6 +235,9 @@ namespace Archimedes.Geometry.Tests
             var v1 = Vector2.Parse(vs);
             Assert.AreEqual(v1.Slope, expected);
         }
+
+
+
         
     }
 }

@@ -124,7 +124,7 @@ namespace Archimedes.Geometry
             double intersectionpntY = 0;
 
             if (!Vector.IsVertical && !uRay.Vector.IsVertical) {    // both NOT vertical
-                intersectionpntX = ((-1 * (this.YDist - uRay.YDist)) / (Vector.Slope - uRay.Vector.Slope));
+                intersectionpntX = ((-1.0 * (this.YDist - uRay.YDist)) / (Vector.Slope - uRay.Vector.Slope));
                 intersectionpntY = (Vector.Slope * intersectionpntX + this.YDist);
             } else if (Vector.IsVertical) {                  // this vertical (so it must lie on this.X)
                 intersectionpntX = Vector.X;

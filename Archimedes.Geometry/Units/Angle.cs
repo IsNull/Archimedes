@@ -373,7 +373,7 @@ namespace Archimedes.Geometry.Units
 
         public string ToString(string format, IFormatProvider formatProvider)
         {
-            return this.ToString(format, formatProvider, AngleUnit.Radians);
+            return this.ToString(format, formatProvider, AngleUnit.Degrees);
         }
 
         public string ToString(AngleUnit unit)
