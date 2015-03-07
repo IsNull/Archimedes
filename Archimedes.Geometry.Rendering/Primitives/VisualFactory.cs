@@ -71,5 +71,15 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 Pen = pen
             };
         }
+
+        public static VisualText Create(Vector2 location, string text, Pen pen = null, Brush background = null, Font font = null)
+        {
+            return new VisualText(location, text, font)
+            {
+                Pen = pen,
+                FillBrush = background
+            };
+        }
+
     }
 }

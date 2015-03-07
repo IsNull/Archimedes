@@ -59,6 +59,7 @@
     <Compile Include="Primitives\VisualPoint.cs" />
     <Compile Include="Primitives\VisualPolygon.cs" />
     <Compile Include="Primitives\VisualRectangle.cs" />
+    <Compile Include="Primitives\VisualText.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RectangleFUtil.cs" />
     <Compile Include="Renderer.cs" />
