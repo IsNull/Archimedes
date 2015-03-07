@@ -261,10 +261,6 @@ namespace Archimedes.Geometry.Rendering
             };
         }
 
-        public void AddToPath(GraphicsPath path) {
-            throw new NotImplementedException("GdiText has not implemented AddToPath()!");
-        }
-
         #endregion
 
         #region GeomertryBase Collision

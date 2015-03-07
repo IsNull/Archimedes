@@ -90,12 +90,6 @@ namespace Archimedes.Geometry
         #region Drawing
 
         /// <summary>
-        /// Turns this geometry in a path and adds it to the given GraphicsPath object
-        /// </summary>
-        /// <param name="path"></param>
-        void AddToPath(GraphicsPath path);
-
-        /// <summary>
         /// Drawing pen
         /// </summary>
         Pen Pen { get; set; }

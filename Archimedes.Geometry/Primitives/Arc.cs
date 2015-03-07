@@ -588,13 +588,6 @@ namespace Archimedes.Geometry.Primitives
                     (float)(Angle2X.Degrees - 90),
                     (float)Angle.Degrees);
         }
-        public void AddToPath(GraphicsPath path)
-        {
-            path.AddArc(
-                this.DrawingRect,
-                (float)(this.Angle2X.Degrees - 90),
-                (float)Angle.Degrees);
-        }
 
         #endregion
 

@@ -585,10 +585,6 @@ namespace Archimedes.Geometry.Primitives
 
         #region IGeometryBase
 
-        public void AddToPath(GraphicsPath path) {
-            path.AddPolygon(_vertices.ToPointArray());
-        }
-
         public Vector2 Location {
             get { return this.MiddlePoint; }
             set { this.MiddlePoint = value; }

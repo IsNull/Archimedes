@@ -323,10 +323,6 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geomerty Base
 
-        public void AddToPath(GraphicsPath path) {
-            path.AddLine(this.Start, this.End);
-        }
-
         public Vector2 Location {
             get {
                 return this.Start;

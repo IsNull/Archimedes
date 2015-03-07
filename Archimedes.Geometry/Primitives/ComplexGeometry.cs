@@ -71,11 +71,6 @@ namespace Archimedes.Geometry.Primitives
                 geometry.Draw(g);
         }
 
-        public void AddToPath(GraphicsPath path) {
-            foreach (var geometry in _geometries)
-                geometry.AddToPath(path);
-        }
-
         #endregion
 
         #region Public Properties

@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace Archimedes.Geometry
 {
-    public static class Parser
+    internal static class Parser
     {
         public static readonly string DoublePattern = @"[+-]?\d*(?:[.,]\d+)?(?:[eE][+-]?\d+)?";
         public const string SeparatorPattern = @" *[,;] *";

@@ -200,7 +200,7 @@ namespace Archimedes.Geometry.Primitives
                 g.DrawPath(Pen, path);
         }
 
-        public void AddToPath(GraphicsPath path) {
+        private void AddToPath(GraphicsPath path) {
             if (_vertices.Count() > 1)
             {
                 path.AddLines(Vertices.ToPoints(_vertices).ToArray());

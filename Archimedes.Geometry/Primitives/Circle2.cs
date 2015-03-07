@@ -397,11 +397,6 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public void AddToPath(GraphicsPath path)
-        {
-            path.AddEllipse(RectangleFUtil.ToRectangleF(this.BoundingBox));
-        }
-
         #endregion
 
         public void Scale(double factor) {

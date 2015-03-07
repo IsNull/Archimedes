@@ -327,11 +327,6 @@ namespace Archimedes.Geometry.Primitives
         Pen _pen = null;
         Brush _brush = null;
 
-        public void AddToPath(GraphicsPath path)
-        {
-            this.ToPolygon2().AddToPath(path);
-        }
-
         public virtual void Dispose()
         {
             Pen.Dispose();
