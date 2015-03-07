@@ -10,23 +10,23 @@ namespace Archimedes.Geometry.Builder
 {
     public class PathConnector
     {
-        float? bestDist;
-        Action combineAction;
-        IEnumerable<Vertex> path;
-        IEnumerable<Vertex> path2;
-        List<Vertex> connectedPath;
+        private double? _bestDist;
+        private Action _combineAction;
+        private readonly IEnumerable<Vertex> _path;
+        private readonly IEnumerable<Vertex> _path2;
+        private List<Vertex> _connectedPath;
 
         public PathConnector(IEnumerable<Vertex> upath, IEnumerable<Vertex> upath2) {
-            path = upath;
-            path2 = upath2;
+            _path = upath;
+            _path2 = upath2;
         }
 
         /// <summary>
         /// Prepares for a new Search
         /// </summary>
         private void Reset(){
-            bestDist = null;
-            connectedPath = new List<Vertex>(); 
+            _bestDist = null;
+            _connectedPath = new List<Vertex>(); 
         }
 
         public IEnumerable<Vertex> ConnectPaths() {
@@ -34,57 +34,57 @@ namespace Archimedes.Geometry.Builder
             Reset();
 
             // avoid error if one of the collections is empty
-            if (path.Count() == 0 || path2.Count() == 0) {
-                connectedPath.AddRange(path);
-                connectedPath.AddRange(path2);
-                return connectedPath;
+            if (_path.Count() == 0 || _path2.Count() == 0) {
+                _connectedPath.AddRange(_path);
+                _connectedPath.AddRange(_path2);
+                return _connectedPath;
             }
 
             // Combine
-            bestDist = (float)Line2.CalcLenght(path.Last(), path2.First());
-            combineAction = Combine;
+            _bestDist = (float)Line2.CalcLenght(_path.Last(), _path2.First());
+            _combineAction = Combine;
 
             // Combine2Reversed
-            dist = (float)Line2.CalcLenght(path.Last(), path2.Last());
-            if (dist < bestDist) {
-                bestDist = dist;
-                combineAction = Combine2Reversed;
+            dist = (float)Line2.CalcLenght(_path.Last(), _path2.Last());
+            if (dist < _bestDist) {
+                _bestDist = dist;
+                _combineAction = Combine2Reversed;
             }
 
             // Combine1Reversed
-            dist = (float)Line2.CalcLenght(path.First(), path2.First());
-            if (dist < bestDist) {
-                bestDist = dist;
-                combineAction = Combine1Reversed;
+            dist = (float)Line2.CalcLenght(_path.First(), _path2.First());
+            if (dist < _bestDist) {
+                _bestDist = dist;
+                _combineAction = Combine1Reversed;
             }
 
             // CombineInvert
-            dist = (float)Line2.CalcLenght(path.First(), path2.Last());
-            if (dist < bestDist) {
-                bestDist = dist;
-                combineAction = CombineInvert;
+            dist = (float)Line2.CalcLenght(_path.First(), _path2.Last());
+            if (dist < _bestDist) {
+                _bestDist = dist;
+                _combineAction = CombineInvert;
             }
 
-            combineAction.Invoke();
-            return connectedPath;
+            _combineAction.Invoke();
+            return _connectedPath;
         }
 
 
         private void Combine() {
-            connectedPath.AddRange(path);
-            connectedPath.AddRange(path2);
+            _connectedPath.AddRange(_path);
+            _connectedPath.AddRange(_path2);
         }
         private void Combine2Reversed() {
-            connectedPath.AddRange(path);
-            connectedPath.AddRange(path2.Reverse());
+            _connectedPath.AddRange(_path);
+            _connectedPath.AddRange(_path2.Reverse());
         }
         private void Combine1Reversed() {
-            connectedPath.AddRange(path.Reverse());
-            connectedPath.AddRange(path2);
+            _connectedPath.AddRange(_path.Reverse());
+            _connectedPath.AddRange(_path2);
         }
         private void CombineInvert() {
-            connectedPath.AddRange(path2);
-            connectedPath.AddRange(path);
+            _connectedPath.AddRange(_path2);
+            _connectedPath.AddRange(_path);
         }
 
 
