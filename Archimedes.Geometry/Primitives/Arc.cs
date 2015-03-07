@@ -308,7 +308,7 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Lenght of the Arc-Bow-Line
         /// </summary>
-        public float BowLen
+        public double BowLen
         {
             set
             {
@@ -324,7 +324,7 @@ namespace Archimedes.Geometry.Primitives
                     // possible to calc bowlen?
                     if (_radius != null && _angle != null)
                     {
-                        return (float)(_radius * Math.PI * (_angle.Value.Degrees / 180));
+                        return (_radius.Value * Math.PI * (_angle.Value.Degrees / 180));
                     }
                     else
                     {
@@ -333,7 +333,7 @@ namespace Archimedes.Geometry.Primitives
                 }
                 else
                 {
-                    return (float)_bowlen;
+                    return _bowlen.Value;
                 }
             }
         }
@@ -535,18 +535,17 @@ namespace Archimedes.Geometry.Primitives
             get { return this.ToCircle(); }
         }
 
-        public RectangleF BoundingBox
+        public AARectangle BoundingBox
         {
             get
             {
-                RectangleF box;
+                AARectangle box = AARectangle.Empty;
                 try
                 {
                     box = new Polygon2(ToVertices()).BoundingBox;
                 }
                 catch (Exception)
                 {
-                    box = new RectangleF();
                     //igonre - return void boundingbox
                 }
                 return box;

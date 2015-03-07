@@ -8,6 +8,7 @@
 
 
 using System.Linq;
+using Archimedes.Geometry.Rendering;
 using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Primitives
@@ -92,13 +93,6 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public RectangleF DrawingRect {
-            get {
-                return new RectangleF(
-                    (float)(this.Location.X - this.Radius), (float)(this.Location.Y - this.Radius),
-                    (float)(2 * this.Radius), (float)(2 * this.Radius));
-            }
-        }
 
         #endregion
 
@@ -311,10 +305,6 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geometry Base
 
-        public void AddToPath(GraphicsPath path) {
-            path.AddEllipse(this.DrawingRect);
-        }
-
         public void Translate(Vector2 mov) {
             this.Location += mov;
         }
@@ -379,9 +369,12 @@ namespace Archimedes.Geometry.Primitives
             get { return this.Clone() as Circle2; }
         }
 
-        public virtual RectangleF BoundingBox {
+        public virtual AARectangle BoundingBox
+        {
             get {
-                return this.DrawingRect;
+                return new AARectangle(
+                    (this.Location.X - this.Radius), (this.Location.Y - this.Radius),
+                    (2.0 * this.Radius), (2.0 * this.Radius));
             }
         }
 
@@ -397,12 +390,17 @@ namespace Archimedes.Geometry.Primitives
         public virtual void Draw(Graphics g) {
             try {
                 if (this.FillBrush != null)
-                    g.FillEllipse(this.FillBrush, this.DrawingRect);
+                    g.FillEllipse(this.FillBrush, RectangleFUtil.ToRectangleF(this.BoundingBox));
                 if (this.Pen != null)
-                    g.DrawArc(this.Pen, this.DrawingRect, 0, 360);
+                    g.DrawArc(this.Pen, RectangleFUtil.ToRectangleF(this.BoundingBox), 0, 360);
             } catch (Exception) {
                 //ignore
             }
+        }
+
+        public void AddToPath(GraphicsPath path)
+        {
+            path.AddEllipse(RectangleFUtil.ToRectangleF(this.BoundingBox));
         }
 
         #endregion
@@ -417,7 +415,7 @@ namespace Archimedes.Geometry.Primitives
                 var path = new GraphicsPath();
                 _vertices.Clear();
                 try {
-                    path.AddArc(this.DrawingRect, 0, 360);
+                    path.AddArc(RectangleFUtil.ToRectangleF(this.BoundingBox), 0, 360);
                     path.Flatten();
                     _vertices.AddRange(path.PathPoints);
                 } catch (ArgumentException) {

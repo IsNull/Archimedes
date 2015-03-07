@@ -116,7 +116,7 @@ namespace Archimedes.Geometry.Primitives
 
         public Vector2 MiddlePoint {
             get {
-                return this.BoundingBox.MiddlePoint();
+                return this.BoundingBox.MiddlePoint;
             }
             set {
                 var move = new Vector2(this.MiddlePoint, value);
@@ -148,7 +148,7 @@ namespace Archimedes.Geometry.Primitives
             return new Vertices(_gpath.PathPoints);
         }
 
-        public System.Drawing.RectangleF BoundingBox {
+        public AARectangle BoundingBox {
             get { return ToVertices().BoundingBox; }
         }
 
@@ -158,7 +158,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public Circle2 BoundingCircle {
-            get { return BoundingBox.BoundingCircle(); }
+            get { return BoundingBox.BoundingCircle; }
         }
 
         public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)

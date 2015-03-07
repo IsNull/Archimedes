@@ -17,23 +17,18 @@ namespace Archimedes.Geometry.Extensions
     public static class BitmapBoundingBoxExtension
     {
 
-        public static Rectangle BoundingBox(this Bitmap oBitmap, Color BackGrundColor) {
-            var BoundingBox = new Rectangle();
+        public static AARectangle BoundingBox(this Bitmap oBitmap, Color backGrundColor)
+        {
+            var downRight = new Vector2(oBitmap.FindFirstPixelDist(ScanSideBegin.RIGHT, backGrundColor), oBitmap.FindFirstPixelDist(ScanSideBegin.BOTTOM, backGrundColor));
+            var upperLeft = new Vector2(oBitmap.FindFirstPixelDist(ScanSideBegin.LEFT, backGrundColor), oBitmap.FindFirstPixelDist(ScanSideBegin.TOP, backGrundColor));
 
-            var DownRight = new Point(oBitmap.FindFirstPixelDist(ScanSideBegin.RIGHT, BackGrundColor), oBitmap.FindFirstPixelDist(ScanSideBegin.BOTTOM, BackGrundColor));
-            var UpperLeft = new Point(oBitmap.FindFirstPixelDist(ScanSideBegin.LEFT, BackGrundColor), oBitmap.FindFirstPixelDist(ScanSideBegin.TOP, BackGrundColor));
-
-            DownRight.Y -= 2; //Correction 
-
-            BoundingBox.Location = UpperLeft;
-            BoundingBox.Width = (DownRight.X - UpperLeft.X);
-            BoundingBox.Height = (DownRight.Y - UpperLeft.Y);
-
-            return BoundingBox;
+            var correction = new Vector2(0, 2);
+            downRight = downRight - correction; // Correction 
+            return new AARectangle(upperLeft, new SizeD((downRight.X - upperLeft.X), (downRight.Y - upperLeft.Y)));
         }
 
 
-        public static int FindFirstPixelDist(this Bitmap oBitmap, ScanSideBegin uScanSide, Color BackGrundColor) {
+        public static int FindFirstPixelDist(this Bitmap oBitmap, ScanSideBegin uScanSide, Color backGrundColor) {
             bool bColorFound = false;
             int i = 0;
 
@@ -45,7 +40,7 @@ namespace Archimedes.Geometry.Extensions
                 for (i = (oBitmap.Width - 1); i > 0; i--) {
 
                     for (int i2 = 1; i2 < oBitmap.Height; i2++) {
-                        if (oBitmap.GetPixel(i, i2) != BackGrundColor) {
+                        if (oBitmap.GetPixel(i, i2) != backGrundColor) {
                             bColorFound = true;
                             break;
                         }
@@ -63,7 +58,7 @@ namespace Archimedes.Geometry.Extensions
                 for (i = 1; i < oBitmap.Width; i++) {
 
                     for (int i2 = 1; i2 < oBitmap.Height; i2++) {
-                        if (oBitmap.GetPixel(i, i2) != BackGrundColor) {
+                        if (oBitmap.GetPixel(i, i2) != backGrundColor) {
                             bColorFound = true;
                             break;
                         }
@@ -81,7 +76,7 @@ namespace Archimedes.Geometry.Extensions
                 for (i = (oBitmap.Height - 1); i > 0; i--) {
 
                     for (int i2 = 1; i2 < oBitmap.Width; i2++) {
-                        if (oBitmap.GetPixel(i2, i) != BackGrundColor) {
+                        if (oBitmap.GetPixel(i2, i) != backGrundColor) {
                             bColorFound = true;
                             break;
                         }
@@ -98,7 +93,7 @@ namespace Archimedes.Geometry.Extensions
             case ScanSideBegin.TOP: // ------------ Search First Pixel UP
                 for (i = 1; i < oBitmap.Height; i++) {
                     for (int i2 = 1; i2 < oBitmap.Width; i2++) {
-                        if (oBitmap.GetPixel(i2, i) != BackGrundColor) {
+                        if (oBitmap.GetPixel(i2, i) != backGrundColor) {
                             bColorFound = true;
                             break;
                         }

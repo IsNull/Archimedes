@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AABox.cs" />
+    <Compile Include="AARectangle.cs" />
     <Compile Include="Builder\ConvexHullBuilder.cs" />
     <Compile Include="Builder\PathConnector.cs" />
     <Compile Include="Direction.cs" />
@@ -60,7 +60,6 @@
     <Compile Include="Extensions\NumberExtension.cs" />
     <Compile Include="Extensions\PointExtension.cs" />
     <Compile Include="Extensions\PointListExtensions.cs" />
-    <Compile Include="Extensions\RectangleExtensions.cs" />
     <Compile Include="GeometrySettings.cs" />
     <Compile Include="IShape.cs" />
     <Compile Include="IDrawable.cs" />
@@ -87,6 +86,7 @@
     <Compile Include="Rendering\DrawingGroup.cs" />
     <Compile Include="Rendering\Effects\IEffect.cs" />
     <Compile Include="Rendering\Effects\OverlineEffect.cs" />
+    <Compile Include="Rendering\RectangleFUtil.cs" />
     <Compile Include="Rendering\Renderer.cs" />
     <Compile Include="Rendering\RenderEventArgs.cs" />
     <Compile Include="Rendering\ZoomWorker.cs" />

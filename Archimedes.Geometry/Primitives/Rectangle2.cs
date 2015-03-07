@@ -66,9 +66,9 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public SizeF Size {
+        public SizeD Size {
             get {
-                return new SizeF((float)_width, (float)_height);
+                return new SizeD(_width, _height);
             }
             set {
                 _width = value.Width;
@@ -88,8 +88,15 @@ namespace Archimedes.Geometry.Primitives
 
         #region Constructor's
 
+        /// <summary>
+        /// Creates an empty rectangle
+        /// </summary>
         public Rectangle2() { }
 
+        /// <summary>
+        /// Creates a rectangle with 4 edge points.
+        /// </summary>
+        /// <param name="vertices"></param>
         public Rectangle2(Vector2[] vertices) {
 
             if (vertices.Count() != 4)
@@ -121,27 +128,27 @@ namespace Archimedes.Geometry.Primitives
             this.Angle = angle;
         }
 
-        public Rectangle2(Vector2 uLocation, SizeF uSize)
+        public Rectangle2(Vector2 uLocation, SizeD uSize)
             : this(uLocation, uSize, Angle.Zero)
         {
         }
 
-        public Rectangle2(Vector2 uLocation, SizeF uSize, Angle angle)
+        public Rectangle2(Vector2 uLocation, SizeD uSize, Angle angle)
         {
             this.Size = uSize;
             this.Location = uLocation;
             this.Angle = angle;
         }
 
-        public Rectangle2(RectangleF uRectF)
-            : this(uRectF, Angle.Zero)
+        public Rectangle2(AARectangle rect)
+            : this(rect, Angle.Zero)
         {
         }
 
-        public Rectangle2(RectangleF uRectF, Angle angle)
+        public Rectangle2(AARectangle rect, Angle angle)
         {
-            this.Size = uRectF.Size;
-            this.Location = uRectF.Location;
+            this.Size = rect.Size;
+            this.Location = rect.Location;
             this.Angle = angle;
         }
 
@@ -203,10 +210,11 @@ namespace Archimedes.Geometry.Primitives
             };
         }
 
-        public RectangleF ToRectangleF(bool forceConversation = false) {
+        public AARectangle ToRectangleF(bool forceConversation = false)
+        {
             if (this.Angle != Angle.Zero || forceConversation)
                 throw new NotSupportedException("Can not transform rotated Rectangle2 to RectangleF!");
-            return new RectangleF(this.Location, this.Size);
+            return new AARectangle(this.Location, this.Size);
         }
 
         /// <summary>
@@ -314,7 +322,7 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public RectangleF BoundingBox {
+        public AARectangle BoundingBox {
             get { return this.ToPolygon2().BoundingBox; }
         }
 

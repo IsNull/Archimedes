@@ -11,6 +11,7 @@ using System.Drawing;
 using Archimedes.Geometry.Extensions;
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
+using Archimedes.Geometry.Rendering;
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -31,7 +32,7 @@ namespace Archimedes.Geometry.Primitives
         Vector2 _location = new Vector2();
         TextAligning _textAligning = TextAligning.Centered;
 
-        RectangleF _textSizeBounding = new RectangleF();
+        private AARectangle _textSizeBounding = AARectangle.Empty;
         bool _updateBoundingBox = false;
         bool _updateTextRect = false;
         Font _font = null;
@@ -155,17 +156,18 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="Font"></param>
         /// <returns></returns>
         /// 
-        private Rectangle GetTextBoundRect() {
+        private AARectangle GetTextBoundRect() {
             SizeF tmpSize;
-            Rectangle boundingBox;
+            AARectangle boundingBox;
 
-            if (String.IsNullOrEmpty(Text) || Font == null) {
-                return new Rectangle();
+            if (String.IsNullOrEmpty(Text) || Font == null)
+            {
+                return AARectangle.Empty;
             }
 
             var bText = new SolidBrush(Color.Black);
 
-            // find the approximation of the text size
+            // Find the approximation of the text size
             using (var Gtmp = Graphics.FromImage(new Bitmap(100, 100))) {
                 tmpSize = Gtmp.MeasureString(Text, Font);
             }
@@ -181,8 +183,12 @@ namespace Archimedes.Geometry.Primitives
             }
 
             if (this.Aligning == TextAligning.Centered) {
-                boundingBox.X = (int)(this.Location.X - (boundingBox.Width / 2));
-                boundingBox.Y = (int)(this.Location.Y - (boundingBox.Height / 2));
+
+                var pos = new Vector2(
+                    this.Location.X - (boundingBox.Width / 2.0),
+                    this.Location.Y - (boundingBox.Height / 2.0));
+                boundingBox = new AARectangle(pos, boundingBox.Size);
+
             } else
                 throw new NotImplementedException();
             return boundingBox;
@@ -237,9 +243,11 @@ namespace Archimedes.Geometry.Primitives
             set { _pen = value; }
         }
 
-        public void Draw(Graphics g) {
-            g.FillRectangle(new SolidBrush(this.BackGroundColor), this.BoundingBox);
-            g.DrawString(this.Text, this.Font, this.Pen.Brush, this.BoundingBox, GetStringFormat());
+        public void Draw(Graphics g)
+        {
+            var rect = RectangleFUtil.ToRectangleF(BoundingBox);
+            g.FillRectangle(new SolidBrush(this.BackGroundColor), rect);
+            g.DrawString(this.Text, this.Font, this.Pen.Brush, rect, GetStringFormat());
         }
 
         private StringFormat GetStringFormat() {
@@ -273,7 +281,7 @@ namespace Archimedes.Geometry.Primitives
                 return other.Intersect(this, tolerance);
         }
 
-        private IEnumerable<Vector2> IntersectRect(RectangleF other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private IEnumerable<Vector2> IntersectRect(AARectangle other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var pnts = new List<Vector2>();
             foreach (var side in Line2.RectExplode(this.BoundingBox)) {
@@ -287,7 +295,7 @@ namespace Archimedes.Geometry.Primitives
             get { return new Rectangle2(this.BoundingBox).BoundingCircle; }
         }
 
-        public RectangleF BoundingBox {
+        public AARectangle BoundingBox {
             get {
                 if (_updateBoundingBox) {
                     var boundingBox = GetTextBoundRect();
@@ -331,7 +339,7 @@ namespace Archimedes.Geometry.Primitives
         #region IShape
 
         public double Area {
-            get { return BoundingBox.Area(); }
+            get { return BoundingBox.Area; }
         }
 
         public Brush FillBrush {

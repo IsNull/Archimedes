@@ -52,7 +52,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, true is returned, false otherwise</returns>
-        private bool InterceptRectWith(RectangleF rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private bool InterceptRectWith(AARectangle rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             
             var borderLines = Line2.RectExplode(rect); //get 4 borderlines from rect
@@ -67,7 +67,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, a List of interception Points is returned</returns>
-        private List<Vector2> InterceptRect(RectangleF rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private List<Vector2> InterceptRect(AARectangle rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var intersections = new List<Vector2>();
             var borderLines = Line2.RectExplode(rect); //get 4 borderlines from rect

@@ -61,10 +61,12 @@ namespace Archimedes.Geometry
         /// <summary>
         /// Returns a Boundingbox (orth rect) around all vertices
         /// </summary>
-        public RectangleF BoundingBox {
-            get {
+        public AARectangle BoundingBox
+        {
+            get
+            {
                 if (!_vertices.Any())
-                    return new RectangleF();
+                    return AARectangle.Empty;
 
                 var minX = (from v in _vertices
                             orderby v.X ascending
@@ -82,7 +84,7 @@ namespace Archimedes.Geometry
                             orderby v.Y descending
                             select v.Y).First();
 
-                return new RectangleF((float)minX, (float)minY, (float)(maxX - minX), (float)(maxY - minY));
+                return new AARectangle(minX, minY, (maxX - minX), (maxY - minY));
             }
         }
 

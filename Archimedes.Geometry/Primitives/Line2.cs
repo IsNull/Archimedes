@@ -202,7 +202,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns></returns>
-        public static double CalcLenght(Vector2 start, Vector2 end) {
+        public static double CalcLenght(Vector2 start, Vector2 end) { // TODO Rename to distance()
             return Math.Sqrt(Math.Pow(end.X - start.X, 2) + Math.Pow(end.Y - start.Y, 2));
         }
       
@@ -283,7 +283,8 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect"></param>
         /// <returns>Line2d List<></returns>
-        public static Line2[] RectExplode(RectangleF rect) {
+        public static Line2[] RectExplode(AARectangle rect)
+        {
             var sides = new Line2[4];
             sides[0] = new Line2(rect.X, rect.Y, rect.X + rect.Width, rect.Y);                                 // upper horz line
             sides[1] = new Line2(rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);     // lower horz line
@@ -366,20 +367,20 @@ namespace Archimedes.Geometry.Primitives
             return new Line2(this);
         }
 
-        public RectangleF BoundingBox {
+        public AARectangle BoundingBox {
 	        get { 
-                Vector2 SP;
+                Vector2 start;
                 if (Start.X > End.X) {
-                    SP = Start;
+                    start = Start;
                 }else if (Start.X == End.X){
                     if(Start.Y < End.Y)
-                        SP = Start;
+                        start = Start;
                     else
-                        SP = End;
+                        start = End;
                 }else
-                    SP = End;
+                    start = End;
 
-                return new RectangleF(SP, new SizeF((float)Math.Abs(Start.X - End.X), (float)Math.Abs(Start.Y - End.Y)));
+                return new AARectangle(start, new SizeD(Math.Abs(Start.X - End.X), Math.Abs(Start.Y - End.Y)));
             }
         }
 

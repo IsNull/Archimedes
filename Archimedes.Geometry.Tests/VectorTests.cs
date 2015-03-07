@@ -148,7 +148,7 @@ namespace Archimedes.Geometry.Tests
         {
             var v1 = Vector2.Parse(v1s);
 
-            Angle av = v1.GetAngleToX();
+            Angle av = v1.AngleSignedTo(Vector2.UnitX, true);
             Assert.AreEqual(expected, av.Degrees, 0.1);
         }
 

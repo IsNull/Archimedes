@@ -44,14 +44,15 @@ namespace Archimedes.Geometry.Primitives
             }
             set {
                 lock (_syncLOCK) {
-                    if (value == null) {
-                        Size = new SizeF();
+                    if (value == null)
+                    {
+                        Size = SizeD.Empty;
                     } else {
                         try {
-                            Size = value.Size;
+                            Size = new SizeD(value.Size.Width, value.Size.Height);
                             _image = value;
                         } catch {
-                            Size = new SizeF();
+                            Size = SizeD.Empty;
                         }
                     }
                 }
@@ -91,7 +92,7 @@ namespace Archimedes.Geometry.Primitives
         public override void Draw(Graphics g) {
             lock (_syncLOCK) {
                 if (_image != null)
-                    g.DrawImage(_image, new RectangleF(Location, Size));
+                    g.DrawImage(_image, new RectangleF(Location, new SizeF((float)Size.Width, (float)Size.Height)));
             }
         }
 

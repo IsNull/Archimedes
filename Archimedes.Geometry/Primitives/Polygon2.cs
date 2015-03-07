@@ -414,7 +414,7 @@ namespace Archimedes.Geometry.Primitives
                 if (vertices.Count() == 4)
                     rect = new Rectangle2(vertices);
                 if (rect.Size.IsEmpty) // smallest boundingboxfinder failed - use simple boundingbox instead
-                    rect = this.BoundingBox.ToGeometry();
+                    rect = this.BoundingBox.ToRectangle();
             } else
                 rect = this.ToConvexPolygon().FindBoundingBox(boxfindingAlgorythm);
 
@@ -602,7 +602,8 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Gets the BoundingBox (Axis Parallel) of this Polygon
         /// </summary>
-        public RectangleF BoundingBox {
+        public AARectangle BoundingBox
+        {
             get { return _vertices.BoundingBox; }
         }
 

@@ -17,7 +17,7 @@ namespace Archimedes.Geometry.Primitives
         Vertices _verticesCache = null;
         readonly object _verticesCacheLock = new object();
 
-        RectangleF _boundingbox;
+        AARectangle _boundingbox;
         Rectangle2 _boundingboxsmall;
 
         bool _boundingboxInvalidated = true;
@@ -203,7 +203,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region Bounding Boxes
 
-        public RectangleF BoundingBox {
+        public AARectangle BoundingBox {
             get {
                 if (_boundingboxInvalidated) {
                     _boundingbox = ToVertices().BoundingBox;

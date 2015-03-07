@@ -56,7 +56,7 @@ namespace Archimedes.Geometry
         /// <summary>
         /// Returns an axis aligned bounding box (AABB) which fully encloses the IGeometryBase object.
         /// </summary>
-        RectangleF BoundingBox { get; } // TODO Dont use Drawing.Rectange but a custom AABB
+        AARectangle BoundingBox { get; } // TODO Dont use Drawing.Rectange but a custom AABB
 
         /// <summary>
         /// Returns a Circle which fully encloses the IGeometryBase object
