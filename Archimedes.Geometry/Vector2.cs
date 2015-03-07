@@ -307,6 +307,16 @@ namespace Archimedes.Geometry
             }
         }
 
+        /// <summary>
+        /// Creates a scaled copy of this vector
+        /// </summary>
+        /// <param name="factor"></param>
+        /// <returns></returns>
+        public Vector2 Scale(double factor)
+        {
+            return this * factor;
+        }
+
         #endregion
 
         #region Public Query Methods
