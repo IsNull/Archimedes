@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Genetics", "Arch
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Geometry.Tests", "Archimedes.Geometry.Tests\Archimedes.Geometry.Tests.csproj", "{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{81044E98-5051-4F8B-8A4E-07F7312441E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Geometry.Rendering", "Archimedes.Geometry.Rendering\Archimedes.Geometry.Rendering.csproj", "{35A09F76-97F9-4667-977B-AF1D84C57C23}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,8 +125,22 @@ Global
 		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B}.Release|x86.ActiveCfg = Release|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{41E7583E-4C6C-4DAA-8648-3DB3455B8A88} = {81044E98-5051-4F8B-8A4E-07F7312441E5}
+		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B} = {81044E98-5051-4F8B-8A4E-07F7312441E5}
 	EndGlobalSection
 EndGlobal

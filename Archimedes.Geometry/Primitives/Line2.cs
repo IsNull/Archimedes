@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using Archimedes.Geometry.Extensions;
 using System.Drawing.Drawing2D;
+using Archimedes.Geometry.Rendering;
 
 namespace Archimedes.Geometry.Primitives
 {

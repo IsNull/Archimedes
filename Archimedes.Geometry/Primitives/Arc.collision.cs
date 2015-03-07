@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Archimedes.Geometry.Rendering;
 
 namespace Archimedes.Geometry.Primitives
 {

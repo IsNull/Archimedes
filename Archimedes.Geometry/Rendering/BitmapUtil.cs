@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
+﻿using System.Drawing;
 
-namespace Archimedes.Geometry.Extensions
+namespace Archimedes.Geometry.Rendering
 {
     public enum ScanSideBegin
     {
@@ -14,13 +10,17 @@ namespace Archimedes.Geometry.Extensions
         BOTTOM
     }
 
-    public static class BitmapBoundingBoxExtension
+    public static class BitmapUtil
     {
 
-        public static AARectangle BoundingBox(this Bitmap oBitmap, Color backGrundColor)
+        public static AARectangle BoundingBox(Bitmap oBitmap, Color backGrundColor)
         {
-            var downRight = new Vector2(oBitmap.FindFirstPixelDist(ScanSideBegin.RIGHT, backGrundColor), oBitmap.FindFirstPixelDist(ScanSideBegin.BOTTOM, backGrundColor));
-            var upperLeft = new Vector2(oBitmap.FindFirstPixelDist(ScanSideBegin.LEFT, backGrundColor), oBitmap.FindFirstPixelDist(ScanSideBegin.TOP, backGrundColor));
+            var downRight = new Vector2(
+                FindFirstPixelDist(oBitmap, ScanSideBegin.RIGHT, backGrundColor),
+                FindFirstPixelDist(oBitmap, ScanSideBegin.BOTTOM, backGrundColor));
+            var upperLeft = new Vector2(
+                FindFirstPixelDist(oBitmap, ScanSideBegin.LEFT, backGrundColor),
+                FindFirstPixelDist(oBitmap, ScanSideBegin.TOP, backGrundColor));
 
             var correction = new Vector2(0, 2);
             downRight = downRight - correction; // Correction 
@@ -28,7 +28,7 @@ namespace Archimedes.Geometry.Extensions
         }
 
 
-        public static int FindFirstPixelDist(this Bitmap oBitmap, ScanSideBegin uScanSide, Color backGrundColor) {
+        public static int FindFirstPixelDist(Bitmap oBitmap, ScanSideBegin uScanSide, Color backGrundColor) {
             bool bColorFound = false;
             int i = 0;
 

@@ -5,15 +5,15 @@
  * 
  * *****************************************
  * *****************************************/
-using System;
-using System.Text;
-using System.Drawing;
-using Archimedes.Geometry.Extensions;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using Archimedes.Geometry.Rendering;
 
-namespace Archimedes.Geometry.Primitives
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using Archimedes.Geometry.Extensions;
+using Archimedes.Geometry.Primitives;
+
+namespace Archimedes.Geometry.Rendering
 {
 
     public enum TextAligning
@@ -179,7 +179,7 @@ namespace Archimedes.Geometry.Primitives
                     gScan.DrawString(Text, Font, bText, 1, 1, GetStringFormat());
                     bText.Dispose();
                 }
-                boundingBox = scanBMP.BoundingBox(Color.White);
+                boundingBox = BitmapUtil.BoundingBox(scanBMP, Color.White);
             }
 
             if (this.Aligning == TextAligning.Centered) {

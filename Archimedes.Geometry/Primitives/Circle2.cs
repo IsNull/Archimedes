@@ -8,7 +8,6 @@
 
 
 using System.Linq;
-using Archimedes.Geometry.Rendering;
 using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Primitives
