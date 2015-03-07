@@ -101,6 +101,8 @@ namespace Archimedes.Geometry
 
         #region Public Modifiers/Creator Methods
 
+
+
         /// <summary>
         /// Rotates given vertices around a origin with given angle. New Vertices are returned.
         /// </summary>
@@ -186,5 +188,29 @@ namespace Archimedes.Geometry
         }
 
         #endregion
+
+        /// <summary>
+        /// Moves all vertices by the given moving vector.
+        /// </summary>
+        /// <param name="mov">Translation vector</param>
+        public void Translate(Vector2 mov)
+        {
+            for (int i = 0; i < _vertices.Count; i++)
+            {
+                _vertices[i] = _vertices[i] + mov;
+            }
+        }
+
+        /// <summary>
+        /// Scales all vertices by the given factor
+        /// </summary>
+        /// <param name="fact">Scale factor</param>
+        public void Scale(double fact)
+        {
+            for (int i = 0; i < _vertices.Count; i++)
+            {
+                _vertices[i] = _vertices[i]*fact;
+            }
+        }
     }
 }
