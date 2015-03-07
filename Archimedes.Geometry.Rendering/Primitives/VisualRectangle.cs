@@ -37,5 +37,12 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 //ignore
             }
         }
+
+        public override Visual Clone()
+        {
+            var copy = new VisualRectangle(_rectangle.Clone() as Rectangle2);
+            copy.Prototype(this);
+            return copy;
+        }
     }
 }

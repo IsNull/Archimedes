@@ -39,5 +39,13 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 //ignore
             }
         }
+
+
+        public override Visual Clone()
+        {
+            var copy = new VisualPolygon(_polygon.Clone() as Polygon2);
+            copy.Prototype(this);
+            return copy;
+        }
     }
 }

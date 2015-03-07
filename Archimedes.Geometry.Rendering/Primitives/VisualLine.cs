@@ -26,5 +26,12 @@ namespace Archimedes.Geometry.Rendering.Primitives
             if (this.Pen != null && !_line.Start.Equals(_line.End))
                 g.DrawLine(this.Pen, _line.Start, _line.End);
         }
+
+        public override Visual Clone()
+        {
+            var copy = new VisualLine(_line.Clone() as Line2);
+            copy.Prototype(this);
+            return copy;
+        }
     }
 }

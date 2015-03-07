@@ -33,5 +33,18 @@ namespace Archimedes.Geometry.Rendering.Primitives
         /// <param name="g"></param>
         public abstract void Draw(System.Drawing.Graphics g);
 
+        /// <summary>
+        /// Creates a clone of this visual
+        /// </summary>
+        /// <returns></returns>
+        public abstract Visual Clone();
+
+
+        protected void Prototype(Visual other)
+        {
+            this.Pen = other.Pen;
+            this.FillBrush = other.FillBrush;
+        }
+
     }
 }

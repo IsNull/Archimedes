@@ -31,5 +31,13 @@ namespace Archimedes.Geometry.Rendering.Primitives
                     (float)(_arc.Angle2X.Degrees - 90),
                     (float)_arc.Angle.Degrees);
         }
+
+        public override Visual Clone()
+        {
+            var copy = new VisualArc(_arc.Clone() as Arc);
+            copy.Prototype(this);
+            return copy;
+        }
+
     }
 }

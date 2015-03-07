@@ -89,6 +89,16 @@ namespace Archimedes.Geometry.Rendering.Primitives
             }
         }
 
+        protected void Prototype(VisualText other)
+        {
+            base.Prototype(other);
+
+            this.Text = other.Text;
+            this.Font = other.Font;
+            this.TextHorizontalAlign = other.TextHorizontalAlign;
+            this.Aligning = other.Aligning;
+        }
+
         #endregion
 
 
@@ -206,6 +216,15 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 boundingBox = BitmapUtil.BoundingBox(scanBMP, Color.White);
             }
             return boundingBox.Size;
+        }
+
+
+
+        public override Visual Clone()
+        {
+            var copy = new VisualText(_rectangle.Location, _text);
+            copy.Prototype(this);
+            return copy;
         }
 
         #endregion

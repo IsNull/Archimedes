@@ -157,5 +157,8 @@ namespace Archimedes.Geometry
         }
 
         #endregion
+
+
+
     }
 }

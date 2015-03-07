@@ -46,5 +46,13 @@ namespace Archimedes.Geometry.Rendering.Primitives
             _visualPoint.FillBrush = FillBrush;
             _visualPoint.Draw(g);
         }
+
+        
+        public override Visual Clone()
+        {
+            var copy = new VisualPoint(_point.Location);
+            copy.Prototype(this);
+            return copy;
+        }
     }
 }

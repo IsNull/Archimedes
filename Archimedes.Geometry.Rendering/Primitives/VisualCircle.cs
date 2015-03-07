@@ -39,5 +39,14 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 //ignore
             }
         }
+
+
+        public override Visual Clone()
+        {
+            var copy = new VisualCircle(_circle.Clone() as Circle2);
+            copy.Prototype(this);
+            return copy;
+        }
+
     }
 }

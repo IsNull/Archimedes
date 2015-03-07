@@ -34,6 +34,13 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 g.DrawPath(Pen, path);
         }
 
+        public override Visual Clone()
+        {
+            var copy = new VisualLineString(_lineString.Clone() as LineString);
+            copy.Prototype(this);
+            return copy;
+        }
+
 
     }
 }

@@ -10,7 +10,7 @@ namespace Archimedes.Geometry
     /// The base of every Geometry Object, which can be anything in 2D space.
     /// For example a line, arc or any shape / polygon
     /// </summary>
-    public interface IGeometryBase : IDrawable, IDisposable
+    public interface IGeometryBase : IDisposable, IDrawable
     {
         /// <summary>
         /// The location of this geometry? 
