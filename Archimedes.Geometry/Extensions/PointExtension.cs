@@ -43,13 +43,9 @@ namespace Archimedes.Geometry.Extensions
 
     public static class VectorExtension
     {
-        public static Point ToPoint(this Vector2 pntF) {
-            return new Point((int)Math.Round(pntF.X), (int)Math.Round(pntF.Y));
-        }
-
-        public static Vector2 Scale(this Vector2 pntF, double factor)
+        public static Point ToPoint(this Vector2 pntF)
         {
-            return new Vector2(pntF.X * factor, pntF.Y * factor);
+            return new Point((int) Math.Round(pntF.X), (int) Math.Round(pntF.Y));
         }
     }
 }

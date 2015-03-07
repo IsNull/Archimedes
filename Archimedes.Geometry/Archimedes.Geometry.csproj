@@ -76,7 +76,7 @@
     <Compile Include="Primitives\ImageDrawable.cs" />
     <Compile Include="Primitives\Line2.Collision.cs" />
     <Compile Include="Primitives\Line2.cs" />
-    <Compile Include="Primitives\Path2.cs" />
+    <Compile Include="Primitives\LineString.cs" />
     <Compile Include="Primitives\Polygon2.cs" />
     <Compile Include="Primitives\Rectangle2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

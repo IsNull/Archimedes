@@ -413,7 +413,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region To Methods
 
-        public GraphicsPath ToPath()
+        private GraphicsPath ToPath()
         {
             var path = new GraphicsPath();
             try

@@ -12,60 +12,75 @@ namespace Archimedes.Geometry.Primitives
 {
     /// <summary>
     /// A line string of connected points.
-    /// // TODO all intersetion methods missing
+    /// // TODO all intersection methods missing
     /// </summary>
-    public class Path2 : IGeometryBase // TODO maybe rename to LineString
+    public class LineString : IGeometryBase
     {
         #region Fields
 
         System.Drawing.Pen _pen;
-        readonly GraphicsPath _gpath = new GraphicsPath();
+        private readonly Vertices _vertices = new Vertices();
 
         #endregion
 
         #region Construcors
 
-        public Path2() {
-            _gpath.StartFigure();
-        }
+        /// <summary>
+        /// Creates an empty line string
+        /// </summary>
+        public LineString() { }
 
-        public Path2(Path2 prototype) 
+        /// <summary>
+        /// Creates a new line string with same values as the prototype
+        /// </summary>
+        /// <param name="prototype"></param>
+        public LineString(LineString prototype) 
             : this() {
             this.Prototype(prototype);
         }
-        public Path2(IGeometryBase geometry)
+
+        /// <summary>
+        /// Creates a new line string with the given vertices
+        /// </summary>
+        /// <param name="vertices"></param>
+        public LineString(IEnumerable<Vertex> vertices)
+            : this()
+        {
+            Append(vertices);
+        }
+
+        public LineString(IGeometryBase geometry)
             : this() {
                 AddGeometry(geometry);
         }
-        public Path2(IEnumerable<IGeometryBase> geometries)
+        public LineString(IEnumerable<IGeometryBase> geometries)
             : this() {
             foreach (var g in geometries)
                 AddGeometry(g);
         }
-        public Path2(IEnumerable<Vertex> vertices)
-            : this() {
-                AddVertices(vertices);
-        }
+
 
         #endregion
 
         #region Data Access
 
         /// <summary>
+        /// Adds the given verices this this line string
+        /// </summary>
+        /// <param name="other"></param>
+        public void Append(IEnumerable<Vector2> other)
+        {
+            _vertices.AddRange(other);
+        }
+
+        /// <summary>
         /// Adds  the <paramref name="geometry"/> to the path.
         /// </summary>
         /// <param name="geometry">Geomtry to add</param>
         public void AddGeometry(IGeometryBase geometry) {
-            AddVertices(geometry.ToVertices());
+            Append(geometry.ToVertices());
         }
-        /// <summary>
-        /// Adds the <paramref name="vertices"/> to the path.
-        /// </summary>
-        /// <param name="vertices">Vertixes to add</param>
-        public void AddVertices(IEnumerable<Vertex> vertices) {
-            if(vertices.Count() > 1)
-                _gpath.AddLines(Vertices.ToPoints(vertices).ToArray());
-        }
+
 
         /// <summary>
         /// Tries to dock the <paramref name="geometry"/> to this path. 
@@ -74,37 +89,38 @@ namespace Archimedes.Geometry.Primitives
         public void DockGeometry(IGeometryBase geometry) {
             DockVertices(geometry.ToVertices());
         }
+
+
         public void DockVertices(IEnumerable<Vertex> vertices) {
             // does vertex order matther?
-            if (_gpath.PointCount == 0) {
-                AddVertices(vertices);
+            if (!_vertices.Any()) {
+                Append(vertices);
                 return;
             }
 
             // sort the vertices to make connection possible
             var connector = new PathConnector(this.ToVertices(), vertices);
             Clear();
-            AddVertices(connector.ConnectPaths());
+            Append(connector.ConnectPaths());
         }
 
         public void Clear() {
-            _gpath.Reset();
+            _vertices.Clear();
         }
 
         #endregion
 
         public Vector2 LastPoint {
-            get { return _gpath.PointCount != 0 ? _gpath.GetLastPoint() : new PointF(); }
+            get { return _vertices.LastOrDefault(); }
         }
 
         public Vector2 FirstPoint {
             get {
-                return _gpath.PointCount != 0 ? _gpath.PathPoints[0] : new PointF();
+                return _vertices.First();
             }
         }
 
         public virtual void Dispose() {
-            _gpath.Dispose();
         }
 
         #region IGeometryBase
@@ -116,7 +132,7 @@ namespace Archimedes.Geometry.Primitives
 
         public Vector2 MiddlePoint {
             get {
-                return this.BoundingBox.MiddlePoint;
+                return BoundingBox.MiddlePoint;
             }
             set {
                 var move = new Vector2(this.MiddlePoint, value);
@@ -125,31 +141,30 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public IGeometryBase Clone() {
-            return new Path2(this);
+            return new LineString(this);
         }
 
         public void Prototype(IGeometryBase prototype) {
-            _gpath.Reset();
-            prototype.AddToPath(_gpath);
+            Clear();
+            Append(prototype.ToVertices());
             this.Pen = prototype.Pen;
         }
 
         public void Translate(Vector2 mov) {
-            for (int i = 0; i < _gpath.PathPoints.Count(); i++)
-                _gpath.PathPoints[i] +=  mov;
+            _vertices.Translate(mov);
         }
 
-        public void Scale(double fact) {
-            for (int i = 0; i < _gpath.PathPoints.Count(); i++)
-                _gpath.PathPoints[i] = _gpath.PathPoints[i].Scale(fact);
+        public void Scale(double fact)
+        {
+            _vertices.Scale(fact);
         }
 
         public Vertices ToVertices() {
-            return new Vertices(_gpath.PathPoints);
+            return new Vertices(_vertices);
         }
 
         public AARectangle BoundingBox {
-            get { return ToVertices().BoundingBox; }
+            get { return _vertices.BoundingBox; }
         }
 
         public System.Drawing.Pen Pen {
@@ -173,17 +188,23 @@ namespace Archimedes.Geometry.Primitives
 
         public bool Contains(Vector2 pnt, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            return this.ToVertices().Contains(pnt); // TODO
+            throw new NotImplementedException();
         }
 
-        public void Draw(System.Drawing.Graphics g) {
-            if (_gpath.PointCount > 0)
-                g.DrawPath(Pen, _gpath);
+        public void Draw(System.Drawing.Graphics g)
+        {
+            var path = new GraphicsPath();
+            AddToPath(path);
+
+            if (path.PointCount > 0)
+                g.DrawPath(Pen, path);
         }
 
         public void AddToPath(GraphicsPath path) {
-            if (_gpath.PointCount > 0)
-                path.AddPath(_gpath, true);
+            if (_vertices.Count() > 1)
+            {
+                path.AddLines(Vertices.ToPoints(_vertices).ToArray());
+            }
         }
 
         #endregion

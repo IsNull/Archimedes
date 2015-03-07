@@ -289,8 +289,8 @@ namespace Archimedes.Geometry.Primitives
         /// Creates a docked path from this geometries.
         /// </summary>
         /// <returns></returns>
-        public Path2 ToPath() {
-            var path = new Path2();
+        public LineString ToPath() {
+            var path = new LineString();
             foreach (var g in _geometries)
                 path.DockGeometry(g);
             return path;
