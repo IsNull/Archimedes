@@ -23,17 +23,9 @@ namespace Archimedes.Geometry.Primitives
         double _height;
         Angle _rotateAngle = Units.Angle.Zero; // Rotation is considered centric
 
-        Pen _pen = null;
-        Brush _brush = null;
-
         #endregion
 
         #region Public Propertys
-
-        public Brush FillBrush {
-            get { return _brush; }
-            set { _brush = value;}
-        }
 
         public Angle Angle
         {
@@ -243,10 +235,6 @@ namespace Archimedes.Geometry.Primitives
 
         #region IGeometryBase
 
-        public void AddToPath(GraphicsPath path) {
-            this.ToPolygon2().AddToPath(path);
-        }
-
         /// <summary>
         /// Gets or sets the Location of the upper Left Corner of this Rectangle
         /// </summary>
@@ -286,21 +274,8 @@ namespace Archimedes.Geometry.Primitives
             return new Rectangle2(this);
         }
 
-        public Pen Pen {
-            get { return _pen; }
-            set { _pen = value; }
-        }
-
-        public virtual void Draw(Graphics g) {
-            this.ToPolygon2().Draw(g);
-        } 
 
         #endregion
-
-        public virtual void Dispose() {
-            Pen.Dispose();
-            FillBrush.Dispose();
-        }
 
         public override string ToString() {
             return string.Format(@"[{0}/{1}] {2}°", _width, _height, _rotateAngle); //rotation is considered centric
@@ -345,6 +320,40 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
+        #endregion
+
+        #region Drawing
+
+        Pen _pen = null;
+        Brush _brush = null;
+
+        public void AddToPath(GraphicsPath path)
+        {
+            this.ToPolygon2().AddToPath(path);
+        }
+
+        public virtual void Dispose()
+        {
+            Pen.Dispose();
+            FillBrush.Dispose();
+        }
+
+        public Brush FillBrush
+        {
+            get { return _brush; }
+            set { _brush = value; }
+        }
+
+        public Pen Pen
+        {
+            get { return _pen; }
+            set { _pen = value; }
+        }
+
+        public virtual void Draw(Graphics g)
+        {
+            this.ToPolygon2().Draw(g);
+        } 
         #endregion
     }
 }

@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using Archimedes.Geometry.Extensions;
 using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry.Rendering
@@ -29,19 +28,22 @@ namespace Archimedes.Geometry.Rendering
 
         string _text = "";
 
-        Vector2 _location = new Vector2();
-        TextAligning _textAligning = TextAligning.Centered;
-
+        private Vector2 _location = new Vector2();
         private AARectangle _textSizeBounding = AARectangle.Empty;
-        bool _updateBoundingBox = false;
-        bool _updateTextRect = false;
-        Font _font = null;
-       
-        int _boundingBorder = 0;
 
-        Pen _pen = Pens.Black;
-        Brush _brush = Brushes.White;
-        StringAlignment _textHorizontalAlign = StringAlignment.Center;
+
+
+        private TextAligning _textAligning = TextAligning.Centered;
+
+        private bool _updateBoundingBox = false;
+        private bool _updateTextRect = false;
+        private Font _font = null;
+
+        private int _boundingBorder = 0;
+
+        private Pen _pen = Pens.Black;
+        private Brush _brush = Brushes.White;
+        private StringAlignment _textHorizontalAlign = StringAlignment.Center;
 
         #endregion
 
