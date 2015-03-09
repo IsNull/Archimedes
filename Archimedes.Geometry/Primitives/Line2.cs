@@ -430,7 +430,7 @@ namespace Archimedes.Geometry.Primitives
             {
                 return this.InterceptLineWith(geometry as Line2, tolerance);
             }
-            else if (geometry is GdiText2 || geometry is ImageDrawable)
+            else if (geometry is GdiText2)
             {
                 return this.InterceptRectWith(geometry.BoundingBox, tolerance);
             } else { //delegate Collision Detection to other Geometry Object

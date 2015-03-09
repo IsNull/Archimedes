@@ -11,6 +11,7 @@ namespace Archimedes.Geometry.Primitives
 {
     /// <summary>
     /// Represents an rectangle in 2D space, which can be arbitary rotated.
+    /// // TODO Creating a rectangle with location + angle is currently broken!
     /// </summary>
     public class Rectangle2 : IShape
     {
@@ -18,23 +19,116 @@ namespace Archimedes.Geometry.Primitives
 
         //Internal Data which defines a rotatable rect
 
-        Vector2 _middlePoint;
-        double _width;
-        double _height;
-        Angle _rotateAngle = Units.Angle.Zero; // Rotation is considered centric
+        private Vector2 _location;
+        private double _width;
+        private double _height;
+        private Angle _rotation = Units.Angle.Zero; // Rotation is considered centric
+
+        #endregion
+
+        #region Static Builder methods
+
+        /// <summary>
+        /// Returns a new, empty rectangle
+        /// </summary>
+        public static Rectangle2 Empty
+        {
+            get { return new Rectangle2(0, 0, 0, 0, Angle.Zero); }
+        }
+
+        /// <summary>
+        /// Constructs a rectangle from 4 points in 2D space.
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        public static Rectangle2 FromVertices(Vector2[] vertices)
+        {
+            if (vertices.Count() != 4)
+                throw new ArgumentException("You must submit 4 vertices!");
+
+            // Calc width and height Vectors
+            var vWidth = new Vector2(vertices[0], vertices[1]);
+            var vHeight = new Vector2(vertices[1], vertices[2]);
+
+            // Use Vector Geometry to walk to the middlepoint
+            var middlePoint = vertices[0] + ((vWidth / 2.0) + (vHeight / 2.0));
+
+            var rotation = vWidth.AngleSignedTo(Vector2.UnitX, true);
+            var width = vWidth.Length;
+            var height = vHeight.Length;
+
+            return new Rectangle2(0, 0, width, height, rotation)
+            {
+                MiddlePoint = middlePoint
+            };
+        }
+
+        #endregion
+
+        #region Constructor's
+
+
+        /// <summary>
+        /// Creates a new Rectangle
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="uwidth"></param>
+        /// <param name="uheight"></param>
+        /// <param name="rotation"></param>
+        public Rectangle2(double x, double y, double uwidth, double uheight, Angle? rotation = null)
+        {
+            _width = uwidth;
+            _height = uheight;
+            this.Location = new Vector2(x, y);
+            this.Rotation = rotation ?? Angle.Zero;
+        }
+
+        public Rectangle2(Vector2 location, SizeD size, Angle? rotation = null)
+            : this(location.X, location.Y, size.Width, size.Height,  rotation ?? Angle.Zero)
+        {
+        }
+
+        public Rectangle2(AARectangle rect, Angle? rotation = null)
+            : this(rect.Location, rect.Size, rotation ?? Angle.Zero) { }
+
+        public Rectangle2(Rectangle2 prototype)
+        {
+            Prototype(prototype);
+        }
+
+        /// <summary>
+        /// Prototype methods, which copies al values from the prototype to this instance.
+        /// </summary>
+        /// <param name="iprototype"></param>
+        public void Prototype(IGeometryBase iprototype)
+        {
+            var prototype = iprototype as Rectangle2;
+            if (prototype == null)
+                throw new NotSupportedException();
+
+            this.Size = prototype.Size;
+            this.MiddlePoint = prototype.MiddlePoint;
+            this.Rotation = prototype.Rotation;
+            this._pen = prototype.Pen;
+            this.FillBrush = prototype.FillBrush;
+        }
 
         #endregion
 
         #region Public Propertys
 
-        public Angle Angle
+        /// <summary>
+        /// Gets / Sets the rotation of this rectangle
+        /// </summary>
+        public Angle Rotation
         {
-            get { return _rotateAngle; }
-            set { _rotateAngle = value; }
+            get { return _rotation; }
+            set { _rotation = value; }
         }
 
         public bool IsRotated {
-            get { return (this.Angle != Units.Angle.Zero); }
+            get { return (this.Rotation != Units.Angle.Zero); }
         }
 
         public double Height
@@ -76,102 +170,69 @@ namespace Archimedes.Geometry.Primitives
             get { return Height * Width; }
         }
 
-        #endregion
-
-        #region Constructor's
-
         /// <summary>
-        /// Creates an empty rectangle
+        /// Gets or sets the Location of the upper Left Corner of this Rectangle
         /// </summary>
-        public Rectangle2() { }
-
-        /// <summary>
-        /// Creates a rectangle with 4 edge points.
-        /// </summary>
-        /// <param name="vertices"></param>
-        public Rectangle2(Vector2[] vertices) {
-
-            if (vertices.Count() != 4)
-                throw new ArgumentException("You must submit 4 vertices!");
-
-            //Calc width and height Vectors
-            var vW = new Vector2(vertices[0], vertices[1]);
-            var vH = new Vector2(vertices[1], vertices[2]);
-
-            //Use Vector Geometry to walk to the middlepoint
-            _middlePoint = vertices[0] + ((vW / 2) + (vH / 2));
-
-            _rotateAngle = vW.AngleSignedTo(Vector2.UnitX, true);
-            _width = vW.Length;
-            _height = vH.Length;
-        }
-
-        public Rectangle2(double x, double y, double uwidth, double uheight)
-            : this(x, y, uwidth, uheight, Angle.Zero)
+        public Vector2 Location
         {
+            get { return _location; }
+            set { _location = value; }
         }
 
-
-        public Rectangle2(double x, double y, double uwidth, double uheight, Angle angle)
+        public Vector2 MiddlePoint
         {
-            _width = uwidth;
-            _height = uheight;
-            this.Location = new Vector2(x, y);
-            this.Angle = angle;
-        }
-
-        public Rectangle2(Vector2 uLocation, SizeD uSize)
-            : this(uLocation, uSize, Angle.Zero)
-        {
-        }
-
-        public Rectangle2(Vector2 uLocation, SizeD uSize, Angle angle)
-        {
-            this.Size = uSize;
-            this.Location = uLocation;
-            this.Angle = angle;
-        }
-
-        public Rectangle2(AARectangle rect)
-            : this(rect, Angle.Zero)
-        {
-        }
-
-        public Rectangle2(AARectangle rect, Angle angle)
-        {
-            this.Size = rect.Size;
-            this.Location = rect.Location;
-            this.Angle = angle;
-        }
-
-        public Rectangle2(Rectangle2 prototype)
-        {
-            Prototype(prototype);
-        }
-
-        public Rectangle2(Rectangle2 prototype, Angle angle)
-        {
-            Prototype(prototype);
-            Angle = angle;
-        }
-
-        /// <summary>
-        /// Prototype methods, which copies al values from the prototype to this instance.
-        /// </summary>
-        /// <param name="iprototype"></param>
-        public void Prototype(IGeometryBase iprototype) {
-            var prototype = iprototype as Rectangle2;
-            if (prototype == null)
-                throw new NotSupportedException();
-
-            this.Size = prototype.Size;
-            this.MiddlePoint = prototype.MiddlePoint;
-            this.Angle = prototype.Angle;
-            this._pen = prototype.Pen;
-            this.FillBrush = prototype.FillBrush;
+            get { return CalcMiddlepoint(Location, Size, Rotation); }
+            set
+            {
+                var move = new Vector2(MiddlePoint, value);
+                Location = Location + move;
+            }
         }
 
         #endregion
+
+        /// <summary>
+        /// Calculates the top left corner of this rectangle based on the middlepoint.
+        /// </summary>
+        /// <param name="middlePoint"></param>
+        /// <param name="size"></param>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
+        private static Vector2 CalcTopLeftCorner(Vector2 middlePoint, SizeD size, Angle rotation)
+        {
+            var upperleftCorner = new Vector2(
+                    middlePoint.X - (size.Width / 2.0),
+                    middlePoint.Y - (size.Height / 2.0)
+                    );
+            if (rotation != Angle.Zero)
+            { // If we have a rotated rect we need to apply this
+                var vToUpperLeft = new Vector2(middlePoint, upperleftCorner);
+                upperleftCorner = middlePoint + vToUpperLeft.GetRotated(rotation);
+            }
+            return upperleftCorner;
+        }
+
+        /// <summary>
+        /// Calculates the top left corner of this rectangle based on the middlepoint.
+        /// </summary>
+        /// <param name="middlePoint"></param>
+        /// <param name="size"></param>
+        /// <param name="rotation"></param>
+        /// <returns></returns>
+        private static Vector2 CalcMiddlepoint(Vector2 topLeft, SizeD size, Angle rotation)
+        {
+            var middle = new Vector2(
+                    topLeft.X + (size.Width / 2.0),
+                    topLeft.Y + (size.Height / 2.0)
+                    );
+            if (rotation != Angle.Zero)
+            { // If we have a rotated rect we need to apply this
+                var vector = new Vector2(topLeft, middle);
+                middle = topLeft + vector.GetRotated(rotation);
+            }
+            return middle;
+        }
+ 
 
         #region Public Misc Methods
 
@@ -181,7 +242,7 @@ namespace Archimedes.Geometry.Primitives
         /// <returns></returns>
         public Vertices ToVertices() {
 
-            var location = new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2);
+            var location = Location;
 
             var vertices = new Vertices()
             {
@@ -191,7 +252,7 @@ namespace Archimedes.Geometry.Primitives
                 new Vector2(location.X, location.Y + Height)
             };
 
-            return  vertices.RotateVertices(this.MiddlePoint, Angle);
+            return vertices.RotateVertices(location, Rotation);
         }
 
         public Polygon2 ToPolygon2() {
@@ -204,7 +265,7 @@ namespace Archimedes.Geometry.Primitives
 
         public AARectangle ToRectangleF(bool forceConversation = false)
         {
-            if (this.Angle != Angle.Zero || forceConversation)
+            if (this.Rotation != Angle.Zero || forceConversation)
                 throw new NotSupportedException("Can not transform rotated Rectangle2 to RectangleF!");
             return new AARectangle(this.Location, this.Size);
         }
@@ -236,23 +297,6 @@ namespace Archimedes.Geometry.Primitives
         #region IGeometryBase
 
         /// <summary>
-        /// Gets or sets the Location of the upper Left Corner of this Rectangle
-        /// </summary>
-        public Vector2 Location {
-            get {
-                var upperleftCorner = new Vector2(MiddlePoint.X - Width / 2, MiddlePoint.Y - Height / 2);
-                if (this.IsRotated) { //optimisation - do only if we have a rotated rect
-                    var vToUpperLeft = new Vector2(MiddlePoint, upperleftCorner);
-                    upperleftCorner = MiddlePoint + vToUpperLeft.GetRotated(Angle);
-                }
-                return upperleftCorner;
-            }
-            set {
-                Translate(new Vector2(Location, value));
-            }
-        }
-
-        /// <summary>
         /// Translate this Rectangle along the given Vector
         /// </summary>
         /// <param name="mov"></param>
@@ -265,10 +309,7 @@ namespace Archimedes.Geometry.Primitives
             throw new NotImplementedException();
         }
 
-        public Vector2 MiddlePoint {
-            get { return this._middlePoint; }
-            set { this._middlePoint = value; }
-        }
+
 
         public IGeometryBase Clone() {
             return new Rectangle2(this);
@@ -278,7 +319,7 @@ namespace Archimedes.Geometry.Primitives
         #endregion
 
         public override string ToString() {
-            return string.Format(@"[{0}/{1}] {2}°", _width, _height, _rotateAngle); //rotation is considered centric
+            return string.Format(@"[{0}/{1}] {2}°", Width, Height, Rotation); //rotation is considered centric
         }
 
         #region IGeometryBase Collision Detection

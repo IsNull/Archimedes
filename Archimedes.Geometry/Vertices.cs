@@ -106,23 +106,27 @@ namespace Archimedes.Geometry
         /// <summary>
         /// Rotates given vertices around a origin with given angle. New Vertices are returned.
         /// </summary>
-        /// <param name="vertices">Array of Points</param>
         /// <param name="rotationOrigin">Origin location of rotation</param>
         /// <param name="angle">Rotation angle</param>
         /// <returns>New vertices array</returns>
         public Vertices RotateVertices(Vector2 rotationOrigin, Angle angle)
         {
-            if (angle == Angle.Zero)
-                return new Vertices(_vertices);
-
-            var cnt = _vertices.Count();
-            var rotVertices = new Vertices();
-            foreach (var vertex in _vertices) {
-                var vrotate = new Vector2(rotationOrigin, vertex);
-                Vector2 pnt = rotationOrigin + vrotate.GetRotated(angle);
-                rotVertices.Add(pnt);
+            if (angle != Angle.Zero)
+            {
+                var cnt = _vertices.Count();
+                var rotVertices = new Vertices();
+                foreach (var vertex in _vertices)
+                {
+                    var vrotate = new Vector2(rotationOrigin, vertex);
+                    Vector2 pnt = rotationOrigin + vrotate.GetRotated(angle);
+                    rotVertices.Add(pnt);
+                }
+                return rotVertices;
             }
-            return rotVertices;
+            else
+            {
+                return new Vertices(_vertices);
+            }
         }
 
         #endregion

@@ -54,6 +54,7 @@
     <Compile Include="Primitives\VisualCircle.cs" />
     <Compile Include="Primitives\VisualFactory.cs" />
     <Compile Include="Primitives\VisualArc.cs" />
+    <Compile Include="Primitives\VisualImage.cs" />
     <Compile Include="Primitives\VisualLine.cs" />
     <Compile Include="Primitives\VisualLineString.cs" />
     <Compile Include="Primitives\VisualPoint.cs" />

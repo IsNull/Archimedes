@@ -379,7 +379,7 @@ namespace Archimedes.Geometry
         }
 
         /// <summary>
-        /// Returns the Angle between two vectors in range of [0° - 180°] 
+        /// Returns the Rotation between two vectors in range of [0° - 180°] 
         /// (If you need 0° -360°, use GetAngleBetweenClockWise() instead.)
         /// </summary>
         /// <param name="toVector"></param>
@@ -402,7 +402,7 @@ namespace Archimedes.Geometry
 
         /**/
         /// <summary>
-        /// Returns the Angle between this and the given vector in the range of [0-360°],
+        /// Returns the Rotation between this and the given vector in the range of [0-360°],
         /// excpet when return negative is true, then for angles > 180°, a negative value is returned
         /// 
         /// </summary>
@@ -441,19 +441,19 @@ namespace Archimedes.Geometry
 
 
         /*
-        public Angle GetAngle2V(Vector2 vbase)
+        public Rotation GetAngle2V(Vector2 vbase)
         {
             double gamma;
             double tmp = this.DotProduct(vbase) / (this.Length * vbase.Length);
-            gamma = Angle.ConvertRadiansToDegrees(Math.Acos(tmp));
+            gamma = Rotation.ConvertRadiansToDegrees(Math.Acos(tmp));
             if (gamma > 180)
             { //from mathematic definition, it's always the shorter angle to return.
                 gamma = 360 - gamma;
             }
-            return new Angle(gamma, AngleUnit.Degrees);
+            return new Rotation(gamma, AngleUnit.Degrees);
         }
 
-        public Angle GetAngleBetweenClockWise(Vector2 b, Direction direction)
+        public Rotation GetAngleBetweenClockWise(Vector2 b, Direction direction)
         {
             var theta = GetAngle2V(b);
             if (((this.Y * b.X - this.X * b.Y) > 0) == (direction == Direction.RIGHT))
@@ -462,7 +462,7 @@ namespace Archimedes.Geometry
             }
             else
             {
-                return Angle.FromDegrees(360) - theta;
+                return Rotation.FromDegrees(360) - theta;
             }
         }*/
         

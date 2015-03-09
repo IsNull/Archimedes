@@ -189,7 +189,7 @@ namespace Archimedes.Geometry.Primitives
         #region Public Propertys
 
         /// <summary>
-        /// Effective Start Angle to draw
+        /// Effective Start Rotation to draw
         /// </summary>
         public Angle Angle2X
         {
@@ -277,7 +277,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         /// <summary>
-        /// The Arc Angle
+        /// The Arc Rotation
         /// </summary>
         public Angle Angle
         {
@@ -368,7 +368,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         /// <summary>
-        /// Split a given Angle-Amount from this Arc
+        /// Split a given Rotation-Amount from this Arc
         /// </summary>
         /// <param name="splitAngle"></param>
         /// <returns></returns>
@@ -563,7 +563,7 @@ namespace Archimedes.Geometry.Primitives
                 }
                 catch (Exception)
                 {
-                    box = new Rectangle2();
+                    box = Rectangle2.Empty;
                 }
                 return box;
             }
@@ -593,7 +593,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region Private POrperties
 
-        /// <summary>Angle break
+        /// <summary>Rotation break
         /// NULL = The Bow is tangent like and has no break.
         /// </summary>
         /// 
@@ -623,7 +623,7 @@ namespace Archimedes.Geometry.Primitives
             string str = "";
 
             str += "MiddlePoint: " + this.MiddlePoint.ToString() + "\n";
-            str += "Angle: " + this.Angle + "\n";
+            str += "Rotation: " + this.Angle + "\n";
             str += "BowLen: " + this.BowLen + "\n";
             str += "Radius: " + this.Radius + "\n";
             str += "Direction: " + this.Direction + "\n";

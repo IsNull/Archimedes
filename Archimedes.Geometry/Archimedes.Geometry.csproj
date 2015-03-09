@@ -73,7 +73,6 @@
     <Compile Include="Primitives\Bounds\PolygonSmallestWidthBoundingBoxAlgorythm.cs" />
     <Compile Include="Primitives\Circle2.cs" />
     <Compile Include="Primitives\ComplexGeometry.cs" />
-    <Compile Include="Primitives\ImageDrawable.cs" />
     <Compile Include="Primitives\Line2.Collision.cs" />
     <Compile Include="Primitives\Line2.cs" />
     <Compile Include="Primitives\LineString.cs" />

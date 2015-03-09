@@ -11,7 +11,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
     {
         #region Fields
 
-        private readonly Rectangle2 _rectangle = new Rectangle2();
+        private readonly Rectangle2 _rectangle = Rectangle2.Empty;
 
         private string _text;
         private Font _font;

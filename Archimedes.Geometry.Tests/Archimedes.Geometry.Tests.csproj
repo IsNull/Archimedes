@@ -56,6 +56,7 @@
     <Compile Include="ArcTests.cs" />
     <Compile Include="Line2Tests.cs" />
     <Compile Include="Circle2Tests.cs" />
+    <Compile Include="Rectangle2Tests.cs" />
     <Compile Include="VectorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

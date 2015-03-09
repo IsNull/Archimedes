@@ -23,7 +23,7 @@ namespace Archimedes.Geometry.Extensions
         /// </summary>
         /// <param name="pntF"></param>
         /// <param name="size"></param>
-        /// <param name="angle">Angle in degree</param>
+        /// <param name="angle">Rotation in degree</param>
         /// <returns></returns>
         public static PointF GetPoint(this PointF pntF, double size, Angle angle)
         {

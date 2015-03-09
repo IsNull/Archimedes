@@ -39,7 +39,7 @@ namespace Archimedes.Geometry.Units
 
 
         /// <summary>
-        /// Creates a new instance of Angle.
+        /// Creates a new instance of Rotation.
         /// </summary>
         /// <param name="value"></param>
         public static Angle FromRadians(double value)
@@ -48,7 +48,7 @@ namespace Archimedes.Geometry.Units
         }
 
         /// <summary>
-        /// Creates a new instance of Angle.
+        /// Creates a new instance of Rotation.
         /// </summary>
         /// <param name="value"></param>
         public static Angle FromDegrees(double value)
@@ -77,7 +77,7 @@ namespace Archimedes.Geometry.Units
         #region Constructor
 
         /// <summary>
-        /// Initializes a new instance of the Angle.
+        /// Initializes a new instance of the Rotation.
         /// </summary>
         /// <param name="angle"></param>
         /// <param name="unit"></param>
@@ -192,7 +192,7 @@ namespace Archimedes.Geometry.Units
         #region Operators
 
         /// <summary>
-        /// Indicates whether two Angle instances are equal.
+        /// Indicates whether two Rotation instances are equal.
         /// </summary>
         /// <returns>
         /// true if the values of <paramref name="left"/> and <paramref name="right"/> are equal; otherwise, false.
@@ -205,7 +205,7 @@ namespace Archimedes.Geometry.Units
         }
 
         /// <summary>
-        /// Indicates whether two Angle instances are not equal.
+        /// Indicates whether two Rotation instances are not equal.
         /// </summary>
         /// <returns>
         /// true if the values of <paramref name="left"/> and <paramref name="right"/> are not equal; otherwise, false.
@@ -218,7 +218,7 @@ namespace Archimedes.Geometry.Units
         }
 
         /// <summary>
-        /// Indicates whether a specified Angle is less than another specified Angle.
+        /// Indicates whether a specified Rotation is less than another specified Rotation.
         /// </summary>
         /// <returns>
         /// true if the value of <paramref name="left"/> is less than the value of <paramref name="right"/>; otherwise, false. 
@@ -231,7 +231,7 @@ namespace Archimedes.Geometry.Units
         }
 
         /// <summary>
-        /// Indicates whether a specified Angle is greater than another specified Angle.
+        /// Indicates whether a specified Rotation is greater than another specified Rotation.
         /// </summary>
         /// <returns>
         /// true if the value of <paramref name="left"/> is greater than the value of <paramref name="right"/>; otherwise, false. 
@@ -244,71 +244,71 @@ namespace Archimedes.Geometry.Units
         }
 
         /// <summary>
-        /// Indicates whether a specified Angle is less than or equal to another specified Angle.
+        /// Indicates whether a specified Rotation is less than or equal to another specified Rotation.
         /// </summary>
         /// <returns>
         /// true if the value of <paramref name="left"/> is less than or equal to the value of <paramref name="right"/>; otherwise, false.
         /// </returns>
-        /// <param name="left">An Angle.</param>
-        /// <param name="right">An Angle.</param>
+        /// <param name="left">An Rotation.</param>
+        /// <param name="right">An Rotation.</param>
         public static bool operator <=(Angle left, Angle right)
         {
             return left.Radians <= right.Radians;
         }
 
         /// <summary>
-        /// Indicates whether a specified Angle is greater than or equal to another specified Angle.
+        /// Indicates whether a specified Rotation is greater than or equal to another specified Rotation.
         /// </summary>
         /// <returns>
         /// true if the value of <paramref name="left"/> is greater than or equal to the value of <paramref name="right"/>; otherwise, false.
         /// </returns>
-        /// <param name="left">An Angle.</param>
-        /// <param name="right">An Angle.</param>
+        /// <param name="left">An Rotation.</param>
+        /// <param name="right">An Rotation.</param>
         public static bool operator >=(Angle left, Angle right)
         {
             return left.Radians >= right.Radians;
         }
 
         /// <summary>
-        /// Multiplies an instance of Angle with <paramref name="left"/> and returns the result.
+        /// Multiplies an instance of Rotation with <paramref name="left"/> and returns the result.
         /// </summary>
-        /// <param name="right">An instance of Angle</param>
+        /// <param name="right">An instance of Rotation</param>
         /// <param name="left">An instance of <seealso cref="T:System.Double"/></param>
-        /// <returns>Multiplies an instance of Angle with <paramref name="left"/> and returns the result.</returns>
+        /// <returns>Multiplies an instance of Rotation with <paramref name="left"/> and returns the result.</returns>
         public static Angle operator *(double left, Angle right)
         {
             return Angle.FromRadians(left * right.Radians);
         }
 
         /// <summary>
-        /// Multiplies an instance of Angle with <paramref name="right"/> and returns the result.
+        /// Multiplies an instance of Rotation with <paramref name="right"/> and returns the result.
         /// </summary>
-        /// <param name="left">An instance of Angle</param>
+        /// <param name="left">An instance of Rotation</param>
         /// <param name="right">An instance of <seealso cref="T:System.Double"/></param>
-        /// <returns>Multiplies an instance of Angle with <paramref name="right"/> and returns the result.</returns>
+        /// <returns>Multiplies an instance of Rotation with <paramref name="right"/> and returns the result.</returns>
         public static Angle operator *(Angle left, double right)
         {
             return Angle.FromRadians(left.Radians * right);
         }
 
         /// <summary>
-        /// Divides an instance of Angle with <paramref name="right"/> and returns the result.
+        /// Divides an instance of Rotation with <paramref name="right"/> and returns the result.
         /// </summary>
-        /// <param name="left">An instance of Angle</param>
+        /// <param name="left">An instance of Rotation</param>
         /// <param name="right">An instance of <seealso cref="T:System.Double"/></param>
-        /// <returns>Divides an instance of Angle with <paramref name="right"/> and returns the result.</returns>
+        /// <returns>Divides an instance of Rotation with <paramref name="right"/> and returns the result.</returns>
         public static Angle operator /(Angle left, double right)
         {
             return Angle.FromRadians(left.Radians / right);
         }
 
         /// <summary>
-        /// Adds two specified Angle instances.
+        /// Adds two specified Rotation instances.
         /// </summary>
         /// <returns>
-        /// An Angle whose value is the sum of the values of <paramref name="left"/> and <paramref name="right"/>.
+        /// An Rotation whose value is the sum of the values of <paramref name="left"/> and <paramref name="right"/>.
         /// </returns>
-        /// <param name="left">A Angle.</param>
+        /// <param name="left">A Rotation.</param>
         /// <param name="right">A TimeSpan.</param>
         public static Angle operator +(Angle left, Angle right)
         {
@@ -319,34 +319,34 @@ namespace Archimedes.Geometry.Units
         /// Subtracts an angle from another angle and returns the difference.
         /// </summary>
         /// <returns>
-        /// An Angle that is the difference
+        /// An Rotation that is the difference
         /// </returns>
-        /// <param name="left">A Angle (the minuend).</param>
-        /// <param name="right">A Angle (the subtrahend).</param>
+        /// <param name="left">A Rotation (the minuend).</param>
+        /// <param name="right">A Rotation (the subtrahend).</param>
         public static Angle operator -(Angle left, Angle right)
         {
             return Angle.FromRadians(left.Radians - right.Radians);
         }
 
         /// <summary>
-        /// Returns an Angle whose value is the negated value of the specified instance.
+        /// Returns an Rotation whose value is the negated value of the specified instance.
         /// </summary>
         /// <returns>
-        /// An Angle with the same numeric value as this instance, but the opposite sign.
+        /// An Rotation with the same numeric value as this instance, but the opposite sign.
         /// </returns>
-        /// <param name="angle">A Angle</param>
+        /// <param name="angle">A Rotation</param>
         public static Angle operator -(Angle angle)
         {
             return Angle.FromRadians(-1 * angle.Radians);
         }
 
         /// <summary>
-        /// Returns the specified instance of Angle.
+        /// Returns the specified instance of Rotation.
         /// </summary>
         /// <returns>
         /// Returns <paramref name="angle"/>.
         /// </returns>
-        /// <param name="angle">A Angle</param>
+        /// <param name="angle">A Rotation</param>
         public static Angle operator +(Angle angle)
         {
             return angle;
@@ -397,7 +397,7 @@ namespace Archimedes.Geometry.Units
         #region Equality members
 
         /// <summary>
-        /// Compares this instance to a specified Angle object and returns an integer that indicates whether this <see cref="instance"/> is shorter than, equal to, or longer than the Angle object.
+        /// Compares this instance to a specified Rotation object and returns an integer that indicates whether this <see cref="instance"/> is shorter than, equal to, or longer than the Rotation object.
         /// </summary>
         /// <returns>
         /// A signed number indicating the relative values of this instance and <paramref name="value"/>.
@@ -419,31 +419,31 @@ namespace Archimedes.Geometry.Units
         ///                     This instance is larger than <paramref name="value"/>.
         /// 
         /// </returns>
-        /// <param name="value">A Angle object to compare to this instance.</param>
+        /// <param name="value">A Rotation object to compare to this instance.</param>
         public int CompareTo(Angle value)
         {
             return this.Radians.CompareTo(value.Radians);
         }
 
         /// <summary>
-        /// Returns a value indicating whether this instance is equal to a specified Angle object.
+        /// Returns a value indicating whether this instance is equal to a specified Rotation object.
         /// </summary>
         /// <returns>
         /// true if <paramref name="other"/> represents the same angle as this instance; otherwise, false.
         /// </returns>
-        /// <param name="other">An Angle object to compare with this instance.</param>
+        /// <param name="other">An Rotation object to compare with this instance.</param>
         public bool Equals(Angle other)
         {
             return Equals(other, Tolerance);
         }
 
         /// <summary>
-        /// Returns a value indicating whether this instance is equal to a specified Angle object within the given tolerance.
+        /// Returns a value indicating whether this instance is equal to a specified Rotation object within the given tolerance.
         /// </summary>
         /// <returns>
         /// true if <paramref name="other"/> represents the same angle as this instance; otherwise, false.
         /// </returns>
-        /// <param name="other">An Angle object to compare with this instance.</param>
+        /// <param name="other">An Rotation object to compare with this instance.</param>
         /// <param name="tolerance">The maximum difference for being considered equal</param>
         public bool Equals(Angle other, double tolerance)
         {

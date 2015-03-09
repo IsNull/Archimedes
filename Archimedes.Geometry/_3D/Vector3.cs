@@ -679,7 +679,7 @@ namespace Archimedes.Geometry._3D
         /// <returns>The angle between two positional Vectors</returns>
         /// <implementation>
         /// <see cref="Angle(Vector3, Vector3)"/>
-        /// Uses the Angle(Vector3,Vector3) method to avoid code duplication
+        /// Uses the Rotation(Vector3,Vector3) method to avoid code duplication
         /// </implementation>
         public double Angle(Vector3 other) {
             return Angle(this, other);

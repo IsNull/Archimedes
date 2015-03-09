@@ -30,36 +30,35 @@ namespace Archimedes.Geometry.Builder
         }
 
         public IEnumerable<Vertex> ConnectPaths() {
-            float dist;
             Reset();
 
-            // avoid error if one of the collections is empty
-            if (_path.Count() == 0 || _path2.Count() == 0) {
+            // Avoid error if one of the collections is empty
+            if (!_path.Any() || !_path2.Any()) {
                 _connectedPath.AddRange(_path);
                 _connectedPath.AddRange(_path2);
                 return _connectedPath;
             }
 
             // Combine
-            _bestDist = (float)Line2.CalcLenght(_path.Last(), _path2.First());
+            _bestDist = Line2.CalcLenght(_path.Last(), _path2.First());
             _combineAction = Combine;
 
             // Combine2Reversed
-            dist = (float)Line2.CalcLenght(_path.Last(), _path2.Last());
+            double dist = Line2.CalcLenght(_path.Last(), _path2.Last());
             if (dist < _bestDist) {
                 _bestDist = dist;
                 _combineAction = Combine2Reversed;
             }
 
             // Combine1Reversed
-            dist = (float)Line2.CalcLenght(_path.First(), _path2.First());
+            dist = Line2.CalcLenght(_path.First(), _path2.First());
             if (dist < _bestDist) {
                 _bestDist = dist;
                 _combineAction = Combine1Reversed;
             }
 
             // CombineInvert
-            dist = (float)Line2.CalcLenght(_path.First(), _path2.Last());
+            dist = Line2.CalcLenght(_path.First(), _path2.Last());
             if (dist < _bestDist) {
                 _bestDist = dist;
                 _combineAction = CombineInvert;

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Archimedes.Geometry.Primitives;
+using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry
 {
@@ -278,9 +279,13 @@ namespace Archimedes.Geometry
 
         #region To - Methods
 
+        /// <summary>
+        /// Turns this axis aligned rectangle in a rotatable rectangle.
+        /// </summary>
+        /// <returns></returns>
         public Rectangle2 ToRectangle()
         {
-            return new Rectangle2();
+            return new Rectangle2(X, Y, Width, Height, Angle.Zero);
         }
 
         public Vertices ToVertices()

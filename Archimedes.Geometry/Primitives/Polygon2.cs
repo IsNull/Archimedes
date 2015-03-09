@@ -407,14 +407,22 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="boxfindingAlgorythm">Concrete implementation of the bounding finder Algorythm to use</param>
         /// <returns></returns>
-        public Rectangle2 FindBoundingBox(IPolygonBoundingBoxAlgorythm boxfindingAlgorythm) {
-            var rect = new Rectangle2();
+        public Rectangle2 FindBoundingBox(IPolygonBoundingBoxAlgorythm boxfindingAlgorythm)
+        {
+            Rectangle2 rect = null;
             if (this.IsConvex()) {
                 var vertices = boxfindingAlgorythm.FindBounds(this);
                 if (vertices.Count() == 4)
-                    rect = new Rectangle2(vertices);
-                if (rect.Size.IsEmpty) // smallest boundingboxfinder failed - use simple boundingbox instead
+                {
+                    rect = Rectangle2.FromVertices(vertices);
+                }
+
+                if (rect == null || rect.Size.IsEmpty)
+                {
+                    // Smallest boundingboxfinder failed - use simple boundingbox instead
                     rect = this.BoundingBox.ToRectangle();
+                } 
+                    
             } else
                 rect = this.ToConvexPolygon().FindBoundingBox(boxfindingAlgorythm);
 
@@ -490,7 +498,7 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Rotates the Polygon around the origin. If no Origin is specified, the middlepoint is taken by default.
         /// </summary>
-        /// <param name="angle">Angle to rotate</param>
+        /// <param name="angle">Rotation to rotate</param>
         /// <param name="origin">Point to rotate around. Default is middlepoint of this polygon</param>
         public void Rotate(Angle angle, Vector2? origin = null) {
             _vertices = _vertices.RotateVertices(origin ?? this.MiddlePoint, angle);
