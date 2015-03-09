@@ -28,9 +28,6 @@ namespace Archimedes.Geometry.Primitives
         double? _radius = null;
         Angle? _angle = null;
         double? _bowlen = null;
-
-        Angle _anglediff = Units.Angle.Zero;
-
         Direction _direction = Direction.LEFT;
         Vector2 _startPoint;
         Vector2 _base;
@@ -92,12 +89,6 @@ namespace Archimedes.Geometry.Primitives
             _base = baseVector;
         }
 
-        private Arc(double? uRadius, Angle? angle,  Vector2 baseVector, Angle angleDiff)
-            : this(uRadius, angle, baseVector)
-        {
-            _anglediff = angleDiff;
-        }
-
         #endregion
 
         #region Public Methods
@@ -111,16 +102,15 @@ namespace Archimedes.Geometry.Primitives
         {
 
             Vector2 pointOnArc;
-            var fakeBaseVector = _base.GetRotated(this.AngleDiff);
 
-            using (var helperArc = new Arc(Radius, deltaAngle, _base, AngleDiff))
+            using (var helperArc = new Arc(Radius, deltaAngle, _base))
             {
                 helperArc.Direction = this.Direction;
                 helperArc.Location = this.Location;
 
                 var relAngle = CalcRelAngle(
                     helperArc.Angle,
-                    fakeBaseVector.AngleSignedTo(Vector2.UnitX, true),
+                    _base.AngleSignedTo(Vector2.UnitX, true),
                     helperArc.Direction);
 
                 pointOnArc = CalcEndpointDelta2M(helperArc.Radius, relAngle);
@@ -195,7 +185,7 @@ namespace Archimedes.Geometry.Primitives
         {
             get
             {
-                var angle = _base.AngleSignedTo(Vector2.UnitX, true) + AngleDiff;
+                var angle = _base.AngleSignedTo(Vector2.UnitX, true);
 
                 // Correct angle if we have opposite direction
                 if (Direction == Direction.RIGHT)
@@ -213,7 +203,7 @@ namespace Archimedes.Geometry.Primitives
         {
             get
             {
-                return Vector2.FromAngleAndLenght(this.AngleDiff + this.Angle, 1);
+                return Vector2.FromAngleAndLenght(this.Angle, 1);
             }
         }
 
@@ -388,7 +378,7 @@ namespace Archimedes.Geometry.Primitives
                 var split = new Arc(this.Radius, splitAngle, _base);
                 split.Location = this.Location;
                 split.Direction = this.Direction;
-                split.AngleDiff = this.AngleDiff;
+                //split.AngleDiff = this.AngleDiff;
                 arcs.Add(split);
 
                 //segment due
@@ -404,7 +394,7 @@ namespace Archimedes.Geometry.Primitives
                 split = new Arc(this.Radius, this.Angle - splitAngle, newBase);
                 split.Location = this.GetPointOnArc(splitAngle);
                 split.Direction = this.Direction;
-                split.AngleDiff = this.AngleDiff;
+                //split.AngleDiff = this.AngleDiff;
                 arcs.Add(split);
             }
             return arcs;
@@ -463,9 +453,7 @@ namespace Archimedes.Geometry.Primitives
             get
             {
                 // Calc vector which points to the arc middlepoint
-                var orthBaseVector = _base.GetOrthogonalVector(this.Direction);
-                orthBaseVector = orthBaseVector.GetRotated(this.AngleDiff);
-                orthBaseVector.Length = Radius;
+                var orthBaseVector = _base.GetOrthogonalVector(Direction).WithLength(Radius);
 
                 return new Vector2((Location.X + orthBaseVector.X), (Location.Y + orthBaseVector.Y));
             }
@@ -516,7 +504,7 @@ namespace Archimedes.Geometry.Primitives
 
             Location = prototype.Location;
             Direction = prototype.Direction;
-            AngleDiff = prototype.AngleDiff;
+            //AngleDiff = prototype.AngleDiff;
             try
             {
                 if (prototype.Pen != null)
@@ -591,24 +579,6 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region Private POrperties
-
-        /// <summary>Rotation break
-        /// NULL = The Bow is tangent like and has no break.
-        /// </summary>
-        /// 
-        private Angle AngleDiff  // TODO What the heck is this???
-        {
-            get { return _anglediff; }
-
-            set
-            {
-                _anglediff = value;
-            }
-        }
-
-
-        #endregion
 
         #region Dispose and ToString 
 
