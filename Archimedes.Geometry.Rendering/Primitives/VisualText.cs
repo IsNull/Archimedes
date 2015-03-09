@@ -47,6 +47,17 @@ namespace Archimedes.Geometry.Rendering.Primitives
             }
         }
 
+        public Vector2 MiddlePoint
+        {
+            get { return _rectangle.MiddlePoint; }
+            set
+            {
+                _rectangle.MiddlePoint = value;
+                Invalidate();
+            }
+        }
+
+
 
         public string Text
         {

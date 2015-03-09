@@ -3,46 +3,39 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using Archimedes.Geometry.Rendering.Primitives;
 
 namespace Archimedes.Geometry.Rendering.Effects
 {
     //Draws the Given IGeometryBase with specific Pen/Brush
     public class OverlineEffect : IEffect
     {
-        private IGeometryBase geometry;
+        private readonly Visual _geometry;
 
-        public OverlineEffect(IGeometryBase ugeometry, Pen effectPen = null, Brush effectBrush = null) {
-            geometry = ugeometry.Clone();
+        public OverlineEffect(Visual visual, Pen effectPen = null, Brush effectBrush = null)
+        {
+            _geometry = visual.Clone();
 
             EffectPen = effectPen;
-            if (geometry is IShape)
-                EffectBrush = effectBrush;         
+            EffectBrush = effectBrush;         
         }
 
         #region Public Properties
 
         public Pen EffectPen {
-            get { return geometry.Pen; }
-            set { geometry.Pen = value; }
+            get { return _geometry.Pen; }
+            set { _geometry.Pen = value; }
         }
 
         public Brush EffectBrush {
-            get { 
-                return (geometry is IShape) ? (geometry as IShape).FillBrush : null;
-            }
-            set {
-                if (geometry is IShape) {
-                    (geometry as IShape).FillBrush = value;
-                } else
-                    throw new NotSupportedException("This Geometry doesn't support FillBrush Property!");
-
-            }
+            get { return _geometry.FillBrush; }
+            set { _geometry.FillBrush = value; }
         }
 
         #endregion
 
         public void Draw(Graphics g) {
-            geometry.Draw(g);
+            _geometry.Draw(g);
         }
     }
 }

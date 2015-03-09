@@ -12,6 +12,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
     /// </summary>
     public static class VisualFactory
     {
+        #region Static Creator methods
 
         public static VisualPoint Create(Vector2 point, Brush brush)
         {
@@ -79,6 +80,39 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 Pen = pen,
                 FillBrush = background
             };
+        }
+
+        #endregion
+
+
+        public static Visual CreateGeneric(IGeometryBase geometry, Pen pen = null, Brush brush = null)
+        {
+            if (geometry is Line2)
+            {
+                return Create(geometry as Line2, pen);
+            }
+            if (geometry is Arc)
+            {
+                return Create(geometry as Arc, pen);
+            }
+            if (geometry is Circle2)
+            {
+                return Create(geometry as Circle2, pen, brush);
+            }
+            if (geometry is Rectangle2)
+            {
+                return Create(geometry as Rectangle2, pen, brush);
+            }
+            if (geometry is Polygon2)
+            {
+                return Create(geometry as Polygon2, pen, brush);
+            }
+            if (geometry is LineString)
+            {
+                return Create(geometry as LineString, pen);
+            }
+
+            throw new NotSupportedException("The given geometry " + geometry.GetType().Name + " is not supported yet by the visual builder!");
         }
 
     }
