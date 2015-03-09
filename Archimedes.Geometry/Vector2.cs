@@ -126,18 +126,28 @@ namespace Archimedes.Geometry
         public readonly double Y;
 
         /// <summary>
-        /// Gets or Sets the Lenght of this Vector
+        /// Gets the Lenght of this Vector
         /// </summary>
         public double Length
         {
             get { return (Math.Sqrt(Math.Pow(this.X, 2) + Math.Pow(this.Y, 2))); }
-            set {
-                if (this.Length != 0)
-                {
-                    //v * newsize / |v|
-                    this = this * (value / this.Length);
-                } else
-                    this = Vector2.Zero;
+        }
+
+        /// <summary>
+        /// Returns a new vector with the same direction but the given length
+        /// </summary>
+        /// <param name="newLenght"></param>
+        /// <returns></returns>
+        public Vector2 WithLength(double newLenght)
+        {
+            if (this.Length != 0)
+            {
+                //v * newsize / |v|
+                return this*(newLenght/this.Length);
+            }
+            else
+            {
+                return Vector2.Zero;
             }
         }
 

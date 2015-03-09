@@ -104,12 +104,11 @@ namespace Archimedes.Geometry.Primitives
 
         #region Arc - Line
 
-
-
         /// <summary>
         /// Bow-Line Interception
         /// </summary>
         /// <param name="uLine">Line to check</param>
+        /// <param name="tolerance"></param>
         /// <returns>Returns the interception Point(s) if the Objects collide</returns>
         private List<Vector2> InterceptLine(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {

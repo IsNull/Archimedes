@@ -149,8 +149,7 @@ namespace Archimedes.Geometry
 
         public void Draw(Graphics g) {
             if (this.Pen != null) {
-                var v = Vector;
-                v.Length = 500;
+                var v = Vector.WithLength(500);
                 var end = this.Location + v;
                 g.DrawLine(this.Pen, this.Location, end);
             }

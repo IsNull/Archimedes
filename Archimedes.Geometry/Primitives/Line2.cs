@@ -160,11 +160,11 @@ namespace Archimedes.Geometry.Primitives
             var vThis = ToVector();
 
             if (direction == Direction.RIGHT) {
-                vThis.Length += len;
+                vThis = vThis.WithLength(vThis.Length + len);
                 this.End = this.Start + vThis;
-            } else {
-                vThis.Length = len;
-                vThis *= -1;
+            } else
+            {
+                vThis = vThis.WithLength(len) * -1;
                 this.Start += vThis;
             }
         }
