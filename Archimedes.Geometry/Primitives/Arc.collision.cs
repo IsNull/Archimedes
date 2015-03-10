@@ -250,7 +250,7 @@ namespace Archimedes.Geometry.Primitives
                 pnts.AddRange(this.InterceptArc(other as Arc, tolerance));
             } else {
                 if (other is IShape)
-                    pnts.AddRange(new Polygon2(other.ToVertices()).Intersect(this, tolerance));
+                    pnts.AddRange(new Polygon2(other.ToVertices().Distinct()).Intersect(this, tolerance));
             }
             return pnts;
         }

@@ -563,9 +563,11 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <returns></returns>
         public Polygon2 ToConvexPolygon() {
+
+            var convexhull = ConvexHullBuilder.Convexhull(this.ToVertices().Distinct());
+
             var clone = this.Clone() as Polygon2;
             clone.Clear();
-            var convexhull = ConvexHullBuilder.Convexhull(this.ToVertices());
             clone.AddRange(convexhull.ToVertices());
             return clone;
         }
