@@ -44,6 +44,7 @@ namespace Archimedes.Geometry.Tests
         }
 
         [TestCase("(0, 0), (100, 0), (100, 200), (0, 200)", "50, 100", "0°")]
+        //[TestCase("(0, 0), (100, 0), (100, 200), (0, 200)", "-100, 50", "90°")]
         // TODO add more tests with rotation
         public void FromVertices(string verticesStr, string expectedMiddleStr, string expectedRotationStr)
         {
@@ -54,7 +55,7 @@ namespace Archimedes.Geometry.Tests
             var rect = Rectangle2.FromVertices(vertices);
             var expectedRotation = Angle.Parse(expectedRotationStr);
 
-
+            Assert.AreEqual(vertices[0], rect.Location);
             Assert.AreEqual(expectedMiddle, rect.MiddlePoint);
             Assert.AreEqual(expectedRotation, rect.Rotation);
         }

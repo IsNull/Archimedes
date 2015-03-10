@@ -17,14 +17,14 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Fields
 
-        protected Vertices _vertices = new Vertices();
+        private Vertices _vertices = new Vertices();
         private bool _boundCircleChanged = false;
 
         private Vector2 _middlePoint;
         private Circle2 _boundingCircle;
 
-        protected Pen _pen = null;
-        protected Brush _fillBrush = null;
+        private Pen _pen = null;
+        private Brush _fillBrush = null;
 
         #endregion
 
@@ -52,17 +52,6 @@ namespace Archimedes.Geometry.Primitives
             get { return _vertices != null ? _vertices.Count : 0; }
         }
 
-
-        public Brush FillBrush {
-            set { _fillBrush = value; }
-            get { return _fillBrush; }
-        }
-
-        public Pen Pen {
-            set { _pen = value; }
-            get { return _pen; }
-        }
-
         #endregion
 
         #region Public Vertex Access Methods
@@ -80,13 +69,11 @@ namespace Archimedes.Geometry.Primitives
             _vertices.Remove(uvertex);
             _boundCircleChanged = true;
         }
-        public void AddRange(IEnumerable<Vector2> uvertices) {
+
+        public void AddRange(IEnumerable<Vector2> uvertices)
+        {
             _vertices.AddRange(uvertices);
             _boundCircleChanged = true;
-        }
-
-        public void CleanUp() {
-            _vertices = new Vertices(_vertices.Distinct());
         }
 
         #endregion
@@ -409,21 +396,20 @@ namespace Archimedes.Geometry.Primitives
         public Rectangle2 FindBoundingBox(IPolygonBoundingBoxAlgorythm boxfindingAlgorythm)
         {
             Rectangle2 rect = null;
-            if (this.IsConvex()) {
-                var vertices = boxfindingAlgorythm.FindBounds(this);
-                if (vertices.Count() == 4)
-                {
-                    rect = Rectangle2.FromVertices(vertices);
-                }
+            var hull = !IsConvex() ? ToConvexPolygon() : this;
 
-                if (rect == null || rect.Size.IsEmpty)
-                {
-                    // Smallest boundingboxfinder failed - use simple boundingbox instead
-                    rect = this.BoundingBox.ToRectangle();
-                } 
-                    
-            } else
-                rect = this.ToConvexPolygon().FindBoundingBox(boxfindingAlgorythm);
+            var vertices = boxfindingAlgorythm.FindBounds(hull);
+
+            if (vertices.Count() == 4)
+            {
+                rect = Rectangle2.FromVertices(vertices);
+            }
+
+            if (rect == null || rect.Size.IsEmpty)
+            {
+                // Smallest boundingboxfinder failed - use simple boundingbox instead
+                rect = this.BoundingBox.ToRectangle();
+            }
 
             return rect;
         }
@@ -576,6 +562,18 @@ namespace Archimedes.Geometry.Primitives
 
         #region IDrawable
 
+        public Brush FillBrush
+        {
+            set { _fillBrush = value; }
+            get { return _fillBrush; }
+        }
+
+        public Pen Pen
+        {
+            set { _pen = value; }
+            get { return _pen; }
+        }
+
         public void Draw(Graphics g) {
             try {
                 var path = new GraphicsPath();
@@ -620,7 +618,7 @@ namespace Archimedes.Geometry.Primitives
         // For two vectors in the X-Y plane, the result is a
         // vector with X and Y components 0 so the Z component
         // gives the vector's length and direction.
-        public static double CrossProductLength(double Ax, double Ay,
+        private static double CrossProductLength(double Ax, double Ay,
             double Bx, double By, double Cx, double Cy)
         {
             // Get the vectors' coordinates.
@@ -633,20 +631,6 @@ namespace Archimedes.Geometry.Primitives
             return (BAx * BCy - BAy * BCx);
         }
 
-        // Return the dot product AB · BC.
-        // Note that AB · BC = |AB| * |BC| * Cos(theta).
-        private static double DotProduct(double Ax, double Ay,
-            double Bx, double By, double Cx, double Cy)
-        {
-            // Get the vectors' coordinates.
-            var BAx = Ax - Bx;
-            var BAy = Ay - By;
-            var BCx = Cx - Bx;
-            var BCy = Cy - By;
-
-            // Calculate the dot product.
-            return (BAx * BCx + BAy * BCy);
-        }
         #endregion // Cross and Dot Products
 
         public virtual void Dispose() {
@@ -656,6 +640,11 @@ namespace Archimedes.Geometry.Primitives
 
         private void Invalidate() {
             _boundCircleChanged = true;
+        }
+
+        private void CleanUp()
+        {
+            _vertices = new Vertices(_vertices.Distinct());
         }
 
         public override string ToString()

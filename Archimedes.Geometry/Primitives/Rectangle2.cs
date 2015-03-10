@@ -57,10 +57,8 @@ namespace Archimedes.Geometry.Primitives
             var width = vWidth.Length;
             var height = vHeight.Length;
 
-            return new Rectangle2(0, 0, width, height, rotation)
-            {
-                MiddlePoint = middlePoint
-            };
+            var bounds = new Rectangle2(vertices[0], new SizeD(width, height), rotation);
+            return bounds;
         }
 
         #endregion
@@ -263,7 +261,7 @@ namespace Archimedes.Geometry.Primitives
             };
         }
 
-        public AARectangle ToRectangleF(bool forceConversation = false)
+        public AARectangle ToAARectangle(bool forceConversation = false)
         {
             if (this.Rotation != Angle.Zero || forceConversation)
                 throw new NotSupportedException("Can not transform rotated Rectangle2 to RectangleF!");
@@ -329,7 +327,7 @@ namespace Archimedes.Geometry.Primitives
             if (this.IsRotated)
                 return this.ToPolygon2().Contains(point, tolerance);
             else //optimisation - use simple rect if no rotation is given
-                return this.ToRectangleF().Contains(point); // TODO Handle Tolerance!
+                return this.ToAARectangle().Contains(point); // TODO Handle Tolerance!
         }
 
         public Circle2 BoundingCircle {
