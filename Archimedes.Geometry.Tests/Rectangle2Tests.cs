@@ -60,21 +60,24 @@ namespace Archimedes.Geometry.Tests
             Assert.AreEqual(expectedRotation, rect.Rotation);
         }
 
-        /**/
-        [TestCase(200,100)]
-        public void Constructor2(double witdh, double height)
+        
+        [TestCase("(0,0),(0,0),(0,0),(0,0)", 200, 100)]             // Specail case: Empty rect!
+        [TestCase("(0,0),(200,0),(200,100), (0,100)", 200, 100)]    // Same size
+        [TestCase("(0,0),(10,0),(10,45), (0,45)", 200, 100)]        // Different origin size
+        public void Constructor2(string rectStr, double witdh, double height)
         {
-            var rect = new Rectangle2(0, 0, 0, 0);
+            var vertices = Vector2.ParseAll(rectStr);
+            var rect = new Rectangle2(vertices);
 
             rect.Width = witdh;
             rect.Height = height;
 
             var location = rect.Location;
 
-            Assert.AreEqual(new Vector2(0, 0), location);
-            Assert.AreEqual(witdh, rect.Width);
-            Assert.AreEqual(height, rect.Height);
-            Assert.AreEqual(Angle.Zero, rect.Rotation);
+            Assert.AreEqual(vertices[0], location);         // Location must stay the same
+            Assert.AreEqual(witdh, rect.Width);             // width must be as set
+            Assert.AreEqual(height, rect.Height);           // height must be as set
+            Assert.AreEqual(Angle.Zero, rect.Rotation);     // Rotation must be Zero
         }
 
 

@@ -158,8 +158,8 @@ namespace Archimedes.Geometry.Primitives
                     wVector = Vector2.UnitX;
                 }
                 var moveVector = wVector.WithLength(value);
-                _rect[1] = _rect[1] + moveVector;
-                _rect[2] = _rect[2] + moveVector;
+                _rect[1] = _rect[0] + moveVector;
+                _rect[2] = _rect[3] + moveVector;
             }
         }
 
@@ -180,8 +180,8 @@ namespace Archimedes.Geometry.Primitives
                     hVector = Vector2.UnitY;
                 }
                 var moveVector = hVector.WithLength(value);
-                _rect[2] = _rect[2] + moveVector;
-                _rect[3] = _rect[3] + moveVector;
+                _rect[2] = _rect[1] + moveVector;
+                _rect[3] = _rect[0] + moveVector;
             }
         }
 
