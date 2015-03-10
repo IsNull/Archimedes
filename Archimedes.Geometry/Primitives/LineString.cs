@@ -6,7 +6,7 @@ using Vertex = Archimedes.Geometry.Vector2;
 using Archimedes.Geometry.Extensions;
 using System.Drawing.Drawing2D;
 using System.Drawing;
-using Archimedes.Geometry.Builder;
+using Archimedes.Geometry.Algorithms;
 
 namespace Archimedes.Geometry.Primitives
 {

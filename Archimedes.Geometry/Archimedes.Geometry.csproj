@@ -51,8 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AARectangle.cs" />
-    <Compile Include="Builder\ConvexHullBuilder.cs" />
-    <Compile Include="Builder\PathConnector.cs" />
+    <Compile Include="Algorithms\ConvexHullBuilder.cs" />
+    <Compile Include="Algorithms\PathConnector.cs" />
+    <Compile Include="DataStructures\CircularDoublyLinkedList.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="IOrdered.cs" />
     <Compile Include="MathHelper.cs" />
@@ -68,9 +69,9 @@
     <Compile Include="Primitives\Arc.collision.cs" />
     <Compile Include="Primitives\Arc.cs" />
     <Compile Include="Primitives\ArcBuilder.cs" />
-    <Compile Include="Primitives\Bounds\IPolygonBoundingBoxAlgorythm.cs" />
-    <Compile Include="Primitives\Bounds\PolygonSmallestBoundingBoxAlgorythm.cs" />
-    <Compile Include="Primitives\Bounds\PolygonSmallestWidthBoundingBoxAlgorythm.cs" />
+    <Compile Include="Algorithms\IPolygonBoundingBoxAlgorythm.cs" />
+    <Compile Include="Algorithms\PolygonSmallestBoundingBoxAlgorythm.cs" />
+    <Compile Include="Algorithms\PolygonSmallestWidthBoundingBoxAlgorythm.cs" />
     <Compile Include="Primitives\Circle2.cs" />
     <Compile Include="Primitives\ComplexGeometry.cs" />
     <Compile Include="Primitives\Line2.Collision.cs" />

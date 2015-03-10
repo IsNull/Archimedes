@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Archimedes.Geometry.DataStructures;
 using Archimedes.Geometry.Primitives;
 
-namespace Archimedes.Geometry.Builder
+namespace Archimedes.Geometry.Algorithms
 {
     /// <summary>
     /// 
@@ -43,18 +43,18 @@ namespace Archimedes.Geometry.Builder
             
 
             // Sort points lexicographically by increasing (x, y)
-            int N = pts.Length;
+            int n = pts.Length;
             Polysort.Quicksort(pts);
 
 
             var left = pts[0];
-            var right = pts[N - 1];
+            var right = pts[n - 1];
 
             // Partition into lower hull and upper hull
             var lower = new CircularDoublyLinkedList<Vector2>(left);
             var upper = new CircularDoublyLinkedList<Vector2>(left);
 
-            for (int i = 0; i < N; i++) {
+            for (int i = 0; i < n; i++) {
                 double det = Vector2.Area2(left, right, pts[i]);
                 if (det > 0)
                     upper = upper.Append(new CircularDoublyLinkedList<Vector2>(pts[i]));
@@ -67,9 +67,9 @@ namespace Archimedes.Geometry.Builder
             Eliminate(lower);
             Eliminate(upper);
             // Eliminate duplicate endpoints
-            if (lower.Prev.val.Equals(upper.val))
+            if (lower.Prev.Value.Equals(upper.Value))
                 lower.Prev.Delete();
-            if (upper.Prev.val.Equals(lower.val))
+            if (upper.Prev.Value.Equals(lower.Value))
                 upper.Prev.Delete();
             // Join the lower and upper hull
             var res = new Vector2[lower.Size() + upper.Size()];
@@ -87,7 +87,7 @@ namespace Archimedes.Geometry.Builder
             while (v.Next != start || !fwd) {
                 if (v.Next == w)
                     fwd = true;
-                if (Vector2.Area2(v.val, v.Next.val, v.Next.Next.val) < 0) // right turn
+                if (Vector2.Area2(v.Value, v.Next.Value, v.Next.Next.Value) < 0) // right turn
                     v = v.Next;
                 else {                                       // left turn or straight
                     v.Next.Delete();
@@ -97,67 +97,7 @@ namespace Archimedes.Geometry.Builder
         }
     }
 
-    /// <summary>
-    /// Circular doubly linked lists of T
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    class CircularDoublyLinkedList<T>
-    {
-        public T val;
-
-        // A new CircularDoublyLinkedList node is a one-element circular list
-        public CircularDoublyLinkedList(T val) {
-            this.val = val; Next = Prev = this;
-        }
-
-        public CircularDoublyLinkedList<T> Prev { get; private set; }
-        public CircularDoublyLinkedList<T> Next { get; private set; }
-
-        /// <summary>
-        /// Adjust the remaining elements, make this one point nowhere
-        /// </summary>
-        public void Delete() {
-            Next.Prev = Prev; Prev.Next = Next;
-            Next = Prev = null;
-        }
-
-        public CircularDoublyLinkedList<T> Prepend(CircularDoublyLinkedList<T> elt) {
-            elt.Next = this; elt.Prev = Prev; Prev.Next = elt; Prev = elt;
-            return elt;
-        }
-
-        public CircularDoublyLinkedList<T> Append(CircularDoublyLinkedList<T> elt) {
-            elt.Prev = this; elt.Next = Next; Next.Prev = elt; Next = elt;
-            return elt;
-        }
-
-        public int Size() {
-            int count = 0;
-            var node = this;
-            do {
-                count++;
-                node = node.Next;
-            } while (node != this);
-            return count;
-        }
-
-        public void PrintFwd() {
-            var node = this;
-            do {
-                Console.WriteLine(node.val);
-                node = node.Next;
-            } while (node != this);
-            Console.WriteLine();
-        }
-
-        public void CopyInto(T[] vals, int i) {
-            var node = this;
-            do {
-                vals[i++] = node.val;	// still, implicit checkcasts at runtime 
-                node = node.Next;
-            } while (node != this);
-        }
-    }
+    
 
     #region Polysort
 

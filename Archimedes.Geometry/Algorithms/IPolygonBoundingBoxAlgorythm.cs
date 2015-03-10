@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
+﻿using Archimedes.Geometry.Primitives;
 
-namespace Archimedes.Geometry.Primitives.Bounds
+namespace Archimedes.Geometry.Algorithms
 {
     /// <summary>
     /// Base Class for all polygon-based BoundingBox finder Algorythms

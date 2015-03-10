@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using Archimedes.Geometry.Builder;
+using Archimedes.Geometry.Algorithms;
 using Archimedes.Geometry.Extensions;
-using Archimedes.Geometry.Primitives.Bounds;
 using Archimedes.Geometry.Units;
 
 

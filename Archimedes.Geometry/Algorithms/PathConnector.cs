@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Drawing.Drawing2D;
-using Vertex = Archimedes.Geometry.Vector2;
 using Archimedes.Geometry.Primitives;
+using Vertex = Archimedes.Geometry.Vector2;
 
-namespace Archimedes.Geometry.Builder
+namespace Archimedes.Geometry.Algorithms
 {
     public class PathConnector
     {
