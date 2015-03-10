@@ -1,28 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Drawing;
-using Archimedes.Geometry.Extensions;
-using System.Drawing.Drawing2D;
 using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Primitives
 {
-    /// <summary>
-    /// Represents an rectangle in 2D space, which can be arbitary rotated.
-    /// // TODO Creating a rectangle with location + angle is currently broken!
-    /// </summary>
     public class Rectangle2 : IShape
     {
-        #region Fields
+         #region Fields
 
-        //Internal Data which defines a rotatable rect
-
-        private Vector2 _location;
-        private double _width;
-        private double _height;
-        private Angle _rotation = Units.Angle.Zero; // Rotation is considered centric
+        // Internal we hold the data in a polygon
+        private readonly Polygon2 _rect;
 
         #endregion
 
@@ -33,7 +23,10 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         public static Rectangle2 Empty
         {
-            get { return new Rectangle2(0, 0, 0, 0, Angle.Zero); }
+            get { return new Rectangle2(new []
+            {
+                Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero
+            }); }
         }
 
         /// <summary>
@@ -43,55 +36,69 @@ namespace Archimedes.Geometry.Primitives
         /// <returns></returns>
         public static Rectangle2 FromVertices(Vector2[] vertices)
         {
-            if (vertices.Count() != 4)
-                throw new ArgumentException("You must submit 4 vertices!");
-
-            // Calc width and height Vectors
-            var vWidth = new Vector2(vertices[0], vertices[1]);
-            var vHeight = new Vector2(vertices[1], vertices[2]);
-
-            // Use Vector Geometry to walk to the middlepoint
-            var middlePoint = vertices[0] + ((vWidth / 2.0) + (vHeight / 2.0));
-
-            var rotation = vWidth.AngleSignedTo(Vector2.UnitX, true);
-            var width = vWidth.Length;
-            var height = vHeight.Length;
-
-            var bounds = new Rectangle2(vertices[0], new SizeD(width, height), rotation);
-            return bounds;
+            return new Rectangle2(vertices);
         }
 
         #endregion
 
         #region Constructor's
 
-
-        /// <summary>
-        /// Creates a new Rectangle
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="uwidth"></param>
-        /// <param name="uheight"></param>
-        /// <param name="rotation"></param>
-        public Rectangle2(double x, double y, double uwidth, double uheight, Angle? rotation = null)
-        {
-            _width = uwidth;
-            _height = uheight;
-            this.Location = new Vector2(x, y);
-            this.Rotation = rotation ?? Angle.Zero;
-        }
-
         public Rectangle2(Vector2 location, SizeD size, Angle? rotation = null)
-            : this(location.X, location.Y, size.Width, size.Height,  rotation ?? Angle.Zero)
+            : this(location.X, location.Y, size.Width, size.Height, rotation ?? Angle.Zero)
         {
         }
 
         public Rectangle2(AARectangle rect, Angle? rotation = null)
             : this(rect.Location, rect.Size, rotation ?? Angle.Zero) { }
 
+
+        /// <summary>
+        /// Creates a new rectangle from 4 points
+        /// </summary>
+        /// <param name="vertices"></param>
+        public Rectangle2(Vector2[] vertices)
+        {
+            if (vertices == null) throw new ArgumentNullException("vertices");
+            if (vertices.Count() != 4) throw new ArgumentException("You must submit 4 vertices!");
+            
+            // TODO Check vertices that they are a rectangle!
+            
+
+            _rect = new Polygon2(vertices);
+        }
+
+        /// <summary>
+        /// Creates a new Rectangle
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="rotation"></param>
+        public Rectangle2(double x, double y, double width, double height, Angle? rotation = null)
+        {
+            var topLeft = new Vector2(x, y);
+            var topRight = new Vector2(x + width, y);
+            var bottomRight = new Vector2(x + width, y + height);
+            var bottomLeft = new Vector2(x, y + height);
+
+            _rect = new Polygon2(new[] { topLeft, topRight, bottomRight, bottomLeft });
+
+            // Rotate if necessary
+            if (rotation.HasValue && rotation.Value != Angle.Zero)
+            {
+                _rect.Rotate(rotation.Value, topLeft);
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="prototype"></param>
         public Rectangle2(Rectangle2 prototype)
         {
+            _rect = new Polygon2();
             Prototype(prototype);
         }
 
@@ -103,12 +110,12 @@ namespace Archimedes.Geometry.Primitives
         {
             var prototype = iprototype as Rectangle2;
             if (prototype == null)
-                throw new NotSupportedException();
+                throw new NotSupportedException("iprototype must be of type Rectangle2!");
 
-            this.Size = prototype.Size;
-            this.MiddlePoint = prototype.MiddlePoint;
-            this.Rotation = prototype.Rotation;
-            this._pen = prototype.Pen;
+            _rect.Clear();
+            _rect.AddRange(prototype.ToVertices());
+
+            this.Pen = prototype.Pen;
             this.FillBrush = prototype.FillBrush;
         }
 
@@ -121,42 +128,70 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         public Angle Rotation
         {
-            get { return _rotation; }
-            set { _rotation = value; }
+            get
+            {
+                var vertices = _rect.ToVertices();
+                var vWidth = new Vector2(vertices[0], vertices[1]);
+                var rotation = vWidth.AngleSignedTo(Vector2.UnitX, true);
+                return rotation;
+            }
         }
 
         public bool IsRotated {
             get { return (this.Rotation != Units.Angle.Zero); }
         }
 
-        public double Height
-        {
-            get {
-                return _height;
-            }
-            set {
-                _height = value;
-            }
-        }
 
         public double Width
         {
-            get {
-                return _width;
+            get
+            {
+                var sideVector = new Vector2(_rect[0], _rect[1]);
+                return sideVector.Length;
             }
-            set {
-                _width = value;
+
+            set
+            {
+                var wVector = new Vector2(_rect[0], _rect[1]);
+                if (wVector.Length == 0)
+                {
+                    wVector = Vector2.UnitX;
+                }
+                var moveVector = wVector.WithLength(value);
+                _rect[1] = _rect[1] + moveVector;
+                _rect[2] = _rect[2] + moveVector;
             }
         }
 
 
+        public double Height
+        {
+            get
+            {
+                var sideVector = new Vector2(_rect[1], _rect[2]);
+                return sideVector.Length;
+            }
+
+            set
+            {
+                var hVector = new Vector2(_rect[1], _rect[2]);
+                if (hVector.Length == 0)
+                {
+                    hVector = Vector2.UnitY;
+                }
+                var moveVector = hVector.WithLength(value);
+                _rect[2] = _rect[2] + moveVector;
+                _rect[3] = _rect[3] + moveVector;
+            }
+        }
+
+
+        /**
+         * 
+         */
         public SizeD Size {
             get {
-                return new SizeD(_width, _height);
-            }
-            set {
-                _width = value.Width;
-                _height = value.Height;
+                return new SizeD(Width, Height);
             }
         }
 
@@ -173,47 +208,30 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         public Vector2 Location
         {
-            get { return _location; }
-            set { _location = value; }
+            get { 
+                return _rect[0]; 
+            }
+            set
+            {
+                var current = Location;
+                var delta = new Vector2(current, value);
+                _rect.Translate(delta);
+            }
         }
 
         public Vector2 MiddlePoint
         {
-            get { return CalcMiddlepoint(Location, Size, Rotation); }
-            set
-            {
-                var move = new Vector2(MiddlePoint, value);
-                Location = Location + move;
-            }
+            get { return _rect.MiddlePoint; }
+            set { _rect.MiddlePoint = value; }
         }
 
         #endregion
 
-        /// <summary>
-        /// Calculates the top left corner of this rectangle based on the middlepoint.
-        /// </summary>
-        /// <param name="middlePoint"></param>
-        /// <param name="size"></param>
-        /// <param name="rotation"></param>
-        /// <returns></returns>
-        private static Vector2 CalcTopLeftCorner(Vector2 middlePoint, SizeD size, Angle rotation)
-        {
-            var upperleftCorner = new Vector2(
-                    middlePoint.X - (size.Width / 2.0),
-                    middlePoint.Y - (size.Height / 2.0)
-                    );
-            if (rotation != Angle.Zero)
-            { // If we have a rotated rect we need to apply this
-                var vToUpperLeft = new Vector2(middlePoint, upperleftCorner);
-                upperleftCorner = middlePoint + vToUpperLeft.GetRotated(rotation);
-            }
-            return upperleftCorner;
-        }
 
         /// <summary>
         /// Calculates the top left corner of this rectangle based on the middlepoint.
         /// </summary>
-        /// <param name="middlePoint"></param>
+        /// <param name="topLeft"></param>
         /// <param name="size"></param>
         /// <param name="rotation"></param>
         /// <returns></returns>
@@ -238,27 +256,13 @@ namespace Archimedes.Geometry.Primitives
         /// Gets the Vertices (Points) of this Rectangle
         /// </summary>
         /// <returns></returns>
-        public Vertices ToVertices() {
-
-            var location = Location;
-
-            var vertices = new Vertices()
-            {
-                location,
-                new Vector2(location.X + Width, location.Y),
-                new Vector2(location.X + Width, location.Y + Height),
-                new Vector2(location.X, location.Y + Height)
-            };
-
-            return vertices.RotateVertices(location, Rotation);
+        public Vertices ToVertices()
+        {
+            return _rect.ToVertices();
         }
 
         public Polygon2 ToPolygon2() {
-            return new Polygon2(this.ToVertices())
-            {
-                Pen = this.Pen,
-                FillBrush = this.FillBrush
-            };
+            return new Polygon2(_rect);
         }
 
         public AARectangle ToAARectangle(bool forceConversation = false)
@@ -272,22 +276,9 @@ namespace Archimedes.Geometry.Primitives
         /// Creates the 4 Lines which encloses this Rectangle
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Line2> ToLines() {
-
-            var vertices = this.ToVertices().ToArray();
-
-            if (vertices.Count() != 4)
-                return new Line2[0]; 
-
-            var lines = new[] 
-            {
-                new Line2(vertices[0], vertices[1]),
-                new Line2(vertices[1], vertices[2]),
-                new Line2(vertices[2], vertices[3]),
-                new Line2(vertices[3], vertices[0])
-            };
-
-            return lines;
+        public IEnumerable<Line2> ToLines()
+        {
+            return _rect.ToLines();
         }
 
         #endregion
@@ -299,14 +290,13 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="mov"></param>
         public void Translate(Vector2 mov) {
-            MiddlePoint += mov;
+            _rect.Translate(mov);
         }
 
         public void Scale(double fact)
         {
-            throw new NotImplementedException();
+            _rect.Scale(fact);
         }
-
 
 
         public IGeometryBase Clone() {
@@ -325,46 +315,34 @@ namespace Archimedes.Geometry.Primitives
         public bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             if (this.IsRotated)
-                return this.ToPolygon2().Contains(point, tolerance);
+                return _rect.Contains(point, tolerance);
             else //optimisation - use simple rect if no rotation is given
                 return this.ToAARectangle().Contains(point); // TODO Handle Tolerance!
         }
 
         public Circle2 BoundingCircle {
             get {
-                return this.ToPolygon2().BoundingCircle;
+                return _rect.BoundingCircle;
             }
         }
 
         public AARectangle BoundingBox {
-            get { return this.ToPolygon2().BoundingBox; }
+            get { return _rect.BoundingBox; }
         }
 
         public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            foreach (var line in this.ToLines()) {
-                if (other.IntersectsWith(line, tolerance))
-                    return true;
-            }
-            return false;
+            return _rect.IntersectsWith(other, tolerance);
         }
         public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            var intersections = new List<Vector2>();
-
-            foreach (var line in this.ToLines())
-                intersections.AddRange(other.Intersect(line, tolerance));
-
-            return intersections;
+            return _rect.Intersect(other, tolerance);
         }
 
 
         #endregion
 
         #region Drawing
-
-        Pen _pen = null;
-        Brush _brush = null;
 
         public virtual void Dispose()
         {
@@ -374,20 +352,21 @@ namespace Archimedes.Geometry.Primitives
 
         public Brush FillBrush
         {
-            get { return _brush; }
-            set { _brush = value; }
+            get { return _rect.FillBrush; }
+            set { _rect.FillBrush = value; }
         }
 
         public Pen Pen
         {
-            get { return _pen; }
-            set { _pen = value; }
+            get { return _rect.Pen; }
+            set { _rect.Pen = value; }
         }
 
         public virtual void Draw(Graphics g)
         {
-            this.ToPolygon2().Draw(g);
+            _rect.Draw(g);
         } 
         #endregion
+
     }
 }

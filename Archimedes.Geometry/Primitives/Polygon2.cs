@@ -56,24 +56,44 @@ namespace Archimedes.Geometry.Primitives
 
         #region Public Vertex Access Methods
 
-        public void Clear() {
+        public virtual void Clear() {
             _vertices.Clear();
-            _boundCircleChanged = true;
+            Invalidate();
         }
 
-        public void Add(Vector2 uvertex) {
+        public virtual void Add(Vector2 uvertex)
+        {
             _vertices.Add(uvertex);
-            _boundCircleChanged = true;
+            Invalidate();
         }
-        public void Remove(Vector2 uvertex) {
+        public virtual void Remove(Vector2 uvertex)
+        {
             _vertices.Remove(uvertex);
-            _boundCircleChanged = true;
+            Invalidate();
         }
 
-        public void AddRange(IEnumerable<Vector2> uvertices)
+        public virtual void AddRange(IEnumerable<Vector2> uvertices)
         {
             _vertices.AddRange(uvertices);
-            _boundCircleChanged = true;
+            Invalidate();
+        }
+
+        /// <summary>
+        /// Direct access to the vertices of this polygon
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Vector2 this[int index]
+        {
+            get
+            {
+                return _vertices[index];
+            }
+            set
+            {
+                _vertices[index] = value;
+                Invalidate();
+            }
         }
 
         #endregion
@@ -551,7 +571,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public Vertices ToVertices() {
-            return new Vertices(_vertices.Distinct());
+            return new Vertices(_vertices);
         }
 
         public Polygon2 ToPolygon2() {

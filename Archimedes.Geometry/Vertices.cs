@@ -113,7 +113,6 @@ namespace Archimedes.Geometry
         {
             if (angle != Angle.Zero)
             {
-                var cnt = _vertices.Count();
                 var rotVertices = new Vertices();
                 foreach (var vertex in _vertices)
                 {

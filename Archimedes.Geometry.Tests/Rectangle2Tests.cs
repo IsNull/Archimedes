@@ -38,8 +38,8 @@ namespace Archimedes.Geometry.Tests
             var rect = new Rectangle2(location, size, rotation);
 
             Assert.AreEqual(location, rect.Location);
-            Assert.AreEqual(size.Width, rect.Width);
-            Assert.AreEqual(size.Height, rect.Height);
+            Assert.AreEqual(size.Width, rect.Width, GeometrySettings.DEFAULT_TOLERANCE);
+            Assert.AreEqual(size.Height, rect.Height, GeometrySettings.DEFAULT_TOLERANCE);
             Assert.AreEqual(rotation, rect.Rotation);
         }
 
@@ -60,6 +60,7 @@ namespace Archimedes.Geometry.Tests
             Assert.AreEqual(expectedRotation, rect.Rotation);
         }
 
+        /**/
         [TestCase(200,100)]
         public void Constructor2(double witdh, double height)
         {
