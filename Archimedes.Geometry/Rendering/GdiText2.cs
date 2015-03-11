@@ -47,11 +47,19 @@ namespace Archimedes.Geometry.Rendering
 
         #endregion
 
-        #region Constructors
+        #region Constructor
 
-        public GdiText2() { }
 
-        public GdiText2(string uText) { this.Text = uText; }
+        public GdiText2(string uText)
+            : this(uText, Vector2.Zero)
+        {
+        }
+
+        public GdiText2(string uText, Vector2 location)
+        {
+            this.Text = uText;
+            this.Location = location;
+        }
 
         public GdiText2(string uText, Font uFont) 
             : this (uText){
