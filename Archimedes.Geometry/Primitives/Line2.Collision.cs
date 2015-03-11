@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Archimedes.Geometry.Primitives
 {
-    public partial class Line2 : IGeometryBase
+    public partial class Line2 : IGeometry
     {
-
+        #region Line - Line Intersection
 
         /// <summary>
         /// Calculates the interception point of two Lines.
@@ -52,6 +52,7 @@ namespace Archimedes.Geometry.Primitives
         /// Is there a interception?
         /// </summary>
         /// <param name="other"></param>
+        /// <param name="tolerance"></param>
         /// <returns>Returns true/false.</returns>
         public bool InterceptLineWith(Line2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
@@ -79,10 +80,16 @@ namespace Archimedes.Geometry.Primitives
             return (this.Contains(intersection, tolerance) && other.Contains(intersection, tolerance));
         }
 
+        #endregion
+
+        // Can be removed if Polygon2 supports Line intersections
+        #region Line - AARectangle Intersection
+
         /// <summary>
         /// Returns true if there is at least one Interception Point.
         /// </summary>
         /// <param name="rect1"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
         public bool InterceptRectWith(AARectangle rect1, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
@@ -98,7 +105,8 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        /// <summary>Returns every intersection Point of the Rect::Line if any. Max returned Points are 2.
+        /// <summary>
+        /// Returns every intersection Point of the Rect::Line if any. Max returned Points are 2.
         /// This Method actaully can't handle full contained Lines in the Rect - use the InterceptRectWith to determite if there is collision.
         /// </summary>
         /// <param name="rect"></param>
@@ -124,7 +132,9 @@ namespace Archimedes.Geometry.Primitives
             return intercepts;
         }
 
+        #endregion
 
+        #region Line - Point (Contains)
 
         /// <summary>
         /// Checks if a Point is on the 2dLine (or in its range)
@@ -145,12 +155,14 @@ namespace Archimedes.Geometry.Primitives
                 } else 
                     return false;
             } else {
-                if (Math.Abs(pos.Y - (pos.X * (float)this.Slope + (float)this.YMovement)) <= tolerance)
+                if (Math.Abs(pos.Y - (pos.X * this.Slope + this.YMovement)) <= tolerance)
                 {
                     return (((pos.X >= this.Start.X) && (pos.X <= this.End.X)) || ((pos.X <= this.Start.X) && (pos.X >= this.End.X)));
                 } else
                     return false;
             }
         }
+
+        #endregion
     }
 }
