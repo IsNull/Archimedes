@@ -25,7 +25,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         /// <summary>
         /// Gets the geometry of this visual
         /// </summary>
-        public abstract IGeometryBase Geometry { get; }
+        public abstract IGeometry Geometry { get; }
 
         /// <summary>
         /// Draws this visual to the given graphics context

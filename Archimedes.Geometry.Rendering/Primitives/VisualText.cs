@@ -92,7 +92,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         public TextAligning Aligning { get; set; }
 
 
-        public override IGeometryBase Geometry
+        public override IGeometry Geometry
         {
             get
             {

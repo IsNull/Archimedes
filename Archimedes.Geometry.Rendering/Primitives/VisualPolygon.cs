@@ -19,7 +19,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         }
 
 
-        public override IGeometryBase Geometry
+        public override IGeometry Geometry
         {
             get { return _polygon; }
         }

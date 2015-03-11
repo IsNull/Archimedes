@@ -26,7 +26,7 @@ namespace Archimedes.Geometry
         }
 
 
-        public static void GetStartEndPoint(IGeometryBase geometry, out Point? start, out Point? end) {
+        public static void GetStartEndPoint(IGeometry geometry, out Point? start, out Point? end) {
 
             start = null;
             end = null;

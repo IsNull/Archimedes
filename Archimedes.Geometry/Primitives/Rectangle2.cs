@@ -106,7 +106,7 @@ namespace Archimedes.Geometry.Primitives
         /// Prototype methods, which copies al values from the prototype to this instance.
         /// </summary>
         /// <param name="iprototype"></param>
-        public void Prototype(IGeometryBase iprototype)
+        public void Prototype(IGeometry iprototype)
         {
             var prototype = iprototype as Rectangle2;
             if (prototype == null)
@@ -299,7 +299,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public IGeometryBase Clone() {
+        public IGeometry Clone() {
             return new Rectangle2(this);
         }
 
@@ -330,11 +330,11 @@ namespace Archimedes.Geometry.Primitives
             get { return _rect.BoundingBox; }
         }
 
-        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             return _rect.IntersectsWith(other, tolerance);
         }
-        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             return _rect.Intersect(other, tolerance);
         }

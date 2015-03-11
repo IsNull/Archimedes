@@ -16,7 +16,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             _line = line;
         }
 
-        public override IGeometryBase Geometry
+        public override IGeometry Geometry
         {
             get { return _line; }
         }

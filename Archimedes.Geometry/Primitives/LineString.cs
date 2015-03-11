@@ -14,7 +14,7 @@ namespace Archimedes.Geometry.Primitives
     /// A line string of connected points.
     /// // TODO all intersection methods missing
     /// </summary>
-    public class LineString : IGeometryBase
+    public class LineString : IGeometry
     {
         #region Fields
 
@@ -49,11 +49,11 @@ namespace Archimedes.Geometry.Primitives
             Append(vertices);
         }
 
-        public LineString(IGeometryBase geometry)
+        public LineString(IGeometry geometry)
             : this() {
                 AddGeometry(geometry);
         }
-        public LineString(IEnumerable<IGeometryBase> geometries)
+        public LineString(IEnumerable<IGeometry> geometries)
             : this() {
             foreach (var g in geometries)
                 AddGeometry(g);
@@ -77,7 +77,7 @@ namespace Archimedes.Geometry.Primitives
         /// Adds  the <paramref name="geometry"/> to the path.
         /// </summary>
         /// <param name="geometry">Geomtry to add</param>
-        public void AddGeometry(IGeometryBase geometry) {
+        public void AddGeometry(IGeometry geometry) {
             Append(geometry.ToVertices());
         }
 
@@ -86,7 +86,7 @@ namespace Archimedes.Geometry.Primitives
         /// Tries to dock the <paramref name="geometry"/> to this path. 
         /// </summary>
         /// <param name="geometry">Geometry to dock on this path</param>
-        public void DockGeometry(IGeometryBase geometry) {
+        public void DockGeometry(IGeometry geometry) {
             DockVertices(geometry.ToVertices());
         }
 
@@ -140,11 +140,11 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public IGeometryBase Clone() {
+        public IGeometry Clone() {
             return new LineString(this);
         }
 
-        public void Prototype(IGeometryBase prototype) {
+        public void Prototype(IGeometry prototype) {
             Clear();
             Append(prototype.ToVertices());
             this.Pen = prototype.Pen;
@@ -176,12 +176,12 @@ namespace Archimedes.Geometry.Primitives
             get { return BoundingBox.BoundingCircle; }
         }
 
-        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             throw new NotImplementedException();
         }

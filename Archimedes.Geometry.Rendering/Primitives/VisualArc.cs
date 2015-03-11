@@ -17,7 +17,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             _arc = arc;
         }
 
-        public override IGeometryBase Geometry
+        public override IGeometry Geometry
         {
             get { return _arc; }
         }

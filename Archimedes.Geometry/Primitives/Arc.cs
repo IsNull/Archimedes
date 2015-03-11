@@ -21,7 +21,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Represents an Arc in 2D Space
     /// </summary>
-    public partial class Arc : IGeometryBase
+    public partial class Arc : IGeometry
     {
         #region Private Data
 
@@ -485,12 +485,12 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public IGeometryBase Clone()
+        public IGeometry Clone()
         {
             return new Arc(this);
         }
 
-        public void Prototype(IGeometryBase iprototype)
+        public void Prototype(IGeometry iprototype)
         {
 
             var prototype = (iprototype as Arc);

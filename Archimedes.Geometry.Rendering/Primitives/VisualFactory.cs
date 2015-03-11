@@ -85,7 +85,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         #endregion
 
 
-        public static Visual CreateGeneric(IGeometryBase geometry, Pen pen = null, Brush brush = null)
+        public static Visual CreateGeneric(IGeometry geometry, Pen pen = null, Brush brush = null)
         {
             if (geometry is Line2)
             {

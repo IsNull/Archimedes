@@ -17,7 +17,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Represents a Line in a 2D coord space defined by two points.
     /// </summary>
-    public partial class Line2 : IGeometryBase
+    public partial class Line2 : IGeometry
     {
         
         #region Fields
@@ -92,7 +92,7 @@ namespace Archimedes.Geometry.Primitives
             Prototype(prototype);
         }
 
-        public virtual void Prototype(IGeometryBase iprototype) {
+        public virtual void Prototype(IGeometry iprototype) {
             var prototype = iprototype as Line2;
             if (prototype == null)
                 throw new NotImplementedException();
@@ -360,7 +360,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public IGeometryBase Clone() {
+        public IGeometry Clone() {
             return new Line2(this);
         }
 
@@ -408,7 +408,7 @@ namespace Archimedes.Geometry.Primitives
         #region Geomtry Base Collision
 
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
+        public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
             var pnts = new List<Vector2>();
 
             if (other is Line2) {
@@ -423,7 +423,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public bool IntersectsWith(IGeometryBase geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IntersectsWith(IGeometry geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
 
             if (geometry is Line2)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Archimedes.Geometry.Primitives;
 using NUnit.Framework;
 
@@ -6,7 +7,8 @@ namespace Archimedes.Geometry.Tests
 {
     public class Line2Tests
     {
-        
+        #region Base Tests
+
         [TestCase("10, 10", "100, 100")]
         public void Constructor(string sp, string ep)
         {
@@ -39,6 +41,8 @@ namespace Archimedes.Geometry.Tests
 
             Assert.AreEqual(l1.Lenght, expected);
         }
+
+        #endregion
 
         #region Slopes / Horz & Vert
 
@@ -98,5 +102,68 @@ namespace Archimedes.Geometry.Tests
 
         #endregion
 
+        #region Intersections
+
+        [TestCase("(10, 50),(100, 50)", "(70,40),(70,60)", "(70, 50)")] // Horz - Vertical
+        [TestCase("(70,40),(70,60)", "(10, 50),(100, 50)", "(70, 50)")] // Vertical - Horz
+        [TestCase("(10, 50),(100, 50)", "(10,10),(90,90)", "(50, 50)")] // Horz - Diagonal
+        [TestCase("(25, 567.52168),(355.95663, 567.52168)", "(212.97, 555.5),(212.97, 579.5)", "(212.97, 567.52168)")] // Specail real world case
+        public void IntersectLine(string line1Str, string line2Str, string expectedIntersection)
+        {
+            var line1 = Line2.Parse(line1Str);
+            var line2 = Line2.Parse(line2Str);
+
+            var expected = Vector2.Parse(expectedIntersection);
+
+            var intersect = line1.IntersectsWith(line2);
+            var intersection = line1.Intersect(line2);
+
+            Assert.AreEqual(true, intersect);
+            Assert.AreEqual(expected, intersection.First());
+        }
+
+        /*
+        [TestCase("(25, 567.52168),(355.95663, 567.52168)", "(212.97, 555.5),(212.97, 579.5)", true)] // Specail real world case
+        public void IntersectLine(string line1Str, string line2Str, bool expectedIntersection)
+        {
+            var line1 = Line2.Parse(line1Str);
+            var line2 = Line2.Parse(line2Str);
+
+            var intersection = line1.Intersect(line2);
+            var intersects = line1.IntersectsWith(line2);
+
+            Assert.AreEqual(expectedIntersection, intersects);
+        }*/
+
+
+
+
+        [TestCase("(10,50) (100,50)", "(30,30)"," (50,40)", "(30,50),(80,50)")] // Horz. Line with two intersections
+        [TestCase("(10,50) (50,50)", "(30,30)", " (50,40)", "(30,50)")]         // Horz. Line with one intersection
+        [TestCase("(10,50) (25,50)", "(30,30)", " (50,40)", "")]         // Horz. Line with no intersection
+        [TestCase("(10,10) (90,90)", "(30,30)", " (50,40)", "(30,30),(70,70)")] // Diagonal Line with two intersections
+       // [TestCase("(25, 567.521681),(355.95663, 567.521681)", "(167.97, 555.5)", "(45, 24)", "(11,11)")] // Case from real data
+
+        public void InterceptRect(string line1Str, string rectLocationStr, string rectSizeStr, string expectedIntersections)
+        {
+            var line1 = Line2.Parse(line1Str);
+            var rect = new AARectangle(Vector2.Parse(rectLocationStr), SizeD.Parse(rectSizeStr));
+
+            var expectedInters = Vector2.ParseAll(expectedIntersections);
+
+            var actual = line1.InterceptRect(rect);
+
+            Assert.AreEqual(expectedInters.Length, actual.Count); // Expected number of intersections
+            // Check each point
+            if (expectedInters.Length == actual.Count)
+            {
+                for (int i = 0; i < expectedInters.Length; i++)
+                {
+                    Assert.AreEqual(expectedInters[i], actual[i]);
+                }
+            }
+        }
+
+        #endregion
     }
 }

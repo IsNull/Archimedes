@@ -63,7 +63,7 @@
     <Compile Include="GeometrySettings.cs" />
     <Compile Include="IShape.cs" />
     <Compile Include="IDrawable.cs" />
-    <Compile Include="IGeometryBase.cs" />
+    <Compile Include="IGeometry.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="PointD.cs" />
     <Compile Include="Primitives\Arc.collision.cs" />
@@ -72,11 +72,13 @@
     <Compile Include="Algorithms\IPolygonBoundingBoxAlgorythm.cs" />
     <Compile Include="Algorithms\PolygonSmallestBoundingBoxAlgorythm.cs" />
     <Compile Include="Algorithms\PolygonSmallestWidthBoundingBoxAlgorythm.cs" />
+    <Compile Include="Primitives\Circle2.collision.cs" />
     <Compile Include="Primitives\Circle2.cs" />
     <Compile Include="Primitives\ComplexGeometry.cs" />
     <Compile Include="Primitives\Line2.Collision.cs" />
     <Compile Include="Primitives\Line2.cs" />
     <Compile Include="Primitives\LineString.cs" />
+    <Compile Include="Primitives\Polygon2.collision.cs" />
     <Compile Include="Primitives\Polygon2.cs" />
     <Compile Include="Primitives\Rectangle2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

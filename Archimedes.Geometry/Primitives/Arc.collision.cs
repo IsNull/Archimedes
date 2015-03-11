@@ -7,10 +7,11 @@ using Archimedes.Geometry.Rendering;
 
 namespace Archimedes.Geometry.Primitives
 {
-    public partial class Arc : IGeometryBase
+    /// <summary>
+    /// Collision parts of Arc implementation
+    /// </summary>
+    public partial class Arc
     {
-
-        #region Arc - Rect
 
         #region Rectangle2
 
@@ -20,9 +21,9 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, true is returned, false otherwise</returns>
-        private bool InterceptRectWith(Rectangle2 rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private bool InterceptWithPolygon(Polygon2 polygon, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            var borderLines = rect.ToLines(); //get 4 borderlines from rect
+            var borderLines = polygon.ToLines(); //get 4 borderlines from rect
             if (borderLines != null) {
                 return InterceptLinesWith(borderLines, tolerance);
             }
@@ -34,10 +35,10 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect">Rectangle to check</param>
         /// <returns>On collision, a List of interception Points is returned</returns>
-        private List<Vector2> InterceptRect(Rectangle2 rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private List<Vector2> InterceptPolygon(Polygon2 polygon, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var intersections = new List<Vector2>();
-            var borderLines = rect.ToLines(); //get 4 borderlines from rect
+            var borderLines = polygon.ToLines(); //get 4 borderlines from rect
             if (borderLines != null) {
                 intersections.AddRange(InterceptLines(borderLines, tolerance));
             }
@@ -46,7 +47,7 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region Rectangle
+        #region Arc - AARectangle
 
         /// <summary>
         /// Checks if a Rectangle collides with the Arc.
@@ -80,32 +81,10 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        private List<Vector2> InterceptLines(IEnumerable<Line2> lines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var intersections = new List<Vector2>();
-            foreach (var border in lines) {
-                intersections.AddRange(this.InterceptLine(border, tolerance));
-            }
-            return intersections;
-        }
-
-        private bool InterceptLinesWith(IEnumerable<Line2> lines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var intersections = new List<Vector2>();
-            foreach (var border in lines) {
-                if (this.InterceptLine(border, tolerance).Count != 0) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        #endregion
-
         #region Arc - Line
 
         /// <summary>
-        /// Bow-Line Interception
+        /// Arc-Line Interception
         /// </summary>
         /// <param name="uLine">Line to check</param>
         /// <param name="tolerance"></param>
@@ -120,7 +99,6 @@ namespace Archimedes.Geometry.Primitives
             strechtedLine.Stretch(tolerance, Direction.LEFT);
             strechtedLine.Stretch(tolerance, Direction.RIGHT);
             uLine = strechtedLine;
-            
 
 
             // Intersect with a circle and test inter points if they lie on our arc
@@ -144,6 +122,30 @@ namespace Archimedes.Geometry.Primitives
         private bool InterceptLineWith(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             return InterceptLine(uLine, tolerance).Any();
+        }
+
+
+        private List<Vector2> InterceptLines(IEnumerable<Line2> lines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            var intersections = new List<Vector2>();
+            foreach (var border in lines)
+            {
+                intersections.AddRange(this.InterceptLine(border, tolerance));
+            }
+            return intersections;
+        }
+
+        private bool InterceptLinesWith(IEnumerable<Line2> lines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            var intersections = new List<Vector2>();
+            foreach (var border in lines)
+            {
+                if (this.InterceptLine(border, tolerance).Count != 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         #endregion
@@ -219,38 +221,66 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            if (other is Line2) {
+            if (other is Line2)
+            {
                 return this.InterceptLineWith(other as Line2, tolerance);
-            } else if (other is GdiText2 || other is Rectangle2) {
+            }
+            else if (other is GdiText2)
+            {
                 return this.InterceptRectWith(other.BoundingBox, tolerance);
-            } else if (other is Circle2) {
+            }
+            else if (other is Circle2)
+            {
                 return this.InterceptCircleWith(other as Circle2, tolerance);
-            } else if (other is Arc) {
+            }
+            else if (other is Rectangle2)
+            {
+                return this.InterceptWithPolygon(((Rectangle2)other).ToPolygon2(), tolerance);
+            }
+            else if (other is Arc)
+            {
                 return this.InterceptArcWith(other as Arc, tolerance);
-            } else {
+            }
+            else
+            {
                 return other.IntersectsWith(this, tolerance);
             }
         }
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var pnts = new List<Vector2>();
 
-            if (other is Line2) {
+            if (other is Line2)
+            {
                 pnts.AddRange(this.InterceptLine(other as Line2, tolerance));
-            } else if (other is GdiText2) {
+            }
+            else if (other is GdiText2)
+            {
                 pnts.AddRange(this.InterceptRect(other.BoundingBox, tolerance));
-            } else if (other is Rectangle2) {
-                pnts.AddRange(this.InterceptRect(other as Rectangle2, tolerance));
-            } else if (other is Circle2) {
+            }
+            else if (other is Rectangle2)
+            {
+                pnts.AddRange(this.InterceptPolygon(((Rectangle2)other).ToPolygon2(), tolerance));
+            }
+            else if (other is Polygon2)
+            {
+                pnts.AddRange(this.InterceptPolygon(other as Polygon2, tolerance));
+            }
+            else if (other is Circle2)
+            {
                 pnts.AddRange(this.InterceptCircle(other as Circle2, tolerance));
-            } else if (other is Arc) {
+            }
+            else if (other is Arc)
+            {
                 pnts.AddRange(this.InterceptArc(other as Arc, tolerance));
-            } else {
+            }
+            else
+            {
                 if (other is IShape)
-                    pnts.AddRange(new Polygon2(other.ToVertices().Distinct()).Intersect(this, tolerance));
+                    pnts.AddRange(((IShape)other).ToPolygon2().Intersect(this, tolerance));
             }
             return pnts;
         }

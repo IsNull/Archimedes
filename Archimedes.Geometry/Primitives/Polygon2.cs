@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using Archimedes.Geometry.Algorithms;
-using Archimedes.Geometry.Extensions;
 using Archimedes.Geometry.Units;
 
 
@@ -13,7 +12,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Represents a closed 2D Area.
     /// </summary>
-    public class Polygon2 : IShape
+    public partial class Polygon2 : IShape
     {
         #region Fields
 
@@ -27,6 +26,16 @@ namespace Archimedes.Geometry.Primitives
         private Brush _fillBrush = null;
 
         #endregion
+
+        /// <summary>
+        /// Creates a new polygon from the given parsed vertices
+        /// </summary>
+        /// <param name="polygonStr"></param>
+        /// <returns></returns>
+        public static Polygon2 Parse(string polygonStr)
+        {
+            return new Polygon2(Vector2.ParseAll(polygonStr));
+        }
 
         #region Constructor
 
@@ -100,7 +109,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region Prototype Methods
 
-        public void Prototype(IGeometryBase iprototype) {
+        public void Prototype(IGeometry iprototype) {
             var prototype = iprototype as Polygon2;
             if (prototype == null)
                 throw new NotSupportedException();
@@ -244,198 +253,6 @@ namespace Archimedes.Geometry.Primitives
         #endregion
 
         #endregion
-
-        #region Collision Detection Methods
-
-        /// <summary>
-        /// Does this polygon contain the given point?
-        /// </summary>
-        /// <param name="p">The Point to check</param>
-        /// <param name="tolerance">The Point to check</param>
-        /// <returns>True if the Point is contained in the Polygon</returns>
-        public bool Contains(Vector2 p, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-
-            if (!BoundingCircle.Contains(p, tolerance))
-            {
-                return false;
-            }
-
-            int counter = 0;
-            int i;
-            Vector2 p2;
-            int N = _vertices.Count;
-
-            var p1 = _vertices[0];
-            for (i = 1; i <= N; i++) {
-                p2 = _vertices[i % N];
-                if (p.Y > Math.Min(p1.Y, p2.Y)) {
-                    if (p.Y <= Math.Max(p1.Y, p2.Y)) {
-                        if (p.X <= Math.Max(p1.X, p2.X)) {
-                            if (p1.Y != p2.Y) // TODO Handle tolerance!!
-                            {
-                                double xinters = (p.Y - p1.Y) * (p2.X - p1.X) / (p2.Y - p1.Y) + p1.X;
-                                if (p1.X == p2.X || p.X <= xinters)
-                                    counter++;
-                            }
-                        }
-                    }
-                }
-                p1 = p2;
-            }
-            return (counter % 2 != 0);
-        }
-
-        /// <summary>
-        /// Is the given Polygon fully contained in this one?
-        /// </summary>
-        /// <param name="polygon"> </param>
-        /// <param name="tolerance"> </param>
-        /// <returns></returns>
-        public bool Contains(Polygon2 polygon, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            if(polygon.ToVertices().All(x => Contains(x, tolerance)))
-            {
-                // When all vertices are contained in a convex polygon
-                // we already know that the given vertices are inside
-                // this polygon thus we are done
-                if (IsConvex()) return true;
-
-                // Otherwise, this is a concave polygon
-                // we need to ensure, that the vertices do not intersect any line
-                var otherLines = polygon.ToLines();
-                return !IntersectLinesWith(otherLines, tolerance);
-            }
-
-            return false;
-        }
-
-
-        public bool IntersectLinesWith(Line2[] otherLines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var myLines = this.ToLines();
-
-            foreach (var myLine in myLines)
-            {
-                foreach (var other in otherLines)
-                {
-                    if (myLine.InterceptLineWith(other, tolerance))
-                        return true;
-                }
-            }
-            return false;
-        }
-
-
-        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            IEnumerable<Vector2> collisionPoints;
-            return InterSectsOther(other, false, out collisionPoints, tolerance);
-        }
-
-        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            IEnumerable<Vector2> collisionPoints;
-            InterSectsOther(other, true, out collisionPoints, tolerance);
-            return collisionPoints;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="other"></param>
-        /// <param name="collectAllPoints"></param>
-        /// <param name="collisionPoints"></param>
-        /// <param name="tolerance"></param>
-        /// <returns></returns>
-        private bool InterSectsOther(IGeometryBase other, bool collectAllPoints, out IEnumerable<Vector2> collisionPoints, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var collisionPointsL = new List<Vector2>();
-            collisionPoints = collisionPointsL;
-
-            if (other is IShape) { /* if other is not a closed element, it must have one vertex in this polygon */
-                foreach (var vertex in this.ToVertices()) {
-                    if (other.Contains(vertex, tolerance))
-                    {
-                        collisionPointsL.Add(vertex);
-                        if (!collectAllPoints) return true;
-                    }
-                }
-            }
-            foreach (var vertex in other.ToVertices()) {
-                if (this.Contains(vertex, tolerance))
-                {
-                    collisionPointsL.Add(vertex);
-                    if (!collectAllPoints) return true;
-                }
-            }
-            return collisionPointsL.Any();
-        }
-
-        /// <summary>
-        /// Gets the bounding circle of this polygon
-        /// </summary>
-        public Circle2 BoundingCircle {
-            get {
-                if (_boundingCircle == null || _boundCircleChanged)
-                {
-                    double dist;
-                    var middlePoint = this.MiddlePoint;
-                    double longestDist = 0;
-
-                    foreach(var vertex in this._vertices) {
-                        dist = Line2.CalcLenght(middlePoint, vertex);
-                        if (longestDist < dist)
-                            longestDist = dist;
-                    }
-                    _boundingCircle = new Circle2(middlePoint, (float)longestDist);
-                }
-                return _boundingCircle;
-            }
-        }
-
-        /// <summary>
-        /// Returns the Boundingbox which Aera is the smallest
-        /// </summary>
-        public Rectangle2 FindSmallestBoundingBox() {
-            return FindBoundingBox(new PolygonSmallestBoundingBoxAlgorythm());
-        }
-
-        /// <summary>
-        /// Returns the Boundingbox which one side (width) is the smallest possible
-        /// </summary>
-        public Rectangle2 FindSmallestWidthBoundingBox() {
-            return FindBoundingBox(new PolygonSmallestWidthBoundingBoxAlgorythm());
-        }
-
-        /// <summary>
-        /// Find the Boundingbox with the given Algorythm
-        /// </summary>
-        /// <param name="boxfindingAlgorythm">Concrete implementation of the bounding finder Algorythm to use</param>
-        /// <returns></returns>
-        public Rectangle2 FindBoundingBox(IPolygonBoundingBoxAlgorythm boxfindingAlgorythm)
-        {
-            Rectangle2 rect = null;
-            var hull = !IsConvex() ? ToConvexPolygon() : this;
-
-            var vertices = boxfindingAlgorythm.FindBounds(hull);
-
-            if (vertices.Count() == 4)
-            {
-                rect = Rectangle2.FromVertices(vertices);
-            }
-
-            if (rect == null || rect.Size.IsEmpty)
-            {
-                // Smallest boundingboxfinder failed - use simple boundingbox instead
-                rect = this.BoundingBox.ToRectangle();
-            }
-
-            return rect;
-        }
-
-
-        #endregion //End Collision Detection
 
         #region Centroid/Middlepoint
         /// <summary>
@@ -618,7 +435,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public IGeometryBase Clone() {
+        public IGeometry Clone() {
             return new Polygon2(this);
         }
 
@@ -673,5 +490,7 @@ namespace Archimedes.Geometry.Primitives
         {
             return "Polygon Vertices(" + VerticesCount + ")";
         }
+
+
     }
 }

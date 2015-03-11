@@ -10,7 +10,7 @@ namespace Archimedes.Geometry
     /// <summary>
     /// Represents a shape (a closed geometry)
     /// </summary>
-    public interface IShape : IGeometryBase
+    public interface IShape : IGeometry
     {
         /// <summary>
         /// Gets the area of this geometry shape

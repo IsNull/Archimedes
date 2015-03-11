@@ -66,7 +66,7 @@ namespace Archimedes.Geometry.Rendering
             Prototype(prototype);
         }
 
-        public void Prototype(IGeometryBase iprototype) {
+        public void Prototype(IGeometry iprototype) {
             var prototype = iprototype as GdiText2;
             if (prototype == null)
                 throw new NotSupportedException();
@@ -232,7 +232,7 @@ namespace Archimedes.Geometry.Rendering
             }
         }
 
-        public IGeometryBase Clone() {
+        public IGeometry Clone() {
             return new GdiText2(this);
         }
 
@@ -265,14 +265,14 @@ namespace Archimedes.Geometry.Rendering
 
         #region GeomertryBase Collision
 
-        public bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
+        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
             if (other is GdiText2)
                 return this.BoundingBox.IntersectsWith(other.BoundingBox); // TODO handle tolerance!!
              else
                 return other.IntersectsWith(this, tolerance);
         }
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
+        public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
             if (other is GdiText2)
                 return IntersectRect(other.BoundingBox, tolerance);
             else

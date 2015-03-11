@@ -9,11 +9,11 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Composition of several single IGeometryBase Elements to a common Interface
     /// </summary>
-    public class ComplexGeometry : IGeometryBase
+    public class ComplexGeometry : IGeometry
     {
         #region Fields
 
-        readonly List<IGeometryBase> _geometries = new List<IGeometryBase>();
+        readonly List<IGeometry> _geometries = new List<IGeometry>();
         Vertices _verticesCache = null;
         readonly object _verticesCacheLock = new object();
 
@@ -33,17 +33,17 @@ namespace Archimedes.Geometry.Primitives
 
         #region Geometry Access Methods
 
-        public void AddGeometry(IGeometryBase geometry) {
+        public void AddGeometry(IGeometry geometry) {
             _geometries.Add(geometry);
             Invalidate();
         }
 
-        public void AddGeometries(IEnumerable<IGeometryBase> geometries) {
+        public void AddGeometries(IEnumerable<IGeometry> geometries) {
             _geometries.AddRange(geometries);
             Invalidate();
         }
 
-        public void RemoveGeometry(IGeometryBase geometry) {
+        public void RemoveGeometry(IGeometry geometry) {
             _geometries.Remove(geometry);
             Invalidate();
         }
@@ -52,7 +52,7 @@ namespace Archimedes.Geometry.Primitives
             return _geometries.Count();
         }
 
-        public IGeometryBase this[int index]{
+        public IGeometry this[int index]{
             get {
                 return _geometries[index];
             }
@@ -155,14 +155,14 @@ namespace Archimedes.Geometry.Primitives
         /// Gets a deep copy of this Object
         /// </summary>
         /// <returns></returns>
-        public IGeometryBase Clone() {
+        public IGeometry Clone() {
             var nuv = new ComplexGeometry();
             foreach (var g in _geometries)
                 nuv.AddGeometry(g.Clone());
             return nuv;
         }
 
-        public void Prototype(IGeometryBase iprototype) {
+        public void Prototype(IGeometry iprototype) {
 
             var prototype = iprototype as ComplexGeometry;
             if (prototype == null)
@@ -183,7 +183,7 @@ namespace Archimedes.Geometry.Primitives
             return false;
         }
 
-        public bool Contains(Vector2 point, ref IGeometryBase subGeometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
+        public bool Contains(Vector2 point, ref IGeometry subGeometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
             subGeometry = null;
             foreach (var g in _geometries) {
                 if (g.Contains(point, tolerance))
@@ -234,7 +234,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region Intersection Methods
 
-        public IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
            var intercepts = new List<Vector2>();
            foreach (var g in _geometries) {
@@ -243,7 +243,7 @@ namespace Archimedes.Geometry.Primitives
            return intercepts;
         }
 
-        public bool IntersectsWith(IGeometryBase geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IntersectsWith(IGeometry geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             foreach (var g in _geometries) {
                 if (g.IntersectsWith(geometry, tolerance))
@@ -273,8 +273,8 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public IEnumerable<IGeometryBase> GetGeometries() {
-            return new List<IGeometryBase>(_geometries);
+        public IEnumerable<IGeometry> GetGeometries() {
+            return new List<IGeometry>(_geometries);
         }
 
         public Polygon2 ToPolygon2() {

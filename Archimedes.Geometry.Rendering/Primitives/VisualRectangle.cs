@@ -17,7 +17,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             _rectangle = geometry;
         }
 
-        public override IGeometryBase Geometry
+        public override IGeometry Geometry
         {
             get { return _rectangle; }
         }

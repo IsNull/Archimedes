@@ -9,7 +9,7 @@ namespace Archimedes.Geometry
 {
     public static class VectorHelper
     {
-        public static Vector2 GetEndVector(IGeometryBase g) {
+        public static Vector2 GetEndVector(IGeometry g) {
             Vector2 v;
             if (g is Line2) {
                 v = (g as Line2).ToVector();

@@ -10,7 +10,7 @@ namespace Archimedes.Geometry
     /// The base of every Geometry Object, which can be anything in 2D space.
     /// For example a line, arc or any shape / polygon
     /// </summary>
-    public interface IGeometryBase : IDisposable, IDrawable
+    public interface IGeometry : IDisposable, IDrawable
     {
         /// <summary>
         /// The location of this geometry? 
@@ -26,13 +26,13 @@ namespace Archimedes.Geometry
         /// Creates a copy of this geometry
         /// </summary>
         /// <returns></returns>
-        IGeometryBase Clone();
+        IGeometry Clone();
 
         /// <summary>
         /// Copy all values from the given prototype ot this instance
         /// </summary>
         /// <param name="prototype"></param>
-        void Prototype(IGeometryBase prototype);
+        void Prototype(IGeometry prototype);
 
         /// <summary>
         /// Translates (moves) this geometry by the given vector
@@ -69,7 +69,7 @@ namespace Archimedes.Geometry
         /// <param name="geometryObject"></param>
         /// <param name="tolerance"></param>
         /// <returns>true if the objects collide</returns>
-        bool IntersectsWith(IGeometryBase geometryObject, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
+        bool IntersectsWith(IGeometry geometryObject, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
 
         /// <summary>
         /// Checks Intersection and returns all Points at intersection joints
@@ -77,7 +77,7 @@ namespace Archimedes.Geometry
         /// <param name="other"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
+        IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
 
         /// <summary>
         /// Checks if a Point is contained in the geometry

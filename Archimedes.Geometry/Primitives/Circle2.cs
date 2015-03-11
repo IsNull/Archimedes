@@ -21,7 +21,7 @@ namespace Archimedes.Geometry.Primitives
     /// <summary>
     /// Represents a circle shape in 2d Space
     /// </summary>
-    public class Circle2 : IShape
+    public partial class Circle2 : IShape
     {
         #region Fields
 
@@ -113,196 +113,13 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region Intersection
-
-        public virtual bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            return Circle2.Contains(this.MiddlePoint, this.Radius, point, tolerance);
-        }
-
-
-
-        /// <summary>
-        /// Checks if a Point lies in a circle
-        /// (This is a strictly static method for performance reasons)
-        /// </summary>
-        /// <param name="middlePoint"></param>
-        /// <param name="radius"></param>
-        /// <param name="checkPoint"></param>
-        /// <param name="tolerance"></param>
-        /// <returns></returns>
-        public static bool Contains(Vector2 middlePoint, double radius, Vector2 checkPoint, double tolerance)
-        {
-            var len = Line2.CalcLenght(middlePoint, checkPoint);
-            var dist = radius - (len - tolerance);
-            return (dist >= 0);
-        }
-
-
-        #region Cricle - Line
-
-        /// <summary>Circle-Line Interception
-        /// Does the Line intercept with the Circle?
-        /// </summary>
-        /// <param name="uLine"></param>
-        /// <returns></returns>
-        private bool InterceptLineWith(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var intersections = InterceptLine(uLine, tolerance);
-            return intersections.Any();
-        }
-
-        /// <summary> 
-        /// Circle-Line Interception 
-        /// </summary>
-        /// <param name="uLine"></param>
-        /// <returns>Returns all intersection points</returns>
-        private List<Vector2> InterceptLine(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
-            var intersections = new List<Vector2>();
-            Vector2 p1, p2;
-            var location = this.Location;
-
-            // we assume that the circle Middlepoint is NULL/NULL
-            // So we move the Line with the delta to NULL
-            var helperLine = new Line2(uLine.Start - location, uLine.End - location);
-
-            // line
-            var q = helperLine.YMovement;
-            var m = helperLine.Slope;
-
-            if (!helperLine.IsVertical) {
-                // The slope is defined as the Line isn't vertical
-
-                var discriminant = (Math.Pow(m, 2) + 1) * Math.Pow(this.Radius, 2) - Math.Pow(q, 2);
-                if (discriminant > 0) {
-                    // only positive discriminants for f() -> sqrt(discriminant) results are defined in |R
-
-
-
-                    var p1X = (Math.Sqrt(discriminant) - m * (q)) / (Math.Pow(m, 2) + 1);
-                    var p1Y = m * p1X + q;
-                    var p2X = (-1 * (Math.Sqrt(discriminant) + m * q)) / (Math.Pow(m, 2) + 1);
-                    var p2Y = m * p2X + q;
-
-                    p1 = new Vector2(p1X, p1Y);
-                    p2 = new Vector2(p2X, p2Y);
-
-                    if (helperLine.Contains(p1, tolerance))
-                    {
-                        intersections.Add(p1 + location);
-                    }
-                    if ((p1.X != p2.X) || (p1.Y != p2.Y)) {
-                        if (helperLine.Contains(p2, tolerance))
-                        {
-                            intersections.Add(p2 + location);
-                        }
-                    }
-                }
-            } else {
-                // undefined slope, so we have to deal with it directly
-
-                var p1X = this.Location.X + helperLine.Start.X;
-                var p1Y = Math.Sqrt(Math.Pow(this.Radius, 2) - Math.Pow(p1X, 2));
-                p1 = new Vector2(p1X, p1Y);
-                p2 = new Vector2(p1.X, -p1.Y);
-
-                if (helperLine.Contains(p1, tolerance))
-                {
-                    intersections.Add(p1 + location);
-                }
-                if (helperLine.Contains(p2, tolerance))
-                {
-                    intersections.Add(p2 + location);
-                }
-            }
-
-            return intersections;
-        }
-        #endregion
-
-        #region Circle Rectangle
-
-        private List<Vector2> InterceptRectangle2(Rectangle2 rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var intersections = new List<Vector2>();
-            foreach (var border in rect.ToLines()) {
-                intersections.AddRange(this.InterceptLine(border, tolerance));
-                border.Dispose();
-            }
-            return intersections;
-        }
-
-        #endregion
-
-        #region Circle - Circle
-
-        private bool InterceptWithCircle(Circle2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var middlepointDistance = Line2.CalcLenght(this.MiddlePoint, other.MiddlePoint);
-            var radiusSum = this.Radius + other.Radius;
-            return !(middlepointDistance > (radiusSum + tolerance));
-        }
-
-        private IEnumerable<Vector2> InterceptCircle(Circle2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
-        {
-            var interceptions = new List<Vector2>();
-            if (InterceptWithCircle(other, tolerance))
-            {
-                var middlepointDistance = Line2.CalcLenght(this.MiddlePoint, other.MiddlePoint);
-                if (middlepointDistance < Math.Abs(this.Radius + other.Radius))
-                {
-                    // circle is contained in other
-                }
-                else if (middlepointDistance == 0 && (this.Radius == other.Radius))
-                {
-                    // circle are concident -> infinite numbers of intersections
-                } else {
-                    interceptions.AddRange(IntersectCircle(this, other));
-                }
-            }
-            return interceptions;
-        }
-
-        /// <summary>
-        /// Returns the radius^2
-        /// </summary>
-        private double Radius2 {
-            get { return Math.Pow(this.Radius, 2); }
-        }
-
-        /// <summary>
-        /// Find Circle - Circle Intersectionpoints
-        /// </summary>
-        /// <param name="cA"></param>
-        /// <param name="cB"></param>
-        /// <returns></returns>
-        private IEnumerable<Vector2> IntersectCircle(Circle2 cA, Circle2 cB) {
-
-            var dv = cA.MiddlePoint - cB.MiddlePoint;
-            var d2 = dv.X * dv.X + dv.Y * dv.Y;
-            var d = Math.Sqrt(d2);
-
-            if (d > cA.Radius + cB.Radius || d < Math.Abs(cA.Radius - cB.Radius))
-                return new Vector2[] { }; // no solution
-
-            var a = (cA.Radius2 - cB.Radius2 + d2) / (2 * d);
-            var h = (float)Math.Sqrt(cA.Radius2 - a * a);
-            var x2 = cA.MiddlePoint.X + a * (cB.MiddlePoint.X - cA.MiddlePoint.X) / d;
-            var y2 = cA.MiddlePoint.Y + a * (cB.MiddlePoint.Y - cA.MiddlePoint.Y) / d;
-
-            var paX = x2 + h * (cB.MiddlePoint.Y - cA.MiddlePoint.Y) / d;
-            var paY = y2 - h * (cB.MiddlePoint.X - cA.MiddlePoint.X) / d;
-            var pbX = x2 - h * (cB.MiddlePoint.Y - cA.MiddlePoint.Y) / d;
-            var pbY = y2 + h * (cB.MiddlePoint.X - cA.MiddlePoint.X) / d;
-
-            return new Vector2[] { new Vector2(paX, paY), new Vector2(pbX, pbY) };
-        }
-
-        #endregion
-
-        #endregion
-
         #region Geometry Base
+
+        public void Scale(double factor)
+        {
+            this.Location = Location.Scale(factor);
+            Radius *= factor;
+        }
 
         public void Translate(Vector2 mov) {
             this.Location += mov;
@@ -318,11 +135,11 @@ namespace Archimedes.Geometry.Primitives
             set { _middlePoint = value; }
         }
 
-        public IGeometryBase Clone() {
+        public IGeometry Clone() {
             return new Circle2(this);
         }
 
-        public void Prototype(IGeometryBase iprototype) {
+        public void Prototype(IGeometry iprototype) {
             this.Location = iprototype.Location;
             this.Pen = iprototype.Pen.Clone() as Pen;
             this.Radius = (iprototype as Circle2).Radius;
@@ -333,48 +150,59 @@ namespace Archimedes.Geometry.Primitives
 
         #region GeomertryBase Collision
 
-
-        public virtual bool IntersectsWith(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public virtual bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            if (other is Line2) {
+            if (other is Line2)
+            {
                 return this.InterceptLineWith(other as Line2, tolerance);
-            } else if (other is Circle2) {
+            }
+            else if (other is Circle2)
+            {
                 return this.InterceptWithCircle(other as Circle2, tolerance);
-            } else if (other is Rectangle2) {
-                return InterceptRectangle2(other as Rectangle2, tolerance).Count != 0;
-            } else if (other is Arc) { // inverse call:
+            }
+            else if (other is Polygon2)
+            {
+                return InterceptPolygon(((Polygon2) other), tolerance).Count != 0;
+            }
+            else if (other is Rectangle2)
+            {
+                return InterceptPolygon(((Rectangle2) other).ToPolygon2(), tolerance).Count != 0;
+            }
+            else if (other is Arc)
+            {
+                // inverse call:
                 return other.IntersectsWith(this, tolerance);
-            } else
+            }
+            else
                 return this.ToPolygon2().IntersectsWith(other, tolerance);
         }
 
-        public virtual IEnumerable<Vector2> Intersect(IGeometryBase other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public virtual IEnumerable<Vector2> Intersect(IGeometry other,
+            double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-
-            if (other is Line2) {
+            if (other is Line2)
+            {
                 return this.InterceptLine(other as Line2, tolerance);
-            } else if (other is Circle2) {
-                return this.InterceptCircle(other as Circle2, tolerance);
-            } else if (other is Rectangle2) {
-                return InterceptRectangle2(other as Rectangle2, tolerance);
-            }else if (other is Arc){ // inverse call:
-                return other.Intersect(this, tolerance);
-            } else
-                return this.ToPolygon2().Intersect(other, tolerance);
-        }
-
-        public virtual Circle2 BoundingCircle {
-            // bounding circle of a cricle... really abstract :)
-            get { return this.Clone() as Circle2; }
-        }
-
-        public virtual AARectangle BoundingBox
-        {
-            get {
-                return new AARectangle(
-                    (this.Location.X - this.Radius), (this.Location.Y - this.Radius),
-                    (2.0 * this.Radius), (2.0 * this.Radius));
             }
+            else if (other is Circle2)
+            {
+                return this.InterceptCircle(other as Circle2, tolerance);
+            }
+            else if (other is Polygon2)
+            {
+                return InterceptPolygon(other as Polygon2, tolerance);
+            }
+            else if (other is Rectangle2)
+            {
+                return InterceptPolygon((other as Rectangle2).ToPolygon2(), tolerance);
+            }
+            else if (other is Arc)
+            {
+                // inverse call:
+                return other.Intersect(this, tolerance);
+            }
+            else
+                return this.ToPolygon2().Intersect(other, tolerance);
         }
 
         #endregion
@@ -399,10 +227,7 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        public void Scale(double factor) {
-            this.Location = Location.Scale(factor);
-            Radius *= factor;
-        }
+        #region To-Methods
 
         public virtual Vertices ToVertices() {
             if (_verticesInValidated) {
@@ -427,6 +252,7 @@ namespace Archimedes.Geometry.Primitives
             };
         }
 
+        #endregion
 
         public void Dispose() {
             //try {

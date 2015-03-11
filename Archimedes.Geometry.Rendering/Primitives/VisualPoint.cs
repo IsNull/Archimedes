@@ -35,7 +35,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             set { _point.MiddlePoint = value; }
         }
 
-        public override IGeometryBase Geometry
+        public override IGeometry Geometry
         {
             get { return _point; }
         }
