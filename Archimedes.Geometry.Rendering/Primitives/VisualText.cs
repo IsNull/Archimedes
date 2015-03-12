@@ -89,6 +89,21 @@ namespace Archimedes.Geometry.Rendering.Primitives
                 InvalidateTextSize();
             }
         }
+
+        /// <summary>
+        /// Gets / Sets the font size of this visual text
+        /// </summary>
+        public float FontSize
+        {
+            get { return Font.Size; }
+            set
+            {
+                if (Font.Size != value) // Avoid creating new Font resources if the size already matches
+                {
+                    Font = new Font(Font.FontFamily, value, Font.Style);
+                }
+            }
+        }
         
         public StringAlignment TextHorizontalAlign
         {
