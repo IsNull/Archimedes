@@ -18,7 +18,7 @@
             : this(v.X, v.Y, startpnt) { }
 
         public Ray(Ray prototype)
-            : this(prototype.Vector, prototype.Location) { }
+            : this(prototype.Direction, prototype.Location) { }
 
         public Ray(double x, double y, Vector2 p) {
             _direction = new Vector2(x, y);
@@ -40,16 +40,16 @@
         /// <summary>
         /// Vector of this Ray
         /// </summary>
-        public Vector2 Vector {
+        public Vector2 Direction {
             get { return _direction; }
         }
 
         public double YDist {
             get {   // q = y1 - m * x1 
-                if (Vector.IsVertical) {
+                if (Direction.IsVertical) {
                     return 0;
                 } else {
-                    return this.Location.Y - (Vector.Slope * this.Location.X);
+                    return this.Location.Y - (Direction.Slope * this.Location.X);
                 }
             }
         }
@@ -66,7 +66,7 @@
         public bool Contains(Vector2 target, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var v = new Vector2(Location, target);
-            return (Vector.IsDirectionEqual(v, tolerance));
+            return (Direction.IsDirectionEqual(v, tolerance));
         }
         
         public Ray Clone() {
@@ -99,7 +99,7 @@
         private Vector2? IntersectN(Ray uRay, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
 
-            if (Vector.IsParallelTo(uRay.Vector, tolerance))
+            if (Direction.IsParallelTo(uRay.Direction, tolerance))
             {
                 return null;
             }
@@ -107,15 +107,15 @@
             double intersectionpntX = 0;
             double intersectionpntY = 0;
 
-            if (!Vector.IsVertical && !uRay.Vector.IsVertical) {    // both NOT vertical
-                intersectionpntX = ((-1.0 * (this.YDist - uRay.YDist)) / (Vector.Slope - uRay.Vector.Slope));
-                intersectionpntY = (Vector.Slope * intersectionpntX + this.YDist);
-            } else if (Vector.IsVertical) {                  // this vertical (so it must lie on this.X)
-                intersectionpntX = Vector.X;
-                intersectionpntY = (uRay.Vector.Slope * intersectionpntX + uRay.YDist);
-            } else if (uRay.Vector.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
-                intersectionpntX = uRay.Vector.X;
-                intersectionpntY = (Vector.Slope * intersectionpntX + this.YDist);
+            if (!Direction.IsVertical && !uRay.Direction.IsVertical) {    // both NOT vertical
+                intersectionpntX = ((-1.0 * (this.YDist - uRay.YDist)) / (Direction.Slope - uRay.Direction.Slope));
+                intersectionpntY = (Direction.Slope * intersectionpntX + this.YDist);
+            } else if (Direction.IsVertical) {                  // this vertical (so it must lie on this.X)
+                intersectionpntX = Direction.X;
+                intersectionpntY = (uRay.Direction.Slope * intersectionpntX + uRay.YDist);
+            } else if (uRay.Direction.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
+                intersectionpntX = uRay.Direction.X;
+                intersectionpntY = (Direction.Slope * intersectionpntX + this.YDist);
             }
 
             var intersectionpnt = new Vector2(intersectionpntX, intersectionpntY);
