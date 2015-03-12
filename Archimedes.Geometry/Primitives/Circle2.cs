@@ -191,17 +191,8 @@ namespace Archimedes.Geometry.Primitives
 
         public virtual Vertices ToVertices() {
             if (_verticesInValidated) {
-                throw new NotImplementedException();
-               /*
-                var path = new GraphicsPath();
                 _vertices.Clear();
-                try {
-                    path.AddArc(RectangleFUtil.ToRectangleF(this.BoundingBox), 0, 360);
-                    path.Flatten();
-                    _vertices.AddRange(path.PathPoints);
-                } catch (ArgumentException) {
-                    // we ignore this -> void vertices
-                }*/
+                _vertices.AddRange(Flatten());
             }
             return new Vertices(_vertices);
         }
@@ -210,6 +201,16 @@ namespace Archimedes.Geometry.Primitives
         {
             return new Polygon2(this.ToVertices());
         }
+
+        private IEnumerable<Vector2> Flatten(int resolution = 50)
+        {
+            for (int i = 0; i < resolution; i++)
+            {
+                double step = 360.0 / resolution * i;
+                yield return GetPoint(Angle.FromDegrees(step));
+            }
+            yield return GetPoint(Angle.FromDegrees(360));
+        } 
 
         #endregion
 

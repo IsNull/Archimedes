@@ -94,9 +94,6 @@ namespace Archimedes.Geometry.Primitives
         /// <returns></returns>
         public Vector2 GetPointOnArc(Angle deltaAngle)
         {
-
-            Vector2 pointOnArc;
-
             var helperArc = new Arc(Radius, deltaAngle, _base);
             helperArc.Direction = this.Direction;
             helperArc.Location = this.Location;
@@ -106,7 +103,7 @@ namespace Archimedes.Geometry.Primitives
                 _base.AngleSignedTo(Vector2.UnitX, true),
                 helperArc.Direction);
 
-            pointOnArc = CalcEndpointDelta2M(helperArc.Radius, relAngle);
+            var pointOnArc = CalcEndpointDelta2M(helperArc.Radius, relAngle);
 
             var helperMP = helperArc.MiddlePoint;
             pointOnArc = new Vector2(pointOnArc.X + helperMP.X, pointOnArc.Y + helperMP.Y);
@@ -114,45 +111,6 @@ namespace Archimedes.Geometry.Primitives
             return pointOnArc;
         }
 
-        /// <summary> 
-        /// Calc the delta from the endpoint to middle
-        /// </summary>
-        /// <param name="radius"></param>
-        /// <param name="rel"></param>
-        /// <returns></returns>
-        private static Vector2 CalcEndpointDelta2M(double radius, Angle rel)
-        {
-            return new Vector2(
-                radius * Math.Cos(rel.Radians),
-                radius * Math.Sin(rel.Radians));
-        }
-
-        /// <summary> 
-        /// Calc Relative angle
-        /// </summary>
-        /// <param name="bowAngle">Bogenwinkel</param>
-        /// <param name="baseAngle">Winkel des Base Vector</param>
-        /// <param name="direction">Links oder Rechts</param>
-        /// <returns>Relativer Winkel</returns>
-        private static Angle CalcRelAngle(Angle bowAngle, Angle baseAngle, Direction direction)
-        {
-            bowAngle = bowAngle.Normalize();
-
-            var relAngle = bowAngle + baseAngle;
-
-            if (direction == Direction.LEFT)
-            {
-                relAngle += Angle.FromDegrees(270);
-            }
-            else
-            {
-                relAngle += Angle.FromDegrees(90) - 2 * (bowAngle - Angle.FromDegrees(180));
-            }
-
-            return relAngle.Normalize();
-        }
-
-        
 
         public void Scale(double factor)
         {
@@ -167,48 +125,8 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-
         #region Public Propertys
 
-        /// <summary>
-        /// Effective Start Rotation to draw
-        /// </summary>
-        public Angle Angle2X
-        {
-            get
-            {
-                var angle = _base.AngleSignedTo(Vector2.UnitX, true);
-
-                // Correct angle if we have opposite direction
-                if (Direction == Direction.RIGHT)
-                {
-                    angle -= (this.Angle - Angle.FromDegrees(180));
-                }
-                return angle;
-            }
-        }
-
-        /// <summary>
-        /// Returns a
-        /// </summary>
-        public Vector2 EndVector
-        {
-            get
-            {
-                return Vector2.FromAngleAndLenght(this.Angle, 1);
-            }
-        }
-
-        /// <summary> 
-        /// Get the Arc's Endpoint
-        /// </summary>
-        public Vector2 EndPoint
-        {
-            get
-            {
-                return GetPointOnArc(this.Angle);
-            }
-        }
 
         public Vector2 BaseVector
         {
@@ -275,7 +193,7 @@ namespace Archimedes.Geometry.Primitives
                 {
                     return _angle.Value;
                 }
-                
+
                 // angle not set!
                 // possible to calc angle?
                 if (_bowlen.HasValue && _radius.HasValue && _radius != 0)
@@ -286,6 +204,7 @@ namespace Archimedes.Geometry.Primitives
                 return Angle.Zero;
             }
         }
+
 
         /// <summary>
         /// Lenght of the Arc-Bow-Line
@@ -317,6 +236,51 @@ namespace Archimedes.Geometry.Primitives
                 {
                     return _bowlen.Value;
                 }
+            }
+        }
+
+        #endregion
+
+        #region Read only properties
+
+
+        /// <summary>
+        /// Effective Start Rotation to draw
+        /// </summary>
+        public Angle Angle2X
+        {
+            get
+            {
+                var angle = _base.AngleSignedTo(Vector2.UnitX, true);
+
+                // Correct angle if we have opposite direction
+                if (Direction == Direction.RIGHT)
+                {
+                    angle -= (this.Angle - Angle.FromDegrees(180));
+                }
+                return angle;
+            }
+        }
+
+        /// <summary>
+        /// Returns a
+        /// </summary>
+        public Vector2 EndVector
+        {
+            get
+            {
+                return Vector2.FromAngleAndLenght(this.Angle, 1);
+            }
+        }
+
+        /// <summary> 
+        /// Get the Arc's Endpoint
+        /// </summary>
+        public Vector2 EndPoint
+        {
+            get
+            {
+                return GetPointOnArc(this.Angle);
             }
         }
 
@@ -382,37 +346,23 @@ namespace Archimedes.Geometry.Primitives
 
         #region To Methods
 
-        /*
-        private GraphicsPath ToPath()
-        {
-            var path = new GraphicsPath();
-            try
-            {
-                path.AddArc(this.DrawingRect, (float)Angle2X.Degrees - 90, (float)Angle.Degrees);
-            }
-            catch (ArgumentException)
-            {
-                //igonore - return void path
-            }
-            return path;
-        }*/
-
         public Vertices ToVertices()
         {
             Vertices vertices = new Vertices();
-            try
-            {
-                throw new NotImplementedException(); // TODO
-                //var path = ToPath();
-                //path.Flatten();
-                //vertices.AddRange(path.PathPoints);
-            }
-            catch (ArgumentException)
-            {
-                // igonroe yield nothing
-            }
+            vertices.AddRange(Flatten());
             return vertices;
         }
+
+
+        private IEnumerable<Vector2> Flatten(int resolution = 50)
+        {
+            for (int i = 0; i < resolution; i++)
+            {
+                double step = Angle.Degrees / resolution * i;
+                yield return GetPointOnArc(Angle.FromDegrees(step));
+            }
+            yield return GetPointOnArc(Angle);
+        } 
 
         public Circle2 ToCircle()
         {
@@ -528,13 +478,51 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region Dispose and ToString 
+        #region Private methods
 
-        public virtual void Dispose()
+
+        /// <summary> 
+        /// Calc the delta from the endpoint to middle
+        /// </summary>
+        /// <param name="radius"></param>
+        /// <param name="rel"></param>
+        /// <returns></returns>
+        private static Vector2 CalcEndpointDelta2M(double radius, Angle rel)
         {
+            return new Vector2(
+                radius * Math.Cos(rel.Radians),
+                radius * Math.Sin(rel.Radians));
         }
 
-       
+        /// <summary> 
+        /// Calc Relative angle
+        /// </summary>
+        /// <param name="bowAngle">Bogenwinkel</param>
+        /// <param name="baseAngle">Winkel des Base Vector</param>
+        /// <param name="direction">Links oder Rechts</param>
+        /// <returns>Relativer Winkel</returns>
+        private static Angle CalcRelAngle(Angle bowAngle, Angle baseAngle, Direction direction)
+        {
+            bowAngle = bowAngle.Normalize();
+
+            var relAngle = bowAngle + baseAngle;
+
+            if (direction == Direction.LEFT)
+            {
+                relAngle += Angle.FromDegrees(270);
+            }
+            else
+            {
+                relAngle += Angle.FromDegrees(90) - 2 * (bowAngle - Angle.FromDegrees(180));
+            }
+
+            return relAngle.Normalize();
+        }
+
+        #endregion
+
+        #region ToString
+
 
         public override string ToString()
         {
