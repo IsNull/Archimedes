@@ -169,6 +169,40 @@ namespace Archimedes.Geometry
             }
         }
 
+        public double Left
+        {
+            get
+            {
+                return X;
+            }
+        }
+
+        public double Top
+        {
+            get
+            {
+                return Y;
+            }
+        }
+
+
+        public double Right
+        {
+            get
+            {
+                return X + Width;
+            }
+        }
+
+
+        public double Bottom
+        {
+            get
+            {
+                return Y + Height;
+            }
+        }
+
         #endregion
 
         #region Public Methods
