@@ -1,4 +1,4 @@
-﻿namespace Archimedes.Geometry
+﻿namespace Archimedes.Geometry.Rendering
 {
     /// <summary>
     /// An element which can draw itself to a GDI+ G-Context. 
