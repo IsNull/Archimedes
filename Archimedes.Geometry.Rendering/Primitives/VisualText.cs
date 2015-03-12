@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Reflection;
 using Archimedes.Geometry.Primitives;
+using log4net;
 
 namespace Archimedes.Geometry.Rendering.Primitives
 {
@@ -11,16 +11,20 @@ namespace Archimedes.Geometry.Rendering.Primitives
     {
         #region Fields
 
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    
+
         private readonly Rectangle2 _rectangle = Rectangle2.Empty;
 
         private string _text;
         private Font _font;
         private StringAlignment _textHorizontalAlign;
 
-        private SizeD? _textSizeCache;
-
+        private SizeD? _textSizeCache = null;
 
         #endregion
+
+        #region Constructor
 
         /// <summary>
         /// Creates a new visual text at the given location
@@ -28,12 +32,15 @@ namespace Archimedes.Geometry.Rendering.Primitives
         /// <param name="location"></param>
         /// <param name="text"></param>
         /// <param name="font"></param>
-        public VisualText(Vector2 location, string text, Font font = null)
+        public VisualText(Vector2 location, string text, Pen pen = null, Font font = null)
         {
             Location = location;
             _text = text;
+            Pen = pen ?? Pens.Black;
             _font = font ?? SystemFonts.DefaultFont;
         }
+
+        #endregion
 
         #region Properties
 
@@ -43,17 +50,21 @@ namespace Archimedes.Geometry.Rendering.Primitives
             set
             {
                 _rectangle.Location = value;
-                Invalidate();
             }
         }
 
+        
         public Vector2 MiddlePoint
         {
-            get { return _rectangle.MiddlePoint; }
+            get
+            {
+                return Geometry.MiddlePoint;
+            }
+            [DebuggerStepThrough]
             set
             {
-                _rectangle.MiddlePoint = value;
-                Invalidate();
+                var geo = Geometry;
+                geo.MiddlePoint = value;
             }
         }
 
@@ -65,7 +76,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             set
             {
                 _text = value;
-                Invalidate();
+                InvalidateTextSize();
             }
         }
 
@@ -75,7 +86,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             set
             {
                 _font = value;
-                Invalidate();
+                InvalidateTextSize();
             }
         }
         
@@ -85,7 +96,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             set
             {
                 _textHorizontalAlign = value;
-                Invalidate();
+                InvalidateTextSize();
             }
         }
 
@@ -96,6 +107,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         {
             get
             {
+                UpdateGeometrySize();
                 return _rectangle;
             }
         }
@@ -112,17 +124,26 @@ namespace Archimedes.Geometry.Rendering.Primitives
 
         #endregion
 
-
         #region Drawing
 
         public override void Draw(Graphics g)
         {
-            var rect = RectangleFUtil.ToRectangleF(GetTextRenderRect());
+            var rect = GetTextRenderRect();
+            var rectF = RectangleFUtil.ToRectangleF(rect);
+            
             if (FillBrush != null)
             {
-                g.FillRectangle(FillBrush, rect);
+                g.FillRectangle(FillBrush, rectF);
             }
-            g.DrawString(this.Text, this.Font, this.Pen.Brush, rect, GetStringFormat());
+
+            if (Pen != null)
+            {
+                g.DrawString(Text, Font, Pen.Brush, rectF, GetStringFormat());
+            }
+            else
+            {
+                Log.Warn("Can not draw text since Pen is Null!");
+            }
         }
 
         private StringFormat GetStringFormat()
@@ -140,6 +161,16 @@ namespace Archimedes.Geometry.Rendering.Primitives
         #region Private Methods
 
         /// <summary>
+        /// Updates the geometry with the current text size.
+        /// </summary>
+        private void UpdateGeometrySize()
+        {
+            var textSize = GetTextSize();
+            _rectangle.Width = textSize.Width;
+            _rectangle.Height = textSize.Height;
+        }
+
+        /// <summary>
         /// Get the rect where the text will be drawn into
         /// </summary>
         /// <returns></returns>
@@ -148,7 +179,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         {
             AARectangle renderRect;
 
-            var textSize = TextSize;
+            var textSize = GetTextSize();
 
             switch (Aligning)
             {
@@ -172,7 +203,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         /// <summary>
         /// Invalidates all cached valuess
         /// </summary>
-        private void Invalidate()
+        private void InvalidateTextSize()
         {
             _textSizeCache = null;
         }
@@ -180,16 +211,13 @@ namespace Archimedes.Geometry.Rendering.Primitives
         /// <summary>
         /// Gets the exacte size this text with current font and settings will take
         /// </summary>
-        private SizeD TextSize
+        private SizeD GetTextSize()
         {
-            get
+            if (!_textSizeCache.HasValue)
             {
-                if (!_textSizeCache.HasValue)
-                {
-                    _textSizeCache = CalcTextSize(Text, Font, GetStringFormat());
-                }
-                return _textSizeCache.Value;
+                _textSizeCache = CalcTextSize(Text, Font, GetStringFormat());
             }
+            return _textSizeCache.Value;
         }
 
 

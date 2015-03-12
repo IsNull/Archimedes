@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Archimedes.Geometry.Units;
 
@@ -214,36 +215,27 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
+        
         public Vector2 MiddlePoint
         {
-            get { return _rect.MiddlePoint; }
-            set { _rect.MiddlePoint = value; }
+            get
+            {
+                return _rect.MiddlePoint;
+            }
+
+            [DebuggerStepThrough]
+            set
+            {
+                if (Width == 0 && Height == 0)
+                {
+                    throw new NotSupportedException("You can not set the middlepoint of a rectangle which has no size!");
+                }
+                _rect.MiddlePoint = value;
+            }
         }
 
         #endregion
 
-
-        /// <summary>
-        /// Calculates the top left corner of this rectangle based on the middlepoint.
-        /// </summary>
-        /// <param name="topLeft"></param>
-        /// <param name="size"></param>
-        /// <param name="rotation"></param>
-        /// <returns></returns>
-        private static Vector2 CalcMiddlepoint(Vector2 topLeft, SizeD size, Angle rotation)
-        {
-            var middle = new Vector2(
-                    topLeft.X + (size.Width / 2.0),
-                    topLeft.Y + (size.Height / 2.0)
-                    );
-            if (rotation != Angle.Zero)
-            { // If we have a rotated rect we need to apply this
-                var vector = new Vector2(topLeft, middle);
-                middle = topLeft + vector.GetRotated(rotation);
-            }
-            return middle;
-        }
- 
 
         #region Public Misc Methods
 

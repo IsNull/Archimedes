@@ -81,5 +81,51 @@ namespace Archimedes.Geometry.Tests
         }
 
 
+        [TestCase]
+        public void EmptyTests()
+        {
+            var rect = Rectangle2.Empty;
+
+            // Check the empty rect
+            Assert.AreEqual(Vector2.Zero, rect.Location);
+            Assert.AreEqual(0, rect.Width);
+            Assert.AreEqual(0, rect.Height);
+            Assert.AreEqual(Angle.Zero, rect.Rotation);     
+
+            // Check how changes to the empty behave
+
+            rect.Location = new Vector2(100, 100);
+            // Check the empty rect
+            Assert.AreEqual(new Vector2(100, 100), rect.Location);
+            Assert.AreEqual(0, rect.Width);
+            Assert.AreEqual(0, rect.Height);
+            Assert.AreEqual(Angle.Zero, rect.Rotation);
+
+
+            rect = Rectangle2.Empty;
+            rect.Width = 100;
+            rect.Height = 50;
+
+            Assert.AreEqual(Vector2.Zero, rect.Location);
+            Assert.AreEqual(100, rect.Width);
+            Assert.AreEqual(50, rect.Height);
+            Assert.AreEqual(Angle.Zero, rect.Rotation);   
+        }
+
+        [TestCase("(0,0),(100,0),(100,100),(0,100)", "(100,100)")]     // Specail case: Empty rect!
+        [TestCase("(0,0),(0,0),(0,0),(0,0)", "(100,100)")]             // Specail case: Empty rect!
+        public void Middlepoint(string rectStr, string newMiddleStr)
+        {
+            var vertices = Vector2.ParseAll(rectStr);
+            var rect = new Rectangle2(vertices);
+
+            var newMid = Vector2.Parse(newMiddleStr);
+
+            rect.MiddlePoint = newMid;
+
+
+            Assert.AreEqual(newMid, rect.MiddlePoint);
+        }
+
     }
 }

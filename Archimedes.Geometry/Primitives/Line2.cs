@@ -47,10 +47,6 @@ namespace Archimedes.Geometry.Primitives
 
         #region Constructors
 
-        /// <summary>
-        /// Creates a new empty line
-        /// </summary>
-        public Line2() { }
 
         /// <summary>
         /// Creates a new horizontal Line, starting from 0,0 with the given Length
@@ -316,10 +312,13 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
+        /// <summary>
+        /// Gets the point in the middle of this line
+        /// </summary>
         public Vector2 MiddlePoint {
             get {
-                Vector2 vLine = (new Vector2(Start, End)) / 2;
-                return Start + vLine;
+                var toMiddle = ToVector() / 2;
+                return Start + toMiddle;
             }
             set {
                 Translate(new Vector2(this.MiddlePoint, value));

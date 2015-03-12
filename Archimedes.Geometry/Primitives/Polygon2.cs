@@ -271,28 +271,30 @@ namespace Archimedes.Geometry.Primitives
         private Vector2 FindCentroid() {
 
             if (_vertices.Count == 0)
-                return new Vector2(); // in case there are no vertices
+                return Vector2.Zero; // No center if there are no vertices
+
+            var polygonArea = this.Area;
+            if (polygonArea == 0)
+                return Vector2.Zero; // No center if there is no Area
 
             // Add the first point at the end of the array.
-            int num_points = _vertices.Count;
-            var pts = new Vector2[num_points + 1];
+            int numPoints = _vertices.Count;
+            var pts = new Vector2[numPoints + 1];
             _vertices.CopyTo(pts, 0);
-            pts[num_points] = _vertices[0];
+            pts[numPoints] = _vertices[0];
 
             // Find the centroid.
             double x = 0;
             double y = 0;
-            double second_factor;
-            for (var i = 0; i < num_points; i++) {
-                second_factor =
-                    pts[i].X * pts[i + 1].Y -
-                    pts[i + 1].X * pts[i].Y;
-                x += (pts[i].X + pts[i + 1].X) * second_factor;
-                y += (pts[i].Y + pts[i + 1].Y) * second_factor;
+            for (var i = 0; i < numPoints; i++)
+            {
+                var secondFactor = pts[i].X*pts[i + 1].Y -
+                                   pts[i + 1].X*pts[i].Y;
+                x += (pts[i].X + pts[i + 1].X)*secondFactor;
+                y += (pts[i].Y + pts[i + 1].Y)*secondFactor;
             }
 
             // Divide by 6 times the polygon's area.
-            var polygonArea = this.Area;
             x /= (6 * polygonArea);
             y /= (6 * polygonArea);
 
