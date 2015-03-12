@@ -58,7 +58,6 @@
     <Compile Include="Effects\OverlineEffect.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="PointFUtil.cs" />
-    <Compile Include="Primitives\TextAligning.cs" />
     <Compile Include="Primitives\Visual.cs" />
     <Compile Include="Primitives\VisualCircle.cs" />
     <Compile Include="Primitives\VisualComposite.cs" />

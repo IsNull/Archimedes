@@ -7,6 +7,9 @@ using log4net;
 
 namespace Archimedes.Geometry.Rendering.Primitives
 {
+    /// <summary>
+    /// Represents a Text in 2D space
+    /// </summary>
     public class VisualText : Visual
     {
         #region Fields
@@ -115,9 +118,6 @@ namespace Archimedes.Geometry.Rendering.Primitives
             }
         }
 
-        public TextAligning Aligning { get; set; }
-
-
         public override IGeometry Geometry
         {
             get
@@ -134,7 +134,6 @@ namespace Archimedes.Geometry.Rendering.Primitives
             this.Text = other.Text;
             this.Font = other.Font;
             this.TextHorizontalAlign = other.TextHorizontalAlign;
-            this.Aligning = other.Aligning;
         }
 
         #endregion
@@ -192,25 +191,8 @@ namespace Archimedes.Geometry.Rendering.Primitives
         /// 
         private AARectangle GetTextRenderRect()
         {
-            AARectangle renderRect;
-
             var textSize = GetTextSize();
-
-            switch (Aligning)
-            {
-                case TextAligning.Centered:
-                     var pos = new Vector2(
-                    _rectangle.Location.X - (textSize.Width / 2.0),
-                    _rectangle.Location.Y - (textSize.Height / 2.0)
-                    );
-                renderRect = new AARectangle(pos, textSize);
-                    break;
-
-                default:
-                    throw new NotSupportedException("Aligning of type " + Aligning + " not supported!");
-            }
- 
-            return renderRect;
+            return  new AARectangle(_rectangle.Location, textSize); ;
         }
 
 
