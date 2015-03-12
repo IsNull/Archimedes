@@ -53,7 +53,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
         {
             if (_image != null)
             {
-                var drawRect = new RectangleF(_imageRect.Location, new SizeF((float)_imageRect.Width, (float)_imageRect.Height));
+                var drawRect = new RectangleF(PointFUtil.ToPointF(_imageRect.Location), new SizeF((float)_imageRect.Width, (float)_imageRect.Height));
                 g.DrawImage(Image, drawRect);
                 // TODO support rotation
             }

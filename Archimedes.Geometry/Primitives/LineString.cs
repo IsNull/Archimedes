@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Vertex = Archimedes.Geometry.Vector2;
-using Archimedes.Geometry.Extensions;
-using System.Drawing.Drawing2D;
-using System.Drawing;
 using Archimedes.Geometry.Algorithms;
+using Vertex = Archimedes.Geometry.Vector2;
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -18,7 +14,6 @@ namespace Archimedes.Geometry.Primitives
     {
         #region Fields
 
-        System.Drawing.Pen _pen;
         private readonly Vertices _vertices = new Vertices();
 
         #endregion
@@ -147,7 +142,6 @@ namespace Archimedes.Geometry.Primitives
         public void Prototype(IGeometry prototype) {
             Clear();
             Append(prototype.ToVertices());
-            this.Pen = prototype.Pen;
         }
 
         public void Translate(Vector2 mov) {
@@ -167,10 +161,6 @@ namespace Archimedes.Geometry.Primitives
             get { return _vertices.BoundingBox; }
         }
 
-        public System.Drawing.Pen Pen {
-            get {return _pen; }
-            set { _pen = value; }
-        }
 
         public Circle2 BoundingCircle {
             get { return BoundingBox.BoundingCircle; }
@@ -189,22 +179,6 @@ namespace Archimedes.Geometry.Primitives
         public bool Contains(Vector2 pnt, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             throw new NotImplementedException();
-        }
-
-        public void Draw(System.Drawing.Graphics g)
-        {
-            var path = new GraphicsPath();
-            AddToPath(path);
-
-            if (path.PointCount > 0)
-                g.DrawPath(Pen, path);
-        }
-
-        private void AddToPath(GraphicsPath path) {
-            if (_vertices.Count() > 1)
-            {
-                path.AddLines(Vertices.ToPoints(_vertices).ToArray());
-            }
         }
 
         #endregion

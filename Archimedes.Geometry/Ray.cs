@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using Archimedes.Geometry.Extensions;
-
-namespace Archimedes.Geometry
+﻿namespace Archimedes.Geometry
 {
     /// <summary>
     /// A Ray is a one-direction infinite Line.
     /// </summary>
-    public class Ray : IDrawable
+    public class Ray
     {
         #region Fields
 
         Vector2 _location;
-        Pen _pen = null;
         Vector2 _direction;
 
         #endregion
@@ -60,14 +52,6 @@ namespace Archimedes.Geometry
                     return this.Location.Y - (Vector.Slope * this.Location.X);
                 }
             }
-        }
-
-        /// <summary>
-        /// Pen used to draw this Ray
-        /// </summary>
-        public Pen Pen {
-            get { return _pen; }
-            set { _pen = value; }
         }
 
         #endregion
@@ -144,19 +128,6 @@ namespace Archimedes.Geometry
             return null;
         }
         #endregion
-
-        #region Drawing Methods
-
-        public void Draw(Graphics g) {
-            if (this.Pen != null) {
-                var v = Vector.WithLength(500);
-                var end = this.Location + v;
-                g.DrawLine(this.Pen, this.Location, end);
-            }
-        }
-
-        #endregion
-
 
 
     }

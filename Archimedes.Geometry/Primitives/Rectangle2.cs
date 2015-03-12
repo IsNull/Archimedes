@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Primitives
@@ -114,9 +112,6 @@ namespace Archimedes.Geometry.Primitives
 
             _rect.Clear();
             _rect.AddRange(prototype.ToVertices());
-
-            this.Pen = prototype.Pen;
-            this.FillBrush = prototype.FillBrush;
         }
 
         #endregion
@@ -138,7 +133,7 @@ namespace Archimedes.Geometry.Primitives
         }
 
         public bool IsRotated {
-            get { return (this.Rotation != Units.Angle.Zero); }
+            get { return (this.Rotation != Angle.Zero); }
         }
 
 
@@ -342,31 +337,6 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region Drawing
-
-        public virtual void Dispose()
-        {
-            Pen.Dispose();
-            FillBrush.Dispose();
-        }
-
-        public Brush FillBrush
-        {
-            get { return _rect.FillBrush; }
-            set { _rect.FillBrush = value; }
-        }
-
-        public Pen Pen
-        {
-            get { return _rect.Pen; }
-            set { _rect.Pen = value; }
-        }
-
-        public virtual void Draw(Graphics g)
-        {
-            _rect.Draw(g);
-        } 
-        #endregion
 
     }
 }

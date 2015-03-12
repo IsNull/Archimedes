@@ -134,7 +134,6 @@ namespace Archimedes.Geometry.Primitives
             foreach (var border in polygon.ToLines())
             {
                 intersections.AddRange(this.InterceptLine(border, tolerance));
-                border.Dispose();
             }
             return intersections;
         }

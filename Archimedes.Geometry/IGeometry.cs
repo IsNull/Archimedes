@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
+﻿using System.Collections.Generic;
 using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry
@@ -10,7 +7,7 @@ namespace Archimedes.Geometry
     /// The base of every Geometry Object, which can be anything in 2D space.
     /// For example a line, arc or any shape / polygon
     /// </summary>
-    public interface IGeometry : IDisposable, IDrawable
+    public interface IGeometry
     {
         /// <summary>
         /// The location of this geometry? 
@@ -87,13 +84,6 @@ namespace Archimedes.Geometry
         /// <returns></returns>
         bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
 
-        #region Drawing
-
-        /// <summary>
-        /// Drawing pen
-        /// </summary>
-        Pen Pen { get; set; }
-
-        #endregion
+      
     }
 }

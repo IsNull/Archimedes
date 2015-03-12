@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Drawing.Drawing2D;
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -64,16 +62,6 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region IDrawable
-
-        /**/
-        public void Draw(Graphics g) {
-            foreach (var geometry in _geometries)
-                geometry.Draw(g);
-        }
-
-        #endregion
-
         #region Public Properties
 
         public Vector2 FirstPoint {
@@ -84,17 +72,6 @@ namespace Archimedes.Geometry.Primitives
             get { return ToPath().LastPoint; }
         }
 
-        public Pen Pen {
-            get {
-                if (_geometries.Any())
-                    return _geometries[1].Pen;
-                return null;
-            }
-            set {
-                foreach (var g in _geometries)
-                    g.Pen = value;
-            }
-        }
 
         private void Invalidate() {
             lock (_verticesCacheLock)
@@ -170,7 +147,6 @@ namespace Archimedes.Geometry.Primitives
 
             _geometries.Clear();
             _geometries.AddRange(prototype.GetGeometries());
-            this.Pen = prototype.Pen;
         }
 
         public bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
@@ -294,15 +270,5 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region IDisposable
-
-        public void Dispose() {
-            foreach (var g in _geometries) {
-                g.Dispose();
-            }
-            _geometries.Clear();
-        }
-
-        #endregion
     }
 }

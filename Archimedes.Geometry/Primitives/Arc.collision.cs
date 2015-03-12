@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Archimedes.Geometry.Rendering;
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -187,34 +184,33 @@ namespace Archimedes.Geometry.Primitives
         private IEnumerable<Vector2> InterceptArc(Arc arc, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var intersections = new List<Vector2>();
+            var c1 = this.ToCircle();
+            var c2 = arc.ToCircle();
 
-            using(var c1 = this.ToCircle())
-            using (var c2 = arc.ToCircle()) {
-                var possibles = c1.Intersect(c2, tolerance);
+            var possibles = c1.Intersect(c2, tolerance);
 
-                foreach (var p in possibles)
-                {
-                    if (this.Contains(p, tolerance) && arc.Contains(p, tolerance))
-                        intersections.Add(p);
-                }
-
+            foreach (var p in possibles)
+            {
+                if (this.Contains(p, tolerance) && arc.Contains(p, tolerance))
+                    intersections.Add(p);
             }
+
+
             return intersections;
         }
 
         private bool InterceptArcWith(Arc arc, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
+            var c1 = this.ToCircle();
+            var c2 = arc.ToCircle();
+            var possibles = c1.Intersect(c2, tolerance);
 
-            using (var c1 = this.ToCircle())
-            using (var c2 = arc.ToCircle()) {
-                var possibles = c1.Intersect(c2, tolerance);
-
-                foreach (var p in possibles)
-                {
-                    if (this.Contains(p, tolerance) && arc.Contains(p, tolerance))
-                        return true;
-                }
+            foreach (var p in possibles)
+            {
+                if (this.Contains(p, tolerance) && arc.Contains(p, tolerance))
+                    return true;
             }
+
             return false;
         }
 
@@ -226,10 +222,6 @@ namespace Archimedes.Geometry.Primitives
             if (other is Line2)
             {
                 return this.InterceptLineWith(other as Line2, tolerance);
-            }
-            else if (other is GdiText2)
-            {
-                return this.InterceptRectWith(other.BoundingBox, tolerance);
             }
             else if (other is Circle2)
             {
@@ -256,10 +248,6 @@ namespace Archimedes.Geometry.Primitives
             if (other is Line2)
             {
                 pnts.AddRange(this.InterceptLine(other as Line2, tolerance));
-            }
-            else if (other is GdiText2)
-            {
-                pnts.AddRange(this.InterceptRect(other.BoundingBox, tolerance));
             }
             else if (other is Rectangle2)
             {

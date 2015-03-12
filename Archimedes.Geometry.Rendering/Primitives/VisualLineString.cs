@@ -28,7 +28,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             var vertices = _lineString.ToVertices();
             if (vertices.Count() > 1)
             {
-                path.AddLines(Vertices.ToPoints(vertices).ToArray());
+                path.AddLines(PointFUtil.ToPointFArray(vertices));
             }
             if (path.PointCount > 0)
                 g.DrawPath(Pen, path);

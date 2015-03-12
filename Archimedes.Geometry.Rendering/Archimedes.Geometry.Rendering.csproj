@@ -47,11 +47,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BitmapUtil.cs" />
     <Compile Include="DrawingGroup.cs" />
     <Compile Include="Effects\IEffect.cs" />
     <Compile Include="Effects\OverlineEffect.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="PointFUtil.cs" />
+    <Compile Include="Primitives\TextAligning.cs" />
     <Compile Include="Primitives\Visual.cs" />
     <Compile Include="Primitives\VisualCircle.cs" />
+    <Compile Include="Primitives\VisualComposite.cs" />
     <Compile Include="Primitives\VisualFactory.cs" />
     <Compile Include="Primitives\VisualArc.cs" />
     <Compile Include="Primitives\VisualImage.cs" />

@@ -5,12 +5,9 @@
  * 
  * *****************************************
  * *****************************************/
+
 using System;
-using System.Drawing;
 using System.Collections.Generic;
-using Archimedes.Geometry.Extensions;
-using System.Drawing.Drawing2D;
-using Archimedes.Geometry.Rendering;
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -24,8 +21,6 @@ namespace Archimedes.Geometry.Primitives
 
         Vector2 _start;
         Vector2 _end;
-
-        Pen _pen = null;
         bool _penSharedResource = false;
 
         #endregion
@@ -71,15 +66,10 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="start">Startpoint of the Line</param>
         /// <param name="end">Endpoint of the Line</param>
-        public Line2(Vector2 start, Vector2 end) {
+        public Line2(Vector2 start, Vector2 end)
+        {
             _start = start;
             _end = end;
-        }
-
-        public Line2(Vector2 uP1, Vector2 uP2, Pen uPen) {
-            _start = uP1;
-            _end = uP2;
-            this.Pen = uPen;
         }
 
         public Line2(double uP1x, double uP1y, double uP2x, double uP2y)
@@ -99,12 +89,6 @@ namespace Archimedes.Geometry.Primitives
 
             this.Start = prototype.Start;
             this.End = prototype.End;
-            try {
-                if (prototype.Pen != null)
-                    this.Pen = prototype.Pen.Clone() as Pen;
-            } catch {
-
-            }
         }
 
         #endregion
@@ -384,24 +368,10 @@ namespace Archimedes.Geometry.Primitives
         public Circle2 BoundingCircle {
             get { 
                 var m = this.MiddlePoint;
-                return new Circle2(m, Line2.CalcLenght(m, this.Start));
+                return new Circle2(m, CalcLenght(m, this.Start));
             }
         }
 
-
-        #endregion
-
-        #region Geomerty Base Drawing
-
-        public Pen Pen {
-            get { return _pen; }
-            set { _pen = value; }
-        }
-
-        public void Draw(Graphics g) {
-            if (this.Pen != null && !Start.Equals(End))
-                g.DrawLine(this.Pen, this.Start, this.End);
-        }
 
         #endregion
 
@@ -415,8 +385,6 @@ namespace Archimedes.Geometry.Primitives
                 var pnt = this.InterceptLine(other as Line2, tolerance);
                 if(pnt.HasValue)
                     pnts.Add(pnt.Value);
-            } else if (other is GdiText2) {
-                pnts.AddRange(this.InterceptRect(other.BoundingBox, tolerance));
             } else
                 other.Intersect(this);
             return pnts;
@@ -429,11 +397,7 @@ namespace Archimedes.Geometry.Primitives
             if (geometry is Line2)
             {
                 return this.InterceptLineWith(geometry as Line2, tolerance);
-            }
-            else if (geometry is GdiText2)
-            {
-                return this.InterceptRectWith(geometry.BoundingBox, tolerance);
-            } else { //delegate Collision Detection to other Geometry Object
+            }else { //delegate Collision Detection to other Geometry Object
                 return geometry.IntersectsWith(this, tolerance);
             }
         }
@@ -450,11 +414,11 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="closest">Closest Point on Line to Targetpoint</param>
         /// <returns>Distance to target point</returns>
         public double FindDistanceToPoint(Vector2 pt, out Vector2 closest) {
-            return Line2.FindDistanceToPoint(pt, this, out closest);
+            return FindDistanceToPoint(pt, this, out closest);
         }
         public double FindDistanceToPoint(Vector2 pt) {
             Vector2 dummy;
-            return Line2.FindDistanceToPoint(pt, this, out dummy);
+            return FindDistanceToPoint(pt, this, out dummy);
         }
 
         /// <summary>
@@ -496,15 +460,6 @@ namespace Archimedes.Geometry.Primitives
             }
 
             return Math.Sqrt(dx * dx + dy * dy);
-        }
-
-        #endregion
-
-        #region IDisposable
-
-        public virtual void Dispose() {
-            //if (_pen != null && !PenSharedResource)
-            //    _pen.Dispose();
         }
 
         #endregion

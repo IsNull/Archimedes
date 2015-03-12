@@ -7,17 +7,12 @@
  * *****************************************/
 
 
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Primitives
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Drawing2D;
-    using Archimedes.Geometry.Extensions;
-
     /// <summary>
     /// Represents a circle shape in 2d Space
     /// </summary>
@@ -27,8 +22,6 @@ namespace Archimedes.Geometry.Primitives
 
         Vector2 _middlePoint;
         double _radius;
-        Pen _pen = null;
-        Brush _fillBrush = null;
 
         bool _verticesInValidated = true;
         Vertices _vertices = new Vertices();
@@ -53,25 +46,13 @@ namespace Archimedes.Geometry.Primitives
             _middlePoint = new Vector2(x, y);
             _radius = uRadius;
         }
-        
-        public Circle2(double x, double y, double uRadius, Pen pen)
-        {
-            _middlePoint = new Vector2(x, y);
-            _radius = uRadius;
-            Pen = pen;
-        }
+
 
 
         public Circle2(Vector2 uMiddlePoint, double uRadius)
         {
             _middlePoint = uMiddlePoint;
             _radius = uRadius;
-        }
-        public Circle2(Vector2 uMiddlePoint, double uRadius, Pen pen)
-        {
-            _middlePoint = uMiddlePoint;
-            _radius = uRadius;
-            Pen = pen;
         }
 
         public Circle2(Circle2 prototype) {
@@ -141,7 +122,6 @@ namespace Archimedes.Geometry.Primitives
 
         public void Prototype(IGeometry iprototype) {
             this.Location = iprototype.Location;
-            this.Pen = iprototype.Pen.Clone() as Pen;
             this.Radius = (iprototype as Circle2).Radius;
         }
 
@@ -207,30 +187,12 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        #region Geometry Base Drawing
-
-        public Pen Pen {
-            get { return _pen; }
-            set { _pen = value; }
-        }
-
-        public virtual void Draw(Graphics g) {
-            try {
-                if (this.FillBrush != null)
-                    g.FillEllipse(this.FillBrush, RectangleFUtil.ToRectangleF(this.BoundingBox));
-                if (this.Pen != null)
-                    g.DrawArc(this.Pen, RectangleFUtil.ToRectangleF(this.BoundingBox), 0, 360);
-            } catch (Exception) {
-                //ignore
-            }
-        }
-
-        #endregion
-
         #region To-Methods
 
         public virtual Vertices ToVertices() {
             if (_verticesInValidated) {
+                throw new NotImplementedException();
+               /*
                 var path = new GraphicsPath();
                 _vertices.Clear();
                 try {
@@ -239,38 +201,19 @@ namespace Archimedes.Geometry.Primitives
                     _vertices.AddRange(path.PathPoints);
                 } catch (ArgumentException) {
                     // we ignore this -> void vertices
-                }
+                }*/
             }
             return new Vertices(_vertices);
         }
 
-        public Polygon2 ToPolygon2() {
-            return new Polygon2(this.ToVertices())
-            {
-                FillBrush = this.FillBrush,
-                Pen = this.Pen
-            };
+        public Polygon2 ToPolygon2()
+        {
+            return new Polygon2(this.ToVertices());
         }
 
         #endregion
 
-        public void Dispose() {
-            //try {
-            //    if (Pen != null)
-            //        this.Pen.Dispose();
-            //    if (FillBrush != null)
-            //        this.FillBrush.Dispose();
-            //} catch (ArgumentException) {
-            //    // ignore
-            //}
-        }
-
         #region IShape
-
-        public Brush FillBrush {
-            get { return _fillBrush; }
-            set { _fillBrush = value; }
-        }
 
         public double Area {
             get { return Math.Pow(Radius, 2) * Math.PI; }

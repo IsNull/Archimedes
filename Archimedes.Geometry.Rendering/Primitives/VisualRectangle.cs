@@ -27,7 +27,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             try
             {
                 var path = new GraphicsPath();
-                path.AddPolygon(_rectangle.ToVertices().ToPointArray());
+                path.AddPolygon(PointFUtil.ToPointFArray(_rectangle.ToVertices()));
                 if (this.FillBrush != null)
                     g.FillPath(this.FillBrush, path);
                 g.DrawPath(Pen, path);

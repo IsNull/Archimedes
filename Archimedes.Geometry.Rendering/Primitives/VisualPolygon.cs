@@ -24,12 +24,17 @@ namespace Archimedes.Geometry.Rendering.Primitives
             get { return _polygon; }
         }
 
+        public Polygon2 Polygon
+        {
+            get { return _polygon; }
+        }
+
         public override void Draw(Graphics g)
         {
             try
             {
                 var path = new GraphicsPath();
-                path.AddPolygon(_polygon.ToVertices().ToPointArray());
+                path.AddPolygon(PointFUtil.ToPointFArray(_polygon.ToVertices()));
                 if (this.FillBrush != null)
                     g.FillPath(this.FillBrush, path);
                 g.DrawPath(Pen, path);

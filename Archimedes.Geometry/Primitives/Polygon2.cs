@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Linq;
 using Archimedes.Geometry.Algorithms;
 using Archimedes.Geometry.Units;
-
 
 namespace Archimedes.Geometry.Primitives
 {
@@ -21,9 +18,6 @@ namespace Archimedes.Geometry.Primitives
 
         private Vector2 _middlePoint;
         private Circle2 _boundingCircle;
-
-        private Pen _pen = null;
-        private Brush _fillBrush = null;
 
         #endregion
 
@@ -115,8 +109,6 @@ namespace Archimedes.Geometry.Primitives
                 throw new NotSupportedException();
 
             this.AddRange(prototype.ToVertices());
-            this.Pen = prototype.Pen;
-            this.FillBrush = prototype.FillBrush;
         }
 
         #endregion
@@ -395,34 +387,6 @@ namespace Archimedes.Geometry.Primitives
 
         public Polygon2 ToPolygon2() {
             return this;
-        }
-
-        #endregion
-
-        #region IDrawable
-
-        public Brush FillBrush
-        {
-            set { _fillBrush = value; }
-            get { return _fillBrush; }
-        }
-
-        public Pen Pen
-        {
-            set { _pen = value; }
-            get { return _pen; }
-        }
-
-        public void Draw(Graphics g) {
-            try {
-                var path = new GraphicsPath();
-                path.AddPolygon(_vertices.ToPointArray());
-                if (this.FillBrush != null)
-                    g.FillPath(this.FillBrush, path);
-                g.DrawPath(_pen, path);
-            } catch (Exception) {
-                //ignore
-            }
         }
 
         #endregion

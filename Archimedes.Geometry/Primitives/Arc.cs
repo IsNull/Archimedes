@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using Archimedes.Geometry.Extensions;
 using Archimedes.Geometry.Units;
-
 
 /*******************************************
  * 
@@ -31,8 +27,6 @@ namespace Archimedes.Geometry.Primitives
         Direction _direction = Direction.LEFT;
         Vector2 _startPoint;
         Vector2 _base;
-
-        Pen _pen = null;
 
         #endregion
 
@@ -103,21 +97,20 @@ namespace Archimedes.Geometry.Primitives
 
             Vector2 pointOnArc;
 
-            using (var helperArc = new Arc(Radius, deltaAngle, _base))
-            {
-                helperArc.Direction = this.Direction;
-                helperArc.Location = this.Location;
+            var helperArc = new Arc(Radius, deltaAngle, _base);
+            helperArc.Direction = this.Direction;
+            helperArc.Location = this.Location;
 
-                var relAngle = CalcRelAngle(
-                    helperArc.Angle,
-                    _base.AngleSignedTo(Vector2.UnitX, true),
-                    helperArc.Direction);
+            var relAngle = CalcRelAngle(
+                helperArc.Angle,
+                _base.AngleSignedTo(Vector2.UnitX, true),
+                helperArc.Direction);
 
-                pointOnArc = CalcEndpointDelta2M(helperArc.Radius, relAngle);
+            pointOnArc = CalcEndpointDelta2M(helperArc.Radius, relAngle);
 
-                var helperMP = helperArc.MiddlePoint;
-                pointOnArc = new Vector2(pointOnArc.X + helperMP.X, pointOnArc.Y + helperMP.Y);
-            }
+            var helperMP = helperArc.MiddlePoint;
+            pointOnArc = new Vector2(pointOnArc.X + helperMP.X, pointOnArc.Y + helperMP.Y);
+
             return pointOnArc;
         }
 
@@ -125,9 +118,8 @@ namespace Archimedes.Geometry.Primitives
         /// Calc the delta from the endpoint to middle
         /// </summary>
         /// <param name="radius"></param>
-        /// <param name="relAngle"></param>
+        /// <param name="rel"></param>
         /// <returns></returns>
-        /// 
         private static Vector2 CalcEndpointDelta2M(double radius, Angle rel)
         {
             return new Vector2(
@@ -150,11 +142,11 @@ namespace Archimedes.Geometry.Primitives
 
             if (direction == Direction.LEFT)
             {
-                relAngle += Units.Angle.FromDegrees(270);
+                relAngle += Angle.FromDegrees(270);
             }
             else
             {
-                relAngle += Units.Angle.FromDegrees(90) - 2 * (bowAngle - Units.Angle.FromDegrees(180));
+                relAngle += Angle.FromDegrees(90) - 2 * (bowAngle - Angle.FromDegrees(180));
             }
 
             return relAngle.Normalize();
@@ -328,19 +320,6 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        public RectangleF DrawingRect
-        {
-            get
-            {
-                var middlePoint = this.MiddlePoint;
-                return new RectangleF(
-                    (float)(middlePoint.X - this.Radius),
-                    (float)(middlePoint.Y - this.Radius),
-                    2 * (float)this.Radius,
-                    2 * (float)this.Radius);
-            }
-        }
-
         #endregion
 
         #region Specail Transformation
@@ -403,6 +382,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region To Methods
 
+        /*
         private GraphicsPath ToPath()
         {
             var path = new GraphicsPath();
@@ -415,16 +395,17 @@ namespace Archimedes.Geometry.Primitives
                 //igonore - return void path
             }
             return path;
-        }
+        }*/
 
         public Vertices ToVertices()
         {
             Vertices vertices = new Vertices();
             try
             {
-                var path = ToPath();
-                path.Flatten();
-                vertices.AddRange(path.PathPoints);
+                throw new NotImplementedException(); // TODO
+                //var path = ToPath();
+                //path.Flatten();
+                //vertices.AddRange(path.PathPoints);
             }
             catch (ArgumentException)
             {
@@ -436,8 +417,6 @@ namespace Archimedes.Geometry.Primitives
         public Circle2 ToCircle()
         {
             var c = new Circle2(this.MiddlePoint, this.Radius);
-            if (c.Pen != null)
-                c.Pen = this.Pen.Clone() as Pen;
             return c;
         }
 
@@ -504,16 +483,6 @@ namespace Archimedes.Geometry.Primitives
 
             Location = prototype.Location;
             Direction = prototype.Direction;
-            //AngleDiff = prototype.AngleDiff;
-            try
-            {
-                if (prototype.Pen != null)
-                    this.Pen = prototype.Pen.Clone() as Pen;
-            }
-            catch (Exception)
-            {
-                /// ignore
-            }
         }
 
 
@@ -558,27 +527,6 @@ namespace Archimedes.Geometry.Primitives
         }
 
         #endregion
-
-        #region Geomerty Base Drawing
-
-        public Pen Pen
-        {
-            get { return _pen; }
-            set { _pen = value; }
-        }
-
-        public void Draw(Graphics g)
-        {
-            if (this.Pen != null)
-                g.DrawArc(
-                    this.Pen,
-                    this.DrawingRect,
-                    (float)(Angle2X.Degrees - 90),
-                    (float)Angle.Degrees);
-        }
-
-        #endregion
-
 
         #region Dispose and ToString 
 

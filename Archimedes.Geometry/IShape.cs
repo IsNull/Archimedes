@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using Archimedes.Geometry.Primitives;
+﻿using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry
 {
@@ -22,11 +17,5 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <returns></returns>
         Polygon2 ToPolygon2();
-
-
-        /// <summary>
-        /// The fill brush
-        /// </summary>
-        Brush FillBrush { get; set; } // TODO refactor drawing stuff away...
     }
 }

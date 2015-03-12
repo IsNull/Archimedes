@@ -1,9 +1,6 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Drawing;
 using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry
@@ -25,33 +22,6 @@ namespace Archimedes.Geometry
 
         public Vertices(IEnumerable<Vector2> vertices) {
             _vertices = new List<Vector2>(vertices);
-        }
-
-        public Vertices(IEnumerable<PointF> vertices) {
-            _vertices = new List<Vector2>();
-            this.AddRange(vertices);
-        }
-
-        #endregion
-
-        #region To Methods
-
-        public static IEnumerable<PointF> ToPointFs(IEnumerable<Vector2> vertices) {
-            foreach (var v in vertices)
-                yield return new PointF((float)v.X, (float)v.Y);
-        }
-        public static IEnumerable<Point> ToPoints(IEnumerable<Vector2> vertices) {
-            foreach (var v in vertices)
-                yield return new Point((int)v.X, (int)v.Y);
-        }
-
-        public IEnumerable<PointF> ToPoints()
-        {
-            return ToPointFs(_vertices);
-        }
-
-        public PointF[] ToPointArray() {
-            return ToPoints().ToArray();
         }
 
         #endregion
@@ -92,11 +62,6 @@ namespace Archimedes.Geometry
 
         public void AddRange(IEnumerable<Vector2> vertices) {
             _vertices.AddRange(vertices);
-        }
-
-        public void AddRange(IEnumerable<PointF> vertices) {
-            foreach (var p in vertices)
-                this.Add(p);
         }
 
         #region Public Modifiers/Creator Methods
@@ -186,8 +151,8 @@ namespace Archimedes.Geometry
             return _vertices.GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
-            return ((System.Collections.IEnumerable)_vertices).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() {
+            return ((IEnumerable)_vertices).GetEnumerator();
         }
 
         #endregion

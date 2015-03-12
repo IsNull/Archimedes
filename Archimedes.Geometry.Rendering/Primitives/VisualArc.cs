@@ -22,12 +22,16 @@ namespace Archimedes.Geometry.Rendering.Primitives
             get { return _arc; }
         }
 
+        public Arc Arc {
+            get { return _arc; }
+        }
+
         public override void Draw(Graphics g)
         {
             if (this.Pen != null)
                 g.DrawArc(
                     this.Pen,
-                    _arc.DrawingRect,
+                    CalcDrawingRect(),
                     (float)(_arc.Angle2X.Degrees - 90),
                     (float)_arc.Angle.Degrees);
         }
@@ -37,6 +41,17 @@ namespace Archimedes.Geometry.Rendering.Primitives
             var copy = new VisualArc(_arc.Clone() as Arc);
             copy.Prototype(this);
             return copy;
+        }
+
+
+        private RectangleF CalcDrawingRect()
+        {
+            var middlePoint = _arc.MiddlePoint;
+            return new RectangleF(
+                (float)(middlePoint.X - _arc.Radius),
+                (float)(middlePoint.Y - _arc.Radius),
+                2 * (float)_arc.Radius,
+                2 * (float)_arc.Radius);
         }
 
     }

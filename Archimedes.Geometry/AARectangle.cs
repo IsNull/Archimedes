@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using Archimedes.Geometry.Primitives;
 using Archimedes.Geometry.Units;
 
@@ -49,7 +44,7 @@ namespace Archimedes.Geometry
 
                 return new AARectangle(x1, y1, x2 - x1, y2 - y1);
             }
-            return AARectangle.Empty;
+            return Empty;
         }
 
         /// <summary>

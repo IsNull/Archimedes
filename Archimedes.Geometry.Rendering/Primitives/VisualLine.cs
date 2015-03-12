@@ -21,10 +21,15 @@ namespace Archimedes.Geometry.Rendering.Primitives
             get { return _line; }
         }
 
+        public Line2 Line
+        {
+            get { return _line; }
+        }
+
         public override void Draw(Graphics g)
         {
             if (this.Pen != null && !_line.Start.Equals(_line.End))
-                g.DrawLine(this.Pen, _line.Start, _line.End);
+                g.DrawLine(this.Pen, PointFUtil.ToPointF(_line.Start), PointFUtil.ToPointF(_line.End));
         }
 
         public override Visual Clone()

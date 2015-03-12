@@ -8,8 +8,6 @@
  * *****************************************/
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using Archimedes.Geometry.Extensions;
 using Archimedes.Geometry.Units;
 
@@ -209,32 +207,6 @@ namespace Archimedes.Geometry
 
         public static bool operator !=(Vector2 v1, Vector2 v2) {
             return !(v1 == v2);
-        }
-
-        /// <summary>
-        /// Loosing precision in this conversion
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public static implicit operator PointF(Vector2 other) {
-            return new PointF((float)other.X, (float)other.Y);
-        }
-
-        public static implicit operator Vector2(PointF other) {
-            return new Vector2(other.X, other.Y);
-        }
-
-        /// <summary>
-        /// Warning: You may loose all floating signs
-        /// </summary>
-        /// <param name="other"></param>
-        /// <returns></returns>
-        public static explicit operator Point(Vector2 other) {
-            return new Point((int)other.X, (int)other.Y);
-        }
-
-        public static implicit operator Vector2(Point other) {
-            return new Vector2(other.X, other.Y);
         }
 
         #endregion    

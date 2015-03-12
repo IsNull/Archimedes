@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using Archimedes.Geometry.Extensions;
+﻿using System.Collections.Generic;
 using Archimedes.Geometry.Primitives;
 
 namespace Archimedes.Geometry
