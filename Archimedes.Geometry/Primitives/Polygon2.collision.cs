@@ -247,7 +247,7 @@ namespace Archimedes.Geometry.Primitives
 
             if (vertices.Count() == 4)
             {
-                rect = Rectangle2.FromVertices(vertices);
+                rect = new Rectangle2(vertices);
             }
 
             if (rect == null || rect.Size.IsEmpty)

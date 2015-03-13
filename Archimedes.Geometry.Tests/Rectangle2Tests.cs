@@ -28,7 +28,7 @@ namespace Archimedes.Geometry.Tests
         }
 
         [TestCase("100, 100", "500, 300", "0°")]
-        [TestCase("100, 100", "500, 300", "90°")]
+        [TestCase("100, 100", "500, 300", "45°")]
         public void LocationRotation(string locationStr, string sizeStr, string rotationStr)
         {
             var location = Vector2.Parse(locationStr);
@@ -52,7 +52,7 @@ namespace Archimedes.Geometry.Tests
             var expectedMiddle = Vector2.Parse(expectedMiddleStr);
 
 
-            var rect = Rectangle2.FromVertices(vertices);
+            var rect = new Rectangle2(vertices);
             var expectedRotation = Angle.Parse(expectedRotationStr);
 
             Assert.AreEqual(vertices[0], rect.Location);
@@ -113,8 +113,22 @@ namespace Archimedes.Geometry.Tests
         }
 
         [TestCase("(0,0),(100,0),(100,100),(0,100)", "(100,100)")]     // Specail case: Empty rect!
-        [TestCase("(0,0),(0,0),(0,0),(0,0)", "(100,100)")]             // Specail case: Empty rect!
         public void Middlepoint(string rectStr, string newMiddleStr)
+        {
+            var vertices = Vector2.ParseAll(rectStr);
+            var rect = new Rectangle2(vertices);
+
+            var newMid = Vector2.Parse(newMiddleStr);
+
+            rect.MiddlePoint = newMid;
+
+
+            Assert.AreEqual(newMid, rect.MiddlePoint);
+        }
+
+        [TestCase("(0,0),(0,0),(0,0),(0,0)", "(100,100)")]             // Specail case: Empty rect!
+        [ExpectedException(typeof(NotSupportedException))]
+        public void MiddlepointException(string rectStr, string newMiddleStr)
         {
             var vertices = Vector2.ParseAll(rectStr);
             var rect = new Rectangle2(vertices);

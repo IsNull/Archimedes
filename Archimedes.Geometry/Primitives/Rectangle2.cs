@@ -8,7 +8,7 @@ namespace Archimedes.Geometry.Primitives
 {
     public class Rectangle2 : IShape
     {
-         #region Fields
+        #region Fields
 
         // Internal we hold the data in a polygon
         private readonly Polygon2 _rect;
@@ -29,14 +29,32 @@ namespace Archimedes.Geometry.Primitives
         }
 
         /// <summary>
-        /// Constructs a rectangle from 4 points in 2D space.
+        /// Builds the edges of a rectangle from a location and width/height.
+        /// Optionally, you can specify the rotation angle to the X-Axsis
         /// </summary>
-        /// <param name="vertices"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="rotation"></param>
         /// <returns></returns>
-        public static Rectangle2 FromVertices(Vector2[] vertices)
+        public static Vector2[] BuildEdges(double x, double y, double width, double height, Angle? rotation = null)
         {
-            return new Rectangle2(vertices);
+            var topLeft = new Vector2(x, y);
+            var topRight = new Vector2(x + width, y);
+            var bottomRight = new Vector2(x + width, y + height);
+            var bottomLeft = new Vector2(x, y + height);
+
+            var vertices = new Vertices(new[] { topLeft, topRight, bottomRight, bottomLeft });
+
+            // Rotate if necessary
+            if (rotation.HasValue && rotation.Value != Angle.Zero)
+            {
+               vertices = vertices.RotateVertices(topLeft, rotation.Value);
+            }
+            return vertices.ToArray();
         }
+
 
         #endregion
 
@@ -59,10 +77,12 @@ namespace Archimedes.Geometry.Primitives
         {
             if (vertices == null) throw new ArgumentNullException("vertices");
             if (vertices.Count() != 4) throw new ArgumentException("You must submit 4 vertices!");
-            
-            // TODO Check vertices that they are a rectangle!
-            
 
+            if (!IsRectangle(vertices))
+            {
+                throw new ArgumentOutOfRangeException("vertices", "The given vertices must form a rectangle in 2D space!");
+            }
+            
             _rect = new Polygon2(vertices);
         }
 
@@ -75,30 +95,18 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="height"></param>
         /// <param name="rotation"></param>
         public Rectangle2(double x, double y, double width, double height, Angle? rotation = null)
+            : this(BuildEdges(x, y, width, height, rotation))
         {
-            var topLeft = new Vector2(x, y);
-            var topRight = new Vector2(x + width, y);
-            var bottomRight = new Vector2(x + width, y + height);
-            var bottomLeft = new Vector2(x, y + height);
-
-            _rect = new Polygon2(new[] { topLeft, topRight, bottomRight, bottomLeft });
-
-            // Rotate if necessary
-            if (rotation.HasValue && rotation.Value != Angle.Zero)
-            {
-                _rect.Rotate(rotation.Value, topLeft);
-            }
         }
 
 
         /// <summary>
-        /// 
+        /// Creates a new rectangle from the given prototype
         /// </summary>
         /// <param name="prototype"></param>
         public Rectangle2(Rectangle2 prototype)
+            : this(prototype.ToVertices().ToArray())
         {
-            _rect = new Polygon2();
-            Prototype(prototype);
         }
 
         /// <summary>
@@ -112,7 +120,12 @@ namespace Archimedes.Geometry.Primitives
                 throw new NotSupportedException("iprototype must be of type Rectangle2!");
 
             _rect.Clear();
-            _rect.AddRange(prototype.ToVertices());
+            var vertices = prototype.ToVertices().ToArray();
+            if (!IsRectangle(vertices))
+            {
+                throw new ArgumentOutOfRangeException("vertices", "The given vertices must form a rectangle in 2D space!");
+            }
+            _rect.AddRange(vertices);
         }
 
         #endregion
@@ -120,7 +133,7 @@ namespace Archimedes.Geometry.Primitives
         #region Public Propertys
 
         /// <summary>
-        /// Gets / Sets the rotation of this rectangle
+        /// Gets the clockwise rotation angle of this rectangle to the X-Axis
         /// </summary>
         public Angle Rotation
         {
@@ -183,7 +196,7 @@ namespace Archimedes.Geometry.Primitives
 
 
         /**
-         * 
+         * Gets the size of this rectangle
          */
         public SizeD Size {
             get {
@@ -215,7 +228,10 @@ namespace Archimedes.Geometry.Primitives
             }
         }
 
-        
+        /// <summary>
+        /// Gets/Sets the middlepoint of this rectangle.
+        /// If this rectangle is empty, a NotSupportedException is thrown when attempting to set a middlepoint
+        /// </summary>
         public Vector2 MiddlePoint
         {
             get
@@ -235,7 +251,6 @@ namespace Archimedes.Geometry.Primitives
         }
 
         #endregion
-
 
         #region Public Misc Methods
 
@@ -295,6 +310,37 @@ namespace Archimedes.Geometry.Primitives
 
         public override string ToString() {
             return string.Format(@"[{0}/{1}] {2}°", Width, Height, Rotation); //rotation is considered centric
+        }
+
+        /// <summary>
+        /// Checks if the given 4 vertices form a rectangle
+        /// </summary>
+        /// <param name="vertices"></param>
+        /// <returns></returns>
+        public static bool IsRectangle(Vector2[] vertices, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            if (vertices == null) throw new ArgumentNullException("vertices");
+            if (vertices.Count() != 4) throw new ArgumentException("You must submit 4 vertices!");
+
+            var topLine = new Line2(vertices[0], vertices[1]).ToVector();
+            var rightLine = new Line2(vertices[1], vertices[2]).ToVector();
+            var bottomLine = new Line2(vertices[2], vertices[3]).ToVector();
+            var leftLine = new Line2(vertices[3], vertices[0]).ToVector();
+
+            // Check that two lines have equal length
+
+            if (Math.Abs(topLine.Length - bottomLine.Length) < tolerance
+                && Math.Abs(rightLine.Length - leftLine.Length) < tolerance)
+            {
+                // Now ensure that the lines are orthogonal on each other
+                bool isRect = topLine.IsPerpendicularTo(rightLine, tolerance);
+                isRect &= rightLine.IsPerpendicularTo(bottomLine, tolerance);
+                isRect &= bottomLine.IsPerpendicularTo(leftLine, tolerance);
+
+                return isRect;
+            }
+
+            return false;
         }
 
         #region IGeometryBase Collision Detection
