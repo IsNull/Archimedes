@@ -73,6 +73,7 @@ namespace Archimedes.Geometry.Primitives
         /// Creates a new rectangle from 4 points
         /// </summary>
         /// <param name="vertices"></param>
+        [DebuggerStepThrough]
         public Rectangle2(Vector2[] vertices)
         {
             if (vertices == null) throw new ArgumentNullException("vertices");

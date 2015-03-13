@@ -27,6 +27,14 @@ namespace Archimedes.Geometry.Tests
             Assert.AreEqual(rotation, rect.Rotation);
         }
 
+        [TestCase("(0,0),(100,0),(120,120), (0,100)")]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void ConstructorFail(string rectStr)
+        {
+            var vertices = Vector2.ParseAll(rectStr);
+            var rect = new Rectangle2(vertices);
+        }
+
         [TestCase("100, 100", "500, 300", "0°")]
         [TestCase("100, 100", "500, 300", "45°")]
         public void LocationRotation(string locationStr, string sizeStr, string rotationStr)
