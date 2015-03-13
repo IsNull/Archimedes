@@ -221,5 +221,10 @@ namespace Archimedes.Geometry.Primitives
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("Radius: {0}, MiddlePoint: {1}, Area: {2}", Radius, MiddlePoint, Area);
+        }
     }
 }

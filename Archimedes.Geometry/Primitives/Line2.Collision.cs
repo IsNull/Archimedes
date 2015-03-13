@@ -97,7 +97,7 @@ namespace Archimedes.Geometry.Primitives
             if (rect1.Contains(this.Start) || rect1.Contains(this.End)) // TODO handle collision
                 return true; 
             // crosses the Line a Rectangle Border?
-            var borderLines = RectExplode(rect1); //get 4 borderlines from rect
+            var borderLines = FromRectangle(rect1); //get 4 borderlines from rect
 
             // check if any of the borderlines intercept with this line
             return borderLines.Any(border => this.InterceptLineWith(border, tolerance));
@@ -115,7 +115,7 @@ namespace Archimedes.Geometry.Primitives
         {
             var intercepts = new List<Vector2>(2);
             short i = 0;
-            var borderLines = RectExplode(rect); //get 4 borderlines from rect
+            var borderLines = FromRectangle(rect); //get 4 borderlines from rect
 
             foreach (var border in borderLines) {
                 if (this.InterceptLineWith(border, tolerance))

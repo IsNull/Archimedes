@@ -475,12 +475,9 @@ namespace Archimedes.Geometry
 
         #region Common Methods
 
-        public override string ToString() {
-            string vecDump = "";
-            vecDump += "X: " + this.X + "\n";
-            vecDump += "Y: " + this.Y + "\n";
-            vecDump += "norm: " + this.Length + "\n";
-            return vecDump;
+        public override string ToString()
+        {
+            return string.Format("({0}, {1})", X, Y);
         }
 
         #endregion

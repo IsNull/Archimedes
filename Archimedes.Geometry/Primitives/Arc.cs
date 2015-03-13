@@ -523,18 +523,9 @@ namespace Archimedes.Geometry.Primitives
 
         #region ToString
 
-
         public override string ToString()
         {
-            string str = "";
-
-            str += "MiddlePoint: " + this.MiddlePoint.ToString() + "\n";
-            str += "Rotation: " + this.Angle + "\n";
-            str += "BowLen: " + this.BowLen + "\n";
-            str += "Radius: " + this.Radius + "\n";
-            str += "Direction: " + this.Direction + "\n";
-
-            return str;
+            return string.Format("Direction: {0}, Angle: {1}, BowLen: {2}, BaseVector: {3}, Radius: {4}", Direction, Angle, BowLen, BaseVector, Radius);
         }
 
         #endregion

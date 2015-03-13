@@ -454,9 +454,7 @@ namespace Archimedes.Geometry.Primitives
 
         public override string ToString()
         {
-            return "Polygon Vertices(" + VerticesCount + ")";
+            return string.Format("VerticesCount: {0}, Location: {1}, Vertices: {2}", VerticesCount, Location, _vertices);
         }
-
-
     }
 }

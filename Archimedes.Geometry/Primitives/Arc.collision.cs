@@ -54,7 +54,7 @@ namespace Archimedes.Geometry.Primitives
         private bool InterceptRectWith(AARectangle rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             
-            var borderLines = Line2.RectExplode(rect); //get 4 borderlines from rect
+            var borderLines = Line2.FromRectangle(rect); //get 4 borderlines from rect
             if (borderLines != null) {
                 return InterceptLinesWith(borderLines, tolerance);
             }
@@ -69,7 +69,7 @@ namespace Archimedes.Geometry.Primitives
         private List<Vector2> InterceptRect(AARectangle rect, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var intersections = new List<Vector2>();
-            var borderLines = Line2.RectExplode(rect); //get 4 borderlines from rect
+            var borderLines = Line2.FromRectangle(rect); //get 4 borderlines from rect
             if (borderLines != null) {
                 intersections.AddRange(InterceptLines(borderLines, tolerance));
             }

@@ -309,9 +309,7 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        public override string ToString() {
-            return string.Format(@"[{0}/{1}] {2}°", Width, Height, Rotation); //rotation is considered centric
-        }
+        #region Static methods
 
         /// <summary>
         /// Checks if the given 4 vertices form a rectangle
@@ -343,6 +341,8 @@ namespace Archimedes.Geometry.Primitives
 
             return false;
         }
+
+        #endregion
 
         #region IGeometryBase Collision Detection
 
@@ -376,6 +376,9 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-
+        public override string ToString()
+        {
+            return string.Format("Width: {0}, Height: {1}, Location: {2}, Rotation: {3}", Width, Height, Location, Rotation);
+        }
     }
 }

@@ -21,12 +21,17 @@ namespace Archimedes.Geometry.Primitives
 
         Vector2 _start;
         Vector2 _end;
-        bool _penSharedResource = false;
 
         #endregion
 
         #region Static Builder
 
+        /// <summary>
+        /// Parses the given vertices string into a line.
+        /// Expected format: "(x1,y1),(x2,y2)"
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static Line2 Parse(string value)
         {
             Line2 line;
@@ -41,6 +46,38 @@ namespace Archimedes.Geometry.Primitives
                     "Expected where 2 vertices to build a line, but got: " +vertices.Length + " - Parsed from '" + value+"'");
             }
             return line;
+        }
+
+
+        /// <summary>
+        /// Explodes a Rectangle into the 4 border lines and returns an array of lines
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns>4 lines, one for each side of the rectangle</returns>
+        public static Line2[] FromRectangle(AARectangle rect)
+        {
+            var sides = new Line2[4];
+            sides[0] = new Line2(rect.X, rect.Y, rect.X + rect.Width, rect.Y);                                 // upper horz line
+            sides[1] = new Line2(rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);     // lower horz line
+            sides[2] = new Line2(rect.X, rect.Y, rect.X, rect.Y + rect.Height);                                // left  vert line
+            sides[3] = new Line2(rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);      // right  vert line
+            return sides;
+        }
+
+        /// <summary>
+        /// Buils lines from the given vertices
+        /// </summary>
+        /// <param name="vertices">The vertices - they must be ordered as the lines shall be created</param>
+        /// <returns></returns>
+        public static IEnumerable<Line2> FromVertices(Vertices vertices)
+        {
+            if (vertices.Count > 1)
+            {
+                for (int i = 0; i < vertices.Count - 1; i++)
+                {
+                    yield return new Line2(vertices[i], vertices[i + 1]);
+                }
+            }
         }
 
         #endregion
@@ -260,41 +297,17 @@ namespace Archimedes.Geometry.Primitives
         }
 
         /// <summary>
-        /// Explodes a Rectangle into the 4 border lines and returns an array of lines
+        /// Turns this line into a vector
         /// </summary>
-        /// <param name="rect"></param>
-        /// <returns>Line2d List<></returns>
-        public static Line2[] RectExplode(AARectangle rect)
-        {
-            var sides = new Line2[4];
-            sides[0] = new Line2(rect.X, rect.Y, rect.X + rect.Width, rect.Y);                                 // upper horz line
-            sides[1] = new Line2(rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);     // lower horz line
-            sides[2] = new Line2(rect.X, rect.Y, rect.X, rect.Y + rect.Height);                                // left  vert line
-            sides[3] = new Line2(rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);      // right  vert line
-            return sides;
-        }
-
-        /// <summary>
-        /// Buils lines from the vertices
-        /// </summary>
-        /// <param name="vertices">The vertices - they must be ordered as the lines shall be created</param>
         /// <returns></returns>
-        public static IEnumerable<Line2> LinesFromVertices(Vertices vertices)
-        {
-            if (vertices.Count > 1)
-            {
-                for (int i = 0; i < vertices.Count - 1; i++)
-                {
-                    yield return new Line2(vertices[i], vertices[i + 1]);
-                }
-            }
-        }
-
-
         public Vector2 ToVector() {
             return new Vector2(this.Start, this.End);
         }
 
+        /// <summary>
+        /// Turns this line into a series of vertices.
+        /// </summary>
+        /// <returns></returns>
         public Vertices ToVertices() {
             return new Vertices{ this.Start, this.End };
         }
@@ -463,16 +476,9 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        public override string ToString() {
-            string dump = "";
-            dump += "P1: " + this.Start.ToString() + "\n";
-            dump += "P2: " + this.End.ToString() + "\n";
-            dump += "slope: " + this.Slope + "\n";
-            dump += "q: " + this.YMovement + "\n";
-            dump += "vert: " + this.IsVertical + "\n";
-            dump += "horz: " + this.IsHorizontal + "\n";
-
-            return dump;
+        public override string ToString()
+        {
+            return string.Format("({0}, {1}) : Length: {2}, Slope: {3}", Start, End, Length, Slope);
         }
     }
 }
