@@ -35,12 +35,13 @@ namespace Archimedes.Geometry.Rendering.Primitives
         /// <param name="location"></param>
         /// <param name="text"></param>
         /// <param name="font"></param>
-        public VisualText(Vector2 location, string text, Pen pen = null, Font font = null)
+        public VisualText(Vector2 location, string text, Pen pen = null, Font font = null, Brush background = null)
         {
             Location = location;
             _text = text;
             Pen = pen ?? Pens.Black;
             _font = font ?? SystemFonts.DefaultFont;
+            FillBrush = background;
         }
 
         #endregion
