@@ -25,7 +25,7 @@ namespace Archimedes.Geometry.Tests
         public void Parse(string sp, double expected)
         {
             var l1 = Line2.Parse(sp);
-            Assert.AreEqual(expected, l1.Lenght);
+            Assert.AreEqual(expected, l1.Length);
         }
 
 
@@ -39,7 +39,7 @@ namespace Archimedes.Geometry.Tests
 
             var l1 = new Line2(spv, epv);
 
-            Assert.AreEqual(l1.Lenght, expected);
+            Assert.AreEqual(l1.Length, expected);
         }
 
         #endregion

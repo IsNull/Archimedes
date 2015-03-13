@@ -152,7 +152,7 @@ namespace Archimedes.Geometry.Primitives
         /// <summary>
         /// Returns the lenght of this line
         /// </summary>
-        public double Lenght {
+        public double Length {
             get { return CalcLenght(this.Start, this.End); }
         }
 
