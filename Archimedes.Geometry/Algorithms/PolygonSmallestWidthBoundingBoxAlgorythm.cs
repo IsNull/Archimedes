@@ -2,9 +2,12 @@
 
 namespace Archimedes.Geometry.Algorithms
 {
+    /// <summary>
+    /// Algorithm which finds the boundingbox with the smallest width.
+    /// </summary>
     public class PolygonSmallestWidthBoundingBoxAlgorythm : PolygonSmallestBoundingBoxAlgorythm
     {
-        Area? _bestRectDimension;
+        SizeD? _bestRectDimension;
 
         protected override bool IsCurrentRectangleTheBest(Vector2[] currentRectangle)
         {
@@ -17,8 +20,8 @@ namespace Archimedes.Geometry.Algorithms
             var vx1 = currentRectangle[1].X - currentRectangle[2].X;
             var vy1 = currentRectangle[1].Y - currentRectangle[2].Y;
             var len1 = Math.Sqrt(vx1 * vx1 + vy1 * vy1);
-            
-            var thisRectDim = Area.Create(len0, len1);
+
+            var thisRectDim = CreateArea(len0, len1);
 
             if (_bestRectDimension.HasValue) {
                 if (_bestRectDimension.Value.Width > thisRectDim.Width) {
@@ -32,29 +35,11 @@ namespace Archimedes.Geometry.Algorithms
             return isBetter;
         }
 
-
-        struct Area
+        private static SizeD CreateArea(double n1, double n2)
         {
-            private Area(double lenght, double width)
-            {
-                Lenght = lenght;
-                Width = width;
-            }
-
-            private double Lenght;
-            public double Width;
-
-            /// <summary>
-            /// Create the Area Struct from given 2 numbers
-            /// </summary>
-            /// <param name="n1"></param>
-            /// <param name="n2"></param>
-            /// <returns></returns>
-            public static Area Create(double n1, double n2)
-            {
-                return (n1 >= n2) ? new Area(n1, n2) : new Area(n2, n1);
-            }
+            return (n1 >= n2) ?  new SizeD(n2, n1) : new SizeD(n1, n2);
         }
+
 
     }
 }
