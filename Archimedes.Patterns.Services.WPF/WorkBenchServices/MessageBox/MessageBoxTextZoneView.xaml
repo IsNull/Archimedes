@@ -24,13 +24,9 @@
         </Grid.ColumnDefinitions>
 
         <!--Row 1-->
-        <Image MaxWidth="48" MaxHeight="48" Margin="10" Source="{Binding ImageSource}" />
-        <!--
-        Source="{Binding ImageSource}"
-        ../../Images/dialog-clean.ico 
-        Text="{Binding Message}"-->
+        <Image Grid.Row="0" MaxWidth="48" MaxHeight="48" Margin="10" Source="{Binding ImageSource}" />
 
-        <TextBlock Grid.Column="2" HorizontalAlignment="Left"
+        <TextBlock Grid.Row="0"  Grid.Column="2" HorizontalAlignment="Left"
                    Text="{Binding Message, FallbackValue=DebugText}" VerticalAlignment="Center" TextAlignment="Left" TextWrapping="Wrap" />
 
         <!--Row 2: Detail Section -->

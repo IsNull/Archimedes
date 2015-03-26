@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Archimedes.Services.WPF.WorkBenchServices.MessageBox"
              mc:Ignorable="d" 
              d:DesignHeight="158" d:DesignWidth="507">
-<Grid>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="Auto" />
