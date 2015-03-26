@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -66,6 +67,11 @@ namespace Archimedes.Geometry
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return "{Width=" + Width.ToString((IFormatProvider)CultureInfo.CurrentCulture) + ", Height=" + Height.ToString((IFormatProvider)CultureInfo.CurrentCulture) + "}";
+        }
 
     }
 }
