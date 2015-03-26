@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -27,24 +28,39 @@ namespace Archimedes.Patterns.Reflection
         public static bool IsNumeric(object obj) {
             return TypeHelper.NUMERIC_TYPES.Contains(obj.GetType());
         }
+
+        [DebuggerStepThrough]
         public static bool IsNumeric(Type type) {
+            if (type == null) throw new ArgumentNullException("type");
+
             return TypeHelper.NUMERIC_TYPES.Contains(type);
         }
 
+        [DebuggerStepThrough]
         public static bool IsNullableType(Type type)
         {
+            if(type == null) throw new ArgumentNullException("type");
+
             return (type.IsGenericType && type.
-              GetGenericTypeDefinition().Equals
-              (typeof(Nullable<>)));
+                GetGenericTypeDefinition() == typeof(Nullable<>));
         }
 
+        [DebuggerStepThrough]
         public static bool IsTypeOrUnderlingType(Type type, Type needle) {
+            if (type == null) throw new ArgumentNullException("type");
+            if (type == null) throw new ArgumentNullException("needle");
+
             if (IsNullableType(type))
                 type = Nullable.GetUnderlyingType(type);
-            return type.Equals(needle);
+            return type == needle;
         }
 
+        [DebuggerStepThrough]
         public static object ConvertOrDefault(object source, Type destination, bool instantiateNullables = true) {
+
+            if (destination == null) throw new ArgumentNullException("destination");
+
+
             object newvalue;
 
             Type destinationType = destination;

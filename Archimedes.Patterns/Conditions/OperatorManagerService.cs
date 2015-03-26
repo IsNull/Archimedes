@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Archimedes.Patterns.Reflection;
@@ -42,7 +43,11 @@ namespace Archimedes.Patterns.Conditions
             }
         }
 
+        [DebuggerStepThrough]
         public IEnumerable<Operator> GetPossibleOperatorsForType(Type type) {
+            
+            if(type == null) throw new ArgumentNullException("type");
+
 
             if (TypeHelper.IsNullableType(type)) {
                 type = Nullable.GetUnderlyingType(type);
@@ -56,6 +61,10 @@ namespace Archimedes.Patterns.Conditions
         }
 
         public void RegisterOperatorsForType(Type type, IEnumerable<Operator> possibleOperators) {
+
+            if (type == null) throw new ArgumentNullException("type");
+
+
             if (_opmap.ContainsKey(type))
                 _opmap[type] = possibleOperators.ToArray();
             else
