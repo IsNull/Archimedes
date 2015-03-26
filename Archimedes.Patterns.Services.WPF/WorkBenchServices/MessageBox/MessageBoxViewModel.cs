@@ -7,7 +7,7 @@ using Archimedes.Services.WPF.Resources;
 
 namespace Archimedes.Services.WPF.WorkBenchServices.MessageBox
 {
-    public class MessageBoxViewModel : WorkspaceViewModel
+    class MessageBoxViewModel : WorkspaceViewModel
     {
         #region Fields
         string _detailHeader = Strings.Details;
