@@ -49,3 +49,7 @@ shared
 *.sdf
 *.sdf
 *.msi
+
+#ignore nuget packages
+/packages/
+!packages/repositories.config
