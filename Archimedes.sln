@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns", "Archimedes.Patterns\Archimedes.Patterns.csproj", "{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Services.WPF", "Archimedes.Patterns.Services.WPF\Archimedes.Services.WPF.csproj", "{EA929451-8342-492C-8C16-6E4B15355E7C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns.WPF", "Archimedes.Patterns.WPF\Archimedes.Patterns.WPF.csproj", "{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Geometry", "Archimedes.Geometry\Archimedes.Geometry.csproj", "{B16862E8-837A-411A-8D07-09CCDA8CE3D7}"
@@ -52,16 +50,6 @@ Global
 		{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}.Release|x86.ActiveCfg = Release|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{EA929451-8342-492C-8C16-6E4B15355E7C}.Release|x86.ActiveCfg = Release|Any CPU
 		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
