@@ -12,7 +12,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         static string _version;
         static string _name;
-        static string _copyright = "(c) 2011 RIEDO Informatics";
+        static string _copyright = "(c) 2015 ElderByte GmbH";
 
         static AboutViewModel() {
             // Collect Assembly informations
