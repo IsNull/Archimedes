@@ -119,6 +119,7 @@
     <Compile Include="Serializing\SerializableDictionary.cs" />
     <Compile Include="Serializing\SerializerHelper.cs" />
     <Compile Include="Serializing\SerializableSettingsBase.cs" />
+    <Compile Include="Services\ImplementationRegistry.cs" />
     <Compile Include="Threading\IDispatcher.cs" />
     <Compile Include="Threading\LockEx.cs" />
     <Compile Include="Threading\ThreadMutableObservableCollection.cs" />
