@@ -15,9 +15,8 @@ namespace Archimedes.Geometry.Rendering.Primitives
         #region Fields
 
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-    
 
-        private readonly Rectangle2 _rectangle = Rectangle2.Empty;
+        private readonly RectangleAA2 _rectangle = RectangleAA2.Empty;
 
         private string _text;
         private Font _font;
@@ -213,7 +212,8 @@ namespace Archimedes.Geometry.Rendering.Primitives
         {
             if (!_textSizeCache.HasValue)
             {
-                _textSizeCache = CalcTextSize(Text, Font, GetStringFormat());
+                var size = CalcTextSize(Text, Font, GetStringFormat());
+                _textSizeCache = size;
             }
             return _textSizeCache.Value;
         }
@@ -265,5 +265,10 @@ namespace Archimedes.Geometry.Rendering.Primitives
         }
 
         #endregion
+
+        public override string ToString()
+        {
+            return Text + " @ " + Geometry;
+        }
     }
 }

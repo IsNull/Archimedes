@@ -149,5 +149,16 @@ namespace Archimedes.Geometry.Tests
             Assert.AreEqual(newMid, rect.MiddlePoint);
         }
 
+        [TestCase]
+        public void NegativeLocation()
+        {
+            var rect = new Rectangle2(new Vector2(-6.144577234345E+26, 2.57349556991535E+28), SizeD.Empty);
+            rect.Width = 37;
+            rect.Height = 15;
+            Assert.AreEqual(100, rect.Width);
+            Assert.AreEqual(200, rect.Height);
+        }
+
+
     }
 }

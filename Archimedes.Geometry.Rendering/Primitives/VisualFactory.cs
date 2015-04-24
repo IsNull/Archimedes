@@ -65,6 +65,15 @@ namespace Archimedes.Geometry.Rendering.Primitives
             };
         }
 
+        public static VisualAARectangle Create(RectangleAA2 rect, Pen pen = null, Brush brush = null)
+        {
+            return new VisualAARectangle(rect)
+            {
+                Pen = pen,
+                FillBrush = brush
+            };
+        }
+
         public static VisualLineString Create(LineString lineString, Pen pen = null)
         {
             return new VisualLineString(lineString)
@@ -101,6 +110,10 @@ namespace Archimedes.Geometry.Rendering.Primitives
             if (geometry is Rectangle2)
             {
                 return Create(geometry as Rectangle2, pen, brush);
+            }
+            if (geometry is RectangleAA2)
+            {
+                return Create(geometry as RectangleAA2, pen, brush);
             }
             if (geometry is Polygon2)
             {

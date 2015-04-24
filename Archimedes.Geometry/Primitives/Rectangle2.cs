@@ -6,6 +6,15 @@ using Archimedes.Geometry.Units;
 
 namespace Archimedes.Geometry.Primitives
 {
+    /// <summary>
+    /// Represents a rectangle in 2D space which can be arbitarly rotated.
+    /// 
+    /// Internal representation is done with a polygon of 4 vertices. 
+    /// 
+    /// If you do not need rotation, use the RectangleAA2 (axis aligned rectangle)
+    /// for easier handling and better performance!
+    /// 
+    /// </summary>
     public class Rectangle2 : IShape
     {
         #region Fields

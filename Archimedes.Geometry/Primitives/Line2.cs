@@ -248,7 +248,7 @@ namespace Archimedes.Geometry.Primitives
         {
             if (IsParallelTo(line2, tolerance))
             {
-                return (this.Contains(line2.Start, tolerance) || this.Contains(line2.End, tolerance));
+                return (Contains(line2.Start, tolerance) || Contains(line2.End, tolerance));
             }
             return false;
         }

@@ -9,7 +9,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
 {
     public class VisualImage : Visual
     {
-        private readonly Rectangle2 _imageRect;
+        private readonly RectangleAA2 _imageRect;
         private Image _image;
 
         public VisualImage()
@@ -19,7 +19,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
 
         public VisualImage(Vector2 location, Image image)
         {
-            _imageRect = new Rectangle2(location.X, location.Y, 0, 0);
+            _imageRect = new RectangleAA2(location.X, location.Y, 0, 0);
             Image = image;
         }
 
@@ -55,7 +55,6 @@ namespace Archimedes.Geometry.Rendering.Primitives
             {
                 var drawRect = new RectangleF(PointFUtil.ToPointF(_imageRect.Location), new SizeF((float)_imageRect.Width, (float)_imageRect.Height));
                 g.DrawImage(Image, drawRect);
-                // TODO support rotation
             }
         }
 
