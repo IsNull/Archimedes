@@ -189,9 +189,27 @@ namespace Archimedes.Geometry.Primitives
                    point.Y < Y + Height + tolerance;
         }
 
-        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool HasCollision(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            return ToPolygon2().IntersectsWith(other, tolerance);
+            if (BoundingCircle.HasCollision(other.BoundingCircle))
+            {
+                // We can handle some collisions better here
+                if (other is Line2)
+                {
+                    return HasCollision(other as Line2, tolerance);
+                }else if (other is Circle2)
+                {
+                    return HasCollision(other as Circle2, tolerance);
+                }
+                else if (other is RectangleAA2)
+                {
+                    return HasCollision(other as RectangleAA2, tolerance);
+                }
+
+                // all others are handled over the generic polygon collsion
+                return ToPolygon2().HasCollision(other, tolerance);
+            }
+            return false;
         }
 
         public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
@@ -199,7 +217,73 @@ namespace Archimedes.Geometry.Primitives
             return ToPolygon2().Intersect(other, tolerance);
         }
 
+        #region Line2 - RectangleAA2
+
+        private bool HasCollision(Line2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            // Test each line if it has a collision
+            var lines = ToLines();
+
+            foreach (var line in lines)
+            {
+                if (other.HasCollision(line, tolerance))
+                {
+                    return true; // We have a collision and can stop
+                }
+            }
+            return false;
+        }
+
         #endregion
+
+        #region Circle2 - RectangleAA2
+
+        private bool HasCollision(Circle2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            // Test each line if it has a collision
+            var lines = ToLines();
+
+            foreach (var line in lines)
+            {
+                if (other.HasCollision(line, tolerance))
+                {
+                    return true; // We have a collision and can stop
+                }
+            }
+            return false;
+        }
+
+        #endregion
+
+        #region RectangleAA2 - RectangleAA2
+
+        private bool HasCollision(RectangleAA2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        {
+            return (other.X < (X + Width + tolerance)) &&
+                   (X < (other.X + other.Width + tolerance)) &&
+                   (other.Y < (Y + Height + tolerance)) &&
+                   (Y < (other.Y + other.Height + tolerance));
+        }
+
+        #endregion
+
+
+        #endregion
+
+        private Line2[] ToLines()
+        {
+            var topRight = new Vector2(X + Width, Y);
+            var bottomRight = new Vector2(X + Width, Y + Height);
+            var bottomLeft = new Vector2(X, Y + Height);
+
+            return new[]
+            {
+                new Line2(Location, topRight),
+                new Line2(topRight, bottomRight),
+                new Line2(bottomRight, bottomLeft),
+                new Line2(bottomLeft, Location)
+            };
+        }
 
     }
 }
