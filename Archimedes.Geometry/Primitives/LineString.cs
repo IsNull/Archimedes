@@ -166,7 +166,7 @@ namespace Archimedes.Geometry.Primitives
             get { return BoundingBox.BoundingCircle; }
         }
 
-        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool HasCollision(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             throw new NotImplementedException();
         }

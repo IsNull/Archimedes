@@ -130,7 +130,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region GeomertryBase Collision
 
-        public virtual bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public virtual bool HasCollision(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             if (other is Line2)
             {
@@ -151,10 +151,10 @@ namespace Archimedes.Geometry.Primitives
             else if (other is Arc)
             {
                 // inverse call:
-                return other.IntersectsWith(this, tolerance);
+                return other.HasCollision(this, tolerance);
             }
             else
-                return this.ToPolygon2().IntersectsWith(other, tolerance);
+                return this.ToPolygon2().HasCollision(other, tolerance);
         }
 
         public virtual IEnumerable<Vector2> Intersect(IGeometry other,

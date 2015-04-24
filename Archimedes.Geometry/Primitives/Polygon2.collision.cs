@@ -106,7 +106,7 @@ namespace Archimedes.Geometry.Primitives
         #endregion
 
 
-        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool HasCollision(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             return Intersect(other).Any();
         }

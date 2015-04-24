@@ -217,7 +217,7 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool HasCollision(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             if (other is Line2)
             {
@@ -237,7 +237,7 @@ namespace Archimedes.Geometry.Primitives
             }
             else
             {
-                return other.IntersectsWith(this, tolerance);
+                return other.HasCollision(this, tolerance);
             }
         }
 

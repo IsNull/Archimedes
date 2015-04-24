@@ -241,7 +241,7 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
-        public bool IntersectsWith(AARectangle rect)
+        public bool CollidesWith(AARectangle rect)
         {
             return (rect.X < this.X + this.Width) &&
                    (this.X < (rect.X + rect.Width)) &&

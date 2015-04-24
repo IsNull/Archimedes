@@ -115,7 +115,7 @@ namespace Archimedes.Geometry.Tests
 
             var expected = Vector2.Parse(expectedIntersection);
 
-            var intersect = line1.IntersectsWith(line2);
+            var intersect = line1.HasCollision(line2);
             var intersection = line1.Intersect(line2);
 
             Assert.AreEqual(true, intersect);

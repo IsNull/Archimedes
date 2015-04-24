@@ -219,10 +219,10 @@ namespace Archimedes.Geometry.Primitives
            return intercepts;
         }
 
-        public bool IntersectsWith(IGeometry geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool HasCollision(IGeometry geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             foreach (var g in _geometries) {
-                if (g.IntersectsWith(geometry, tolerance))
+                if (g.HasCollision(geometry, tolerance))
                 {
                     return true;
                 }

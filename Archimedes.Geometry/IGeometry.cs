@@ -61,12 +61,12 @@ namespace Archimedes.Geometry
         Circle2 BoundingCircle { get; }
 
         /// <summary>
-        /// Checks if this geometry intersects with the given other one.
+        /// Checks if this geometry collides with the given other one.
         /// </summary>
         /// <param name="geometryObject"></param>
         /// <param name="tolerance"></param>
         /// <returns>true if the objects collide</returns>
-        bool IntersectsWith(IGeometry geometryObject, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
+        bool HasCollision(IGeometry geometryObject, double tolerance = GeometrySettings.DEFAULT_TOLERANCE);
 
         /// <summary>
         /// Checks Intersection and returns all Points at intersection joints

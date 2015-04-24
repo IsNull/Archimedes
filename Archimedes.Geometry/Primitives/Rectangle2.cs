@@ -373,9 +373,9 @@ namespace Archimedes.Geometry.Primitives
             get { return _rect.BoundingBox; }
         }
 
-        public bool IntersectsWith(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool HasCollision(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            return _rect.IntersectsWith(other, tolerance);
+            return _rect.HasCollision(other, tolerance);
         }
         public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {

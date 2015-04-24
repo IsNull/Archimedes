@@ -403,14 +403,14 @@ namespace Archimedes.Geometry.Primitives
         }
 
 
-        public bool IntersectsWith(IGeometry geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool HasCollision(IGeometry geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
 
             if (geometry is Line2)
             {
                 return this.InterceptLineWith(geometry as Line2, tolerance);
             }else { //delegate Collision Detection to other Geometry Object
-                return geometry.IntersectsWith(this, tolerance);
+                return geometry.HasCollision(this, tolerance);
             }
         }
 
