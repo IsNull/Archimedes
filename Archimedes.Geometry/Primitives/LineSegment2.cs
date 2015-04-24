@@ -12,9 +12,10 @@ using System.Collections.Generic;
 namespace Archimedes.Geometry.Primitives
 {
     /// <summary>
-    /// Represents a Line in a 2D coord space defined by two points.
+    /// Represents a Line segment in a 2D coord space.
+    /// A line segment is a part of a line that is bounded by two distinct end points, and contains every point on the line between its end points.
     /// </summary>
-    public partial class Line2 : IGeometry
+    public partial class LineSegment2 : IGeometry
     {
         
         #region Fields
@@ -32,13 +33,13 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static Line2 Parse(string value)
+        public static LineSegment2 Parse(string value)
         {
-            Line2 line;
+            LineSegment2 line;
             var vertices = Vector2.ParseAll(value);
             if (vertices.Length == 2)
             {
-                line = new Line2(vertices[0], vertices[1]);
+                line = new LineSegment2(vertices[0], vertices[1]);
             }
             else
             {
@@ -54,13 +55,13 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="rect"></param>
         /// <returns>4 lines, one for each side of the rectangle</returns>
-        public static Line2[] FromRectangle(AARectangle rect)
+        public static LineSegment2[] FromRectangle(AARectangle rect)
         {
-            var sides = new Line2[4];
-            sides[0] = new Line2(rect.X, rect.Y, rect.X + rect.Width, rect.Y);                                 // upper horz line
-            sides[1] = new Line2(rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);     // lower horz line
-            sides[2] = new Line2(rect.X, rect.Y, rect.X, rect.Y + rect.Height);                                // left  vert line
-            sides[3] = new Line2(rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);      // right  vert line
+            var sides = new LineSegment2[4];
+            sides[0] = new LineSegment2(rect.X, rect.Y, rect.X + rect.Width, rect.Y);                                 // upper horz line
+            sides[1] = new LineSegment2(rect.X, rect.Y + rect.Height, rect.X + rect.Width, rect.Y + rect.Height);     // lower horz line
+            sides[2] = new LineSegment2(rect.X, rect.Y, rect.X, rect.Y + rect.Height);                                // left  vert line
+            sides[3] = new LineSegment2(rect.X + rect.Width, rect.Y, rect.X + rect.Width, rect.Y + rect.Height);      // right  vert line
             return sides;
         }
 
@@ -69,13 +70,13 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="vertices">The vertices - they must be ordered as the lines shall be created</param>
         /// <returns></returns>
-        public static IEnumerable<Line2> FromVertices(Vertices vertices)
+        public static IEnumerable<LineSegment2> FromVertices(Vertices vertices)
         {
             if (vertices.Count > 1)
             {
                 for (int i = 0; i < vertices.Count - 1; i++)
                 {
-                    yield return new Line2(vertices[i], vertices[i + 1]);
+                    yield return new LineSegment2(vertices[i], vertices[i + 1]);
                 }
             }
         }
@@ -89,7 +90,7 @@ namespace Archimedes.Geometry.Primitives
         /// Creates a new horizontal Line, starting from 0,0 with the given Length
         /// </summary>
         /// <param name="lenght">Lenght of the new Line</param>
-        public Line2(double lenght) {
+        public LineSegment2(double lenght) {
             _start = Vector2.Zero;
             _end = new Vector2(lenght, 0);
         }
@@ -99,24 +100,24 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="start">Startpoint of the Line</param>
         /// <param name="end">Endpoint of the Line</param>
-        public Line2(Vector2 start, Vector2 end)
+        public LineSegment2(Vector2 start, Vector2 end)
         {
             _start = start;
             _end = end;
         }
 
-        public Line2(double uP1x, double uP1y, double uP2x, double uP2y)
+        public LineSegment2(double uP1x, double uP1y, double uP2x, double uP2y)
         {
             _start = new Vector2(uP1x, uP1y);
             _end = new Vector2(uP2x, uP2y);
         }
 
-        public Line2(Line2 prototype) {
+        public LineSegment2(LineSegment2 prototype) {
             Prototype(prototype);
         }
 
         public virtual void Prototype(IGeometry iprototype) {
-            var prototype = iprototype as Line2;
+            var prototype = iprototype as LineSegment2;
             if (prototype == null)
                 throw new NotImplementedException();
 
@@ -231,7 +232,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="line"></param>
         /// <param name="tolerance"></param>
         /// <returns>true, if the solpes are equal</returns>
-        public bool IsParallelTo(Line2 line, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IsParallelTo(LineSegment2 line, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             return ToVector().IsParallelTo(line.ToVector(), tolerance);
         }
@@ -244,7 +245,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="line2"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        public bool IsCongruentTo(Line2 line2, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IsCongruentTo(LineSegment2 line2, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             if (IsParallelTo(line2, tolerance))
             {
@@ -349,15 +350,15 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="origin"></param>
         /// <param name="move"></param>
         /// <returns></returns>
-        public static Line2 CreateMoved(Line2 origin, Vector2 move) {
-            var clone = origin.Clone() as Line2;
+        public static LineSegment2 CreateMoved(LineSegment2 origin, Vector2 move) {
+            var clone = origin.Clone() as LineSegment2;
             clone.Translate(move);
             return clone;
         }
 
 
         public IGeometry Clone() {
-            return new Line2(this);
+            return new LineSegment2(this);
         }
 
         public AARectangle BoundingBox {
@@ -393,8 +394,8 @@ namespace Archimedes.Geometry.Primitives
         public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE) {
             var pnts = new List<Vector2>();
 
-            if (other is Line2) {
-                var pnt = this.InterceptLine(other as Line2, tolerance);
+            if (other is LineSegment2) {
+                var pnt = this.InterceptLine(other as LineSegment2, tolerance);
                 if(pnt.HasValue)
                     pnts.Add(pnt.Value);
             } else
@@ -406,9 +407,9 @@ namespace Archimedes.Geometry.Primitives
         public bool HasCollision(IGeometry geometry, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
 
-            if (geometry is Line2)
+            if (geometry is LineSegment2)
             {
-                return this.InterceptLineWith(geometry as Line2, tolerance);
+                return this.InterceptLineWith(geometry as LineSegment2, tolerance);
             }else { //delegate Collision Detection to other Geometry Object
                 return geometry.HasCollision(this, tolerance);
             }
@@ -440,7 +441,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="line">line</param>
         /// <param name="closest">closes Point on Line to target Point</param>
         /// <returns>Smallest distance to the targetpoint</returns>
-        public static double FindDistanceToPoint(Vector2 pt, Line2 line, out Vector2 closest) {
+        public static double FindDistanceToPoint(Vector2 pt, LineSegment2 line, out Vector2 closest) {
             var p1 = line.Start; var p2 = line.End;
             double dx = p2.X - p1.X;
             double dy = p2.Y - p1.Y;

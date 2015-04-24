@@ -9,9 +9,9 @@ namespace Archimedes.Geometry.Rendering.Primitives
 {
     public class VisualLine : Visual
     {
-        private readonly Line2 _line;
+        private readonly LineSegment2 _line;
 
-        public VisualLine(Line2 line)
+        public VisualLine(LineSegment2 line)
         {
             _line = line;
         }
@@ -21,7 +21,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             get { return _line; }
         }
 
-        public Line2 Line
+        public LineSegment2 Line
         {
             get { return _line; }
         }
@@ -34,7 +34,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
 
         public override Visual Clone()
         {
-            var copy = new VisualLine(_line.Clone() as Line2);
+            var copy = new VisualLine(_line.Clone() as LineSegment2);
             copy.Prototype(this);
             return copy;
         }

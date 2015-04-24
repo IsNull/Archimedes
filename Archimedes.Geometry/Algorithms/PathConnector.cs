@@ -38,25 +38,25 @@ namespace Archimedes.Geometry.Algorithms
             }
 
             // Combine
-            _bestDist = Line2.CalcLenght(_path.Last(), _path2.First());
+            _bestDist = LineSegment2.CalcLenght(_path.Last(), _path2.First());
             _combineAction = Combine;
 
             // Combine2Reversed
-            double dist = Line2.CalcLenght(_path.Last(), _path2.Last());
+            double dist = LineSegment2.CalcLenght(_path.Last(), _path2.Last());
             if (dist < _bestDist) {
                 _bestDist = dist;
                 _combineAction = Combine2Reversed;
             }
 
             // Combine1Reversed
-            dist = Line2.CalcLenght(_path.First(), _path2.First());
+            dist = LineSegment2.CalcLenght(_path.First(), _path2.First());
             if (dist < _bestDist) {
                 _bestDist = dist;
                 _combineAction = Combine1Reversed;
             }
 
             // CombineInvert
-            dist = Line2.CalcLenght(_path.First(), _path2.Last());
+            dist = LineSegment2.CalcLenght(_path.First(), _path2.Last());
             if (dist < _bestDist) {
                 _bestDist = dist;
                 _combineAction = CombineInvert;

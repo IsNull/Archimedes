@@ -27,8 +27,8 @@ namespace Archimedes.Geometry
             start = null;
             end = null;
 
-            if (geometry is Line2) {
-                var line = geometry as Line2;
+            if (geometry is LineSegment2) {
+                var line = geometry as LineSegment2;
                 start = line.Start; ;
                 end = line.End;
             } else if (geometry is Arc) {

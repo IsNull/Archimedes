@@ -15,7 +15,7 @@ namespace Archimedes.Geometry.Tests
             var spv = Vector2.Parse(sp);
             var epv = Vector2.Parse(ep);
 
-            var l1 = new Line2(spv, epv);
+            var l1 = new LineSegment2(spv, epv);
 
             Assert.AreEqual(l1.Start, spv);
             Assert.AreEqual(l1.End, epv);
@@ -24,7 +24,7 @@ namespace Archimedes.Geometry.Tests
         [TestCase("(10,10) (100,10)", 90)]  // Horizontal
         public void Parse(string sp, double expected)
         {
-            var l1 = Line2.Parse(sp);
+            var l1 = LineSegment2.Parse(sp);
             Assert.AreEqual(expected, l1.Length);
         }
 
@@ -37,7 +37,7 @@ namespace Archimedes.Geometry.Tests
             var spv = Vector2.Parse(sp);
             var epv = Vector2.Parse(ep);
 
-            var l1 = new Line2(spv, epv);
+            var l1 = new LineSegment2(spv, epv);
 
             Assert.AreEqual(l1.Length, expected);
         }
@@ -55,7 +55,7 @@ namespace Archimedes.Geometry.Tests
         {
             var spv = Vector2.Parse(sp);
             var epv = Vector2.Parse(ep);
-            var l1 = new Line2(spv, epv);
+            var l1 = new LineSegment2(spv, epv);
 
             Assert.AreEqual(expected, l1.Slope);
         }
@@ -69,7 +69,7 @@ namespace Archimedes.Geometry.Tests
         {
             var spv = Vector2.Parse(sp);
             var epv = Vector2.Parse(ep);
-            var l1 = new Line2(spv, epv);
+            var l1 = new LineSegment2(spv, epv);
 
             Assert.AreEqual(expected, l1.IsVertical);
         }
@@ -83,7 +83,7 @@ namespace Archimedes.Geometry.Tests
         {
             var spv = Vector2.Parse(sp);
             var epv = Vector2.Parse(ep);
-            var l1 = new Line2(spv, epv);
+            var l1 = new LineSegment2(spv, epv);
 
             Assert.AreEqual(expected, l1.IsHorizontal);
         }
@@ -94,8 +94,8 @@ namespace Archimedes.Geometry.Tests
         [TestCase("(10,10) (10,100)", "(0,303) (0,500)", true)] // Two vert lines
         public void IsParallelTo(string line1Str, string line2Str, bool expected)
         {
-            var line1 = Line2.Parse(line1Str);
-            var line2 = Line2.Parse(line2Str);
+            var line1 = LineSegment2.Parse(line1Str);
+            var line2 = LineSegment2.Parse(line2Str);
             Assert.AreEqual(expected, line1.IsParallelTo(line2));
         }
          
@@ -110,8 +110,8 @@ namespace Archimedes.Geometry.Tests
         [TestCase("(25, 567.52168),(355.95663, 567.52168)", "(212.97, 555.5),(212.97, 579.5)", "(212.97, 567.52168)")] // Specail real world case
         public void IntersectLine(string line1Str, string line2Str, string expectedIntersection)
         {
-            var line1 = Line2.Parse(line1Str);
-            var line2 = Line2.Parse(line2Str);
+            var line1 = LineSegment2.Parse(line1Str);
+            var line2 = LineSegment2.Parse(line2Str);
 
             var expected = Vector2.Parse(expectedIntersection);
 
@@ -146,7 +146,7 @@ namespace Archimedes.Geometry.Tests
 
         public void InterceptRect(string line1Str, string rectLocationStr, string rectSizeStr, string expectedIntersections)
         {
-            var line1 = Line2.Parse(line1Str);
+            var line1 = LineSegment2.Parse(line1Str);
             var rect = new AARectangle(Vector2.Parse(rectLocationStr), SizeD.Parse(rectSizeStr));
 
             var expectedInters = Vector2.ParseAll(expectedIntersections);

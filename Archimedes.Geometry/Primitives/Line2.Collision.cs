@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Archimedes.Geometry.Primitives
 {
-    public partial class Line2 : IGeometry
+    public partial class LineSegment2 : IGeometry
     {
         #region Line - Line Intersection
 
@@ -14,7 +14,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="other"></param>
         /// <param name="tolerance"></param>
         /// <returns>Returns a Point if func succeeds. If there is no interception, empty point is returned.</returns>
-        private Vector2? InterceptLine(Line2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private Vector2? InterceptLine(LineSegment2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
 
             double interPntX = 0;
@@ -53,7 +53,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="other"></param>
         /// <param name="tolerance"></param>
         /// <returns>Returns true/false.</returns>
-        public bool InterceptLineWith(Line2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool InterceptLineWith(LineSegment2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             double intersectionX = 0;
             double intersectionY = 0;

@@ -165,7 +165,7 @@ namespace Archimedes.Geometry
             get
             {
                 var mp = MiddlePoint;
-                return new Circle2(mp, Line2.CalcLenght(mp, Location));
+                return new Circle2(mp, LineSegment2.CalcLenght(mp, Location));
             }
         }
 

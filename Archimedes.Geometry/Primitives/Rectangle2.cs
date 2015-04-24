@@ -288,7 +288,7 @@ namespace Archimedes.Geometry.Primitives
         /// Creates the 4 Lines which encloses this Rectangle
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Line2> ToLines()
+        public IEnumerable<LineSegment2> ToLines()
         {
             return _rect.ToLines();
         }
@@ -330,10 +330,10 @@ namespace Archimedes.Geometry.Primitives
             if (vertices == null) throw new ArgumentNullException("vertices");
             if (vertices.Count() != 4) throw new ArgumentException("You must submit 4 vertices!");
 
-            var topLine = new Line2(vertices[0], vertices[1]).ToVector();
-            var rightLine = new Line2(vertices[1], vertices[2]).ToVector();
-            var bottomLine = new Line2(vertices[2], vertices[3]).ToVector();
-            var leftLine = new Line2(vertices[3], vertices[0]).ToVector();
+            var topLine = new LineSegment2(vertices[0], vertices[1]).ToVector();
+            var rightLine = new LineSegment2(vertices[1], vertices[2]).ToVector();
+            var bottomLine = new LineSegment2(vertices[2], vertices[3]).ToVector();
+            var leftLine = new LineSegment2(vertices[3], vertices[0]).ToVector();
 
             // Check that two lines have equal length
 

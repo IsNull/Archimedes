@@ -348,15 +348,15 @@ namespace Archimedes.Geometry.Primitives
         /// Gets all border lines of this polygon including the closing line
         /// </summary>
         /// <returns></returns>
-        public Line2[] ToLines()
+        public LineSegment2[] ToLines()
         {
-            var lines = new Line2[_vertices.Count];
+            var lines = new LineSegment2[_vertices.Count];
 
             if(_vertices.Count > 1)
             {
                 for (int i = 0; i < _vertices.Count; i++)
                 {
-                    lines[i] = new Line2(
+                    lines[i] = new LineSegment2(
                         _vertices[i], 
                         _vertices[(i + 1) % _vertices.Count] // next vertex, cycle on end to the beginning
                         );

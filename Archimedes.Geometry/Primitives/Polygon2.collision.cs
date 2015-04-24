@@ -88,7 +88,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="otherLines"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        private bool IntersectLinesWith(Line2[] otherLines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private bool IntersectLinesWith(LineSegment2[] otherLines, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var myLines = this.ToLines();
 
@@ -113,9 +113,9 @@ namespace Archimedes.Geometry.Primitives
 
         public IEnumerable<Vector2> Intersect(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            if (other is Line2)
+            if (other is LineSegment2)
             {
-                return this.InterceptLine(other as Line2, tolerance);
+                return this.InterceptLine(other as LineSegment2, tolerance);
             }
             else if (other is Circle2)
             {
@@ -176,7 +176,7 @@ namespace Archimedes.Geometry.Primitives
         /// <param name="other"></param>
         /// <param name="tolerance"></param>
         /// <returns></returns>
-        private IEnumerable<Vector2> InterceptLine(Line2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private IEnumerable<Vector2> InterceptLine(LineSegment2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var intersections = new List<Vector2>();
             var thisLines = ToLines();
@@ -207,7 +207,7 @@ namespace Archimedes.Geometry.Primitives
 
                     foreach (var vertex in this._vertices)
                     {
-                        dist = Line2.CalcLenght(middlePoint, vertex);
+                        dist = LineSegment2.CalcLenght(middlePoint, vertex);
                         if (longestDist < dist)
                             longestDist = dist;
                     }

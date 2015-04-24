@@ -22,7 +22,7 @@ namespace Archimedes.Geometry.Rendering.Primitives
             };
         }
 
-        public static VisualLine Create(Line2 line, Pen pen = null)
+        public static VisualLine Create(LineSegment2 line, Pen pen = null)
         {
             return new VisualLine(line)
             {
@@ -95,9 +95,9 @@ namespace Archimedes.Geometry.Rendering.Primitives
 
         public static Visual CreateGeneric(IGeometry geometry, Pen pen = null, Brush brush = null)
         {
-            if (geometry is Line2)
+            if (geometry is LineSegment2)
             {
-                return Create(geometry as Line2, pen);
+                return Create(geometry as LineSegment2, pen);
             }
             if (geometry is Arc)
             {

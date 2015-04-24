@@ -72,7 +72,7 @@
     <Compile Include="Primitives\Circle2.cs" />
     <Compile Include="Primitives\ComplexGeometry.cs" />
     <Compile Include="Primitives\Line2.Collision.cs" />
-    <Compile Include="Primitives\Line2.cs" />
+    <Compile Include="Primitives\LineSegment2.cs" />
     <Compile Include="Primitives\LineString.cs" />
     <Compile Include="Primitives\Polygon2.collision.cs" />
     <Compile Include="Primitives\Polygon2.cs" />

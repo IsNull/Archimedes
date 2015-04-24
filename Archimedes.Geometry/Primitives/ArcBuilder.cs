@@ -57,8 +57,8 @@
             Vector2 vRay1 = new Vector2(startPoint, interPoint).GetOrthogonalVector(direction);    //Direction doesn't matter !?
             Vector2 vRay2 = new Vector2(interPoint, endPoint).GetOrthogonalVector(direction);      //Direction doesn't matter !?
 
-            var ray1StartPoint = new Line2(startPoint, interPoint).MiddlePoint;
-            var ray2StartPoint = new Line2(interPoint, endPoint).MiddlePoint;
+            var ray1StartPoint = new LineSegment2(startPoint, interPoint).MiddlePoint;
+            var ray2StartPoint = new LineSegment2(interPoint, endPoint).MiddlePoint;
 
             rays[0] = new Ray(vRay1, ray1StartPoint);
             rays[1] = new Ray(vRay2, ray2StartPoint);

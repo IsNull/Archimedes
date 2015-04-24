@@ -132,9 +132,9 @@ namespace Archimedes.Geometry.Primitives
 
         public virtual bool HasCollision(IGeometry other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            if (other is Line2)
+            if (other is LineSegment2)
             {
-                return this.InterceptLineWith(other as Line2, tolerance);
+                return this.InterceptLineWith(other as LineSegment2, tolerance);
             }
             else if (other is Circle2)
             {
@@ -160,9 +160,9 @@ namespace Archimedes.Geometry.Primitives
         public virtual IEnumerable<Vector2> Intersect(IGeometry other,
             double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            if (other is Line2)
+            if (other is LineSegment2)
             {
-                return this.InterceptLine(other as Line2, tolerance);
+                return this.InterceptLine(other as LineSegment2, tolerance);
             }
             else if (other is Circle2)
             {

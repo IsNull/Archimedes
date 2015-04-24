@@ -10,8 +10,8 @@ namespace Archimedes.Geometry
         /// </summary>
         /// <param name="vertices">Sorted vertices</param>
         /// <returns>Line(s)</returns>
-        public static IEnumerable<Line2> VerticesPathToLines(IEnumerable<Vector2> vertices) {
-            var segments = new List<Line2>();
+        public static IEnumerable<LineSegment2> VerticesPathToLines(IEnumerable<Vector2> vertices) {
+            var segments = new List<LineSegment2>();
             Vector2? startPoint = null;
             Vector2? endPoint = null;
             int i = 0;
@@ -24,7 +24,7 @@ namespace Archimedes.Geometry
                     endPoint = uP;
 
                 if (startPoint.HasValue && endPoint.HasValue) {
-                    segments.Add(new Line2(startPoint.Value, endPoint.Value));
+                    segments.Add(new LineSegment2(startPoint.Value, endPoint.Value));
                 }
                 startPoint = endPoint;
             }

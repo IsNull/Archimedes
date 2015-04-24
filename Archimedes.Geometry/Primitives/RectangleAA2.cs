@@ -117,7 +117,7 @@ namespace Archimedes.Geometry.Primitives
             get
             {
                 var mp = MiddlePoint;
-                return new Circle2(mp, Line2.CalcLenght(mp, Location));
+                return new Circle2(mp, LineSegment2.CalcLenght(mp, Location));
             }
         }
 
@@ -194,9 +194,9 @@ namespace Archimedes.Geometry.Primitives
             if (BoundingCircle.HasCollision(other.BoundingCircle))
             {
                 // We can handle some collisions better here
-                if (other is Line2)
+                if (other is LineSegment2)
                 {
-                    return HasCollision(other as Line2, tolerance);
+                    return HasCollision(other as LineSegment2, tolerance);
                 }else if (other is Circle2)
                 {
                     return HasCollision(other as Circle2, tolerance);
@@ -219,7 +219,7 @@ namespace Archimedes.Geometry.Primitives
 
         #region Line2 - RectangleAA2
 
-        private bool HasCollision(Line2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private bool HasCollision(LineSegment2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             // Test each line if it has a collision
             var lines = ToLines();
@@ -270,7 +270,7 @@ namespace Archimedes.Geometry.Primitives
 
         #endregion
 
-        private Line2[] ToLines()
+        private LineSegment2[] ToLines()
         {
             var topRight = new Vector2(X + Width, Y);
             var bottomRight = new Vector2(X + Width, Y + Height);
@@ -278,12 +278,16 @@ namespace Archimedes.Geometry.Primitives
 
             return new[]
             {
-                new Line2(Location, topRight),
-                new Line2(topRight, bottomRight),
-                new Line2(bottomRight, bottomLeft),
-                new Line2(bottomLeft, Location)
+                new LineSegment2(Location, topRight),
+                new LineSegment2(topRight, bottomRight),
+                new LineSegment2(bottomRight, bottomLeft),
+                new LineSegment2(bottomLeft, Location)
             };
         }
 
+        public override string ToString()
+        {
+            return "(" + Location + ", " + Size + ")";
+        }
     }
 }

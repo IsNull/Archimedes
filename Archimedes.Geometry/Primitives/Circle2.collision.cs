@@ -25,7 +25,7 @@ namespace Archimedes.Geometry.Primitives
         /// <returns></returns>
         public static bool Contains(Vector2 middlePoint, double radius, Vector2 checkPoint, double tolerance)
         {
-            var len = Line2.CalcLenght(middlePoint, checkPoint);
+            var len = LineSegment2.CalcLenght(middlePoint, checkPoint);
             var dist = radius - (len - tolerance);
             return (dist >= 0);
         }
@@ -39,7 +39,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="uLine"></param>
         /// <returns></returns>
-        private bool InterceptLineWith(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private bool InterceptLineWith(LineSegment2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var intersections = InterceptLine(uLine, tolerance);
             return intersections.Any();
@@ -50,7 +50,7 @@ namespace Archimedes.Geometry.Primitives
         /// </summary>
         /// <param name="uLine"></param>
         /// <returns>Returns all intersection points</returns>
-        private List<Vector2> InterceptLine(Line2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        private List<Vector2> InterceptLine(LineSegment2 uLine, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var intersections = new List<Vector2>();
             Vector2 p1, p2;
@@ -58,7 +58,7 @@ namespace Archimedes.Geometry.Primitives
 
             // we assume that the circle Middlepoint is NULL/NULL
             // So we move the Line with the delta to NULL
-            var helperLine = new Line2(uLine.Start - location, uLine.End - location);
+            var helperLine = new LineSegment2(uLine.Start - location, uLine.End - location);
 
             // line
             var q = helperLine.YMovement;
@@ -144,7 +144,7 @@ namespace Archimedes.Geometry.Primitives
 
         private bool InterceptWithCircle(Circle2 other, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            var middlepointDistance = Line2.CalcLenght(this.MiddlePoint, other.MiddlePoint);
+            var middlepointDistance = LineSegment2.CalcLenght(this.MiddlePoint, other.MiddlePoint);
             var radiusSum = this.Radius + other.Radius;
             return !(middlepointDistance > (radiusSum + tolerance));
         }
@@ -154,7 +154,7 @@ namespace Archimedes.Geometry.Primitives
             var interceptions = new List<Vector2>();
             if (InterceptWithCircle(other, tolerance))
             {
-                var middlepointDistance = Line2.CalcLenght(this.MiddlePoint, other.MiddlePoint);
+                var middlepointDistance = LineSegment2.CalcLenght(this.MiddlePoint, other.MiddlePoint);
                 if (middlepointDistance < Math.Abs(this.Radius + other.Radius))
                 {
                     // circle is contained in other

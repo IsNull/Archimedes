@@ -11,8 +11,8 @@ namespace Archimedes.Geometry
     {
         public static Vector2 GetEndVector(IGeometry g) {
             Vector2 v;
-            if (g is Line2) {
-                v = (g as Line2).ToVector();
+            if (g is LineSegment2) {
+                v = (g as LineSegment2).ToVector();
             } else if (g is Arc) {
                 v = (g as Arc).EndVector;
             } else
@@ -26,7 +26,7 @@ namespace Archimedes.Geometry
         /// <param name="direction"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        public static Angle GetSignedAngleBetween(Line2 direction, Vector2 next)
+        public static Angle GetSignedAngleBetween(LineSegment2 direction, Vector2 next)
         {
             var angle = next.GetAngleTo(direction.ToVector());
             return angle * (direction.IsLeft(next) ? 1 : -1);
