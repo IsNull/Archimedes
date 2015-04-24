@@ -125,7 +125,7 @@ namespace Archimedes.Geometry
             }
             else if (other.Direction.IsVertical)
             {                // Line2 vertical (so it must lie on Line2.X)
-                intersectionpntX = other.Direction.X;
+                intersectionpntX = other.Location.X;
                 intersectionpntY = (Direction.Slope * intersectionpntX + this.CalcYIntercept());
             }
 
