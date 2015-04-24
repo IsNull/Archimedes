@@ -55,6 +55,7 @@
     <Compile Include="DataStructures\CircularDoublyLinkedList.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="IOrdered.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="MathHelper.cs" />
     <Compile Include="Extensions\NumberExtension.cs" />
     <Compile Include="GeometrySettings.cs" />
