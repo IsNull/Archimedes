@@ -7,8 +7,7 @@
     {
         #region Fields
 
-        Vector2 _location;
-        Vector2 _direction;
+        private Line _infiniteLine;
 
         #endregion
 
@@ -20,9 +19,14 @@
         public Ray(Ray prototype)
             : this(prototype.Direction, prototype.Location) { }
 
-        public Ray(double x, double y, Vector2 p) {
-            _direction = new Vector2(x, y);
-            this.Location = p;
+        /// <summary>
+        /// Creates a new Ray
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="startPoint">The origin location of this ray</param>
+        public Ray(double x, double y, Vector2 startPoint) {
+            _infiniteLine = new Line(startPoint, new Vector2(x, y));
         }
 
         #endregion 
@@ -33,40 +37,36 @@
         /// Startpoint of this Ray
         /// </summary>
         public Vector2 Location {
-            get { return _location; }
-            set { _location = value; }
+            get { return _infiniteLine.Location; }
+            set { _infiniteLine.Location = value; }
         }
 
         /// <summary>
         /// Vector of this Ray
         /// </summary>
         public Vector2 Direction {
-            get { return _direction; }
-        }
-
-        public double YDist {
-            get {   // q = y1 - m * x1 
-                if (Direction.IsVertical) {
-                    return 0;
-                } else {
-                    return this.Location.Y - (Direction.Slope * this.Location.X);
-                }
-            }
+            get { return _infiniteLine.Direction; }
         }
 
         #endregion
 
         #region Public Methods
 
+
         /// <summary>
         /// Test if a Point lies on the Ray
         /// </summary>
         /// <param name="target"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
-        public bool Contains(Vector2 target, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool Contains(Vector2 point, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            var v = new Vector2(Location, target);
-            return (Direction.IsDirectionEqual(v, tolerance));
+            if (_infiniteLine.Contains(point))
+            {
+                var v = new Vector2(Location, point);
+                return (Direction.IsDirectionEqual(v, tolerance));
+            }
+            return false;
         }
         
         public Ray Clone() {
@@ -95,38 +95,23 @@
         /// 
         /// </summary>
         /// <param name="uRay"></param>
+        /// <param name="tolerance"></param>
         /// <returns></returns>
         private Vector2? IntersectN(Ray uRay, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
+            var intersection = _infiniteLine.Intersection(uRay._infiniteLine, tolerance);
 
-            if (Direction.IsParallelTo(uRay.Direction, tolerance))
+            if (intersection.HasValue)
             {
-                return null;
-            }
-
-            double intersectionpntX = 0;
-            double intersectionpntY = 0;
-
-            if (!Direction.IsVertical && !uRay.Direction.IsVertical) {    // both NOT vertical
-                intersectionpntX = ((-1.0 * (this.YDist - uRay.YDist)) / (Direction.Slope - uRay.Direction.Slope));
-                intersectionpntY = (Direction.Slope * intersectionpntX + this.YDist);
-            } else if (Direction.IsVertical) {                  // this vertical (so it must lie on this.X)
-                intersectionpntX = Direction.X;
-                intersectionpntY = (uRay.Direction.Slope * intersectionpntX + uRay.YDist);
-            } else if (uRay.Direction.IsVertical) {                // Line2 vertical (so it must lie on Line2.X)
-                intersectionpntX = uRay.Direction.X;
-                intersectionpntY = (Direction.Slope * intersectionpntX + this.YDist);
-            }
-
-            var intersectionpnt = new Vector2(intersectionpntX, intersectionpntY);
-
-            //check if computed intercept lies on our line.
-            if (Contains(intersectionpnt, tolerance) || uRay.Contains(intersectionpnt, tolerance))
-            {
-                return intersectionpnt;
+                //check if computed point lies on our line.
+                if (Contains(intersection.Value, tolerance) || uRay.Contains(intersection.Value, tolerance))
+                {
+                    return intersection;
+                }
             }
             return null;
         }
+
         #endregion
 
 
