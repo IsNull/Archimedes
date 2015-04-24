@@ -313,6 +313,15 @@ namespace Archimedes.Geometry.Primitives
             return new Vertices{ this.Start, this.End };
         }
 
+        /// <summary>
+        /// Returns an infinite line based on this line segment
+        /// </summary>
+        /// <returns></returns>
+        public Line ToLine()
+        {
+            return new Line(Location, ToVector());
+        }
+
         #endregion
 
         #region Geomerty Base
@@ -481,5 +490,7 @@ namespace Archimedes.Geometry.Primitives
         {
             return string.Format("({0}, {1}) : Length: {2}, Slope: {3}", Start, End, Length, Slope);
         }
+
+
     }
 }
