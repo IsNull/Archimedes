@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace Archimedes.Geometry.Tests
 {
-    public class Line2Tests
+    public class LineSegment2Tests
     {
         #region Base Tests
 

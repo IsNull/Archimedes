@@ -54,8 +54,9 @@
   <ItemGroup>
     <Compile Include="AngleTests.cs" />
     <Compile Include="ArcTests.cs" />
-    <Compile Include="Line2Tests.cs" />
+    <Compile Include="LineSegment2Tests.cs" />
     <Compile Include="Circle2Tests.cs" />
+    <Compile Include="LineTests.cs" />
     <Compile Include="Polygon2Tests.cs" />
     <Compile Include="Rectangle2Tests.cs" />
     <Compile Include="VectorTests.cs" />
