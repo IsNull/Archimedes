@@ -44,6 +44,28 @@ namespace Archimedes.Patterns.Container
             get { return _name; }
         }
 
+        /// <summary>
+        /// Auto wire fields / property dependencies which are annotated with Inject
+        /// </summary>
+        /// <param name="instance"></param>
+        public void Autowire(object instance)
+        {
+
+            var targetFields = from f in instance.GetType().GetFields()
+                               where f.IsDefined(typeof(InjectAttribute), false)
+                               select f;
+
+            foreach (var targetField in targetFields)
+            {
+                if (targetField.GetValue(instance) == null)
+                { // Only inject if the field is null
+                    var fieldValue = Resolve(targetField.FieldType);
+                    targetField.SetValue(instance, fieldValue);
+                }
+            }
+
+        }
+
 
 
         private object ResolveInstanceFor(Type t)

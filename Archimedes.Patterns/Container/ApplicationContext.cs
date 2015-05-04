@@ -17,7 +17,7 @@ namespace Archimedes.Patterns.Container
 
         private static readonly ApplicationContext _instance = new ApplicationContext();
 
-        public ApplicationContext Instance
+        public static ApplicationContext Instance
         {
             get { return _instance; }
         }
@@ -32,7 +32,8 @@ namespace Archimedes.Patterns.Container
 
         public void EnableAutoConfiguration()
         {
-            
+            var conf = new AutoModuleConfiguration(AutoFindComponents());
+            RegisterContext(_defaultContext, conf);
         }
 
 

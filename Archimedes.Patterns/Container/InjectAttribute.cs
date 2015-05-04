@@ -8,7 +8,7 @@ namespace Archimedes.Patterns.Container
     /// <summary>
     /// Marks a Constructor as Injection target
     /// </summary>
-    [AttributeUsage(AttributeTargets.Constructor)]
+    [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Field)]
     public class InjectAttribute : Attribute
     {
 
