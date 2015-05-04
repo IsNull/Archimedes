@@ -24,7 +24,7 @@ namespace Archimedes.Patterns.MVMV
         #region DisplayName
 
 
-        string _displayName = "";
+        string _displayName = "<no name>";
 
         /// <summary>
         /// Returns the user-friendly name of this object.
