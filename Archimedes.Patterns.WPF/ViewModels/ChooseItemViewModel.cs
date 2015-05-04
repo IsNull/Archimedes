@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Input;
 using System.ComponentModel;
+using System.Windows.Data;
 using Archimedes.Patterns.WPF.Commands;
 
 namespace Archimedes.Patterns.WPF.ViewModels
@@ -17,8 +18,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
     {
         #region Fields
 
-        T _selectedEntity;
-        Predicate<T> _customTypeSaveFilter;
+        private T _selectedEntity;
+        private readonly Predicate<T> _customTypeSaveFilter;
 
         #endregion
 
@@ -29,15 +30,13 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// </summary>
         /// <param name="items">Enumeration to present</param>
         /// <param name="itemFilter">optional Filter</param>
-        public ChooseItemDialogeViewModel(IEnumerable<T> items, Predicate<T> itemFilter = null) {
-            if (items == null)
-                throw new ArgumentNullException("items");
-
-            _itemPresenter = ViewBuilder.BuildView(items);
+        public ChooseItemDialogeViewModel(IEnumerable<T> items, Predicate<T> itemFilter = null)
+            : base(CollectionViewSource.GetDefaultView(items))
+        {
             _customTypeSaveFilter = itemFilter;
 
             if (_customTypeSaveFilter != null)
-                _itemPresenter.Filter = FilterWrapper;
+                Items.Filter = FilterWrapper;
         }
 
         #endregion
@@ -71,7 +70,6 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         protected override void ChooseSelectedItem() {
             ChoosenItem = SelectedEntity;
-            this.CloseCommand.Execute(null);
         }
 
         protected override bool CanChooseSelectedItem {
@@ -85,7 +83,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        bool FilterWrapper(object item) {
+        private bool FilterWrapper(object item)
+        {
             T other = item as T;
             if (other == null)
                 return false;

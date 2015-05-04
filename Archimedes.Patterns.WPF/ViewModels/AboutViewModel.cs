@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
-    public class AboutViewModel : WorkspaceViewModel
+    public class AboutViewModel : DialogViewModel
     {
 
         static string _version;

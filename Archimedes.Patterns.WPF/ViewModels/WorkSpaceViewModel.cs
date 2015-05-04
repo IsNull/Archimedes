@@ -23,10 +23,11 @@ namespace Archimedes.Patterns.WPF.ViewModels
     {
         #region Fields
 
-        RelayCommand _closeCommand;
-        RelayCommand _focusCommand;
+        ICommand _closeCommand;
+        ICommand _focusCommand;
         bool _hasFocus = false;
         bool _isOnWorkspace = false;
+        private bool _isVisible;
 
         #endregion // Fields
 
@@ -67,11 +68,29 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #region Constructor
 
-        protected WorkspaceViewModel() { }
+        protected WorkspaceViewModel()
+        {
+            IsVisible = true;
+            CanClose = true;
+        }
 
         #endregion // Constructor
 
         #region Properties
+
+        /// <summary>
+        /// The id of the content view.
+        /// This is primarly used to support persistence of a custom view layout and 
+        /// later recovering the layout again.
+        /// 
+        /// This id must be unique and also be the same after an application restart.
+        /// </summary>
+        public string ContentId { get; set; }
+
+        /// <summary>
+        /// Determines if the view assigned to this viewmodel can be removed from the workspace by the user.
+        /// </summary>
+        public bool CanClose { get; set; }
 
         public static XmlLanguage DefaultLanguage = XmlLanguage.Empty;
         public virtual XmlLanguage Language {
@@ -86,6 +105,16 @@ namespace Archimedes.Patterns.WPF.ViewModels
             set { 
                 _hasFocus = value;
                 OnHasFocusChanged();
+            }
+        }
+
+        public bool IsVisible
+        {
+            get { return _isVisible; }
+            set
+            {
+                _isVisible = value;
+                OnPropertyChanged(() => IsVisible);
             }
         }
 
@@ -126,6 +155,9 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         #endregion // CloseCommand
 
+
+        public ICommand FloatCommand { get; set; }
+
         #region Focus Command
 
         /// <summary>
@@ -139,6 +171,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
                 }
                 return _focusCommand;
             }
+            set { _focusCommand = value; }
         }
         #endregion // FocusCommand
 

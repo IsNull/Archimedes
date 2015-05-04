@@ -10,6 +10,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <summary>
         /// Dialoge Result
         /// </summary>
-        IDDialogResult DialogeResult { get; }
+        DialogResultType DialogeResult { get; }
+
+        IEnumerable<DialogCommand> DialogCommands { get; }
     }
 }

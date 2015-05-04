@@ -8,7 +8,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
     /// <summary>
     /// Specifies identifiers to indicate the return value of a dialog box.
     /// </summary>
-    public enum IDDialogResult
+    public enum DialogResultType
     {
         /// <summary>
         /// Nothing is returned from the dialog box. This means that the modal dialog

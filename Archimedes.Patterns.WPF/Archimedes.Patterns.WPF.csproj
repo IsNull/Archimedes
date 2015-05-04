@@ -146,14 +146,15 @@
     <Compile Include="ViewModels\ChooseItemViewModel.cs" />
     <Compile Include="ViewModels\Commands\CommandManagerViewModel.cs" />
     <Compile Include="ViewModels\Commands\UnDoCommandViewModel.cs" />
+    <Compile Include="ViewModels\CommandType.cs" />
+    <Compile Include="ViewModels\DialogCommand.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
-    <Compile Include="ViewModels\IDDialogResult.cs" />
+    <Compile Include="ViewModels\DialogResultType.cs" />
     <Compile Include="ViewModels\IDialogViewModel.cs" />
     <Compile Include="ViewModels\IWorkspaceViewModel.cs" />
     <Compile Include="ViewModels\ThreadingSupport.cs" />
     <Compile Include="ViewModels\Trees\ITreeViewItemViewModel.cs" />
     <Compile Include="ViewModels\Trees\TreeViewItemViewModel.cs" />
-    <Compile Include="ViewModels\ViewBuilder.cs" />
     <Compile Include="ViewModels\ViewModelWPF.cs" />
     <Compile Include="ViewModels\WorkSpaceViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

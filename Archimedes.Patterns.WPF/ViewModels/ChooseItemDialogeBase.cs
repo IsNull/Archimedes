@@ -10,8 +10,15 @@ namespace Archimedes.Patterns.WPF.ViewModels
 {
     public abstract class ChooseItemDialogeBase : DialogViewModel
     {
-        protected ICollectionView _itemPresenter;
+        private readonly ICollectionView _itemPresenter;
 
+
+        protected ChooseItemDialogeBase(ICollectionView itemPresenter)
+        {
+            if (itemPresenter == null)
+                throw new ArgumentNullException("itemPresenter");
+            _itemPresenter = itemPresenter;
+        }
 
         /// <summary>
         /// Items which are chooseable
@@ -20,24 +27,16 @@ namespace Archimedes.Patterns.WPF.ViewModels
             get { return _itemPresenter; }
         }
 
+        protected override IEnumerable<DialogCommand> BuildCommands()
+        {
+           yield return BuildDefaultCommand("CANCEL", DialogResultType.Cancel, false, true);
 
-        #region Commands
-
-        public ICommand ChooseSelectedItemCommand {
-            get {
-                return new RelayCommand(
-                    x => ChooseSelectedItemInternal(),
-                    x => CanChooseSelectedItem);
-            }
+           var chooseCommand = BuildDefaultCommand("CHOOSE", DialogResultType.OK, true);
+           chooseCommand.CustomAction = o => ChooseSelectedItem();
+           chooseCommand.CustomCanExecute = o => CanChooseSelectedItem;
+           yield return chooseCommand;
         }
 
-        #endregion
-
-
-        private void ChooseSelectedItemInternal() {
-            ChooseSelectedItem();
-            DialogeResult = IDDialogResult.OK;
-        }
 
         protected abstract void ChooseSelectedItem();
         protected abstract bool CanChooseSelectedItem { get; }
