@@ -303,6 +303,12 @@ namespace Archimedes.Geometry
 
         #region Public Query Methods
 
+        /// <summary>
+        /// Checks if this vector is parallel to the given vector
+        /// </summary>
+        /// <param name="othervector"></param>
+        /// <param name="tolerance"></param>
+        /// <returns></returns>
         public bool IsParallelTo(Vector2 othervector, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
             var @this = this.Normalize();

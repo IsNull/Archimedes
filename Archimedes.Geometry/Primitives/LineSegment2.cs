@@ -242,14 +242,15 @@ namespace Archimedes.Geometry.Primitives
         /// TODO Probably change this method to return the intersectin line segment
         /// 
         /// </summary>
-        /// <param name="line2"></param>
-        /// <param name="tolerance"></param>
+        /// <param name="other">The other line segment</param>
+        /// <param name="parallelTolerance">The tolerance for parallel detection</param>
+        /// <param name="overlapTolerance">The tolerance for overlap detection</param>
         /// <returns></returns>
-        public bool IsCongruentTo(LineSegment2 line2, double tolerance = GeometrySettings.DEFAULT_TOLERANCE)
+        public bool IsCongruentTo(LineSegment2 other, double overlapTolerance = GeometrySettings.DEFAULT_TOLERANCE, double parallelTolerance = GeometrySettings.DEFAULT_TOLERANCE)
         {
-            if (IsParallelTo(line2, tolerance))
+            if (IsParallelTo(other, parallelTolerance))
             {
-                return (Contains(line2.Start, tolerance) || Contains(line2.End, tolerance));
+                return (Contains(other.Start, overlapTolerance) || Contains(other.End, overlapTolerance));
             }
             return false;
         }
