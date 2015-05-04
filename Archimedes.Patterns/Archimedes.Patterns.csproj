@@ -85,6 +85,13 @@
     <Compile Include="Conditions\IOperatorManagerService.cs" />
     <Compile Include="Conditions\Operator.cs" />
     <Compile Include="Conditions\OperatorManagerService.cs" />
+    <Compile Include="Container\ApplicationContext.cs" />
+    <Compile Include="Container\AutoModuleConfiguration.cs" />
+    <Compile Include="Container\ComponentAttribute.cs" />
+    <Compile Include="Container\ElderBox.cs" />
+    <Compile Include="Container\ElderModuleConfiguration.cs" />
+    <Compile Include="Container\InjectAttribute.cs" />
+    <Compile Include="Container\ServiceAttribute.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Crypto\StringObfuscator.cs" />
     <Compile Include="Data\Entity.cs" />
@@ -115,7 +122,7 @@
     <Compile Include="Notifications\NotificationCollection.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
     <Compile Include="Conditions\DynamicConditionExpression.cs" />
-    <Compile Include="Reflection\TypeHelper.cs" />
+    <Compile Include="Notifications\Reflection\TypeHelper.cs" />
     <Compile Include="RegEx\RegExReplaceAggregate.cs" />
     <Compile Include="RegEx\RegExReplacer.cs" />
     <Compile Include="Serializing\SerializableDictionary.cs" />
