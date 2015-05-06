@@ -1,5 +1,7 @@
 ﻿
 
+using Archimedes.Patterns.Container;
+
 namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
 {
     using System;
@@ -11,6 +13,7 @@ namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
     /// <summary>
     /// Pool for common used ViewModels
     /// </summary>
+    [Service]
     public class ViewModelPoolService : IViewModelPoolService
     {
         Dictionary<Type, ICacheable> _viewModels = new Dictionary<Type, ICacheable>();

@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections.Specialized;
+using Archimedes.Patterns.Container;
 using Archimedes.Patterns.Data;
 
 namespace Archimedes.Patterns.Commands
@@ -10,12 +8,13 @@ namespace Archimedes.Patterns.Commands
     /// <summary>
     /// Holds all executed Commands 
     /// </summary>
+    [Service]
     public class CustomCommandManager : ICommandManager
     {
         #region Fields
 
-        ObservableLimitedStack<ICommandUndo> commandsExecuted = new ObservableLimitedStack<ICommandUndo>();
-        StackLimited<ICommandUndo> commandsUndone = new StackLimited<ICommandUndo>();
+        private readonly ObservableLimitedStack<ICommandUndo> _commandsExecuted = new ObservableLimitedStack<ICommandUndo>();
+        private readonly StackLimited<ICommandUndo> _commandsUndone = new StackLimited<ICommandUndo>();
 
         #endregion
 
@@ -67,7 +66,7 @@ namespace Archimedes.Patterns.Commands
         /// </summary>
         public ObservableLimitedStack<ICommandUndo> History {
             get {
-                return commandsExecuted;
+                return _commandsExecuted;
             }
         }
 
@@ -75,9 +74,9 @@ namespace Archimedes.Patterns.Commands
         /// How many commands are tracked in the History and therefore are undoable?
         /// </summary>
         public uint HistoryLimit {
-            get { return commandsExecuted.Limit; }
+            get { return _commandsExecuted.Limit; }
             set {
-                commandsExecuted.Limit = value;
+                _commandsExecuted.Limit = value;
             }
         }
 
@@ -85,14 +84,14 @@ namespace Archimedes.Patterns.Commands
         /// Can the CommandManager undo something?
         /// </summary>
         public virtual bool CanUndo {
-            get { return commandsExecuted.Any(); }
+            get { return _commandsExecuted.Any(); }
         }
 
         /// <summary>
         /// Can the CommandManager redo smething?
         /// </summary>
         public virtual bool CanRedo {
-            get { return commandsUndone.Any(); }
+            get { return _commandsUndone.Any(); }
         }
 
         /// <summary>
@@ -100,8 +99,8 @@ namespace Archimedes.Patterns.Commands
         /// </summary>
         public ICommandUndo PreviewUndoCommand {
             get {
-                if (commandsExecuted.Count != 0)
-                    return commandsExecuted.Peek();
+                if (_commandsExecuted.Count != 0)
+                    return _commandsExecuted.Peek();
                 else
                     return null;
             }
@@ -112,8 +111,8 @@ namespace Archimedes.Patterns.Commands
         /// </summary>
         public ICommandUndo PreviewRedoCommand {
             get {
-                if (commandsUndone.Count != 0)
-                    return commandsUndone.Peek();
+                if (_commandsUndone.Count != 0)
+                    return _commandsUndone.Peek();
                 else
                     return null;
             }
@@ -138,7 +137,7 @@ namespace Archimedes.Patterns.Commands
             }
 
             if (!cmd.IsTransparentCommand) {
-                commandsExecuted.Push(cmd.CloneCommand());
+                _commandsExecuted.Push(cmd.CloneCommand());
                 OnCommandsExecutedChanged();
             }
 
@@ -160,9 +159,9 @@ namespace Archimedes.Patterns.Commands
                     var undo = this.CanUndo;
                     var redo = this.CanRedo;
 
-                    var cmd = commandsExecuted.Pop();
+                    var cmd = _commandsExecuted.Pop();
                     cmd.UnExecute();
-                    commandsUndone.Push(cmd);
+                    _commandsUndone.Push(cmd);
                     OnCommandsUndoneChanged();
 
                     if (undo != this.CanUndo)
@@ -189,9 +188,9 @@ namespace Archimedes.Patterns.Commands
                     var undo = this.CanUndo;
                     var redo = this.CanRedo;
 
-                    var cmd = commandsUndone.Pop();
+                    var cmd = _commandsUndone.Pop();
                     cmd.Redo();
-                    commandsExecuted.Push(cmd);
+                    _commandsExecuted.Push(cmd);
                     OnCommandsExecutedChanged();
 
 
@@ -212,8 +211,8 @@ namespace Archimedes.Patterns.Commands
         /// Clears the whole Command History
         /// </summary>
         public virtual void ClearHistory() {
-            commandsExecuted.ClearStack();
-            commandsUndone.ClearStack();
+            _commandsExecuted.ClearStack();
+            _commandsUndone.ClearStack();
             OnCanUndoChanged();
             OnCanRedoChanged();
             OnCommandsExecutedChanged();

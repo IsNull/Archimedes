@@ -11,24 +11,46 @@ namespace Archimedes.Patterns.Container
     /// </summary>
     public class ElderBox
     {
+        #region Fields
 
         private readonly Dictionary<Type, object> _serviceRegistry = new Dictionary<Type, object>();
         private readonly ElderModuleConfiguration _configuration;
         private readonly string _name;
 
+        #endregion
+
+        #region Constructor
 
         internal ElderBox(ElderModuleConfiguration configuration)
         {
+            if (configuration == null) throw new ArgumentNullException("configuration");
+
             _configuration = configuration;
         }
 
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Resolve an instance for the given Type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T Resolve<T>()
         {
             return (T)Resolve(typeof(T));
         }
 
+        /// <summary>
+        /// Resolve an instance for the given Type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public object Resolve(Type type)
         {
+            if (type == null) throw new ArgumentNullException("type");
+
             if (_serviceRegistry.ContainsKey(type))
             {
                 return _serviceRegistry[type];
@@ -39,65 +61,85 @@ namespace Archimedes.Patterns.Container
             return instance;
         }
 
+        /// <summary>
+        /// The name of the context of this container
+        /// </summary>
         public string ContextName
         {
             get { return _name; }
         }
 
         /// <summary>
-        /// Auto wire fields / property dependencies which are annotated with Inject
+        /// Auto wire fields / property dependencies which are annotated with <see cref="InjectAttribute"/> 
         /// </summary>
         /// <param name="instance"></param>
         public void Autowire(object instance)
         {
-
-            var targetFields = from f in instance.GetType().GetFields()
-                               where f.IsDefined(typeof(InjectAttribute), false)
-                               select f;
-
-            foreach (var targetField in targetFields)
+            try
             {
-                if (targetField.GetValue(instance) == null)
-                { // Only inject if the field is null
-                    var fieldValue = Resolve(targetField.FieldType);
-                    targetField.SetValue(instance, fieldValue);
+                var targetFields = from f in instance.GetType().GetFields()
+                    where f.IsDefined(typeof (InjectAttribute), false)
+                    select f;
+
+                foreach (var targetField in targetFields)
+                {
+                    if (targetField.GetValue(instance) == null)
+                    {
+                        // Only inject if the field is null
+                        var fieldValue = Resolve(targetField.FieldType);
+                        targetField.SetValue(instance, fieldValue);
+                    }
                 }
             }
-
+            catch (Exception e)
+            {
+                throw new AutowireException("Autowiring of instance " + instance.GetType().Name + " failed!", e);
+            }
         }
 
+        #endregion
 
+        #region Private methods
 
-        private object ResolveInstanceFor(Type t)
+        private object ResolveInstanceFor(Type type)
         {
+            if(type == null) throw new ArgumentNullException("type");
+
             object instance = null;
             // First check if we have a mapping for the given type
-            Type implementationType = _configuration.GetImplementaionTypeFor(t);
+            Type implementationType = _configuration.GetImplementaionTypeFor(type);
+            var typeForImplementation = implementationType ?? type;
+
 
             // Maybe this type has already been created
-            if (_serviceRegistry.ContainsKey(implementationType))
+            if (_serviceRegistry.ContainsKey(typeForImplementation))
             {
-                return _serviceRegistry[implementationType];
+                return _serviceRegistry[typeForImplementation];
             }
 
-            if (implementationType != null)
+
+            if (CanCreateInstance(typeForImplementation))
             {
-                instance = CreateInstance(implementationType);
+                instance = CreateInstance(typeForImplementation);
             }
             else
             {
-               // No mapping defined. If the requested type is a class itself,
-               // we may be able to instance it directly
-                if (CanCreateInstance(t))
-                {
-                    instance = CreateInstance(t);
-                }
+                throw new NotSupportedException("Can not create instance for type '" + type.Name + "' which was resolved to implementation '" + typeForImplementation.Name+"'!");
             }
+
             return instance;
         }
 
+        /// <summary>
+        /// Creates a new instance from the given implementaiton
+        /// </summary>
+        /// <param name="implementationType"></param>
+        /// <returns></returns>
         private object CreateInstance(Type implementationType)
         {
+            if (implementationType == null) throw new ArgumentNullException("implementationType");
+
+
             // Try to create an instance of the given type.
 
             var constructor = (from c in implementationType.GetConstructors()
@@ -106,21 +148,30 @@ namespace Archimedes.Patterns.Container
 
             if (constructor == null)
             {
-                constructor = implementationType.GetConstructors().FirstOrDefault();
+                // There was no Constructor with the Inject Attribute.
+                // Just get the first available one
+                constructor = (from c in implementationType.GetConstructors()
+                               where !c.IsPrivate
+                               select c).FirstOrDefault();
             }
 
             if (constructor != null)
             {
-                return CreateInstanceWithConstructor(implementationType, constructor);
+                // We have found a constructor
+                var instance = CreateInstanceWithConstructor(implementationType, constructor);
+                
+                Autowire(instance);
+                
+                return instance;
             }
 
-            throw new NotSupportedException("Can not create an instance of class " + implementationType.Name);
+            throw new NotSupportedException("Can not create an instance for type " + implementationType.Name + " - no viable (public/protected) constructor found.");
         }
 
         private object CreateInstanceWithConstructor(Type type, ConstructorInfo constructor)
         {
             // Resolve all parameters 
-            var parameters = ResolveParameters(constructor);
+            var parameters = AutowireParameters(constructor);
             return Activator.CreateInstance(type, parameters);
         }
 
@@ -129,23 +180,39 @@ namespace Archimedes.Patterns.Container
         /// </summary>
         /// <param name="constructor"></param>
         /// <returns></returns>
-        private object[] ResolveParameters(ConstructorInfo constructor)
+        private object[] AutowireParameters(ConstructorInfo constructor)
         {
-            var parameterInfos =constructor.GetParameters();
-            List<object> parameters = new List<object>(parameterInfos.Length);
+            if (constructor == null) throw new ArgumentNullException("constructor");
+
+            var parameterInfos = constructor.GetParameters();
+            var parameters = new List<object>(parameterInfos.Length);
 
             foreach (var parameter in parameterInfos)
             {
-                var paramInstance = Resolve(parameter.ParameterType);
-                parameters.Add(paramInstance);
+                try
+                {
+                    var paramInstance = Resolve(parameter.ParameterType);
+                    parameters.Add(paramInstance);
+                }
+                catch (Exception e)
+                {
+                    throw new AutowireException("Autowiring constructor parameter " + parameter.Name +"("+parameter.ParameterType+")" + " has failed!", e);
+                }
             }
             return parameters.ToArray();
         }
 
+        /// <summary>
+        /// Is it possible to create an instance of the given type.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private bool CanCreateInstance(Type type)
         {
             return type.IsClass && !type.IsAbstract;
         }
+
+        #endregion
 
         public override string ToString()
         {

@@ -6,16 +6,16 @@ using System.Text;
 namespace Archimedes.Patterns.Container
 {
     /// <summary>
-    /// Marks the class as a service component
+    /// Marks the component as a controller
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
-    public class ServiceAttribute : ComponentAttribute
+    public class ControllerAttribute : ComponentAttribute
     {
-        public ServiceAttribute() { }
+        public ControllerAttribute() { }
 
-        public ServiceAttribute(string name) : base(name)
+        public ControllerAttribute(string name)
+            : base(name)
         {
         }
-
     }
 }

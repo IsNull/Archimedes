@@ -87,10 +87,13 @@
     <Compile Include="Conditions\OperatorManagerService.cs" />
     <Compile Include="Container\ApplicationContext.cs" />
     <Compile Include="Container\AutoModuleConfiguration.cs" />
+    <Compile Include="Container\AutowireException.cs" />
     <Compile Include="Container\ComponentAttribute.cs" />
+    <Compile Include="Container\ControllerAttribute.cs" />
     <Compile Include="Container\ElderBox.cs" />
     <Compile Include="Container\ElderModuleConfiguration.cs" />
     <Compile Include="Container\InjectAttribute.cs" />
+    <Compile Include="Container\PrimaryAttribute.cs" />
     <Compile Include="Container\ServiceAttribute.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Crypto\StringObfuscator.cs" />

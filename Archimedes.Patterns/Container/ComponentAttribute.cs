@@ -7,7 +7,7 @@ namespace Archimedes.Patterns.Container
 {
 
     [AttributeUsage(AttributeTargets.Class)]
-    class ComponentAttribute : Attribute
+    public class ComponentAttribute : Attribute
     {
         private readonly string _name;
         public ComponentAttribute() { }

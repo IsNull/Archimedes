@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Input;
 using Archimedes.Patterns.WPF.Commands;
 using Archimedes.Patterns.Commands;
+using Archimedes.Patterns.Container;
 using Archimedes.Patterns.Data;
 using Archimedes.Patterns.MVMV.ViewModels.PoolCache;
 
@@ -17,9 +18,9 @@ namespace Archimedes.Patterns.WPF.ViewModels.Commands
     {
         #region Fields
 
-        readonly ICommandManager _commandManager;
-        RelayCommand _undoCommand;
-        RelayCommand _redoCommand;
+        private readonly ICommandManager _commandManager;
+        private RelayCommand _undoCommand;
+        private RelayCommand _redoCommand;
 
         #endregion
 
@@ -34,6 +35,7 @@ namespace Archimedes.Patterns.WPF.ViewModels.Commands
 
         #region Constructor
 
+        [Inject]
         public CommandManagerViewModel(ICommandManager manager) {
             if (manager == null)
                 throw new ArgumentNullException("manager");

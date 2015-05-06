@@ -17,12 +17,12 @@ namespace Archimedes.Patterns.Container
         {
             foreach (var componentType in _componentTypes)
             {
-                if (componentType.IsDefined(typeof(ServiceAttribute), false))
+                if (componentType.IsDefined(typeof(ServiceAttribute), false) || 
+                    componentType.IsDefined(typeof(ControllerAttribute), false) || 
+                    componentType.IsDefined(typeof(ComponentAttribute), false))
                 {
                     RegisterSingleton(componentType, componentType);
-
                     RegisterInterfaceImpl(componentType);
-
                 }
             }
         }

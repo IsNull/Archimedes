@@ -9,7 +9,7 @@ namespace Archimedes.Patterns.Services
     /// Global service locator.
     /// Singleton
     /// </summary>
-    [Obsolete("Consider using Unity or MEF for Dependency Injection")]
+    [Obsolete("Consider using Unity or MEF for Dependency Injection", true)]
     public class ServiceLocator : ServiceLocatorInstance
     {
         private readonly static ServiceLocator _instance = new ServiceLocator();
