@@ -50,26 +50,10 @@ namespace Archimedes.DI
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public object Resolve(Type type)
         {
-            if (type == null) throw new ArgumentNullException("type");
-
-            if (_serviceRegistry.ContainsKey(type))
-            {
-                return _serviceRegistry[type];
-            }
-            var instance = ResolveInstanceFor(type);
-
-            if (instance != null)
-            {
-                _serviceRegistry.Add(type, instance);
-            }
-            else
-            {
-                throw new NotSupportedException("Something went wrong while resolving instance for type " + type.Name);
-            }
-
-            return instance;
+            return Resolve(type, new HashSet<Type>());
         }
 
         /// <summary>
@@ -87,18 +71,63 @@ namespace Archimedes.DI
         [DebuggerStepThrough]
         public void Autowire(object instance)
         {
+            Autowire(instance, new HashSet<Type>());
+        }
+
+        #endregion
+
+        #region Private methods
+
+        [DebuggerStepThrough]
+        private object Resolve(Type type, HashSet<Type> unresolvedDependencies)
+        {
+            if (type == null) throw new ArgumentNullException("type");
+
+
+            if (_serviceRegistry.ContainsKey(type))
+            {
+                return _serviceRegistry[type];
+            }
+
+            unresolvedDependencies.Add(type); // Mark this type as unresolved
+            var instance = ResolveInstanceFor(type, unresolvedDependencies);
+
+            if (instance != null)
+            {
+                // Successfully resolved the instance:
+                unresolvedDependencies.Remove(type);
+                _serviceRegistry.Add(type, instance);
+            }
+            else
+            {
+                throw new NotSupportedException("Something went wrong while resolving instance for type " + type.Name);
+            }
+
+            return instance;
+        }
+
+
+        [DebuggerStepThrough]
+        private void Autowire(object instance, HashSet<Type> unresolvedDependencies)
+        {
             try
             {
                 var targetFields = from f in instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
-                    where f.IsDefined(typeof(InjectAttribute), false)
-                    select f;
+                                   where f.IsDefined(typeof(InjectAttribute), false)
+                                   select f;
 
                 foreach (var targetField in targetFields)
                 {
                     if (targetField.GetValue(instance) == null)
                     {
+
+                        if (unresolvedDependencies.Contains(targetField.FieldType))
+                        {
+                            throw new CircularDependencyException(instance.GetType(), targetField.FieldType);
+                        }
+
                         // Only inject if the field is null
-                        var fieldValue = Resolve(targetField.FieldType);
+                        var fieldValue = Resolve(targetField.FieldType, unresolvedDependencies);
                         targetField.SetValue(instance, fieldValue);
                     }
                 }
@@ -109,12 +138,9 @@ namespace Archimedes.DI
             }
         }
 
-        #endregion
-
-        #region Private methods
 
         [DebuggerStepThrough]
-        private object ResolveInstanceFor(Type type)
+        private object ResolveInstanceFor(Type type, HashSet<Type> unresolvedDependencies)
         {
             if(type == null) throw new ArgumentNullException("type");
 
@@ -133,7 +159,7 @@ namespace Archimedes.DI
 
             if (CanCreateInstance(typeForImplementation))
             {
-                instance = CreateInstance(typeForImplementation);
+                instance = CreateInstance(typeForImplementation, unresolvedDependencies);
             }
             else
             {
@@ -147,9 +173,10 @@ namespace Archimedes.DI
         /// Creates a new instance from the given implementaiton
         /// </summary>
         /// <param name="implementationType"></param>
+        /// <param name="circularRefSet">Holds all types which depend on this instance</param>
         /// <returns></returns>
-        //[DebuggerStepThrough]
-        private object CreateInstance(Type implementationType)
+        [DebuggerStepThrough]
+        private object CreateInstance(Type implementationType, HashSet<Type> unresolvedDependencies)
         {
             if (implementationType == null) throw new ArgumentNullException("implementationType");
 
@@ -175,10 +202,9 @@ namespace Archimedes.DI
 
                 var rawInstance = FormatterServices.GetUninitializedObject(implementationType);
 
-                //var instance = Activator.CreateInstance(implementationType, parameters);
-                Autowire(rawInstance);
+                Autowire(rawInstance, unresolvedDependencies);
 
-                var parameters = AutowireParameters(constructor);
+                var parameters = AutowireParameters(implementationType, constructor, unresolvedDependencies);
                 var obj = constructor.Invoke(rawInstance, parameters);
                 return rawInstance;
             }
@@ -187,13 +213,15 @@ namespace Archimedes.DI
         }
 
 
-
         /// <summary>
         /// Resolves all parameter instances of the given constructor.
         /// </summary>
+        /// <param name="implementationType">Just used for better debug messages</param>
         /// <param name="constructor"></param>
+        /// <param name="circularRefSet"></param>
         /// <returns></returns>
-        private object[] AutowireParameters(ConstructorInfo constructor)
+        [DebuggerStepThrough]
+        private object[] AutowireParameters(Type implementationType, ConstructorInfo constructor, HashSet<Type> circularRefSet)
         {
             if (constructor == null) throw new ArgumentNullException("constructor");
 
@@ -204,7 +232,10 @@ namespace Archimedes.DI
             {
                 try
                 {
-                    var paramInstance = Resolve(parameter.ParameterType);
+                    if (circularRefSet.Contains(parameter.ParameterType))
+                        throw new CircularDependencyException(implementationType, parameter.ParameterType);
+
+                    var paramInstance = Resolve(parameter.ParameterType, circularRefSet); // Recursive call
                     if (paramInstance != null)
                     {
                         parameters.Add(paramInstance);
@@ -212,8 +243,7 @@ namespace Archimedes.DI
                     else
                     {
                         throw new NotSupportedException("Could not resolve parameter " + parameter.Name + " value was (null)!");
-                    }
-                    
+                    } 
                 }
                 catch (Exception e)
                 {

@@ -54,6 +54,7 @@
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="AOP\AutoModuleConfiguration.cs" />
     <Compile Include="AutowireException.cs" />
+    <Compile Include="CircularDependencyException.cs" />
     <Compile Include="ElderBox.cs" />
     <Compile Include="ElderModuleConfiguration.cs" />
     <Compile Include="IModuleConfiguration.cs" />

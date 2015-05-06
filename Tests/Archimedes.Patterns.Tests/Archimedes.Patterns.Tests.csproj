@@ -51,6 +51,12 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ContainerTest\Circular\ContainerCircularProtectionTest.cs" />
+    <Compile Include="ContainerTest\Circular\ServiceA1.cs" />
+    <Compile Include="ContainerTest\Circular\ServiceY1.cs" />
+    <Compile Include="ContainerTest\Circular\ServiceA2.cs" />
+    <Compile Include="ContainerTest\Circular\ServiceY2.cs" />
+    <Compile Include="ContainerTest\Circular\ServiceA3.cs" />
     <Compile Include="ContainerTest\ContainerTest.cs" />
     <Compile Include="ContainerTest\IServiceB.cs" />
     <Compile Include="ContainerTest\ServiceA.cs" />
@@ -59,6 +65,7 @@
     <Compile Include="ContainerTest\ServiceX.cs" />
     <Compile Include="ContainerTest\ServiceD.cs" />
     <Compile Include="ContainerTest\ServiceC.cs" />
+    <Compile Include="ContainerTest\ServiceY.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -76,6 +83,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContainerTest\Circular\ServiceY3.cs" />
     <None Include="packages.config" />
   </ItemGroup>
   <Choose>
