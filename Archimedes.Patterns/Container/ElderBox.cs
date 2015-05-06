@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -14,17 +15,17 @@ namespace Archimedes.Patterns.Container
         #region Fields
 
         private readonly Dictionary<Type, object> _serviceRegistry = new Dictionary<Type, object>();
-        private readonly ElderModuleConfiguration _configuration;
+        private readonly IModuleConfiguration _configuration;
         private readonly string _name;
 
         #endregion
 
         #region Constructor
 
-        internal ElderBox(ElderModuleConfiguration configuration)
+        public ElderBox(IModuleConfiguration configuration)
         {
             if (configuration == null) throw new ArgumentNullException("configuration");
-
+            configuration.Configure();
             _configuration = configuration;
         }
 
@@ -47,6 +48,7 @@ namespace Archimedes.Patterns.Container
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public object Resolve(Type type)
         {
             if (type == null) throw new ArgumentNullException("type");
@@ -73,12 +75,13 @@ namespace Archimedes.Patterns.Container
         /// Auto wire fields / property dependencies which are annotated with <see cref="InjectAttribute"/> 
         /// </summary>
         /// <param name="instance"></param>
+        [DebuggerStepThrough]
         public void Autowire(object instance)
         {
             try
             {
-                var targetFields = from f in instance.GetType().GetFields()
-                    where f.IsDefined(typeof (InjectAttribute), false)
+                var targetFields = from f in instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                    where f.IsDefined(typeof(InjectAttribute), false)
                     select f;
 
                 foreach (var targetField in targetFields)
@@ -101,6 +104,7 @@ namespace Archimedes.Patterns.Container
 
         #region Private methods
 
+        [DebuggerStepThrough]
         private object ResolveInstanceFor(Type type)
         {
             if(type == null) throw new ArgumentNullException("type");
@@ -180,6 +184,7 @@ namespace Archimedes.Patterns.Container
         /// </summary>
         /// <param name="constructor"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         private object[] AutowireParameters(ConstructorInfo constructor)
         {
             if (constructor == null) throw new ArgumentNullException("constructor");

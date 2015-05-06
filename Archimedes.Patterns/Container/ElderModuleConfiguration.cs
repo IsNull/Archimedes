@@ -6,7 +6,7 @@ namespace Archimedes.Patterns.Container
     /// <summary>
     /// 
     /// </summary>
-    public abstract class ElderModuleConfiguration
+    public abstract class ElderModuleConfiguration : IModuleConfiguration
     {
 
         private readonly Dictionary<Type, Type> _componentRegistry = new Dictionary<Type, Type>();

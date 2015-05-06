@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.AccessControl;
 using System.Text;
+using log4net;
 
 namespace Archimedes.Patterns.Container
 {
     public sealed class ApplicationContext
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
         private const string _defaultContext = "_ELDER_DEFAULT";
 
         private List<Type> _components = new List<Type>();
@@ -66,6 +70,12 @@ namespace Archimedes.Patterns.Container
             if (_components != null)
             {
                 _components = GetTypesWith<ServiceAttribute>(false).ToList();
+
+                Log.Info("Component Scanning found:");
+                foreach (var component in _components)
+                {
+                    Log.Info("---> " + component.Name);
+                }
             }
             return _components;
         }

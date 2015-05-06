@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8B68A9
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns.Tests", "Tests\Archimedes.Patterns.Tests\Archimedes.Patterns.Tests.csproj", "{DE9EAC18-1645-4050-860C-F3BF37473D0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +132,16 @@ Global
 		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{35A09F76-97F9-4667-977B-AF1D84C57C23}.Release|x86.ActiveCfg = Release|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,5 +149,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{41E7583E-4C6C-4DAA-8648-3DB3455B8A88} = {81044E98-5051-4F8B-8A4E-07F7312441E5}
 		{8D205AFC-2BD1-4D6E-92BD-AA565C87F99B} = {81044E98-5051-4F8B-8A4E-07F7312441E5}
+		{DE9EAC18-1645-4050-860C-F3BF37473D0F} = {81044E98-5051-4F8B-8A4E-07F7312441E5}
 	EndGlobalSection
 EndGlobal
