@@ -176,6 +176,7 @@ namespace Archimedes.DI
             return instance;
         }
 
+        [DebuggerStepThrough]
         private void ThrowIfTypeNotComponent(Type type)
         {
             if (!AOPUitl.IsTypeComponent(type)) throw new AutowireException("The implementation " + type + " is not marked as Component and can therefore not be used." +
