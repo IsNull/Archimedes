@@ -63,7 +63,7 @@ namespace Archimedes.DI
             Log.Info("DI Module Configuration:");
             foreach (var kv in _componentRegistry)
             {
-                Log.Info( kv.Key + " --> "+ kv.Value );
+                Log.Info( kv.Key + "  ===>  "+ kv.Value );
             }
         }
     }

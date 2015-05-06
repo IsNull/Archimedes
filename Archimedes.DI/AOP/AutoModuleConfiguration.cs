@@ -25,7 +25,6 @@ namespace Archimedes.DI.AOP
                     componentType.IsDefined(typeof(ControllerAttribute), false) || 
                     componentType.IsDefined(typeof(ComponentAttribute), false))
                 {
-                    RegisterSingleton(componentType, componentType);
                     RegisterInterfaceImpl(componentType);
                 }
             }

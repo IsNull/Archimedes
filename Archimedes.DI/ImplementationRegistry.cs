@@ -47,7 +47,11 @@ namespace Archimedes.DI
             // Last priority are anonymous implementations
             if (_anonymousImpls.Count == 0)
             {
-                throw new NotSupportedException("Could not find a implemnetation for type " + _iface.Name);
+                if (_namedImpls.Count == 1)
+                {
+                    return _namedImpls.First().Value;
+                }
+                throw new NotSupportedException("Could not find an implemnetation for type " + _iface.Name);
             }
             else if (_anonymousImpls.Count == 1)
             {
@@ -80,6 +84,7 @@ namespace Archimedes.DI
                 if (!_namedImpls.ContainsKey(name))
                 {
                     _namedImpls.Add(name, impl);
+                    _anonymousImpls.Add(impl);
                 }
                 else
                 {
@@ -126,11 +131,16 @@ namespace Archimedes.DI
         }
 
 
+        public override string ToString()
+        {
+            if (_primary != null) return _primary.Name;
 
-
-
-
-
-
+            string allImpl = "";
+            foreach (var impl in _anonymousImpls)
+            {
+                allImpl += impl.Name + " | ";
+            }
+            return allImpl;
+        }
     }
 }

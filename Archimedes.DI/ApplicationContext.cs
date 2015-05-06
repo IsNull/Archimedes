@@ -84,6 +84,8 @@ namespace Archimedes.DI
 
         private IEnumerable<Type> FindComponentTypes(string[] assemblyFilters)
         {
+            Log.Info("Assembly Component-Scanning restricted to: " + string.Join(", ", assemblyFilters));
+            
             EnsureAssembliesAreLoadedForComponentScan();
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -92,14 +94,15 @@ namespace Archimedes.DI
             {
                 if (ScanAssembly(assembly, assemblyFilters))
                 {
-                    Log.Info("=> Scanning assembly " + assembly.FullName + "...");
+                    Log.Info("==  Scanning assembly " + assembly.GetName().Name + "  ==");
                     var components = FindComponentTypes(assembly);
 
                     foreach (var component in components)
                     {
-                        Log.Info("---> " + component.Name);
+                        Log.Info("      * " + component.Name);
                         yield return component;
                     }
+                    Log.Info(" == == ");
                 }
             }
         }
