@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest
     public class ServiceD
     {
         [Inject]
+        [DebuggerStepThrough]
         public ServiceD(ServiceA serviceA, IServiceB serviceB)
         {
             if(serviceA == null) throw new ArgumentNullException("serviceA");

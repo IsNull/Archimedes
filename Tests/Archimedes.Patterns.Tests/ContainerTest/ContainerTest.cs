@@ -14,7 +14,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest
         [TestCase]
         public void TestComponentScan()
         {
-            var components = ApplicationContext.Instance.ScanComponents().ToList();
+            var components = ApplicationContext.Instance.ScanComponents("Archimedes.*").ToList();
 
             Assert.True(components.Contains(typeof (ServiceA)), "");
             Assert.True(components.Contains(typeof (ServiceB)), "");
@@ -26,7 +26,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest
         [TestCase]
         public void TestAutoConfiguration()
         {
-            var components = ApplicationContext.Instance.ScanComponents().ToList();
+            var components = ApplicationContext.Instance.ScanComponents("Archimedes.*").ToList();
             var conf = new AutoModuleConfiguration(components);
         }
 
@@ -35,7 +35,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest
         public void TestSimpleConstructorWiring()
         {
 
-            var context = new ElderBox(new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents()));
+            var context = new ElderBox(GetConfiguration());
 
             var instance = context.Resolve<ServiceC>();
         }
@@ -45,7 +45,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest
         public void TestSimpleInstanceWiring()
         {
 
-            var context = new ElderBox(new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents()));
+            var context = new ElderBox(GetConfiguration());
 
 
             context.Autowire(this);
@@ -57,7 +57,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest
         [TestCase]
         public void TestInterfaceConstructorWiring()
         {
-            var context = new ElderBox(new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents()));
+            var context = new ElderBox(GetConfiguration());
             var instance = context.Resolve<ServiceD>();
         }
 
@@ -66,11 +66,23 @@ namespace Archimedes.Patterns.Tests.ContainerTest
         [ExpectedException(typeof(AmbiguousMappingException))]
         public void TestAmbigous()
         {
-            var context = new ElderBox(new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents()));
+            var context = new ElderBox(GetConfiguration());
 
             var imp = context.Resolve<IServiceAmbig>();
-        } /**/
+        }
 
+        [TestCase]
+        public void TestConstructorByPassing()
+        {
+            var context = new ElderBox(GetConfiguration());
+
+            var imp = context.Resolve<ServiceX>();
+        }
+
+        private AutoModuleConfiguration GetConfiguration()
+        {
+            return new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents("Archimedes.*"));
+        }
 
     }
 }

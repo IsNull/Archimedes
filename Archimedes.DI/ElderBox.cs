@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Archimedes.DI.AOP;
 
 namespace Archimedes.DI
@@ -49,7 +50,6 @@ namespace Archimedes.DI
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        [DebuggerStepThrough]
         public object Resolve(Type type)
         {
             if (type == null) throw new ArgumentNullException("type");
@@ -59,7 +59,15 @@ namespace Archimedes.DI
                 return _serviceRegistry[type];
             }
             var instance = ResolveInstanceFor(type);
-            _serviceRegistry.Add(type, instance);
+
+            if (instance != null)
+            {
+                _serviceRegistry.Add(type, instance);
+            }
+            else
+            {
+                throw new NotSupportedException("Something went wrong while resolving instance for type " + type.Name);
+            }
 
             return instance;
         }
@@ -81,7 +89,7 @@ namespace Archimedes.DI
         {
             try
             {
-                var targetFields = from f in instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                var targetFields = from f in instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
                     where f.IsDefined(typeof(InjectAttribute), false)
                     select f;
 
@@ -140,7 +148,7 @@ namespace Archimedes.DI
         /// </summary>
         /// <param name="implementationType"></param>
         /// <returns></returns>
-        [DebuggerStepThrough]
+        //[DebuggerStepThrough]
         private object CreateInstance(Type implementationType)
         {
             if (implementationType == null) throw new ArgumentNullException("implementationType");
@@ -164,14 +172,15 @@ namespace Archimedes.DI
             if (constructor != null)
             {
                 // We have found a constructor
+
+                var rawInstance = FormatterServices.GetUninitializedObject(implementationType);
+
+                //var instance = Activator.CreateInstance(implementationType, parameters);
+                Autowire(rawInstance);
+
                 var parameters = AutowireParameters(constructor);
-
-
-                var instance = Activator.CreateInstance(implementationType, parameters);
-                
-                Autowire(instance);
-                
-                return instance;
+                var obj = constructor.Invoke(rawInstance, parameters);
+                return rawInstance;
             }
 
             throw new NotSupportedException("Can not create an instance for type " + implementationType.Name + " - no viable (public/protected) constructor found.");
@@ -184,20 +193,27 @@ namespace Archimedes.DI
         /// </summary>
         /// <param name="constructor"></param>
         /// <returns></returns>
-        [DebuggerStepThrough]
         private object[] AutowireParameters(ConstructorInfo constructor)
         {
             if (constructor == null) throw new ArgumentNullException("constructor");
 
             var parameterInfos = constructor.GetParameters();
-            var parameters = new List<object>(parameterInfos.Length);
+            var parameters = new List<object>();
 
             foreach (var parameter in parameterInfos)
             {
                 try
                 {
                     var paramInstance = Resolve(parameter.ParameterType);
-                    parameters.Add(paramInstance);
+                    if (paramInstance != null)
+                    {
+                        parameters.Add(paramInstance);
+                    }
+                    else
+                    {
+                        throw new NotSupportedException("Could not resolve parameter " + parameter.Name + " value was (null)!");
+                    }
+                    
                 }
                 catch (Exception e)
                 {
