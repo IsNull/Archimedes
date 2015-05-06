@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8B68A9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns.Tests", "Tests\Archimedes.Patterns.Tests\Archimedes.Patterns.Tests.csproj", "{DE9EAC18-1645-4050-860C-F3BF37473D0F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.DI", "Archimedes.DI\Archimedes.DI.csproj", "{07DACD83-28BD-40B5-8EBC-EF682F871304}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -142,6 +144,16 @@ Global
 		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DE9EAC18-1645-4050-860C-F3BF37473D0F}.Release|x86.ActiveCfg = Release|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{07DACD83-28BD-40B5-8EBC-EF682F871304}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

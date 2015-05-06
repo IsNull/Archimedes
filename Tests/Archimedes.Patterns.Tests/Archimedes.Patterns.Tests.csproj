@@ -61,6 +61,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Archimedes.Controls.WPF\Archimedes.Controls.WPF.csproj">
+      <Project>{9b72f725-a1db-45e8-aeff-34ab9601f161}</Project>
+      <Name>Archimedes.Controls.WPF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Archimedes.DI\Archimedes.DI.csproj">
+      <Project>{07dacd83-28bd-40b5-8ebc-ef682f871304}</Project>
+      <Name>Archimedes.DI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Archimedes.Patterns\Archimedes.Patterns.csproj">
       <Project>{5c5031e6-c6a4-4d8f-a473-cdb08db8e282}</Project>
       <Name>Archimedes.Patterns</Name>

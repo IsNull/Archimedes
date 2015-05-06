@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.AccessControl;
-using System.Text;
+using System.Text.RegularExpressions;
+using Archimedes.DI.AOP;
 using log4net;
 
-namespace Archimedes.Patterns.Container
+namespace Archimedes.DI
 {
     public sealed class ApplicationContext
     {
@@ -34,9 +34,13 @@ namespace Archimedes.Patterns.Container
         #endregion
 
 
-        public void EnableAutoConfiguration()
+        /// <summary>
+        ///   
+        /// </summary>
+        /// <param name="assemblyFilters">Regexes which allow an assembly if matched.</param>
+        public void EnableAutoConfiguration(params string[] assemblyFilters)
         {
-            var conf = new AutoModuleConfiguration(ScanComponents());
+            var conf = new AutoModuleConfiguration(ScanComponents(assemblyFilters));
             RegisterContext(_defaultContext, conf);
         }
 
@@ -62,35 +66,58 @@ namespace Archimedes.Patterns.Container
         }
 
         /// <summary>
+        /// 
         /// Finds all types in the application context which are known components
         /// </summary>
+        /// <param name="assemblyFilters">Regexes which allow an assembly if matched.</param>
         /// <returns></returns>
-        public IEnumerable<Type> ScanComponents()
+        public IEnumerable<Type> ScanComponents(params string[] assemblyFilters)
         {
             if (_components == null)
             {
-                _components = FindComponentTypes().ToList();
+                _components = FindComponentTypes(assemblyFilters).ToList();
             }
             return _components;
         }
 
-        private IEnumerable<Type> FindComponentTypes()               
+        #region Private Implementation
+
+        private IEnumerable<Type> FindComponentTypes(string[] assemblyFilters)
         {
+            EnsureAssembliesAreLoadedForComponentScan();
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             foreach (var assembly in assemblies)
             {
-                Log.Info("=> Scanning assembly " + assembly.FullName);
-                var components = FindComponentTypes(assembly);
-
-                foreach (var component in components)
+                if (ScanAssembly(assembly, assemblyFilters))
                 {
-                    Log.Info("---> " + component.Name);
-                    yield return component;
+                    Log.Info("=> Scanning assembly " + assembly.FullName + "...");
+                    var components = FindComponentTypes(assembly);
+
+                    foreach (var component in components)
+                    {
+                        Log.Info("---> " + component.Name);
+                        yield return component;
+                    }
                 }
             }
         }
+
+        private bool ScanAssembly(Assembly assembly, string[] assemblyFilters)
+        {
+            if (assemblyFilters.Length == 0) return true;
+
+            foreach (var filter in assemblyFilters)
+            {
+                if (Regex.IsMatch(assembly.GetName().Name, filter, RegexOptions.IgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         private IEnumerable<Type> FindComponentTypes(Assembly assembly)
         {
@@ -103,6 +130,20 @@ namespace Archimedes.Patterns.Container
                    select t;
         }
 
-        
+        private void EnsureAssembliesAreLoadedForComponentScan()
+        {
+            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+
+            loadedAssemblies
+                .SelectMany(x => x.GetReferencedAssemblies())
+                .Distinct()
+                .Where(y => loadedAssemblies.Any((a) => a.FullName == y.FullName) == false)
+                .ToList()
+                .ForEach(x => loadedAssemblies.Add(AppDomain.CurrentDomain.Load(x)));
+        }
+
+        #endregion
+
+
     }
 }

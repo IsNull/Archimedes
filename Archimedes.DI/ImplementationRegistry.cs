@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Archimedes.DI.AOP;
 
-namespace Archimedes.Patterns.Container
+namespace Archimedes.DI
 {
     /// <summary>
     /// Holds all (named) implementations of a type.

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Archimedes.Patterns.Container;
+using Archimedes.DI.AOP;
 using Archimedes.Patterns.Data;
 
 namespace Archimedes.Patterns.Commands

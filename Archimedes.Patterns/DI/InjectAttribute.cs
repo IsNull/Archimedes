@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Archimedes.Patterns.Container
+namespace Archimedes.DI.AOP
 {
     /// <summary>
     /// Marks a Field or Constructor as Injection target

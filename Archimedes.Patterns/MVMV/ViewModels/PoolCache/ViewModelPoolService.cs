@@ -1,6 +1,6 @@
 ﻿
 
-using Archimedes.Patterns.Container;
+using Archimedes.DI.AOP;
 
 namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
 {

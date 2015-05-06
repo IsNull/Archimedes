@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using log4net;
 
-namespace Archimedes.Patterns.Container
+namespace Archimedes.DI
 {
     /// <summary>
     /// 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Archimedes.Patterns.Container;
+using Archimedes.DI.AOP;
 
 namespace Archimedes.Patterns.Tests.ContainerTest
 {

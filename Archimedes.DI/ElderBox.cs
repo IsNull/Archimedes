@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using Archimedes.DI.AOP;
 
-namespace Archimedes.Patterns.Container
+namespace Archimedes.DI
 {
     /// <summary>
     /// A very lightweight dependency injection container wich requires virtually no configuration.
@@ -38,6 +38,7 @@ namespace Archimedes.Patterns.Container
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public T Resolve<T>()
         {
             return (T)Resolve(typeof(T));
@@ -139,6 +140,7 @@ namespace Archimedes.Patterns.Container
         /// </summary>
         /// <param name="implementationType"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         private object CreateInstance(Type implementationType)
         {
             if (implementationType == null) throw new ArgumentNullException("implementationType");
@@ -162,7 +164,10 @@ namespace Archimedes.Patterns.Container
             if (constructor != null)
             {
                 // We have found a constructor
-                var instance = CreateInstanceWithConstructor(implementationType, constructor);
+                var parameters = AutowireParameters(constructor);
+
+
+                var instance = Activator.CreateInstance(implementationType, parameters);
                 
                 Autowire(instance);
                 
@@ -172,12 +177,7 @@ namespace Archimedes.Patterns.Container
             throw new NotSupportedException("Can not create an instance for type " + implementationType.Name + " - no viable (public/protected) constructor found.");
         }
 
-        private object CreateInstanceWithConstructor(Type type, ConstructorInfo constructor)
-        {
-            // Resolve all parameters 
-            var parameters = AutowireParameters(constructor);
-            return Activator.CreateInstance(type, parameters);
-        }
+
 
         /// <summary>
         /// Resolves all parameter instances of the given constructor.
