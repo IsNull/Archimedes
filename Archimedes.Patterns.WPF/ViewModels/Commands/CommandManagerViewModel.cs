@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
+using Archimedes.DI.AOP;
 using Archimedes.Patterns.WPF.Commands;
 using Archimedes.Patterns.Commands;
-using Archimedes.Patterns.Container;
 using Archimedes.Patterns.Data;
 using Archimedes.Patterns.MVMV.ViewModels.PoolCache;
 
