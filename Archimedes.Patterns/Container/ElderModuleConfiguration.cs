@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using log4net;
 
 namespace Archimedes.Patterns.Container
 {
@@ -8,8 +10,9 @@ namespace Archimedes.Patterns.Container
     /// </summary>
     public abstract class ElderModuleConfiguration : IModuleConfiguration
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly Dictionary<Type, Type> _componentRegistry = new Dictionary<Type, Type>();
+        private readonly Dictionary<Type, ImplementationRegistry> _componentRegistry = new Dictionary<Type, ImplementationRegistry>();
 
 
         /// <summary>
@@ -18,7 +21,13 @@ namespace Archimedes.Patterns.Container
         /// Sub classes are expected to overwrite this method and 
         /// call <see cref="RegisterSingleton"/> to configure the module.
         /// </summary>
-        public abstract void Configure();
+        public void Configure()
+        {
+            ConfigureInternal();
+            LogConfiguration();
+        }
+
+        public abstract void ConfigureInternal();
 
         /// <summary>
         /// Registers a service as a singleton.
@@ -31,7 +40,12 @@ namespace Archimedes.Patterns.Container
 
         protected void RegisterSingleton(Type iface, Type impl)
         {
-            _componentRegistry.Add(iface, impl);
+            if (!_componentRegistry.ContainsKey(iface))
+            {
+                _componentRegistry.Add(iface, new ImplementationRegistry(iface));
+            }
+
+            _componentRegistry[iface].Register(impl);
         }
 
 
@@ -39,9 +53,18 @@ namespace Archimedes.Patterns.Container
         {
             if (_componentRegistry.ContainsKey(type))
             {
-                return _componentRegistry[type];
+                return _componentRegistry[type].TryGetImplementation();
             }
             return null;
+        }
+
+        public void LogConfiguration()
+        {
+            Log.Info("DI Module Configuration:");
+            foreach (var kv in _componentRegistry)
+            {
+                Log.Info( kv.Key + " --> "+ kv.Value );
+            }
         }
     }
 }

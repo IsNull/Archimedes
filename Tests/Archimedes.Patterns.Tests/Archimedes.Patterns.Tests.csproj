@@ -54,6 +54,7 @@
     <Compile Include="ContainerTest\ContainerTest.cs" />
     <Compile Include="ContainerTest\IServiceB.cs" />
     <Compile Include="ContainerTest\ServiceA.cs" />
+    <Compile Include="ContainerTest\ServiceAmbig.cs" />
     <Compile Include="ContainerTest\ServiceB.cs" />
     <Compile Include="ContainerTest\ServiceD.cs" />
     <Compile Include="ContainerTest\ServiceC.cs" />

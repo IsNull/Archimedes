@@ -14,7 +14,7 @@ namespace Archimedes.Patterns.Container
 
         private const string _defaultContext = "_ELDER_DEFAULT";
 
-        private List<Type> _components = new List<Type>();
+        private List<Type> _components = null; // Lazy initialized!
         private readonly Dictionary<string, ElderBox> _contextRegistry = new Dictionary<string, ElderBox>();
 
         #region Singleton
@@ -36,7 +36,7 @@ namespace Archimedes.Patterns.Container
 
         public void EnableAutoConfiguration()
         {
-            var conf = new AutoModuleConfiguration(AutoFindComponents());
+            var conf = new AutoModuleConfiguration(ScanComponents());
             RegisterContext(_defaultContext, conf);
         }
 
@@ -65,28 +65,44 @@ namespace Archimedes.Patterns.Container
         /// Finds all types in the application context which are known components
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Type> AutoFindComponents()
+        public IEnumerable<Type> ScanComponents()
         {
-            if (_components != null)
+            if (_components == null)
             {
-                _components = GetTypesWith<ServiceAttribute>(false).ToList();
-
-                Log.Info("Component Scanning found:");
-                foreach (var component in _components)
-                {
-                    Log.Info("---> " + component.Name);
-                }
+                _components = FindComponentTypes().ToList();
             }
             return _components;
         }
 
-        private IEnumerable<Type> GetTypesWith<TAttribute>(bool inherit)
-                              where TAttribute : System.Attribute
+        private IEnumerable<Type> FindComponentTypes()               
         {
-            return from a in AppDomain.CurrentDomain.GetAssemblies()
-                   from t in a.GetTypes()
-                   where t.IsDefined(typeof(TAttribute), inherit)
+
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            foreach (var assembly in assemblies)
+            {
+                Log.Info("=> Scanning assembly " + assembly.FullName);
+                var components = FindComponentTypes(assembly);
+
+                foreach (var component in components)
+                {
+                    Log.Info("---> " + component.Name);
+                    yield return component;
+                }
+            }
+        }
+
+        private IEnumerable<Type> FindComponentTypes(Assembly assembly)
+        {
+            var service = typeof(ServiceAttribute);
+            var component = typeof(ComponentAttribute);
+            var controller = typeof(ControllerAttribute);
+
+            return from t in assembly.GetTypes()
+                   where t.IsDefined(service, false) || t.IsDefined(component, false) || t.IsDefined(controller, false)
                    select t;
         }
+
+        
     }
 }

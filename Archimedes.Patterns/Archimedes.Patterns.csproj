@@ -88,6 +88,7 @@
     <Compile Include="Conditions\IOperatorManagerService.cs" />
     <Compile Include="Conditions\Operator.cs" />
     <Compile Include="Conditions\OperatorManagerService.cs" />
+    <Compile Include="Container\AmbiguousMappingException.cs" />
     <Compile Include="Container\ApplicationContext.cs" />
     <Compile Include="Container\AutoModuleConfiguration.cs" />
     <Compile Include="Container\AutowireException.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Container\ElderBox.cs" />
     <Compile Include="Container\ElderModuleConfiguration.cs" />
     <Compile Include="Container\IModuleConfiguration.cs" />
+    <Compile Include="Container\ImplementationRegistry.cs" />
     <Compile Include="Container\InjectAttribute.cs" />
     <Compile Include="Container\PrimaryAttribute.cs" />
     <Compile Include="Container\ServiceAttribute.cs" />

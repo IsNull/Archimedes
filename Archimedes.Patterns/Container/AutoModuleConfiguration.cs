@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using log4net;
 
 
 namespace Archimedes.Patterns.Container
 {
     public class AutoModuleConfiguration : ElderModuleConfiguration
     {
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
+
         private readonly IEnumerable<Type> _componentTypes;
 
         public AutoModuleConfiguration(IEnumerable<Type> componentTypes)
@@ -13,7 +18,7 @@ namespace Archimedes.Patterns.Container
             _componentTypes = componentTypes;
         }
 
-        public override void Configure()
+        public override void ConfigureInternal()
         {
             foreach (var componentType in _componentTypes)
             {
@@ -34,6 +39,8 @@ namespace Archimedes.Patterns.Container
                 RegisterSingleton(@interface, componentType);
             }
         }
+
+
 
     }
 }
