@@ -134,6 +134,10 @@ namespace Archimedes.DI
             }
             catch (Exception e)
             {
+                if (e is CircularDependencyException)
+                {
+                    throw;
+                }
                 throw new AutowireException("Autowiring of instance " + instance.GetType().Name + " failed!", e);
             }
         }
@@ -159,15 +163,24 @@ namespace Archimedes.DI
 
             if (CanCreateInstance(typeForImplementation))
             {
+                // We allow only types marked with Component, Service or Controller
+                ThrowIfTypeNotComponent(typeForImplementation);
+
                 instance = CreateInstance(typeForImplementation, unresolvedDependencies);
             }
             else
             {
-                throw new NotSupportedException("Can not create instance for type '" + type.Name + "' which was resolved to implementation '" + typeForImplementation.Name+"'!");
+                throw new AutowireException("Can not create instance for type '" + type.Name + "' which was resolved to implementation '" + typeForImplementation.Name + "'!");
             }
 
             return instance;
         }
+
+        private void ThrowIfTypeNotComponent(Type type)
+        {
+            if (!AOPUitl.IsTypeComponent(type)) throw new AutowireException("The implementation " + type + " is not marked as Component and can therefore not be used." +
+                                                                              " Did you forget to add a [Service] or [Controller] annotation?");
+        } 
 
         /// <summary>
         /// Creates a new instance from the given implementaiton
@@ -247,6 +260,10 @@ namespace Archimedes.DI
                 }
                 catch (Exception e)
                 {
+                    if (e is CircularDependencyException)
+                    {
+                        throw;
+                    }
                     throw new AutowireException("Autowiring constructor parameter " + parameter.Name +"("+parameter.ParameterType+")" + " has failed!", e);
                 }
             }

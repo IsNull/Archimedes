@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AmbiguousMappingException.cs" />
+    <Compile Include="AOPUitl.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="AOP\AutoModuleConfiguration.cs" />
     <Compile Include="AutowireException.cs" />

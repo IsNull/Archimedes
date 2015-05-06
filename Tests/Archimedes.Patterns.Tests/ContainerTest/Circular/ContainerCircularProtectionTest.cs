@@ -12,7 +12,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest.Circular
     public class ContainerCircularProtectionTest
     {
         [TestCase]
-        [ExpectedException(typeof(AutowireException))]
+        [ExpectedException(typeof(CircularDependencyException))]
         public void TestCircularProtection()
         {
             var conf = new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents("Archimedes.*"));
@@ -22,7 +22,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest.Circular
         }
 
         [TestCase]
-        [ExpectedException(typeof(AutowireException))]
+        [ExpectedException(typeof(CircularDependencyException))]
         public void TestCircularProtection2()
         {
             var conf = new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents("Archimedes.*"));
@@ -33,7 +33,7 @@ namespace Archimedes.Patterns.Tests.ContainerTest.Circular
 
 
         [TestCase]
-        [ExpectedException(typeof(AutowireException))]
+        [ExpectedException(typeof(CircularDependencyException))]
         public void TestCircularProtectionAutowiring()
         {
             var conf = new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents("Archimedes.*"));

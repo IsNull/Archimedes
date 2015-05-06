@@ -7,6 +7,11 @@ namespace Archimedes.DI
     /// </summary>
     public class AutowireException : Exception
     {
+
+        public AutowireException(string message) : base(message)
+        {
+        }
+
         public AutowireException(string messgae, Exception cause) 
             : base(messgae, cause)
         {

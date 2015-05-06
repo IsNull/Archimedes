@@ -12,8 +12,6 @@ namespace Archimedes.DI
     {
         private readonly Type _iface; // Just used for better exception texts
 
-        private static readonly Type[] ComponentAttributs = { typeof(ServiceAttribute), typeof(ControllerAttribute), typeof(ComponentAttribute) };
-        private static readonly Type PrimaryAttribute = typeof (PrimaryAttribute);
 
         private readonly List<Type> _anonymousImpls = new List<Type>();
         private readonly Dictionary<string, Type> _namedImpls = new Dictionary<string, Type>();
@@ -74,7 +72,7 @@ namespace Archimedes.DI
         public void Register(Type impl)
         {
 
-            var attr = GetComponentAttribute(impl);
+            var attr = AOPUitl.GetComponentAttribute(impl);
             string name = attr.Name;
 
             if (name != null)
@@ -94,7 +92,7 @@ namespace Archimedes.DI
                 _anonymousImpls.Add(impl);
             }
 
-            if (IsPrimaryImplementation(impl))
+            if (AOPUitl.IsPrimaryImplementation(impl))
             {
                 if (_primary == null)
                 {
@@ -127,23 +125,9 @@ namespace Archimedes.DI
             }
         }
 
-        private ComponentAttribute GetComponentAttribute(Type impl)
-        {
-            foreach (var componentAttribut in ComponentAttributs)
-            {
-                var attr = impl.GetCustomAttributes(componentAttribut, false);
-                if (attr.Length > 0)
-                {
-                    return (ComponentAttribute)attr[0];
-                }
-            }
-            return null;
-        }
 
-        private bool IsPrimaryImplementation(Type impl)
-        {
-            return impl.IsDefined(PrimaryAttribute, false);
-        }
+
+
 
 
 
