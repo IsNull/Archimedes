@@ -26,8 +26,19 @@ namespace Archimedes.DI.AOP
                     componentType.IsDefined(typeof(ComponentAttribute), false))
                 {
                     RegisterInterfaceImpl(componentType);
+                    RegisterInheritanceImpl(componentType);
                 }
             }
+        }
+
+        private void RegisterInheritanceImpl(Type componentType)
+        {
+            Type t = componentType.BaseType;
+            while (t != null && !(t == typeof(Object)))
+            {
+                RegisterSingleton(t, componentType);
+                t = t.BaseType;
+            } 
         }
 
         private void RegisterInterfaceImpl(Type componentType)

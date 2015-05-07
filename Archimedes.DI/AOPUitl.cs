@@ -32,9 +32,9 @@ namespace Archimedes.DI
         }
 
 
-        public static bool IsPrimaryImplementation(Type impl)
+        public static PrimaryAttribute GetPrimaryAttribute(Type impl)
         {
-            return impl.IsDefined(PrimaryAttribute, false);
+            return (PrimaryAttribute) impl.GetCustomAttributes(PrimaryAttribute, false).FirstOrDefault();
         }
     }
 }

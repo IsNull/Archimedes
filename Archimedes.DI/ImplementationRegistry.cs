@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Archimedes.DI.AOP;
 
@@ -30,6 +31,7 @@ namespace Archimedes.DI
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
+        [DebuggerStepThrough]
         public Type TryGetImplementation(string name = null)
         {
             // First priority is a named implementation
@@ -97,18 +99,46 @@ namespace Archimedes.DI
                 _anonymousImpls.Add(impl);
             }
 
-            if (AOPUitl.IsPrimaryImplementation(impl))
+            RegisterPrimary(impl);
+
+        }
+
+        private void RegisterPrimary(Type impl)
+        {
+            var primaryAttr = AOPUitl.GetPrimaryAttribute(impl);
+
+            if (primaryAttr != null)
             {
-                if (_primary == null)
+                // The Implementation has the Primary Attribute
+                if (IsPrimaryForThisIface(primaryAttr))
                 {
-                    _primary = impl;
-                }
-                else
-                {
-                    throw new AmbiguousMappingException("The [Primary] annotation is used on more than one available implementations: " + _primary.Name + " and " + impl);
+                    if (_primary == null)
+                    {
+                        _primary = impl;
+                    }
+                    else
+                    {
+                        throw new AmbiguousMappingException("The [Primary] annotation is used on more than one available implementations: " + _primary.Name + " and " + impl);
+                    }
                 }
             }
+        }
 
+        /// <summary>
+        /// The primary attribute allows to specify specific interface types
+        /// for which it overrules.
+        /// </summary>
+        /// <param name="primaryAttribute"></param>
+        /// <returns></returns>
+        private bool IsPrimaryForThisIface(PrimaryAttribute primaryAttribute)
+        {
+            if (primaryAttribute.PrimaryForTypes.Length == 0) return true;
+
+            foreach (var primaryApplies in primaryAttribute.PrimaryForTypes)
+            {
+                return _iface == primaryApplies;
+            }
+            return false;
         }
 
 
