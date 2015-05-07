@@ -14,6 +14,7 @@ namespace Archimedes.Patterns.WPF.ViewModels.Commands
     /// <summary>
     /// UI friendly wrapper of CommandManager
     /// </summary>
+    [Controller]
     public class CommandManagerViewModel : WorkspaceViewModel, ICacheable
     {
         #region Fields
