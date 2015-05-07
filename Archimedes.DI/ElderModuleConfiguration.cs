@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using log4net;
 
@@ -48,7 +49,7 @@ namespace Archimedes.DI
             _componentRegistry[iface].Register(impl);
         }
 
-
+        [DebuggerStepThrough]
         public Type GetImplementaionTypeFor(Type type)
         {
             if (_componentRegistry.ContainsKey(type))

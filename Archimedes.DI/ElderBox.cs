@@ -127,8 +127,15 @@ namespace Archimedes.DI
                         }
 
                         // Only inject if the field is null
-                        var fieldValue = Resolve(targetField.FieldType, unresolvedDependencies);
-                        targetField.SetValue(instance, fieldValue);
+                        try
+                        {
+                            var fieldValue = Resolve(targetField.FieldType, unresolvedDependencies);
+                            targetField.SetValue(instance, fieldValue);
+                        }
+                        catch (Exception e)
+                        {
+                            throw new AutowireException("Autowiring of Field " + targetField.Name + "("+targetField.FieldType.Name+") has failed!", e);
+                        }
                     }
                 }
             }
@@ -256,7 +263,7 @@ namespace Archimedes.DI
                     }
                     else
                     {
-                        throw new NotSupportedException("Could not resolve parameter " + parameter.Name + " value was (null)!");
+                        throw new NotSupportedException("Could not resolve parameter " + parameter.Name + " of "+implementationType+ ", the value was (null)!");
                     } 
                 }
                 catch (Exception e)
@@ -265,7 +272,7 @@ namespace Archimedes.DI
                     {
                         throw;
                     }
-                    throw new AutowireException("Autowiring constructor parameter " + parameter.Name +"("+parameter.ParameterType+")" + " has failed!", e);
+                    throw new AutowireException("Autowiring constructor parameter " + parameter.Name + " (" + parameter.ParameterType.Name + ") of " + implementationType + " has failed!", e);
                 }
             }
             return parameters.ToArray();
