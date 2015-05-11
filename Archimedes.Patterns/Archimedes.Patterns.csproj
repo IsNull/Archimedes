@@ -119,6 +119,7 @@
     <Compile Include="EventArgs.cs" />
     <Compile Include="FileSizeFormatProvider.cs" />
     <Compile Include="ICloneable.cs" />
+    <Compile Include="Maybe.cs" />
     <Compile Include="MVMV\IViewModelBase.cs" />
     <Compile Include="Notifications\NotificationCollection.cs" />
     <Compile Include="Notifications\UserNotification.cs" />
