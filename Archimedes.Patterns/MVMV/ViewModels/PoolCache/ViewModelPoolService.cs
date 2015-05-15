@@ -16,8 +16,8 @@ namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
     [Service]
     public class ViewModelPoolService : IViewModelPoolService
     {
-        Dictionary<Type, ICacheable> _viewModels = new Dictionary<Type, ICacheable>();
-        Dictionary<object, ICacheable> _domainModel2VMmap = new Dictionary<object, ICacheable>();
+        readonly Dictionary<Type, ICacheable> _viewModels = new Dictionary<Type, ICacheable>();
+        readonly Dictionary<object, ICacheable> _domainModel2VMmap = new Dictionary<object, ICacheable>();
 
 
         /// <summary>
@@ -25,16 +25,17 @@ namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Resolve<T>() where T : class {
+        public T Resolve<T>() where T : class, ICacheable 
+        {
             if (_viewModels.ContainsKey(typeof(T))) {
                 return _viewModels[typeof(T)] as T;
-            } else {
-                foreach (var vt in _viewModels.Keys)
-                    if (typeof(T).IsAssignableFrom(vt))
-                        return _viewModels[vt] as T;
-                Debug.Fail(string.Format("Can't find an Instance of {0} in the VM Pool!", typeof(T).Name));
-                return null;
             }
+
+            foreach (var vt in _viewModels.Keys)
+                if (typeof(T).IsAssignableFrom(vt))
+                    return _viewModels[vt] as T;
+            Debug.Fail(string.Format("Can't find an Instance of {0} in the VM Pool!", typeof(T).Name));
+            return null;
         }
 
         /// <summary>
@@ -42,7 +43,8 @@ namespace Archimedes.Patterns.MVMV.ViewModels.PoolCache
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Resolve<T>(object domainModel) where T : class {
+        public T Resolve<T>(object domainModel) where T : class,ICacheable
+        {
             if (_domainModel2VMmap.ContainsKey(domainModel)) {
                 return _domainModel2VMmap[domainModel] as T;
             } else
