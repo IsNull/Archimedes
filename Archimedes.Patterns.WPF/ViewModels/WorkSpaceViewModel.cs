@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Input;
-using Archimedes.Patterns.MVMV;
 using Archimedes.Patterns.WPF.Commands;
-using System.Linq.Expressions;
 using System.Windows.Markup;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
