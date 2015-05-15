@@ -10,6 +10,7 @@ namespace Archimedes.DI
 {
     /// <summary>
     /// A very lightweight dependency injection container wich requires virtually no configuration.
+    /// Use <see cref="ApplicationContext"/> with its Auto-Scan ability to get started easily.
     /// </summary>
     public class ElderBox
     {
@@ -38,7 +39,7 @@ namespace Archimedes.DI
 
         /// <summary>
         /// Creates a new instance of the given Type.
-        /// Using the provided arguments as constructor parameters.
+        /// Using the provided (optional) arguments as constructor parameters.
         /// If there are Constructor parameters which are not provided, this context is used to auto-wire 
         /// the missing dependencies.
         /// 
@@ -54,7 +55,7 @@ namespace Archimedes.DI
 
 
         /// <summary>
-        /// Resolve an instance for the given Type.
+        /// Resolve an instance for the given Type. All dependencies will be auto wired (injected).
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -65,7 +66,7 @@ namespace Archimedes.DI
         }
 
         /// <summary>
-        /// Resolve an instance for the given Type.
+        /// Resolve an instance for the given Type. All dependencies will be auto wired (injected).
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
@@ -85,6 +86,7 @@ namespace Archimedes.DI
 
         /// <summary>
         /// Auto wire fields / property dependencies which are annotated with <see cref="InjectAttribute"/> 
+        /// Usefull if you have already an instance which could not be created using this DI container.
         /// </summary>
         /// <param name="instance"></param>
         [DebuggerStepThrough]

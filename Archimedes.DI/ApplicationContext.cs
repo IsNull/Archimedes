@@ -8,6 +8,9 @@ using log4net;
 
 namespace Archimedes.DI
 {
+    /// <summary>
+    /// Represents the Application Context, which provides component scanning / auto-configuration.
+    /// </summary>
     public sealed class ApplicationContext
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -35,21 +38,33 @@ namespace Archimedes.DI
 
 
         /// <summary>
-        ///   
+        ///  Enables Auto-Configuration, which basically scans for Components.
+        /// 
+        ///  Components must be marked with [Service] or [Controller].
+        /// 
         /// </summary>
-        /// <param name="assemblyFilters">Regexes which allow an assembly if matched.</param>
+        /// <param name="assemblyFilters">Regexes which allow an assembly if matched.
+        /// If none provided, all assemblies are scanned.</param>
         public void EnableAutoConfiguration(params string[] assemblyFilters)
         {
             var conf = new AutoModuleConfiguration(ScanComponents(assemblyFilters));
             RegisterContext(_defaultContext, conf);
         }
 
-
+        /// <summary>
+        /// Gets the default context which is populated by the auto configuration.
+        /// </summary>
+        /// <returns></returns>
         public ElderBox GetContext()
         {
             return _contextRegistry[_defaultContext];
         }
 
+        /// <summary>
+        /// Get a named DI context
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public ElderBox GetContext(string name)
         {
             if (_contextRegistry.ContainsKey(name))
@@ -60,13 +75,17 @@ namespace Archimedes.DI
             throw new NotSupportedException("ElderBox Context with name '" + name + "' could not be found. Did you forget to register it?" );
         }
 
+        /// <summary>
+        /// Register a named DI context.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="configuration"></param>
         public void RegisterContext(string name, ElderModuleConfiguration configuration)
         {
             _contextRegistry.Add(name, new ElderBox(configuration));
         }
 
         /// <summary>
-        /// 
         /// Finds all types in the application context which are known components
         /// </summary>
         /// <param name="assemblyFilters">Regexes which allow an assembly if matched.</param>
