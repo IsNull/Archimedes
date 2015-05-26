@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Input;
-using Archimedes.Patterns.WPF.Commands;
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -30,6 +26,8 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         public DialogCommand(DialogViewModel owner, string name, DialogResultType cause)
         {
+            if(owner == null) throw new ArgumentNullException("owner");
+
             _owner = owner;
             Name = name;
             Cause = cause;
@@ -88,13 +86,13 @@ namespace Archimedes.Patterns.WPF.ViewModels
         public Predicate<object> CustomCanExecute { get; set; }
 
 
-        public virtual void Execute(object parameter)
+        public void Execute(object parameter)
         {
             if (CustomAction != null) CustomAction(parameter);
             CloseOwner(Cause);
         }
 
-        public virtual bool CanExecute(object parameter)
+        public bool CanExecute(object parameter)
         {
             return CustomCanExecute == null || CustomCanExecute(parameter);
         }
@@ -105,7 +103,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <param name="cause"></param>
         protected void CloseOwner(DialogResultType cause)
         {
-            _owner.DialogeResult = cause;
+            _owner.DialogResult = cause;
             _owner.Close();
         }
 

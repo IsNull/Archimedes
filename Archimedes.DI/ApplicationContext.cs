@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Archimedes.DI.AOP;
+using Archimedes.Patterns.Configuration;
 using log4net;
 
 namespace Archimedes.DI
@@ -13,12 +14,17 @@ namespace Archimedes.DI
     /// </summary>
     public sealed class ApplicationContext
     {
+        #region Fields
+
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string _defaultContext = "_ELDER_DEFAULT";
 
         private List<Type> _components = null; // Lazy initialized!
         private readonly Dictionary<string, ElderBox> _contextRegistry = new Dictionary<string, ElderBox>();
+        private readonly IConfigurationService _configurationService = new ConfigurationService();
+
+        #endregion
 
         #region Singleton
 
@@ -36,6 +42,7 @@ namespace Archimedes.DI
 
         #endregion
 
+        #region Public methods
 
         /// <summary>
         ///  Enables Auto-Configuration, which basically scans for Components.
@@ -43,12 +50,16 @@ namespace Archimedes.DI
         ///  Components must be marked with [Service] or [Controller].
         /// 
         /// </summary>
-        /// <param name="assemblyFilters">Regexes which allow an assembly if matched.
-        /// If none provided, all assemblies are scanned.</param>
-        public void EnableAutoConfiguration(params string[] assemblyFilters)
+        public void EnableAutoConfiguration(string[] args)
         {
+            LoadConfiguration(_configurationService, args);
+            var assemblyFiltersStr = _configurationService.GetOptional("archimedes.componentscan.assemblies");
+            var assemblyFilters = assemblyFiltersStr.MapOptional(x => x.Split(',')).OrDefault();
+
             var conf = new AutoModuleConfiguration(ScanComponents(assemblyFilters));
-            RegisterContext(_defaultContext, conf);
+            var ctx = RegisterContext(_defaultContext, conf);
+
+            ctx.RegisterInstance<IConfigurationService>(_configurationService);
         }
 
         /// <summary>
@@ -80,9 +91,11 @@ namespace Archimedes.DI
         /// </summary>
         /// <param name="name"></param>
         /// <param name="configuration"></param>
-        public void RegisterContext(string name, ElderModuleConfiguration configuration)
+        public ElderBox RegisterContext(string name, ElderModuleConfiguration configuration)
         {
-            _contextRegistry.Add(name, new ElderBox(configuration));
+            var diContext = new ElderBox(configuration);
+            _contextRegistry.Add(name, diContext);
+            return diContext;
         }
 
         /// <summary>
@@ -94,75 +107,23 @@ namespace Archimedes.DI
         {
             if (_components == null)
             {
-                _components = FindComponentTypes(assemblyFilters).ToList();
+                var scanner = new ComponentScanner();
+                _components = scanner.ScanComponents(assemblyFilters).ToList();
             }
             return _components;
         }
 
+        #endregion
+
         #region Private Implementation
 
-        private IEnumerable<Type> FindComponentTypes(string[] assemblyFilters)
+        private void LoadConfiguration(IConfigurationService configurationService, string[] cmdArguments)
         {
-            Log.Info("Assembly Component-Scanning restricted to: " + string.Join(", ", assemblyFilters));
-            
-            EnsureAssembliesAreLoadedForComponentScan();
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            foreach (var assembly in assemblies)
-            {
-                if (ScanAssembly(assembly, assemblyFilters))
-                {
-                    Log.Info("==  Scanning assembly " + assembly.GetName().Name + "  ==");
-                    var components = FindComponentTypes(assembly);
-
-                    foreach (var component in components)
-                    {
-                        Log.Info("      * " + component.Name);
-                        yield return component;
-                    }
-                    Log.Info(" == == ");
-                }
-            }
+            var properties = new ConfigurationLoader().LoadConfiguration(cmdArguments);
+           configurationService.Merge(properties);
         }
 
-        private bool ScanAssembly(Assembly assembly, string[] assemblyFilters)
-        {
-            if (assemblyFilters.Length == 0) return true;
-
-            foreach (var filter in assemblyFilters)
-            {
-                if (Regex.IsMatch(assembly.GetName().Name, filter, RegexOptions.IgnoreCase))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-
-        private IEnumerable<Type> FindComponentTypes(Assembly assembly)
-        {
-            var service = typeof(ServiceAttribute);
-            var component = typeof(ComponentAttribute);
-            var controller = typeof(ControllerAttribute);
-
-            return from t in assembly.GetTypes()
-                   where t.IsDefined(service, false) || t.IsDefined(component, false) || t.IsDefined(controller, false)
-                   select t;
-        }
-
-        private void EnsureAssembliesAreLoadedForComponentScan()
-        {
-            var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
-
-            loadedAssemblies
-                .SelectMany(x => x.GetReferencedAssemblies())
-                .Distinct()
-                .Where(y => loadedAssemblies.Any((a) => a.FullName == y.FullName) == false)
-                .ToList()
-                .ForEach(x => loadedAssemblies.Add(AppDomain.CurrentDomain.Load(x)));
-        }
+       
 
         #endregion
 

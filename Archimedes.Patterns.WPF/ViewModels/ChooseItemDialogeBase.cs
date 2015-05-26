@@ -29,9 +29,9 @@ namespace Archimedes.Patterns.WPF.ViewModels
 
         protected override IEnumerable<DialogCommand> BuildCommands()
         {
-           yield return BuildDefaultCommand("CANCEL", DialogResultType.Cancel, false, true);
+           yield return BuildDefaultCommand("Abbrechen", DialogResultType.Cancel, false, true);
 
-           var chooseCommand = BuildDefaultCommand("CHOOSE", DialogResultType.OK, true);
+           var chooseCommand = BuildDefaultCommand("Wählen", DialogResultType.Affirmative, true);
            chooseCommand.CustomAction = o => ChooseSelectedItem();
            chooseCommand.CustomCanExecute = o => CanChooseSelectedItem;
            yield return chooseCommand;

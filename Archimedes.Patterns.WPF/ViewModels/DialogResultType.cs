@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
 
 namespace Archimedes.Patterns.WPF.ViewModels
 {
@@ -11,25 +8,24 @@ namespace Archimedes.Patterns.WPF.ViewModels
     public enum DialogResultType
     {
         /// <summary>
-        /// Nothing is returned from the dialog box. This means that the modal dialog
-        /// continues running.
+        /// Nothing is returned from the dialog box.
         /// </summary>
         None = 0,
 
         /// <summary>
-        /// The dialog box return value is OK (usually sent from a button labeled OK).
+        /// The dialog box has been accepted/confirmed/liked/yes
         /// </summary>
-        OK = 1,
+        Affirmative = 1,
 
         /// <summary>
-        /// The dialog box return value is Cancel (usually sent from a button labeled Cancel).
+        /// The dialog box has been declined/aborted/disliked/no
         /// </summary>
-        Cancel = 2,
+        Negative = 2,
 
         /// <summary>
-        /// The dialog box return value is Abort (usually sent from a button labeled  Abort).
+        /// The dialog box was canceled
         /// </summary>
-        Abort = 3,
+        Cancel = 3,
 
         /// <summary>
         /// The dialog box return value is Retry (usually sent from a button labeled Retry).
@@ -40,16 +36,5 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// The dialog box return value is Ignore (usually sent from a button labeled Ignore).
         /// </summary>
         Ignore = 5,
-
-        /// <summary>
-        ///  The dialog box return value is Yes (usually sent from a button labeled Yes).
-        /// </summary>
-        Yes = 6,
-
-
-        /// <summary>
-        /// The dialog box return value is No (usually sent from a button labeled No).
-        /// </summary>
-        No = 7,
     }
 }

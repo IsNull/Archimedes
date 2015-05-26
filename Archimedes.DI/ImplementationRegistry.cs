@@ -7,27 +7,34 @@ using Archimedes.DI.AOP;
 namespace Archimedes.DI
 {
     /// <summary>
-    /// Holds all (named) implementations of a type.
+    /// Holds all (named) implementation types of an interface.
     /// </summary>
     internal class ImplementationRegistry
     {
+        #region Fields
+
         private readonly Type _iface; // Just used for better exception texts
-
-
         private readonly List<Type> _anonymousImpls = new List<Type>();
         private readonly Dictionary<string, Type> _namedImpls = new Dictionary<string, Type>();
 
 
         private Type _primary = null;
 
+        #endregion
+
+        #region Constructor
 
         public ImplementationRegistry(Type iface)
         {
             _iface = iface;
         }
 
+        #endregion
+
+        #region Public methods
+
         /// <summary>
-        /// 
+        /// Try to get the implementation
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -68,7 +75,6 @@ namespace Archimedes.DI
                 }
                 throw new AmbiguousMappingException("There is more than one ("+_anonymousImpls.Count+") implementation available for the same type "+_iface+": " + implsStr);
             }
-
         }
 
         /// <summary>
@@ -100,8 +106,11 @@ namespace Archimedes.DI
             }
 
             RegisterPrimary(impl);
-
         }
+
+        #endregion
+
+        #region Private methods
 
         private void RegisterPrimary(Type impl)
         {
@@ -159,6 +168,8 @@ namespace Archimedes.DI
                 throw new NotSupportedException("Could not find a named implemnetation '" + name + "' of type " + _iface.Name);
             }
         }
+
+        #endregion
 
 
         public override string ToString()

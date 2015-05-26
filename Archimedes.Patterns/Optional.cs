@@ -118,5 +118,22 @@ namespace Archimedes.Patterns
         {
             return IsPresent ? Get() + "" : "{Empty-Maybe}";
         }
+
+        /// <summary>
+        /// Maps this value if present, using the given mapper function.
+        /// Otherwise, an empty optional is returned.
+        /// </summary>
+        /// <typeparam name="TD"></typeparam>
+        /// <param name="mapper"></param>
+        /// <returns></returns>
+        public Optional<TD> MapOptional<TD>(Func<T, TD> mapper)
+        {
+            if (IsPresent)
+            {
+                return Optional<TD>.OfNullable(mapper(Get()));
+            }
+
+            return Optional<TD>.Empty();
+        }
     }
 }

@@ -366,5 +366,17 @@ namespace Archimedes.DI
         {
             return ContextName + " holding " + _serviceRegistry.Count + " entries!";
         }
+
+        public void RegisterInstance<T>(T serviceInstance)
+        {
+            if (_serviceRegistry.ContainsKey(typeof(T)))
+            {
+                _serviceRegistry.Add(typeof(T), serviceInstance);
+            }
+            else
+            {
+                _serviceRegistry[typeof (T)] = serviceInstance;
+            }
+        }
     }
 }

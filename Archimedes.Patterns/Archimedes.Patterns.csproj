@@ -88,6 +88,14 @@
     <Compile Include="Conditions\IOperatorManagerService.cs" />
     <Compile Include="Conditions\Operator.cs" />
     <Compile Include="Conditions\OperatorManagerService.cs" />
+    <Compile Include="Configuration\CommandLineOptions.cs" />
+    <Compile Include="Configuration\CommandLineParser.cs" />
+    <Compile Include="Configuration\ConfigurationLoader.cs" />
+    <Compile Include="Configuration\ConfigurationService.cs" />
+    <Compile Include="Configuration\IConfigurationService.cs" />
+    <Compile Include="Configuration\Properties.cs" />
+    <Compile Include="Configuration\PropertiesParser.cs" />
+    <Compile Include="Configuration\UnknownParameterException.cs" />
     <Compile Include="Converters\TimeSpanConverter.cs" />
     <Compile Include="Crypto\StringObfuscator.cs" />
     <Compile Include="Data\Entity.cs" />

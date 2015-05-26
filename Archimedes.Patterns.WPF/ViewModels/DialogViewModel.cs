@@ -28,7 +28,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <summary>
         /// Gets or sets the Dialoge result
         /// </summary>
-        public DialogResultType DialogeResult {
+        public DialogResultType DialogResult {
             get { return _dlgres;  }
             set { _dlgres = value;  }
         }
@@ -62,7 +62,7 @@ namespace Archimedes.Patterns.WPF.ViewModels
         /// <returns></returns>
         protected virtual IEnumerable<DialogCommand> BuildCommands()
         {
-            yield return BuildDefaultCommand("OK", DialogResultType.OK, true);
+            yield return BuildDefaultCommand("OK", DialogResultType.Affirmative, true);
         }
 
 

@@ -7,12 +7,11 @@ using log4net;
 namespace Archimedes.DI
 {
     /// <summary>
-    /// 
+    /// Base class of the ElderBox DI configuration
     /// </summary>
     public abstract class ElderModuleConfiguration : IModuleConfiguration
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         private readonly Dictionary<Type, ImplementationRegistry> _componentRegistry = new Dictionary<Type, ImplementationRegistry>();
 
 
