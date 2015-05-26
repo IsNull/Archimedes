@@ -50,6 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\CommandLineOptions.cs" />
+    <Compile Include="Configuration\CommandLineParser.cs" />
+    <Compile Include="Configuration\ConfigurationLoader.cs" />
+    <Compile Include="Configuration\ConfigurationService.cs" />
+    <Compile Include="Configuration\IConfigurationService.cs" />
+    <Compile Include="Configuration\Properties.cs" />
+    <Compile Include="Configuration\PropertiesParser.cs" />
+    <Compile Include="Configuration\UnknownParameterException.cs" />
     <Compile Include="DI\AmbiguousMappingException.cs" />
     <Compile Include="AOP\AOPUitl.cs" />
     <Compile Include="AOP\ComponentScanner.cs" />

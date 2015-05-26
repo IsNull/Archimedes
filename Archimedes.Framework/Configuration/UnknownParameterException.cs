@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Archimedes.Patterns.Configuration
+namespace Archimedes.Framework.Configuration
 {
     public class UnknownParameterException : Exception
     {

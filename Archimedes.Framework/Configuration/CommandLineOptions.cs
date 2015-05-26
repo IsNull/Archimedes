@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Archimedes.Patterns.Configuration
+namespace Archimedes.Framework.Configuration
 {
     /// <summary>
     /// Holds commandline parameters and arguments in a easy accessible model.

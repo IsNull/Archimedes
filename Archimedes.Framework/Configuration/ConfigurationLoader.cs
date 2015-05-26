@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
-
-namespace Archimedes.Patterns.Configuration
+namespace Archimedes.Framework.Configuration
 {
     public class ConfigurationLoader
     {

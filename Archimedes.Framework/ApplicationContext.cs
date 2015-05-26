@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Archimedes.Framework.AOP;
+using Archimedes.Framework.Configuration;
 using Archimedes.Framework.DI;
-using Archimedes.Patterns.Configuration;
 using log4net;
 
 namespace Archimedes.Framework

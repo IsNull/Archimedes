@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using Archimedes.Patterns;
 
-namespace Archimedes.Patterns.Configuration
+namespace Archimedes.Framework.Configuration
 {
     /// <summary>
     /// Represents properties as a simple key-value store
