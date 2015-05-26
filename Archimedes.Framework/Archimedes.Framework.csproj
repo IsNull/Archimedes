@@ -50,17 +50,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AmbiguousMappingException.cs" />
-    <Compile Include="AOPUitl.cs" />
+    <Compile Include="DI\AmbiguousMappingException.cs" />
+    <Compile Include="AOP\AOPUitl.cs" />
     <Compile Include="AOP\ComponentScanner.cs" />
     <Compile Include="ApplicationContext.cs" />
     <Compile Include="AOP\AutoModuleConfiguration.cs" />
-    <Compile Include="AutowireException.cs" />
-    <Compile Include="CircularDependencyException.cs" />
-    <Compile Include="ElderBox.cs" />
-    <Compile Include="ElderModuleConfiguration.cs" />
-    <Compile Include="IModuleConfiguration.cs" />
-    <Compile Include="ImplementationRegistry.cs" />
+    <Compile Include="DI\AutowireException.cs" />
+    <Compile Include="DI\CircularDependencyException.cs" />
+    <Compile Include="DI\ElderBox.cs" />
+    <Compile Include="DI\ElderModuleConfiguration.cs" />
+    <Compile Include="DI\IModuleConfiguration.cs" />
+    <Compile Include="DI\ImplementationRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

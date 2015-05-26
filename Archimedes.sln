@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8B68A9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Patterns.Tests", "Tests\Archimedes.Patterns.Tests\Archimedes.Patterns.Tests.csproj", "{DE9EAC18-1645-4050-860C-F3BF37473D0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.DI", "Archimedes.DI\Archimedes.DI.csproj", "{07DACD83-28BD-40B5-8EBC-EF682F871304}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Archimedes.Framework", "Archimedes.Framework\Archimedes.Framework.csproj", "{07DACD83-28BD-40B5-8EBC-EF682F871304}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
