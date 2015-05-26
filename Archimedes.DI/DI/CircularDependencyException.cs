@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
-namespace Archimedes.DI
+namespace Archimedes.Framework.DI
 {
     public class CircularDependencyException : Exception
     {

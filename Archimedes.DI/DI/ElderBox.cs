@@ -5,8 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using Archimedes.DI.AOP;
+using Archimedes.Framework.AOP;
 
-namespace Archimedes.DI
+namespace Archimedes.Framework.DI
 {
     /// <summary>
     /// A very lightweight dependency injection container wich requires virtually no configuration.

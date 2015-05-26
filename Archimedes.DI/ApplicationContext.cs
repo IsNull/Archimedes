@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
-using Archimedes.DI.AOP;
+using Archimedes.Framework.AOP;
+using Archimedes.Framework.DI;
 using Archimedes.Patterns.Configuration;
 using log4net;
 
-namespace Archimedes.DI
+namespace Archimedes.Framework
 {
     /// <summary>
     /// Represents the Application Context, which provides component scanning / auto-configuration.

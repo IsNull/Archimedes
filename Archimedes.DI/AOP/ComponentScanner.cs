@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Archimedes.DI.AOP;
 using log4net;
 
-namespace Archimedes.DI.AOP
+namespace Archimedes.Framework.AOP
 {
     /// <summary>
     /// Scans for components (types which are annotated by component attributes)

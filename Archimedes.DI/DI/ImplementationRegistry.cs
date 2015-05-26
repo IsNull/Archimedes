@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Archimedes.DI.AOP;
+using Archimedes.Framework.AOP;
 
-namespace Archimedes.DI
+namespace Archimedes.Framework.DI
 {
     /// <summary>
     /// Holds all (named) implementation types of an interface.

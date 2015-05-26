@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Archimedes.DI.AOP;
+using Archimedes.Framework.DI;
 using log4net;
 
-namespace Archimedes.DI.AOP
+namespace Archimedes.Framework.AOP
 {
     public class AutoModuleConfiguration : ElderModuleConfiguration
     {

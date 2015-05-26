@@ -7,8 +7,8 @@
     <ProjectGuid>{07DACD83-28BD-40B5-8EBC-EF682F871304}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Archimedes.DI</RootNamespace>
-    <AssemblyName>Archimedes.DI</AssemblyName>
+    <RootNamespace>Archimedes.Framework</RootNamespace>
+    <AssemblyName>Archimedes.Framework</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>

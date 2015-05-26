@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Archimedes.DI
+namespace Archimedes.Framework.DI
 {
     /// <summary>
     /// Thrown when autowiring (injecting dependencies) has failed.

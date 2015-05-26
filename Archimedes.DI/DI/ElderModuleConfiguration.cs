@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using log4net;
 
-namespace Archimedes.DI
+namespace Archimedes.Framework.DI
 {
     /// <summary>
     /// Base class of the ElderBox DI configuration
