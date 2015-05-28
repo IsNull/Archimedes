@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using Archimedes.DI.AOP;
 using Archimedes.Framework.AOP;
+using Archimedes.Framework.Configuration;
+using log4net;
 
 namespace Archimedes.Framework.DI
 {
@@ -16,6 +18,9 @@ namespace Archimedes.Framework.DI
     public class ElderBox
     {
         #region Fields
+
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+
 
         private readonly Dictionary<Type, object> _serviceRegistry = new Dictionary<Type, object>();
         private readonly IModuleConfiguration _configuration;
@@ -128,7 +133,11 @@ namespace Archimedes.Framework.DI
             return instance;
         }
 
-
+        /// <summary>
+        /// Autowires all fields which have the [Inject] Attribute with the resolved dependency.
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="unresolvedDependencies"></param>
         [DebuggerStepThrough]
         private void Autowire(object instance, HashSet<Type> unresolvedDependencies)
         {
@@ -140,7 +149,7 @@ namespace Archimedes.Framework.DI
 
                 foreach (var targetField in targetFields)
                 {
-                    if (targetField.GetValue(instance) == null)
+                    if (targetField.GetValue(instance) == null) // Only autowire if the field is null
                     {
 
                         if (unresolvedDependencies.Contains(targetField.FieldType))
@@ -148,7 +157,6 @@ namespace Archimedes.Framework.DI
                             throw new CircularDependencyException(instance.GetType(), targetField.FieldType);
                         }
 
-                        // Only inject if the field is null
                         try
                         {
                             var fieldValue = Resolve(targetField.FieldType, unresolvedDependencies);
@@ -169,7 +177,42 @@ namespace Archimedes.Framework.DI
                 }
                 throw new AutowireException("Autowiring of instance " + instance.GetType().Name + " failed!", e);
             }
+
+            AutowireConfiguration(instance, unresolvedDependencies);
         }
+
+
+        /// <summary>
+        /// Autofills all fields of the given instance which have the [Value(...)] atribute.
+        /// </summary>
+        /// <param name="instance"></param>
+        private void AutowireConfiguration(object instance, HashSet<Type> unresolvedDependencies)
+        {
+            var valueFields = (from f in instance.GetType().GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public)
+                               where f.IsDefined(typeof(ValueAttribute), false)
+                               select f).ToList();
+
+            if (valueFields.Any())
+            {
+                var configurationService = (IConfigurationService)Resolve(typeof(IConfigurationService), unresolvedDependencies);
+
+                var configurator = new ValueConfigurator(configurationService);
+
+                foreach (var targetField in valueFields)
+                {
+                    if (targetField.GetValue(instance) == null) // Only inject value if field is null
+                    {
+                        var valueAttrs = targetField.GetCustomAttributes(typeof (ValueAttribute), false);
+                        if (valueAttrs.Length > 0)
+                        {
+                            var valueAttr = (ValueAttribute) valueAttrs[0];
+                            configurator.SetValue(targetField, instance, valueAttr.Expression);
+                        }
+                    }
+                }
+            }
+        }
+
 
 
         [DebuggerStepThrough]

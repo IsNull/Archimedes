@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ValueAttribute.cs" />
     <Compile Include="Configuration\CommandLineOptions.cs" />
     <Compile Include="Configuration\CommandLineParser.cs" />
     <Compile Include="Configuration\ConfigurationLoader.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="DI\ElderModuleConfiguration.cs" />
     <Compile Include="DI\IModuleConfiguration.cs" />
     <Compile Include="DI\ImplementationRegistry.cs" />
+    <Compile Include="DI\ValueConfigurator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
