@@ -164,6 +164,10 @@ namespace Archimedes.Framework.DI
                         }
                         catch (Exception e)
                         {
+                            if (e is CircularDependencyException)
+                            {
+                                throw;
+                            }
                             throw new AutowireException("Autowiring of Field " + targetField.Name + "("+targetField.FieldType.Name+") has failed!", e);
                         }
                     }

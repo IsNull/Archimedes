@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -24,9 +25,11 @@ namespace Archimedes.Patterns.Services
             _implementations.Add(implementationKey, new Implementation(typeof(TImplementation), true));
         }
 
-
+        [DebuggerStepThrough]
         public T ResolveInstance(string implementationKey)
         {
+            if (implementationKey == null) throw new ArgumentNullException("implementationKey");
+
             if (_implementations.ContainsKey(implementationKey))
             {
                 var implementation = _implementations[implementationKey];

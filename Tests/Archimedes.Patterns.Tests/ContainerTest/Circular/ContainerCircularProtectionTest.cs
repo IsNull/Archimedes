@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Archimedes.DI;
-using Archimedes.DI.AOP;
+﻿using Archimedes.Framework;
+using Archimedes.Framework.AOP;
+using Archimedes.Framework.DI;
 using NUnit.Framework;
 
 namespace Archimedes.Patterns.Tests.ContainerTest.Circular
@@ -39,7 +35,9 @@ namespace Archimedes.Patterns.Tests.ContainerTest.Circular
             var conf = new AutoModuleConfiguration(ApplicationContext.Instance.ScanComponents("Archimedes.*"));
             var container = new ElderBox(conf);
 
-            container.Resolve<ServiceA1>();
+            var service = container.Resolve<ServiceA1>();
+
+            var s2 = service;
         }
     }
 }

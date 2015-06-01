@@ -59,6 +59,11 @@
     <Compile Include="ContainerTest\Circular\ServiceA3.cs" />
     <Compile Include="ContainerTest\ContainerTest.cs" />
     <Compile Include="ContainerTest\IServiceB.cs" />
+    <Compile Include="ContainerTest\Primary\IServiceVV.cs" />
+    <Compile Include="ContainerTest\Primary\PrimaryHandlingTest.cs" />
+    <Compile Include="ContainerTest\Primary\ServiceA.cs" />
+    <Compile Include="ContainerTest\Primary\ServiceVV1.cs" />
+    <Compile Include="ContainerTest\Primary\ServiceVV2.cs" />
     <Compile Include="ContainerTest\ServiceA.cs" />
     <Compile Include="ContainerTest\ServiceAmbig.cs" />
     <Compile Include="ContainerTest\ServiceB.cs" />
@@ -73,9 +78,9 @@
       <Project>{9b72f725-a1db-45e8-aeff-34ab9601f161}</Project>
       <Name>Archimedes.Controls.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Archimedes.DI\Archimedes.DI.csproj">
+    <ProjectReference Include="..\..\Archimedes.Framework\Archimedes.Framework.csproj">
       <Project>{07dacd83-28bd-40b5-8ebc-ef682f871304}</Project>
-      <Name>Archimedes.DI</Name>
+      <Name>Archimedes.Framework</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Archimedes.Patterns\Archimedes.Patterns.csproj">
       <Project>{5c5031e6-c6a4-4d8f-a473-cdb08db8e282}</Project>
