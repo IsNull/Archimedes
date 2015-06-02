@@ -69,11 +69,7 @@ namespace Archimedes.Framework.DI
             }
             else
             {
-                string implsStr = "";
-                foreach (var impl in _anonymousImpls)
-                {
-                    implsStr += impl + " ";
-                }
+                string implsStr = string.Join(" ", _anonymousImpls);
                 throw new AmbiguousMappingException("There is more than one ("+_anonymousImpls.Count+") implementation available for the same type "+_iface+": " + implsStr);
             }
         }
@@ -84,7 +80,6 @@ namespace Archimedes.Framework.DI
         /// <param name="impl"></param>
         public void Register(Type impl)
         {
-
             var attr = AOPUitl.GetComponentAttribute(impl);
             string name = attr.Name;
 
@@ -144,11 +139,7 @@ namespace Archimedes.Framework.DI
         {
             if (primaryAttribute.PrimaryForTypes.Length == 0) return true;
 
-            foreach (var primaryApplies in primaryAttribute.PrimaryForTypes)
-            {
-                return _iface == primaryApplies;
-            }
-            return false;
+            return primaryAttribute.PrimaryForTypes.Any(primaryApplies => _iface == primaryApplies);
         }
 
 
