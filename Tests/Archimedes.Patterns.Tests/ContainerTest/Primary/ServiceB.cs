@@ -7,13 +7,10 @@ using Archimedes.DI.AOP;
 
 namespace Archimedes.Patterns.Tests.ContainerTest.Primary
 {
-    [Primary]
     [Service]
-    class ServiceVV2 : IServiceVV
+    public class ServiceB
     {
-        public void Test()
-        {
-
-        }
+        [Inject]
+        private IServiceCandidate _service;
     }
 }

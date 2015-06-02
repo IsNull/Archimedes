@@ -59,9 +59,16 @@
     <Compile Include="ContainerTest\Circular\ServiceA3.cs" />
     <Compile Include="ContainerTest\ContainerTest.cs" />
     <Compile Include="ContainerTest\IServiceB.cs" />
+    <Compile Include="ContainerTest\Primary\DummyPrimaryService.cs" />
+    <Compile Include="ContainerTest\Primary\IGenericBase.cs" />
+    <Compile Include="ContainerTest\Primary\IServiceCandidate.cs" />
     <Compile Include="ContainerTest\Primary\IServiceVV.cs" />
+    <Compile Include="ContainerTest\Primary\ObjectDummy.cs" />
     <Compile Include="ContainerTest\Primary\PrimaryHandlingTest.cs" />
     <Compile Include="ContainerTest\Primary\ServiceA.cs" />
+    <Compile Include="ContainerTest\Primary\ServiceB.cs" />
+    <Compile Include="ContainerTest\Primary\ServiceCandidate1.cs" />
+    <Compile Include="ContainerTest\Primary\ServiceCandidate2.cs" />
     <Compile Include="ContainerTest\Primary\ServiceVV1.cs" />
     <Compile Include="ContainerTest\Primary\ServiceVV2.cs" />
     <Compile Include="ContainerTest\ServiceA.cs" />

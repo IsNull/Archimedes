@@ -19,7 +19,12 @@ namespace Archimedes.Patterns.Tests.ContainerTest.Primary
             var serviceA = context.Resolve<ServiceA>();
         }
 
-
+        [TestCase]
+        public void TestPrimaryScoped()
+        {
+            var context = new ElderBox(GetConfiguration());
+            var serviceA = context.Resolve<ServiceB>();
+        }
 
         private AutoModuleConfiguration GetConfiguration()
         {
