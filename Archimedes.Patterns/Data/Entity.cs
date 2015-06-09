@@ -34,7 +34,7 @@ namespace Archimedes.Patterns.Data
     /// Baseclass for entities
     /// Usable for Database stored Objects
     /// </summary>
-    /// <typeparam name="Tid">ID type of this entity</typeparam>
+    /// <typeparam name="Tid">Id type of this entity</typeparam>
     /// <typeparam name="T">Type of this entity</typeparam>
     [DataContract]
     public class Entity<Tid, T> : EntityBase<Tid, T>
@@ -49,26 +49,26 @@ namespace Archimedes.Patterns.Data
     /// <summary>
     /// Baseclass for entities
     /// </summary>
-    /// <typeparam name="Tid">ID type of this entity</typeparam>
+    /// <typeparam name="Tid">Id type of this entity</typeparam>
     /// <typeparam name="T">Type of this entity</typeparam>
     [DataContract]
     public class EntityBase<Tid, T> : IEntityBase<Tid,T> where T : class
     {
         public EntityBase() { }
 
-        public EntityBase(Tid id) { ID = id; }
+        public EntityBase(Tid id) { Id = id; }
 
         /// <summary>
         /// ID of this Entity
         /// </summary>
-        public virtual Tid ID {
+        public virtual Tid Id {
             get;
             set;
         }
 
         protected virtual void Prototype(EntityBase<Tid, T> prototype)
         {
-            ID = prototype.ID;
+            Id = prototype.Id;
         }
 
         #region IEquatable
@@ -77,7 +77,7 @@ namespace Archimedes.Patterns.Data
             var other = obj as EntityBase<Tid, T>;
             if (other == null)
                 return false;
-            return other.ID.Equals(this.ID);
+            return other.Id.Equals(this.Id);
         }
 
         public override bool Equals(object obj) {
@@ -85,13 +85,13 @@ namespace Archimedes.Patterns.Data
         }
 
         public override int GetHashCode() {
-            return this.ID.GetHashCode();
+            return this.Id.GetHashCode();
         }
 
         #endregion
 
         public override string ToString() {
-            return this.ID.ToString();
+            return this.Id.ToString();
         }
     }
 }

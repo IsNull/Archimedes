@@ -15,7 +15,7 @@ namespace Archimedes.Patterns.Conditions
     {
         protected ConditionExpression() : this(Guid.NewGuid()) { }
 
-        protected ConditionExpression(Guid id) { this.ID = id; }
+        protected ConditionExpression(Guid id) { this.Id = id; }
 
         /// <summary>
         /// Filters a enumerable list of objects by this condtition

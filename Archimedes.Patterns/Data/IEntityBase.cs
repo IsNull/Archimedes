@@ -11,7 +11,7 @@ namespace Archimedes.Patterns.Data
         /// <summary>
         /// ID of this Entity
         /// </summary>
-        Tid ID { get; set; }
+        Tid Id { get; set; }
         string ToString();
     }
 }
