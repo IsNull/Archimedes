@@ -59,6 +59,7 @@
     <Compile Include="Configuration\Properties.cs" />
     <Compile Include="Configuration\PropertiesParser.cs" />
     <Compile Include="Configuration\UnknownParameterException.cs" />
+    <Compile Include="Configuration\ValueConfigurationException.cs" />
     <Compile Include="DI\AmbiguousMappingException.cs" />
     <Compile Include="AOP\AOPUitl.cs" />
     <Compile Include="AOP\ComponentScanner.cs" />

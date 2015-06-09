@@ -5,7 +5,7 @@ namespace Archimedes.Framework.Configuration
 {
     public class ConfigurationLoader
     {
-        public Properties LoadConfiguration(string[] commandLineArgs)
+        public Properties LoadConfiguration(string[] commandLineArgs = null)
         {
             return LoadConfigurationFromPropertiesFile()
                 .Merge(LoadConfigurationFromCommandLine(commandLineArgs));
@@ -15,8 +15,11 @@ namespace Archimedes.Framework.Configuration
         {
             var cmdProps = new Properties();
 
-            var argsCmd = CommandLineParser.ParseCommandLineArgs(commandLineArgs);
-            cmdProps.Merge(argsCmd.ToParameterMap());
+            if (commandLineArgs != null && commandLineArgs.Length != 0)
+            {
+                var argsCmd = CommandLineParser.ParseCommandLineArgs(commandLineArgs);
+                cmdProps.Merge(argsCmd.ToParameterMap());
+            }
 
             return cmdProps;
         }

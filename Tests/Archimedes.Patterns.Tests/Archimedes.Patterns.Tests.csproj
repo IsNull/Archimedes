@@ -51,6 +51,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ConfigurationTest\ServiceConfigTarget.cs" />
+    <Compile Include="ConfigurationTest\ValueTest.cs" />
     <Compile Include="ContainerTest\Circular\ContainerCircularProtectionTest.cs" />
     <Compile Include="ContainerTest\Circular\ServiceA1.cs" />
     <Compile Include="ContainerTest\Circular\ServiceY1.cs" />

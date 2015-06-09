@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Archimedes.Framework.Configuration;
@@ -25,8 +26,15 @@ namespace Archimedes.Framework.DI
 
         public void SetValue(FieldInfo field, object instance, string valueExpression)
         {
-            var value = InterpretValueExpression(valueExpression);
-            SetValueAutoConvert(field, instance, value);
+            try
+            {
+                var value = InterpretValueExpression(valueExpression);
+                SetValueAutoConvert(field, instance, value);
+            }
+            catch (Exception e)
+            {
+                throw new ValueConfigurationException("Failed to set value " + valueExpression + " to field " + field + " at class " + instance.GetType(), e);
+            }
         }
 
         private string InterpretValueExpression(string expression)
@@ -49,16 +57,23 @@ namespace Archimedes.Framework.DI
 
         private void SetValueAutoConvert(FieldInfo field, object instance, string value)
         {
-            if (field.FieldType == typeof (string))
+            if (field.FieldType == typeof(string))
             {
                 field.SetValue(instance, value);
             }
             else
             {
-                throw new NotSupportedException("The value configurator does not support converting a string to your '" + field.FieldType + "' type!");
+                try
+                {
+                    var typeConverter = TypeDescriptor.GetConverter(field.FieldType);
+                    object propValue = typeConverter.ConvertFromString(value);
+                    field.SetValue(instance, propValue);
+                }
+                catch (NotSupportedException e)
+                {
+                    throw new NotSupportedException("The value configurator does not support converting a string '" + value + "' to your '" + field.FieldType + "' type!", e);
+                }
             }
-            // TODO Support more primitives
-
         }
     }
 }

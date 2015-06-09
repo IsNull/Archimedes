@@ -204,7 +204,8 @@ namespace Archimedes.Framework.DI
 
                 foreach (var targetField in valueFields)
                 {
-                    if (targetField.GetValue(instance) == null) // Only inject value if field is null
+                    if (targetField.FieldType.IsValueType ||
+                        targetField.GetValue(instance) == null) // Only inject value if field is null
                     {
                         var valueAttrs = targetField.GetCustomAttributes(typeof (ValueAttribute), false);
                         if (valueAttrs.Length > 0)
