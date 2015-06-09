@@ -19,10 +19,11 @@ namespace Archimedes.Framework
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string _defaultContext = "_ELDER_DEFAULT";
+        private readonly Dictionary<string, ElderBox> _contextRegistry = new Dictionary<string, ElderBox>();
+
 
         private List<Type> _components = null; // Lazy initialized!
-        private readonly Dictionary<string, ElderBox> _contextRegistry = new Dictionary<string, ElderBox>();
-        private readonly IConfigurationService _configurationService = new ConfigurationService();
+        private  IConfigurationService _configurationService;
 
         #endregion
 
@@ -45,21 +46,36 @@ namespace Archimedes.Framework
         #region Public methods
 
         /// <summary>
+        /// Gets the Application Context configuration.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public IConfigurationService GetConfiguration(string[] args)
+        {
+            if (_configurationService == null)
+            {
+                _configurationService = new ConfigurationService();
+                LoadConfiguration(_configurationService, args);
+            }
+            return _configurationService;
+        }
+
+
+        /// <summary>
         ///  Enables Auto-Configuration, which basically scans for Components.
         /// 
         ///  Components must be marked with [Service] or [Controller].
         /// 
         /// </summary>
-        public void EnableAutoConfiguration(string[] args)
+        public void EnableAutoConfiguration(string[] args = null)
         {
-            LoadConfiguration(_configurationService, args);
-            var assemblyFiltersStr = _configurationService.GetOptional("archimedes.componentscan.assemblies");
-            var assemblyFilters = assemblyFiltersStr.MapOptional(x => x.Split(',')).OrDefault();
+            var configuration = GetConfiguration(args);
+            var assemblyFiltersStr = configuration.GetOptional("archimedes.componentscan.assemblies");
+            var assemblyFilters = assemblyFiltersStr.MapOptional(x => x.Split(',')).OrElse(new string[0]);
 
             var conf = new AutoModuleConfiguration(ScanComponents(assemblyFilters));
             var ctx = RegisterContext(_defaultContext, conf);
-
-            ctx.RegisterInstance<IConfigurationService>(_configurationService);
+            ctx.RegisterInstance<IConfigurationService>(configuration);
         }
 
         /// <summary>
@@ -119,7 +135,7 @@ namespace Archimedes.Framework
 
         private void LoadConfiguration(IConfigurationService configurationService, string[] cmdArguments)
         {
-            var properties = new ConfigurationLoader().LoadConfiguration(cmdArguments);
+           var properties = new ConfigurationLoader().LoadConfiguration(cmdArguments);
            configurationService.Merge(properties);
         }
 
