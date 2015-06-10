@@ -20,5 +20,8 @@ namespace Archimedes.Patterns.Tests.ConfigurationTest
         [Value("${test.nullableNumber}")]
         public int? nullableNumber;
 
+        [Value("${test.simpleDate}")]
+        public DateTime simpleDate;
+
     }
 }

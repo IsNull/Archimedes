@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Archimedes.Framework.Configuration;
@@ -66,7 +67,7 @@ namespace Archimedes.Framework.DI
                 try
                 {
                     var typeConverter = TypeDescriptor.GetConverter(field.FieldType);
-                    object propValue = typeConverter.ConvertFromString(value);
+                    object propValue = typeConverter.ConvertFromString(null, CultureInfo.InvariantCulture, value);
                     field.SetValue(instance, propValue);
                 }
                 catch (NotSupportedException e)
