@@ -36,7 +36,7 @@ namespace Archimedes.Framework.DI
             configuration.Configure();
             _configuration = configuration;
 
-            RegisterSingletonInstance(typeof(ElderBox), this); // Register the current DI container context
+            UpdateSingletonInstance(typeof(ElderBox), this); // Register the current DI container context
         }
 
         #endregion
@@ -134,13 +134,7 @@ namespace Archimedes.Framework.DI
             unresolvedDependencies.Add(type); // Mark this type as unresolved
             var instance = ResolveInstanceFor(type, unresolvedDependencies);
 
-            if (instance != null)
-            {
-                // Successfully resolved the instance:
-                unresolvedDependencies.Remove(type);
-                RegisterSingletonInstance(type, instance);
-            }
-            else
+            if (instance == null)
             {
                 throw new NotSupportedException("Something went wrong while resolving instance for type " + type.Name);
             }
@@ -235,7 +229,7 @@ namespace Archimedes.Framework.DI
 
 
 
-        [DebuggerStepThrough]
+        //[DebuggerStepThrough]
         private object ResolveInstanceFor(Type type, HashSet<Type> unresolvedDependencies)
         {
             if(type == null) throw new ArgumentNullException("type");
@@ -259,6 +253,12 @@ namespace Archimedes.Framework.DI
                 ThrowIfTypeNotComponent(typeForImplementation);
 
                 instance = CreateInstance(typeForImplementation, unresolvedDependencies);
+
+                // Successfully resolved the instance:
+                UpdateSingletonInstance(typeForImplementation, instance);
+                // Update the unresolved dependencies
+                unresolvedDependencies.Remove(typeForImplementation);
+                unresolvedDependencies.Remove(type);
             }
             else
             {
@@ -419,9 +419,16 @@ namespace Archimedes.Framework.DI
         /// </summary>
         /// <param name="type"></param>
         /// <param name="instance"></param>
-        private void RegisterSingletonInstance(Type type, object instance)
+        private void UpdateSingletonInstance(Type type, object instance)
         {
-            _serviceRegistry.Add(type, instance);
+            if (!_serviceRegistry.ContainsKey(type))
+            {
+                _serviceRegistry.Add(type, instance);
+            }
+            else
+            {
+                _serviceRegistry[type] = instance;
+            }
         }
 
         #endregion
@@ -433,14 +440,7 @@ namespace Archimedes.Framework.DI
 
         public void RegisterInstance<T>(T serviceInstance)
         {
-            if (_serviceRegistry.ContainsKey(typeof(T)))
-            {
-                _serviceRegistry.Add(typeof(T), serviceInstance);
-            }
-            else
-            {
-                _serviceRegistry[typeof (T)] = serviceInstance;
-            }
+            UpdateSingletonInstance(typeof(T), serviceInstance);
         }
     }
 }
