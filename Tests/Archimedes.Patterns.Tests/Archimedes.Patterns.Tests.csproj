@@ -81,6 +81,9 @@
     <Compile Include="ContainerTest\ServiceD.cs" />
     <Compile Include="ContainerTest\ServiceC.cs" />
     <Compile Include="ContainerTest\ServiceY.cs" />
+    <Compile Include="ContainerTest\Singletons\ServiceSingletonA.cs" />
+    <Compile Include="ContainerTest\Singletons\ServiceSingletonB.cs" />
+    <Compile Include="ContainerTest\Singletons\SingletonsTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
