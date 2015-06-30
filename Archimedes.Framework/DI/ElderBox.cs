@@ -229,7 +229,7 @@ namespace Archimedes.Framework.DI
 
 
 
-        //[DebuggerStepThrough]
+        [DebuggerStepThrough]
         private object ResolveInstanceFor(Type type, HashSet<Type> unresolvedDependencies)
         {
             if(type == null) throw new ArgumentNullException("type");
@@ -256,6 +256,8 @@ namespace Archimedes.Framework.DI
 
                 // Successfully resolved the instance:
                 UpdateSingletonInstance(typeForImplementation, instance);
+                UpdateSingletonInstance(type, instance);
+
                 // Update the unresolved dependencies
                 unresolvedDependencies.Remove(typeForImplementation);
                 unresolvedDependencies.Remove(type);
