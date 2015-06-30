@@ -34,6 +34,8 @@ namespace Archimedes.Framework.AOP
 
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
+            var ignoredAssemblies = new List<string>();
+
             foreach (var assembly in assemblies)
             {
                 if (ScanAssembly(assembly, assemblyFilters))
@@ -48,7 +50,13 @@ namespace Archimedes.Framework.AOP
                     }
                     Log.Info(" == == ");
                 }
+                else
+                {
+                    ignoredAssemblies.Add(assembly.GetName().Name);
+                }
             }
+            // Log ingnored
+            Log.Info(string.Format("Ignored assemblies: {0}", Environment.NewLine + string.Join(Environment.NewLine, ignoredAssemblies)));
         }
 
         private bool ScanAssembly(Assembly assembly, string[] assemblyFilters)

@@ -56,7 +56,22 @@ namespace Archimedes.Framework.DI
         [DebuggerStepThrough]
         public T Create<T>(params object[] args)
         {
-            return (T)CreateInstance(typeof(T), new HashSet<Type>(), args);
+            return (T)Create(typeof(T), args);
+        }
+
+        /// <summary>
+        /// Creates a new instance of the given Type.
+        /// Using the provided (optional) arguments as constructor parameters.
+        /// If there are Constructor parameters which are not provided, this context is used to auto-wire 
+        /// the missing dependencies.
+        /// 
+        /// </summary>
+        /// <param name="t"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public object Create(Type t, params object[] args)
+        {
+            return CreateInstance(t, new HashSet<Type>(), args);
         }
 
 
