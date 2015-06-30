@@ -37,7 +37,7 @@ namespace Archimedes.Patterns
         }
 
         #endregion
-
+        
         #region Fields
 
         private readonly T _value;
