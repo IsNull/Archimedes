@@ -147,6 +147,7 @@
     <Compile Include="Singleton.cs" />
     <Compile Include="Threading\UIDispatcher.cs" />
     <Compile Include="Types\Period.cs" />
+    <Compile Include="Utils\AppUtil.cs" />
     <Compile Include="Utils\AsciiHelper.cs" />
     <Compile Include="Utils\ExceptionUtil.cs" />
     <Compile Include="Utils\ParseUtil.cs" />
