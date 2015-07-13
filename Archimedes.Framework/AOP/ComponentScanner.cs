@@ -40,15 +40,15 @@ namespace Archimedes.Framework.AOP
             {
                 if (ScanAssembly(assembly, assemblyFilters))
                 {
-                    Log.Info("==  Scanning assembly " + assembly.GetName().Name + "  ==");
+                    Log.Debug("==  Scanning assembly " + assembly.GetName().Name + "  ==");
                     var components = FindComponentTypes(assembly);
 
                     foreach (var component in components)
                     {
-                        Log.Info("      * " + component.Name);
+                        Log.Debug("      * " + component.Name);
                         yield return component;
                     }
-                    Log.Info(" == == ");
+                    Log.Debug(" == == ");
                 }
                 else
                 {
@@ -56,7 +56,7 @@ namespace Archimedes.Framework.AOP
                 }
             }
             // Log ingnored
-            Log.Info(string.Format("Ignored assemblies: {0}", Environment.NewLine + string.Join(Environment.NewLine, ignoredAssemblies)));
+            Log.Debug(string.Format("Ignored assemblies: {0}", Environment.NewLine + string.Join(Environment.NewLine, ignoredAssemblies)));
         }
 
         private bool ScanAssembly(Assembly assembly, string[] assemblyFilters)

@@ -60,10 +60,13 @@ namespace Archimedes.Framework.DI
 
         public void LogConfiguration()
         {
-            Log.Info("DI Module Configuration:");
-            foreach (var kv in _componentRegistry)
+            if (Log.IsDebugEnabled)
             {
-                Log.Info( kv.Key + "  ===>  "+ kv.Value );
+                Log.Debug("DI Module Configuration:");
+                foreach (var kv in _componentRegistry)
+                {
+                    Log.Debug(kv.Key + "  ===>  " + kv.Value);
+                }
             }
         }
     }
