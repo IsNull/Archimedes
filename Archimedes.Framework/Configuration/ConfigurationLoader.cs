@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using Archimedes.Patterns.Utils;
 
 namespace Archimedes.Framework.Configuration
 {
@@ -26,15 +27,25 @@ namespace Archimedes.Framework.Configuration
 
         private Properties LoadConfigurationFromPropertiesFile()
         {
-            var cmdProps = new Properties();
+            const string propertiesFileName = "application.properties";
 
-            var path = AppDomain.CurrentDomain.BaseDirectory + @"\application.properties";
+            var levelOnePath = AppUtil.ApplicaitonBinaryFolder + @"\" + propertiesFileName;
+            var levelTwoPath = AppUtil.AppDataFolder + @"\" + propertiesFileName;
+
+            return LoadProperties(levelOnePath).Merge(LoadProperties(levelTwoPath));
+        }
+
+        private Properties LoadProperties(string path)
+        {
+            var properties = new Properties();
+
             if (File.Exists(path))
             {
-                var properties = PropertiesParser.Parse(path);
-                cmdProps.Merge(properties);
+                var tmp = PropertiesParser.Parse(path);
+                properties.Merge(tmp);
             }
-            return cmdProps;
+
+            return properties;
         }
     }
 }
