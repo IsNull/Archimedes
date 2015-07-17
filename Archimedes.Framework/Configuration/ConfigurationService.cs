@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using Archimedes.Patterns;
+using System.Text;
 using Archimedes.Patterns.CommandLine;
 using Archimedes.Patterns.Utils;
 
@@ -26,17 +25,43 @@ namespace Archimedes.Framework.Configuration
         /// </summary>
         /// <param name="commandLineArgs"></param>
         /// <returns></returns>
-        public void LoadConfiguration(string[] commandLineArgs = null)
+        public void LoadConfiguration(params string[] commandLineArgs)
         {
             var properties = LoadConfigurationFromPropertiesFile()
                 .Merge(LoadConfigurationFromCommandLine(commandLineArgs));
 
+            InterpretProperties(properties);
+
             Configuration.Merge(properties);
         }
 
-
-
         #region Private methods
+
+        private void InterpretProperties(Properties properties)
+        {
+            var allProperties = properties.ToKeyValuePairs();
+            foreach (var key in allProperties.Keys)
+            {
+                if (key.Contains(".$hidden"))
+                {
+                    var hiddenValue = properties.Get(key);
+                    properties.Set(key.Replace(".$hidden", ""), Unhide(hiddenValue));
+                }
+            }
+
+        }
+
+        private string Unhide(string hidden)
+        {
+            if (!string.IsNullOrEmpty(hidden))
+            {
+                byte[] decodedBytes = Convert.FromBase64String(hidden);
+                string decodedText = Encoding.UTF8.GetString(decodedBytes);
+                return decodedText;
+            }
+            return null;
+        }
+
 
         private Properties LoadConfigurationFromCommandLine(string[] commandLineArgs)
         {

@@ -18,6 +18,5 @@ namespace Archimedes.Patterns.Tests.ConfigurationTest
 
         [Value("${test.simpleDate}")]
         public DateTime simpleDate;
-
     }
 }

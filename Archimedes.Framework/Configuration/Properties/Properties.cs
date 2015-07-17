@@ -118,6 +118,11 @@ namespace Archimedes.Framework.Configuration
             return Merge(other._parameters);
         }
 
+        public Dictionary<string, string> ToKeyValuePairs()
+        {
+            return new Dictionary<string, string>(_parameters);
+        }
+
         public override string ToString()
         {
             return _parameters.Aggregate("", (current, kv) =>
