@@ -69,6 +69,8 @@
   <ItemGroup>
     <Compile Include="Cancelable\CancelableBase.cs" />
     <Compile Include="Cancelable\ICancelableWorker.cs" />
+    <Compile Include="CommandLine\CommandLineOptions.cs" />
+    <Compile Include="CommandLine\CommandLineParser.cs" />
     <Compile Include="Commands\CommandEventArgs.cs" />
     <Compile Include="Commands\CommandUndo.cs" />
     <Compile Include="Commands\CompositeUnDoCommand.cs" />

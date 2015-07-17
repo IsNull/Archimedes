@@ -50,16 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\ValueAttribute.cs" />
-    <Compile Include="Configuration\CommandLineOptions.cs" />
-    <Compile Include="Configuration\CommandLineParser.cs" />
-    <Compile Include="Configuration\ConfigurationLoader.cs" />
+    <Compile Include="Configuration\Properties\PropertiesLoader.cs" />
+    <Compile Include="Configuration\Values\ValueAttribute.cs" />
     <Compile Include="Configuration\ConfigurationService.cs" />
     <Compile Include="Configuration\IConfigurationService.cs" />
-    <Compile Include="Configuration\Properties.cs" />
-    <Compile Include="Configuration\PropertiesParser.cs" />
+    <Compile Include="Configuration\Properties\Properties.cs" />
+    <Compile Include="Configuration\Properties\PropertiesFileParser.cs" />
     <Compile Include="Configuration\UnknownParameterException.cs" />
-    <Compile Include="Configuration\ValueConfigurationException.cs" />
+    <Compile Include="Configuration\Values\ValueConfigurationException.cs" />
     <Compile Include="DI\AmbiguousMappingException.cs" />
     <Compile Include="AOP\AOPUitl.cs" />
     <Compile Include="AOP\ComponentScanner.cs" />
@@ -84,6 +82,7 @@
       <Name>Archimedes.Patterns</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

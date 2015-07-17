@@ -14,6 +14,14 @@ namespace Archimedes.Framework.Configuration
 
 
         /// <summary>
+        /// Creates an empty properties object.
+        /// </summary>
+        public Properties()
+        {
+            
+        }
+
+        /// <summary>
         /// Adds a flag with a value (option)
         /// </summary>
         /// <param name="parameter"></param>

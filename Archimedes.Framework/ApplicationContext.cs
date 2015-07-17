@@ -48,21 +48,22 @@ namespace Archimedes.Framework
         /// <summary>
         /// Gets the Application Context configuration.
         /// </summary>
-        /// <param name="args"></param>
+        /// <param name="cmdArguments"></param>
         /// <returns></returns>
-        public IConfigurationService GetConfiguration(string[] args)
+        public Properties GetConfiguration(string[] cmdArguments)
         {
             if (_configurationService == null)
             {
                 _configurationService = new ConfigurationService();
-                LoadConfiguration(_configurationService, args);
+                _configurationService.LoadConfiguration(cmdArguments);
             }
-            return _configurationService;
+            return _configurationService.Configuration;
         }
 
 
         /// <summary>
-        ///  Enables Auto-Configuration, which basically scans for Components.
+        ///  Enables Auto-Configuration, which basically scans for Components, handles the configuration
+        /// and makes the app ready for usage.
         /// 
         ///  Components must be marked with [Service] or [Controller].
         /// 
@@ -70,12 +71,13 @@ namespace Archimedes.Framework
         public void EnableAutoConfiguration(string[] args = null)
         {
             var configuration = GetConfiguration(args);
+
             var assemblyFiltersStr = configuration.GetOptional("archimedes.componentscan.assemblies");
             var assemblyFilters = assemblyFiltersStr.MapOptional(x => x.Split(',')).OrElse(new string[0]);
 
             var conf = new AutoModuleConfiguration(ScanComponents(assemblyFilters));
             var ctx = RegisterContext(_defaultContext, conf);
-            ctx.RegisterInstance<IConfigurationService>(configuration);
+            ctx.RegisterInstance<IConfigurationService>(_configurationService);
         }
 
         /// <summary>
@@ -130,19 +132,6 @@ namespace Archimedes.Framework
         }
 
         #endregion
-
-        #region Private Implementation
-
-        private void LoadConfiguration(IConfigurationService configurationService, string[] cmdArguments)
-        {
-           var properties = new ConfigurationLoader().LoadConfiguration(cmdArguments);
-           configurationService.Merge(properties);
-        }
-
-       
-
-        #endregion
-
 
     }
 }

@@ -17,11 +17,14 @@ namespace Archimedes.Patterns.Tests.ConfigurationTest
 
         public void TestParse(string propertyLine, string expectedKey, string expectedValue)
         {
-            var result = PropertiesParser.ParseLine(propertyLine);
+            var result = PropertiesFileParser.ParseLine(propertyLine);
 
-            Assert.AreEqual(expectedKey, result.Key);
-            Assert.AreEqual(expectedValue, result.Value);
+            Assert.AreEqual(expectedKey, result.Item1);
+            Assert.AreEqual(expectedValue, result.Item2);
 
         }
+
+
+
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace Archimedes.Framework.Configuration
+namespace Archimedes.Patterns.CommandLine
 {
     /// <summary>
     /// Utility to parse command-line arguments into a CommandLineOptions object

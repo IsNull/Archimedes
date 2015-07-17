@@ -209,7 +209,7 @@ namespace Archimedes.Framework.DI
             {
                 var configurationService = (IConfigurationService)Resolve(typeof(IConfigurationService), unresolvedDependencies);
 
-                var configurator = new ValueConfigurator(configurationService);
+                var configurator = new ValueConfigurator(configurationService.Configuration);
 
                 foreach (var targetField in valueFields)
                 {

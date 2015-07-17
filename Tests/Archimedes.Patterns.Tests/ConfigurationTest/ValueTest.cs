@@ -17,17 +17,16 @@ namespace Archimedes.Patterns.Tests.ConfigurationTest
         [TestCase]
         public void TestValue()
         {
-            // "Archimedes.*"
             ApplicationContext.Instance.EnableAutoConfiguration();
 
             var context = ApplicationContext.Instance.GetContext();
-            var configuration = context.Resolve<IConfigurationService>();
-            configuration.SetParameterValue("test.simpleString", "MyTest");
-            configuration.SetParameterValue("test.simpleNumber", 12.ToString());
-            configuration.SetParameterValue("test.nullableNumber", 33.ToString());
+            var configuration = context.Resolve<IConfigurationService>().Configuration;
+            configuration.Set("test.simpleString", "MyTest");
+            configuration.Set("test.simpleNumber", 12.ToString());
+            configuration.Set("test.nullableNumber", 33.ToString());
 
             var date = DateTime.Now;
-            configuration.SetParameterValue("test.simpleDate", date.ToString(CultureInfo.InvariantCulture));
+            configuration.Set("test.simpleDate", date.ToString(CultureInfo.InvariantCulture));
 
 
             var valueService = context.Resolve<ServiceConfigTarget>();
@@ -45,8 +44,6 @@ namespace Archimedes.Patterns.Tests.ConfigurationTest
             Assert.AreEqual(date.Second, valueService.simpleDate.Second);
 
         }
-
-
         
     }
 }

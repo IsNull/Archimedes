@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using Archimedes.Patterns;
+using Archimedes.Patterns.CommandLine;
+using Archimedes.Patterns.Utils;
 
 namespace Archimedes.Framework.Configuration
 {
@@ -8,42 +12,75 @@ namespace Archimedes.Framework.Configuration
     /// </summary>
     public class ConfigurationService : IConfigurationService
     {
-        private readonly Properties _properties = new Properties();
+        private const string PropertiesFileName = "application.properties";
+
+        private readonly Properties _configuration = new Properties();
 
 
-        public void SetParameterValue(string parameter, string value)
-        {
-            _properties.Set(parameter, value);
+        public Properties Configuration {
+            get { return _configuration; }
         }
 
-        public string Get(string parameter)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="commandLineArgs"></param>
+        /// <returns></returns>
+        public void LoadConfiguration(string[] commandLineArgs = null)
         {
-            return _properties.Get(parameter);
+            var properties = LoadConfigurationFromPropertiesFile()
+                .Merge(LoadConfigurationFromCommandLine(commandLineArgs));
+
+            Configuration.Merge(properties);
         }
 
-        public Optional<string> GetOptional(string parameter)
+
+
+        #region Private methods
+
+        private Properties LoadConfigurationFromCommandLine(string[] commandLineArgs)
         {
-            return _properties.GetOptional(parameter);
+            var cmdProps = new Properties();
+
+            if (commandLineArgs != null && commandLineArgs.Length != 0)
+            {
+                var argsCmd = CommandLineParser.ParseCommandLineArgs(commandLineArgs);
+                cmdProps.Merge(argsCmd.ToParameterMap());
+            }
+
+            return cmdProps;
         }
 
-        public Optional<string> GetOptional(params string[] parameters)
+        private Properties LoadConfigurationFromPropertiesFile()
         {
-            return _properties.GetOptional(parameters);
+            try
+            {
+                var levelOnePath = AppUtil.ApplicaitonBinaryFolder + @"\" + PropertiesFileName;
+                var levelTwoPath = AppUtil.AppDataFolder + @"\" + PropertiesFileName;
+
+                return LoadProperties(levelOnePath).Merge(LoadProperties(levelTwoPath));
+            }
+            catch (NotSupportedException e)
+            {
+                // Ignore - we cant load any of the property files
+            }
+            return new Properties();
         }
 
-        public bool IsParameterEnabled(string parameter)
+        private Properties LoadProperties(string path)
         {
-            return _properties.IsTrue(parameter);
+            var properties = new Properties();
+
+            if (File.Exists(path))
+            {
+                var tmp = PropertiesFileParser.Parse(path);
+                properties.Merge(tmp);
+            }
+
+            return properties;
         }
 
-        public void Merge(Dictionary<string, string> properties)
-        {
-            _properties.Merge(properties);
-        }
-
-        public void Merge(Properties properties)
-        {
-            _properties.Merge(properties);
-        }
+        #endregion
+        
     }
 }

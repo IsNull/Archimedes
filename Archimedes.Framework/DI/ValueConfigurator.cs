@@ -15,14 +15,14 @@ namespace Archimedes.Framework.DI
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly Regex _variableReference = new Regex(@"\$\{(.*)\}");
-        private readonly IConfigurationService _configurationService;
+        private readonly Properties _configuration;
 
         #endregion
 
 
-        public ValueConfigurator(IConfigurationService configurationService)
+        public ValueConfigurator(Properties configuration)
         {
-            this._configurationService = configurationService;
+            _configuration = configuration;
         }
 
         public void SetValue(FieldInfo field, object instance, string valueExpression)
@@ -44,7 +44,7 @@ namespace Archimedes.Framework.DI
             {
                 var variable = match.Groups[1].Value;
 
-                var valueOpt = _configurationService.GetOptional(variable);
+                var valueOpt = _configuration.GetOptional(variable);
 
                 if (!valueOpt.IsPresent)
                 {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -9,7 +10,7 @@ namespace Archimedes.Framework.Configuration
     /// <summary>
     /// Parses a property file in the standard spring java format.
     /// </summary>
-    public static class PropertiesParser
+    public static class PropertiesFileParser
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         private static readonly Regex KeyValueParser = new Regex("(.*?)=(.*)");
@@ -31,21 +32,21 @@ namespace Archimedes.Framework.Configuration
 
                 if (parsed != null)
                 {
-                    if (!properties.ContainsKey(parsed.Key))
+                    if (!properties.ContainsKey(parsed.Item1))
                     {
-                        properties.Add(parsed.Key, parsed.Value);
+                        properties.Add(parsed.Item1, parsed.Item2);
                     }
                     else
                     {
-                        properties[parsed.Key] = parsed.Value;
-                        Log.Warn("Property key '" + parsed.Key + "' is defined multiple times. Value got overriden.");
+                        properties[parsed.Item1] = parsed.Item2;
+                        Log.Warn("Property key '" + parsed.Item1 + "' is defined multiple times. Value got overriden.");
                     }
                 }
             }
             return properties;
         }
 
-        public static PropertyEntry ParseLine(string propertyLine)
+        public static Tuple<string,string> ParseLine(string propertyLine)
         {
             if (!propertyLine.Trim().StartsWith("#"))
             {
@@ -54,33 +55,12 @@ namespace Archimedes.Framework.Configuration
                     var key = KeyValueParser.Match(propertyLine).Groups[1].Value;
                     var value = KeyValueParser.Match(propertyLine).Groups[2].Value;
 
-                    return new PropertyEntry(key, value);
+                    return new Tuple<string, string>(key, value);
                 }
             }
             return null;
         }
 
-        public class PropertyEntry
-        {
-            private readonly string _key;
-            private readonly string _value;
-
-            public PropertyEntry(string key, string value)
-            {
-                _key = key;
-                _value = value;
-            }
-
-            public string Key
-            {
-                get { return _key; }
-            }
-
-            public string Value
-            {
-                get { return _value; }
-            }
-        }
 
     }
 }
