@@ -5,9 +5,7 @@
 The primary content of this project has been MOVED PERMANENTLY to the public [ElderByte](https://github.com/ElderByte-/) and significantly reorganized.
 
 
-
-
-Archimedes is a collection of .NET Common Patterns & Practics classes. 
+The only remaining libraries in this project are those who are not yet migrated.
 
 Sub Projects:
 
