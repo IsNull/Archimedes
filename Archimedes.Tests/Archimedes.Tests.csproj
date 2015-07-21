@@ -101,18 +101,6 @@
       <Project>{9b72f725-a1db-45e8-aeff-34ab9601f161}</Project>
       <Name>Archimedes.Controls.WPF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Archimedes.Geometry\Archimedes.Geometry.csproj">
-      <Project>{B16862E8-837A-411A-8D07-09CCDA8CE3D7}</Project>
-      <Name>Archimedes.Geometry</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Archimedes.Patterns.WPF\Archimedes.Patterns.WPF.csproj">
-      <Project>{59FAD24F-15FE-4A5F-B5DE-0E8ADBDF14D7}</Project>
-      <Name>Archimedes.Patterns.WPF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Archimedes.Patterns\Archimedes.Patterns.csproj">
-      <Project>{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}</Project>
-      <Name>Archimedes.Patterns</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

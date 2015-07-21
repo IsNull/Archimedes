@@ -1,4 +1,0 @@
-﻿AttachedCommandBehaviour
-Based on
-http://marlongrech.wordpress.com/2008/12/13/attachedcommandbehavior-v2-aka-acb/
-Provides the ability to bind to Events in xaml Guis, so that you can fully apply the MVMV Pattern.

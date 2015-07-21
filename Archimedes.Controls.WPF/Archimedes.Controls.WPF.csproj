@@ -116,12 +116,6 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Archimedes.Patterns\Archimedes.Patterns.csproj">
-      <Project>{5C5031E6-C6A4-4D8F-A473-CDB08DB8E282}</Project>
-      <Name>Archimedes.Patterns</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
